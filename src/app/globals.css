@@ -1,4 +1,18 @@
-@import url("satoshi.css");
+/**
+ * @license
+ *
+ * Font Family: Satoshi
+ * Designed by: Deni Anggara
+ * URL: https://www.fontshare.com/fonts/satoshi
+ * © 2024 Indian Type Foundry
+ *
+ * Font Styles:
+ * Satoshi Light
+ * Satoshi Regular
+ * Satoshi Medium
+ * Satoshi Bold
+ *
+*/
 
 @tailwind base;
 @tailwind components;
