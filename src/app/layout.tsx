@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { satoshi } from "@/assets/font/satoshi";
-import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,9 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="light">
-      <body className={satoshi.className}>
-        <Providers>{children}</Providers>
-      </body>
+      <body className={satoshi.className}>{children}</body>
     </html>
   );
 }
