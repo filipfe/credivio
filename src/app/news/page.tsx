@@ -1,7 +1,8 @@
 import { getNews } from "@/lib/news/actions";
-import { Pagination } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
+
+export const revalidate = 30;
 
 export default async function Page({
   searchParams,

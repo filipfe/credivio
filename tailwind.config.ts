@@ -12,7 +12,9 @@ const config: Config = {
     extend: {
       colors: {
         primary: "#4169E1",
+        font: "#000000",
         light: "#FAFAFA",
+        background: "#FFFFFF",
       },
     },
   },
