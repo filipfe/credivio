@@ -2,7 +2,7 @@ import { getNews } from "@/lib/news/actions";
 import Image from "next/image";
 import Link from "next/link";
 
-export const revalidate = 30;
+export const revalidate = 0;
 
 export default async function Page({
   searchParams,
@@ -10,15 +10,14 @@ export default async function Page({
   searchParams?: { page: string };
 }) {
   const page = searchParams?.page;
-  const { results: first, nextPage: firstPage } = await getNews(page);
-  const { results: second, nextPage: secondPage } = await getNews(firstPage);
+  const { results } = await getNews(page ? parseInt(page) : 0);
   return (
     <div className="px-12 pt-8 pb-24">
       <h1 className="text-3xl">Aktualności</h1>
       <section className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-y-10 gap-x-6 mt-12">
-        {[...first, ...second].map((item, i) => (
+        {/* {[...first, ...second].map((item, i) => (
           <NewsRef {...item} key={i} />
-        ))}
+        ))} */}
       </section>
     </div>
   );
