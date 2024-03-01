@@ -3,9 +3,9 @@ import Link from "next/link";
 
 export default async function Settings() {
   return (
-    <div className="px-12 pt-8 pb-24">
+    <div className="px-12 pt-8 pb-24 space-y-8">
       <h1 className="text-3xl">Ustawienia</h1>
-      <section className="grid grid-cols-4 gap-y-10 gap-x-6 mt-8">
+      <section className="grid grid-cols-4 gap-y-10 gap-x-6">
         {SETTINGS_PAGES.map((link) => (
           <LinkRef {...link} key={link.href} />
         ))}
