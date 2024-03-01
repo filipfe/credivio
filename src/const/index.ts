@@ -46,3 +46,14 @@ export const SETTINGS_PAGES: (Page & { description: string })[] = [
       "Kliknij tutaj, aby zarządzać ustawieniami wyświetlania, powiadomień i innymi.",
   },
 ];
+
+export const ADD_METHODS: AddMethod[] = [
+  {
+    title: "Import CSV",
+    type: "csv",
+  },
+  {
+    title: "Ręcznie",
+    type: "manual",
+  },
+];

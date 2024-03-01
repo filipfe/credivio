@@ -7,3 +7,8 @@ type Page = {
 type SettingsPage = Page & {
   description: string;
 };
+
+type SupabaseResponse<T> = {
+  error?: string;
+  results: T[];
+};
