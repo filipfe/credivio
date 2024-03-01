@@ -1,5 +1,5 @@
 import {
-  HandCoinsIcon,
+  CoinsIcon,
   LayoutDashboardIcon,
   NewspaperIcon,
   SlidersIcon,
@@ -16,7 +16,7 @@ export const PAGES: Page[] = [
   {
     title: "Przychód",
     href: "/income",
-    icon: HandCoinsIcon,
+    icon: CoinsIcon,
   },
   {
     title: "Wydatki",
