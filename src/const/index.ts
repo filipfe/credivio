@@ -14,17 +14,17 @@ export const PAGES: Page[] = [
     icon: LayoutDashboardIcon,
   },
   {
-    title: "Income",
+    title: "Przychód",
     href: "/income",
     icon: HandCoinsIcon,
   },
   {
-    title: "Expenses",
+    title: "Wydatki",
     href: "/expenses",
     icon: WalletIcon,
   },
   {
-    title: "News",
+    title: "Aktualności",
     href: "/news",
     icon: NewspaperIcon,
   },
