@@ -16,7 +16,7 @@ export default function NavLink({
       className={`h-11 px-6 rounded-lg text-sm font-medium flex items-center gap-4 ${
         (href === "/" ? pathname === "/" : pathname.startsWith(href))
           ? "bg-light"
-          : "hover:bg-light bg-white"
+          : "hover:bg-light bg-white text-font/75"
       }`}
       href={href}
       key={href}
