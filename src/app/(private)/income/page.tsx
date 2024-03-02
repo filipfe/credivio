@@ -1,4 +1,7 @@
+"use client";
+
 import AddIncome from "@/components/income/add";
+import IncomeTable from "@/components/income/table";
 
 export default function Page() {
   return (
@@ -7,7 +10,7 @@ export default function Page() {
         <h1 className="text-3xl">Przychód</h1>
         <AddIncome />
       </div>
-      <section className="grid grid-cols-4 gap-y-10 gap-x-6 mt-8"></section>
+      <IncomeTable />
     </div>
   );
 }
