@@ -1,11 +1,12 @@
-import Budget from "@/components/dashboard/budget";
 import Stat from "@/components/dashboard/stat";
+import { getExpenses } from "@/lib/expenses/actions";
 import { CoinsIcon, SettingsIcon, Wallet2Icon } from "lucide-react";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const { results: expenses } = await getExpenses();
   return (
-    <div className="px-12 py-8 grid grid-cols-6 gap-8">
+    <div className="px-12 py-8 grid grid-cols-6 gap-6">
       {/* <h2 className="text-3xl col-span-6">Budżet</h2>
       <Budget amount="4162,92" currency="PLN" />
       <Budget amount="819,23" currency="USD" />
@@ -19,7 +20,10 @@ export default function Home() {
       />
       <Stat
         title="Wydatki"
-        amount="155,00"
+        amount={expenses
+          .reduce((prev, curr) => prev + parseFloat(curr.amount), 0)
+          .toFixed(2)
+          .toString()}
         currency="PLN"
         description=""
         previous={{ amount: "240" }}

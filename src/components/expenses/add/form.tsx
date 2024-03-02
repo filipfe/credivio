@@ -11,18 +11,19 @@ import {
   Textarea,
 } from "@nextui-org/react";
 import { CheckIcon, EyeIcon, PaperclipIcon } from "lucide-react";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useState, useTransition } from "react";
 import Papa from "papaparse";
 import { addExpenses } from "@/lib/expenses/actions";
 
 export default function ExpenseForm() {
+  const [isPending, startTransition] = useTransition();
   const [method, setMethod] = useState<AddMethodKey>("csv");
   const [fileName, setFileName] = useState("");
-  const [records, setRecords] = useState<string[][]>([]);
+  const [records, setRecords] = useState<Expense[]>([]);
   const [singleRecord, setSingleRecord] = useState<Expense>({
     title: "",
     issued_at: "",
-    amount: "",
+    amount: "0",
     currency: "",
     description: "",
   });
@@ -35,36 +36,53 @@ export default function ExpenseForm() {
       skipEmptyLines: true,
       complete: ({ data, errors }) => {
         if (errors.length > 0) return;
-        // const results = (data as string[][]).map((record) => {
-        //   const [
-        //     issued_at,
-        //     currency_date,
-        //     title,
-        //     amount,
-        //     currency,
-        //     budget_after,
-        //     description,
-        //   ] = record;
-        //   return {
-        //     issued_at,
-        //     currency_date,
-        //     title,
-        //     amount,
-        //     currency,
-        //     budget_after,
-        //     description,
-        //   };
-        // });
-        setRecords(data as string[][]);
+        const results: Expense[] = (data as string[][])
+          .slice(1)
+          .filter((item) => item[3][0] !== "+")
+          .map((record) => {
+            let [
+              issued_at,
+              currency_date,
+              title,
+              amount,
+              currency,
+              budget_after,
+              description,
+            ] = record;
+            amount = amount.slice(1);
+            budget_after = budget_after.slice(1);
+            return {
+              issued_at,
+              currency_date,
+              title,
+              amount,
+              currency,
+              budget_after,
+              description,
+            };
+          });
+        setRecords(results);
       },
     });
   };
+
+  const isPreviewHidden =
+    method === "csv"
+      ? !!fileName
+      : Object.keys(singleRecord).some((key) => {
+          const value = singleRecord[key as keyof Expense];
+          return !!value && value !== "0";
+        });
 
   return (
     <div className="grid grid-cols-2 gap-8 mt-8">
       <form
         className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col"
-        action={addExpenses}
+        action={(e) =>
+          startTransition(async () => {
+            const { error } = await addExpenses(e);
+          })
+        }
       >
         <h2 className="text-lg">Dane</h2>
         <RadioGroup
@@ -88,7 +106,6 @@ export default function ExpenseForm() {
             <input
               type="file"
               id="csv-file"
-              name="csv-file"
               required
               className="opacity-0 -z-50 pointer-events-none absolute"
               accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
@@ -114,7 +131,7 @@ export default function ExpenseForm() {
               label="Kwota"
               placeholder="3600"
               isRequired
-              value={singleRecord.amount}
+              value={parseFloat(singleRecord.amount).toString()}
               onChange={(e) => {
                 let value = e.target.value;
                 value = value.replace(/\D/g, "");
@@ -156,6 +173,7 @@ export default function ExpenseForm() {
               name="issued_at"
               label="Data uiszczenia"
               placeholder="24.01.2024"
+              type="date"
               isRequired
               value={singleRecord.issued_at}
               onChange={(e) =>
@@ -181,19 +199,31 @@ export default function ExpenseForm() {
             />
           </div>
         )}
-        <input type="hidden" name="type" value={method} />
+        <input type="hidden" name="method" value={method} />
+        <input
+          type="hidden"
+          name="data"
+          value={
+            method === "csv"
+              ? JSON.stringify(records)
+              : JSON.stringify(singleRecord)
+          }
+        />
         <div className="flex-1 flex justify-end items-end gap-4">
           <div></div>
-          <Button color="primary" className="h-9 text-white">
+          <Button
+            isDisabled={isPending}
+            color="primary"
+            type="submit"
+            className="h-9 text-white"
+          >
             <CheckIcon className="mt-0.5" size={16} /> Zapisz
           </Button>
         </div>
       </form>
       <div className="bg-white rounded-lg px-10 py-8 flex flex-col gap-4">
         <h2 className="text-lg">Podgląd</h2>
-        {Object.keys(singleRecord).some(
-          (key) => singleRecord[key as keyof Expense]
-        ) ? (
+        {isPreviewHidden ? (
           <div></div>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-center gap-2 w-full self-center max-w-[16rem]">
