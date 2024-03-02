@@ -2,7 +2,6 @@ import { Fragment } from "react";
 import { signOut } from "@/lib/auth/actions";
 import { Button } from "@nextui-org/react";
 import { AlignJustifyIcon } from "lucide-react";
-import Link from "next/link";
 
 export default function Header({
   isMenuHidden,
