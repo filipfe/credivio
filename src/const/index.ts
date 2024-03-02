@@ -4,7 +4,7 @@ import {
   NewspaperIcon,
   SlidersIcon,
   UserCogIcon,
-  WalletIcon,
+  Wallet2Icon,
 } from "lucide-react";
 
 export const PAGES: Page[] = [
@@ -21,7 +21,7 @@ export const PAGES: Page[] = [
   {
     title: "Wydatki",
     href: "/expenses",
-    icon: WalletIcon,
+    icon: Wallet2Icon,
   },
   {
     title: "Aktualności",
