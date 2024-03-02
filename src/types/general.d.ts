@@ -13,6 +13,8 @@ type SupabaseResponse<T> = {
   results: T[];
 };
 
+type OperationType = "expense" | "income";
+
 type Operation = {
   issued_at: string;
   title: string;
@@ -21,4 +23,5 @@ type Operation = {
   currency: string;
   currency_date?: string;
   budget_after?: string;
+  type?: OperationType;
 };

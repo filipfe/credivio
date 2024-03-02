@@ -24,10 +24,8 @@ export async function getNews(page?: number): Promise<NewsList> {
         },
       }
     );
-    console.log({ res });
     return res.data;
   } catch (err) {
-    console.log(err);
     return {
       results: [],
       error: "Error, try again later",
