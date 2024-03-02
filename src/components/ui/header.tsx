@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { signOut } from "@/lib/auth/actions";
 import { Button } from "@nextui-org/react";
 import { AlignJustifyIcon } from "lucide-react";
+import Link from "next/link";
 
 export default function Header({
   isMenuHidden,
@@ -13,7 +14,6 @@ export default function Header({
   return (
     <Fragment>
       <header className="h-20 sticky top-0 bg-white flex items-center justify-between z-50 px-4">
-        <div></div>
         <Button
           onPress={() => setIsMenuHidden((prev) => !prev)}
           className={`rounded-full h-10 w-10 min-w-0 px-0 ml-auto ${
