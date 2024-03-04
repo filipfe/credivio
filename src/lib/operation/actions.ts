@@ -15,7 +15,7 @@ export async function getOperations(
       const { sort } = searchParams;
       const page = Number(searchParams.page);
       const { data, error } = await supabase
-        .from("incomes")
+        .from(`${type}s`)
         .select("*")
         .order(sort.includes("-") ? sort.split("-")[1] : sort, {
           ascending: sort.includes("-") ? false : true,
@@ -23,7 +23,7 @@ export async function getOperations(
         .range(page ? page * 10 - 10 : 0, page ? page * 10 - 1 : 9);
 
       const { count } = await supabase
-        .from("incomes")
+        .from(`${type}s`)
         .select("*", { count: "exact", head: true });
 
       if (error) {
@@ -33,13 +33,13 @@ export async function getOperations(
     } else {
       const page = Number(searchParams?.page);
       const { data, error } = await supabase
-        .from("incomes")
+        .from(`${type}s`)
         .select("*")
         .order("issued_at", { ascending: false })
         .range(page ? page * 10 - 10 : 0, page ? page * 10 - 1 : 9);
 
       const { count } = await supabase
-        .from("incomes")
+        .from(`${type}s`)
         .select("*", { count: "exact", head: true });
 
       if (error) {
