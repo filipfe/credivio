@@ -1,9 +1,9 @@
 import Add from "@/components/operation/add";
 import OperationList from "@/components/operation/list";
-import { getExpenses } from "@/lib/expenses/actions";
+import { getOperations } from "@/lib/operation/actions";
 
 export default async function Page() {
-  const { results: expenses } = await getExpenses();
+  const { results: expenses } = await getOperations("expense");
   return (
     <div className="px-12 pt-8 pb-24 flex flex-col h-full">
       <div className="flex items-center justify-between gap-4 mb-8">
