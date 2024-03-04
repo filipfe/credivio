@@ -6,14 +6,12 @@ import { redirect } from "next/navigation";
 
 const supabase = createClient();
 
-export async function getOperations(
-  type: OperationType,
-  searchParams?: OperationSearchParams
-): Promise<SupabaseResponse<Expense>> {
+export async function getIncomes(
+  sort?: string,
+  page?: number
+): Promise<SupabaseResponse<Income>> {
   try {
-    if (searchParams?.sort) {
-      const { sort } = searchParams;
-      const page = Number(searchParams.page);
+    if (sort) {
       const { data, error } = await supabase
         .from("incomes")
         .select("*")
@@ -29,9 +27,8 @@ export async function getOperations(
       if (error) {
         return { results: [], error: error.message };
       }
-      return { count, results: data };
+      return { count: count, results: data };
     } else {
-      const page = Number(searchParams?.page);
       const { data, error } = await supabase
         .from("incomes")
         .select("*")
@@ -45,7 +42,7 @@ export async function getOperations(
       if (error) {
         return { results: [], error: error.message };
       }
-      return { count, results: data };
+      return { count: count, results: data };
     }
   } catch (err) {
     return {
@@ -55,14 +52,13 @@ export async function getOperations(
   }
 }
 
-export async function addOperations(
+export async function addIncomes(
   formData: FormData
-): Promise<SupabaseResponse<Expense>> {
-  const type = formData.get("type")?.toString() as OperationType;
+): Promise<SupabaseResponse<Income>> {
   const method = formData.get("method")?.toString() as AddMethodKey;
   const data = formData.get("data")!.toString();
 
-  let results: Expense[] = [];
+  let results: Income[] = [];
 
   try {
     switch (method) {
@@ -79,8 +75,7 @@ export async function addOperations(
         };
     }
 
-    const { error } = await supabase.from(`${type}s`).insert(results);
-    console.log(error);
+    const { error } = await supabase.from("incomes").insert(results);
     if (error) {
       return {
         error: error.message,
@@ -94,9 +89,6 @@ export async function addOperations(
     };
   }
 
-  const path = type === "expense" ? "/expenses" : "/income";
-
-  revalidatePath(path);
-  revalidatePath("/");
-  redirect(path);
+  revalidatePath("/incomes");
+  redirect("/incomes");
 }

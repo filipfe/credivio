@@ -11,6 +11,7 @@ type SettingsPage = Page & {
 type SupabaseResponse<T> = {
   error?: string;
   results: T[];
+  count?: number | null;
 };
 
 type OperationType = "expense" | "income";
@@ -27,3 +28,8 @@ type Operation = {
 };
 
 type Option = { name: string; value: number };
+
+type OperationSearchParams = {
+  sort?: string;
+  page?: string;
+};
