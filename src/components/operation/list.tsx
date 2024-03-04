@@ -7,7 +7,7 @@ type Props = {
 
 export default function OperationList({ operations, type }: Props) {
   return (
-    <section className="grid grid-cols-4 gap-6">
+    <section className="flex flex-col lg:grid grid-cols-2 xl:grid-cols-4 gap-6">
       {operations.map((item, k) => (
         <OperationRef {...item} type={type} key={`op:${k}`} />
       ))}

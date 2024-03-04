@@ -6,9 +6,11 @@ import { redirect } from "next/navigation";
 
 const supabase = createClient();
 
-export async function getExpenses(): Promise<SupabaseResponse<Expense>> {
+export async function getOperations(
+  type: OperationType
+): Promise<SupabaseResponse<Expense>> {
   try {
-    const { data, error } = await supabase.from("expenses").select("*");
+    const { data, error } = await supabase.from(`${type}s`).select("*");
     if (error) return { results: [], error: error.message };
     return { results: data };
   } catch (err) {
@@ -19,9 +21,10 @@ export async function getExpenses(): Promise<SupabaseResponse<Expense>> {
   }
 }
 
-export async function addExpenses(
+export async function addOperations(
   formData: FormData
 ): Promise<SupabaseResponse<Expense>> {
+  const type = formData.get("type")?.toString() as OperationType;
   const method = formData.get("method")?.toString() as AddMethodKey;
   const data = formData.get("data")!.toString();
 
@@ -42,7 +45,8 @@ export async function addExpenses(
         };
     }
 
-    const { error } = await supabase.from("expenses").insert(results);
+    const { error } = await supabase.from(`${type}s`).insert(results);
+    console.log(error);
     if (error) {
       return {
         error: error.message,
@@ -56,6 +60,9 @@ export async function addExpenses(
     };
   }
 
-  revalidatePath("/expenses");
-  redirect("/expenses");
+  const path = type === "expense" ? "/expenses" : "/income";
+
+  revalidatePath(path);
+  revalidatePath("/");
+  redirect(path);
 }

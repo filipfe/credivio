@@ -1,10 +1,20 @@
 import Stat from "@/components/dashboard/stat";
-import { getExpenses } from "@/lib/expenses/actions";
+import { getOperations } from "@/lib/operation/actions";
 import { CoinsIcon, SettingsIcon, Wallet2Icon } from "lucide-react";
 import Link from "next/link";
 
 export default async function Home() {
-  const { results: expenses } = await getExpenses();
+  const { results: expenses } = await getOperations("expense");
+  const { results: incomes } = await getOperations("income");
+  const totalIncome = incomes.reduce(
+    (prev, curr) => prev + parseFloat(curr.amount),
+    0
+  );
+  const totalExpenses = expenses.reduce(
+    (prev, curr) => prev + parseFloat(curr.amount),
+    0
+  );
+  const totalProfit = totalIncome - totalExpenses;
   return (
     <div className="px-12 py-8 grid grid-cols-6 gap-6">
       {/* <h2 className="text-3xl col-span-6">Budżet</h2>
@@ -13,24 +23,21 @@ export default async function Home() {
       <h2 className="text-3xl col-span-6">Statystyki</h2> */}
       <Stat
         title="Przychód"
-        amount="260,66"
+        amount={totalIncome.toFixed(2).toString()}
         currency="PLN"
         description=""
         previous={{ amount: "100" }}
       />
       <Stat
         title="Wydatki"
-        amount={expenses
-          .reduce((prev, curr) => prev + parseFloat(curr.amount), 0)
-          .toFixed(2)
-          .toString()}
+        amount={totalExpenses.toFixed(2).toString()}
         currency="PLN"
         description=""
         previous={{ amount: "240" }}
       />
       <Stat
         title="Zysk"
-        amount="260,89"
+        amount={totalProfit.toFixed(2).toString()}
         currency="PLN"
         description=""
         previous={{ amount: "100" }}

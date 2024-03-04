@@ -13,13 +13,12 @@ import {
 } from "@nextui-org/react";
 import { CheckIcon, EyeIcon, PaperclipIcon } from "lucide-react";
 import { ChangeEvent, Fragment, useState, useTransition } from "react";
-import Papa from "papaparse";
-import { addExpenses } from "@/lib/expenses/actions";
-import chardet from "chardet";
+import parseCSV from "@/utils/operation/parse-csv";
+import { addOperations } from "@/lib/operation/actions";
 
-export default function ExpenseForm() {
+export default function AddForm({ type }: { type: OperationType }) {
   const [isPending, startTransition] = useTransition();
-  const [method, setMethod] = useState<AddMethodKey>("csv");
+  const [method, setMethod] = useState<AddMethodKey>("manual");
   const [fileName, setFileName] = useState("");
   const [records, setRecords] = useState<Expense[]>([]);
   const [singleRecord, setSingleRecord] = useState<Expense>({
@@ -34,47 +33,9 @@ export default function ExpenseForm() {
     const file = e.target.files?.item(0);
     if (!file) return;
     setFileName(file.name);
-    const encoding = chardet.detect(Buffer.from(await file.arrayBuffer()));
-
-    const reader = new FileReader();
-
-    reader.onload = async (ev) => {
-      if (!ev.target?.result) return;
-      Papa.parse(ev.target.result as string, {
-        skipEmptyLines: true,
-        encoding: "UTF-8",
-        complete: ({ data, errors }) => {
-          if (errors.length > 0) return;
-          const results: Expense[] = (data as string[][])
-            .filter((item) => item[3][0] !== "+")
-            .slice(1)
-            .map((record) => {
-              let [
-                issued_at,
-                currency_date,
-                title,
-                amount,
-                currency,
-                budget_after,
-                description,
-              ] = record;
-              amount = amount.slice(1);
-              budget_after = budget_after.slice(1);
-              return {
-                issued_at,
-                currency_date,
-                title,
-                amount,
-                currency,
-                budget_after,
-                description,
-              };
-            });
-          setRecords(results);
-        },
-      });
-    };
-    reader.readAsText(file, encoding || "UTF-8");
+    await parseCSV(file, (results) => setRecords(results), {
+      type,
+    });
   };
 
   const isPreviewHidden =
@@ -91,7 +52,7 @@ export default function ExpenseForm() {
         className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col"
         action={(e) =>
           startTransition(async () => {
-            const { error } = await addExpenses(e);
+            const { error } = await addOperations(e);
           })
         }
       >
@@ -211,6 +172,7 @@ export default function ExpenseForm() {
           </div>
         )}
         <input type="hidden" name="method" value={method} />
+        <input type="hidden" name="type" value={type} />
         <input
           type="hidden"
           name="data"
@@ -229,7 +191,7 @@ export default function ExpenseForm() {
             className="h-9 text-white"
           >
             {isPending ? (
-              <Spinner />
+              <Spinner color="white" />
             ) : (
               <Fragment>
                 <CheckIcon className="mt-0.5" size={16} /> Zapisz

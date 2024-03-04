@@ -2,7 +2,9 @@ import { getNews } from "@/lib/news/actions";
 import Image from "next/image";
 import Link from "next/link";
 
-export const revalidate = 0;
+export const revalidate = parseInt(
+  process.env.NEXT_PUBLIC_NEWS_REVALIDATE || "0"
+);
 
 export default async function Page({
   searchParams,
@@ -15,9 +17,9 @@ export default async function Page({
     <div className="px-12 pt-8 pb-24">
       <h1 className="text-3xl">Aktualności</h1>
       <section className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-y-10 gap-x-6 mt-12">
-        {/* {[...first, ...second].map((item, i) => (
-          <NewsRef {...item} key={i} />
-        ))} */}
+        {results.map((item) => (
+          <NewsRef {...item} key={item.article_id} />
+        ))}
       </section>
     </div>
   );

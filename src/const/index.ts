@@ -49,11 +49,11 @@ export const SETTINGS_PAGES: (Page & { description: string })[] = [
 
 export const ADD_METHODS: AddMethod[] = [
   {
-    title: "Import CSV",
-    type: "csv",
-  },
-  {
     title: "Ręcznie",
     type: "manual",
+  },
+  {
+    title: "Import CSV",
+    type: "csv",
   },
 ];
