@@ -70,6 +70,7 @@ export async function addOperations(
         results = JSON.parse(data);
         break;
       case "manual":
+        console.log(data);
         results = [JSON.parse(data)];
         break;
       default:

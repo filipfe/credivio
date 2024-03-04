@@ -12,6 +12,8 @@ const config: Config = {
     extend: {
       colors: {
         primary: "#177981",
+        secondary: "#ffc000",
+        // secondary: "#ff807e",
         font: "#000000",
         light: "#FAFAFA",
         background: "#FFFFFF",
@@ -37,6 +39,7 @@ const config: Config = {
         light: {
           colors: {
             primary: "#177981",
+            secondary: "#ffc000",
             content1: "#FFF",
           },
           layout: {

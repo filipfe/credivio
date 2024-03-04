@@ -16,13 +16,12 @@ import {
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
 const columns = [
-  { key: "issued_at", label: "ISSUED AT" },
-  { key: "title", label: "TITLE" },
-  { key: "amount", label: "AMOUNT" },
-  { key: "description", label: "DESCRIPTION" },
-  { key: "currency", label: "CURRENCY" },
-  { key: "currency_date", label: "CURRENCY DATE" },
-  { key: "budget_after", label: "BUDGET AFTER" },
+  { key: "issued_at", label: "DATA" },
+  { key: "title", label: "TYTUŁ" },
+  { key: "amount", label: "KWOTA" },
+  { key: "description", label: "OPIS" },
+  { key: "currency", label: "WALUTA" },
+  // { key: "budget_after", label: "BUDGET AFTER" },
 ];
 
 type Props = {
@@ -53,7 +52,7 @@ export default function IncomeTable({ operations, count }: Props) {
 
   const bottomContent = React.useMemo(() => {
     return (
-      <div className="py-2 px-2 flex justify-between items-center">
+      <div className="py-2 px-2 flex justify-between items-start">
         <span className="text-small text-default-400">
           {selectedKeys === "all"
             ? "All items selected"

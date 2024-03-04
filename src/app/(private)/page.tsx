@@ -1,5 +1,6 @@
 import Stat from "@/components/dashboard/stat";
-import PieChart from "@/components/operation/pie-chart";
+import BarChart from "@/components/operation/charts/bar-chart";
+import PieChart from "@/components/operation/charts/pie-chart";
 import { getOperations } from "@/lib/operation/actions";
 import prepareChartData from "@/utils/operation/prepare-chart-data";
 import { CoinsIcon, SettingsIcon, Wallet2Icon } from "lucide-react";
@@ -46,10 +47,10 @@ export default async function Home() {
         description=""
         previous={{ amount: "100" }}
       />
-      <div className="xl:col-span-3 bg-white rounded-lg">
-        <PieChart data={expenseChartData} />
+      <div className="xl:col-span-4 bg-white rounded-lg px-10 pt-10 pb-4">
+        <BarChart data={expenseChartData} />
       </div>
-      <div className="xl:col-span-3 bg-white rounded-lg">
+      <div className="xl:col-span-2 bg-white rounded-lg">
         <PieChart data={incomeChartData} />
       </div>
       <h2 className="text-3xl col-span-6">Skróty</h2>
