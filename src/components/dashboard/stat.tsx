@@ -23,7 +23,7 @@ export default function Stat({
     currency,
   });
   return (
-    <div className="col-span-2 bg-white rounded-lg py-8 px-10 space-y-4">
+    <div className="xl:col-span-2 bg-white rounded-lg py-8 px-10 space-y-4">
       <h3 className="text-lg">{title}</h3>
       <div className="flex items-center gap-2">
         <h4 className="text-3xl">{numberFormat.format(floatAmount)}</h4>

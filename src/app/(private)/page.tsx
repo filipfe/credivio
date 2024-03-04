@@ -1,5 +1,7 @@
 import Stat from "@/components/dashboard/stat";
+import PieChart from "@/components/operation/pie-chart";
 import { getOperations } from "@/lib/operation/actions";
+import prepareChartData from "@/utils/operation/prepare-chart-data";
 import { CoinsIcon, SettingsIcon, Wallet2Icon } from "lucide-react";
 import Link from "next/link";
 
@@ -15,8 +17,10 @@ export default async function Home() {
     0
   );
   const totalProfit = totalIncome - totalExpenses;
+  const expenseChartData = prepareChartData(expenses);
+  const incomeChartData = prepareChartData(incomes);
   return (
-    <div className="px-12 py-8 grid grid-cols-6 gap-6">
+    <div className="px-12 py-8 pb-24 flex flex-col xl:grid grid-cols-6 gap-6">
       {/* <h2 className="text-3xl col-span-6">Budżet</h2>
       <Budget amount="4162,92" currency="PLN" />
       <Budget amount="819,23" currency="USD" />
@@ -42,8 +46,12 @@ export default async function Home() {
         description=""
         previous={{ amount: "100" }}
       />
-      <div className="col-span-3 bg-white rounded-lg py-8 px-10"></div>
-      <div className="col-span-3 bg-white rounded-lg py-8 px-10"></div>
+      <div className="xl:col-span-3 bg-white rounded-lg">
+        <PieChart data={expenseChartData} />
+      </div>
+      <div className="xl:col-span-3 bg-white rounded-lg">
+        <PieChart data={incomeChartData} />
+      </div>
       <h2 className="text-3xl col-span-6">Skróty</h2>
       <Link
         href="/income/add"

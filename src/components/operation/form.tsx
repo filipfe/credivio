@@ -1,6 +1,6 @@
 "use client";
 
-import { ADD_METHODS } from "@/const";
+import { ADD_METHODS, CURRENCIES } from "@/const";
 import {
   Autocomplete,
   AutocompleteItem,
@@ -23,9 +23,9 @@ export default function AddForm({ type }: { type: OperationType }) {
   const [records, setRecords] = useState<Expense[]>([]);
   const [singleRecord, setSingleRecord] = useState<Expense>({
     title: "",
-    issued_at: "",
+    issued_at: new Date().toISOString().substring(0, 10),
     amount: "0",
-    currency: "",
+    currency: "PLN",
     description: "",
   });
 
@@ -47,7 +47,7 @@ export default function AddForm({ type }: { type: OperationType }) {
         });
 
   return (
-    <div className="flex flex-col lg:grid grid-cols-2 gap-8 mt-8">
+    <div className="flex flex-col xl:grid grid-cols-2 gap-8 mt-8">
       <form
         className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col"
         action={(e) =>
@@ -105,7 +105,9 @@ export default function AddForm({ type }: { type: OperationType }) {
               isRequired
               value={parseFloat(singleRecord.amount).toString()}
               onChange={(e) => {
-                let value = e.target.value;
+                let { value } = e.target;
+                if (value === "")
+                  return setSingleRecord((prev) => ({ ...prev, amount: "0" }));
                 value = value.replace(/\D/g, "");
                 setSingleRecord((prev) => ({
                   ...prev,
@@ -119,10 +121,11 @@ export default function AddForm({ type }: { type: OperationType }) {
               isClearable={false}
               isRequired
               value={singleRecord.currency}
-              onChange={(e) =>
+              selectedKey={singleRecord.currency}
+              onSelectionChange={(curr) =>
                 setSingleRecord((prev) => ({
                   ...prev,
-                  currency: e.target.value,
+                  currency: curr.toString(),
                 }))
               }
               inputProps={{
@@ -131,14 +134,17 @@ export default function AddForm({ type }: { type: OperationType }) {
                 },
               }}
             >
-              <AutocompleteItem
-                classNames={{
-                  base: "!bg-white hover:!bg-light",
-                }}
-                key="usd"
-              >
-                USD
-              </AutocompleteItem>
+              {CURRENCIES.map((curr) => (
+                <AutocompleteItem
+                  value={curr}
+                  classNames={{
+                    base: "!bg-white hover:!bg-light",
+                  }}
+                  key={curr}
+                >
+                  {curr}
+                </AutocompleteItem>
+              ))}
             </Autocomplete>
             <Input
               classNames={{ inputWrapper: "!bg-light" }}
@@ -188,10 +194,10 @@ export default function AddForm({ type }: { type: OperationType }) {
             isDisabled={isPending}
             color="primary"
             type="submit"
-            className="h-9 text-white"
+            className="h-9 w-24 text-white"
           >
             {isPending ? (
-              <Spinner color="white" />
+              <Spinner color="white" size="sm" />
             ) : (
               <Fragment>
                 <CheckIcon className="mt-0.5" size={16} /> Zapisz

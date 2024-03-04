@@ -57,3 +57,5 @@ export const ADD_METHODS: AddMethod[] = [
     type: "csv",
   },
 ];
+
+export const CURRENCIES = ["USD", "PLN", "GBP", "AUD"];
