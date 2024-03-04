@@ -8,12 +8,14 @@ import {
   Input,
   Radio,
   RadioGroup,
+  Spinner,
   Textarea,
 } from "@nextui-org/react";
 import { CheckIcon, EyeIcon, PaperclipIcon } from "lucide-react";
-import { ChangeEvent, useState, useTransition } from "react";
+import { ChangeEvent, Fragment, useState, useTransition } from "react";
 import Papa from "papaparse";
 import { addExpenses } from "@/lib/expenses/actions";
+import chardet from "chardet";
 
 export default function ExpenseForm() {
   const [isPending, startTransition] = useTransition();
@@ -28,42 +30,51 @@ export default function ExpenseForm() {
     description: "",
   });
 
-  const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.item(0);
     if (!file) return;
     setFileName(file.name);
-    Papa.parse(file as any, {
-      skipEmptyLines: true,
-      complete: ({ data, errors }) => {
-        if (errors.length > 0) return;
-        const results: Expense[] = (data as string[][])
-          .slice(1)
-          .filter((item) => item[3][0] !== "+")
-          .map((record) => {
-            let [
-              issued_at,
-              currency_date,
-              title,
-              amount,
-              currency,
-              budget_after,
-              description,
-            ] = record;
-            amount = amount.slice(1);
-            budget_after = budget_after.slice(1);
-            return {
-              issued_at,
-              currency_date,
-              title,
-              amount,
-              currency,
-              budget_after,
-              description,
-            };
-          });
-        setRecords(results);
-      },
-    });
+    const encoding = chardet.detect(Buffer.from(await file.arrayBuffer()));
+
+    const reader = new FileReader();
+
+    reader.onload = async (ev) => {
+      if (!ev.target?.result) return;
+      Papa.parse(ev.target.result as string, {
+        skipEmptyLines: true,
+        encoding: "UTF-8",
+        complete: ({ data, errors }) => {
+          if (errors.length > 0) return;
+          const results: Expense[] = (data as string[][])
+            .filter((item) => item[3][0] !== "+")
+            .slice(1)
+            .map((record) => {
+              let [
+                issued_at,
+                currency_date,
+                title,
+                amount,
+                currency,
+                budget_after,
+                description,
+              ] = record;
+              amount = amount.slice(1);
+              budget_after = budget_after.slice(1);
+              return {
+                issued_at,
+                currency_date,
+                title,
+                amount,
+                currency,
+                budget_after,
+                description,
+              };
+            });
+          setRecords(results);
+        },
+      });
+    };
+    reader.readAsText(file, encoding || "UTF-8");
   };
 
   const isPreviewHidden =
@@ -75,7 +86,7 @@ export default function ExpenseForm() {
         });
 
   return (
-    <div className="grid grid-cols-2 gap-8 mt-8">
+    <div className="flex flex-col lg:grid grid-cols-2 gap-8 mt-8">
       <form
         className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col"
         action={(e) =>
@@ -217,7 +228,13 @@ export default function ExpenseForm() {
             type="submit"
             className="h-9 text-white"
           >
-            <CheckIcon className="mt-0.5" size={16} /> Zapisz
+            {isPending ? (
+              <Spinner />
+            ) : (
+              <Fragment>
+                <CheckIcon className="mt-0.5" size={16} /> Zapisz
+              </Fragment>
+            )}
           </Button>
         </div>
       </form>
