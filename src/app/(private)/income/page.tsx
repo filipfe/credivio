@@ -1,4 +1,4 @@
-import IncomeTable from "@/components/income/table";
+import IncomeTable from "@/components/operation/table";
 import Add from "@/components/operation/add";
 import OperationList from "@/components/operation/list";
 import { getOperations } from "@/lib/operation/actions";

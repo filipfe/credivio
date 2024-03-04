@@ -1,40 +1,217 @@
-// import { createClient } from "@/utils/supabase/server";
+"use client";
 
-// const supabase = createClient();
+import React, { useCallback, useState } from "react";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  getKeyValue,
+  SortDescriptor,
+  Spinner,
+  Pagination,
+  Button,
+} from "@nextui-org/react";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
-// function formatDate(date: Date) {
-//   const year = date.getFullYear();
-//   const month = String(date.getMonth() + 1).padStart(2, "0");
-//   const day = String(date.getDate()).padStart(2, "0");
+const columns = [
+  { key: "issued_at", label: "ISSUED AT" },
+  { key: "title", label: "TITLE" },
+  { key: "amount", label: "AMOUNT" },
+  { key: "description", label: "DESCRIPTION" },
+  { key: "currency", label: "CURRENCY" },
+  { key: "currency_date", label: "CURRENCY DATE" },
+  { key: "budget_after", label: "BUDGET AFTER" },
+];
 
-//   return `${day}-${month}-${year}`;
-// }
+type Props = {
+  incomes: Operation[];
+  count: number;
+};
 
-// const today = new Date();
-// const formattedDate = formatDate(today);
-// let i = 1;
-// const generateRandomRow = () => {
-//   const issuedAt = formattedDate;
-//   const title = `Sample Title ${Math.floor(Math.random() * 1000)}`;
-//   const amount = (Math.random() * 1000).toFixed(2);
-//   const description = "Sample Description";
-//   const currency = ["USD", "EUR", "GBP"][Math.floor(Math.random() * 3)];
-//   const currencyDate = formattedDate;
-//   const budgetAfter = (Math.random() * 5000).toFixed(2);
+export default function IncomeTable({ incomes, count }: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [selectedKeys, setSelectedKeys] = React.useState<Set<any> | "all">(
+    new Set([])
+  );
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const pages = Math.ceil(count / rowsPerPage);
+  const [searchQuery, setSearchQuery] = useState({
+    page: 1,
+    sort: "",
+  });
 
-//   return {
-//     issued_at: issuedAt,
-//     title: title,
-//     amount: amount,
-//     description: description,
-//     currency: currency,
-//     currency_date: currencyDate,
-//     budget_after: budgetAfter,
-//   };
-// };
+  const { page, sort } = searchQuery;
 
-// const supabase = createClient();
+  // const onRowsPerPageChange = React.useCallback(
+  //   (e: React.ChangeEvent<HTMLInputElement>) => {
+  //     setRowsPerPage(Number(e.target.value));
+  //     changePage(1);
+  //   },
+  //   []
+  // );
 
-// const rows = new Array(10).fill(null).map(() => generateRandomRow());
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams);
+      Object.keys(searchQuery).forEach((key) => {
+        params.set(key, String(searchQuery[key as keyof typeof searchQuery]));
+      });
+      params.set(name, value);
+      return params.toString();
+    },
+    [searchParams]
+  );
 
-// const { error } = await supabase.from("incomes").insert(rows);
+  const onNextPage = React.useCallback(() => {
+    if (page < pages) {
+      setSearchQuery((prev) => ({ ...prev, page }));
+      router.push(
+        pathname + "?" + createQueryString("page", (page + 1).toString())
+      );
+    }
+  }, [page, pages]);
+
+  const onPreviousPage = React.useCallback(() => {
+    if (page > 1) {
+      setSearchQuery((prev) => ({ ...prev, page }));
+      router.push(
+        pathname + "?" + createQueryString("page", (page - 1).toString())
+      );
+    }
+  }, [page]);
+
+  const topContent = React.useMemo(() => {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-between items-center">
+          <span className="text-default-400 text-small">Total {count}</span>
+          <span className="text-small text-default-400">
+            {selectedKeys === "all"
+              ? "All items selected"
+              : `${selectedKeys.size} of ${count} selected`}
+          </span>
+          {/* <label className="flex items-center text-default-400 text-small">
+            Rows per page:
+            <select
+              className="bg-transparent outline-none text-default-400 text-small"
+              onChange={onRowsPerPageChange}
+            >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+            </select>
+          </label> */}
+        </div>
+      </div>
+    );
+  }, [
+    // filterValue,
+    // statusFilter,
+    // visibleColumns,
+    // onSearchChange,
+    // onRowsPerPageChange,
+    count,
+    selectedKeys,
+    // hasSearchFilter,
+  ]);
+
+  const bottomContent = React.useMemo(() => {
+    return (
+      <div className="py-2 px-2 flex justify-between items-center">
+        <Pagination
+          isCompact
+          showControls
+          showShadow
+          color="primary"
+          className="text-background"
+          page={page}
+          total={pages}
+          onChange={(page: number) => {
+            setSearchQuery((prev) => ({ ...prev, page }));
+            router.push(
+              pathname + "?" + createQueryString("page", page.toString())
+            );
+          }}
+        />
+        <div className="hidden sm:flex w-[30%] justify-end gap-2">
+          <Button
+            isDisabled={pages === 1}
+            size="sm"
+            variant="flat"
+            onPress={onPreviousPage}
+          >
+            Previous
+          </Button>
+          <Button
+            isDisabled={pages === 1}
+            size="sm"
+            variant="flat"
+            onPress={onNextPage}
+          >
+            Next
+          </Button>
+        </div>
+      </div>
+    );
+  }, [incomes.length, page, pages]);
+
+  return (
+    <Table
+      shadow="none"
+      color="primary"
+      selectionMode="multiple"
+      sortDescriptor={{
+        column: sort?.includes("-") ? sort?.split("-")[1] : sort?.toString(),
+        direction: sort?.includes("-") ? "descending" : "ascending",
+      }}
+      onSortChange={(descriptor: SortDescriptor) => {
+        const value =
+          (descriptor.direction === "descending" ? "-" : "") +
+          descriptor.column;
+        setSearchQuery((prev) => ({ ...prev, sort: value }));
+        router.push(pathname + "?" + createQueryString("sort", value));
+      }}
+      topContent={topContent}
+      topContentPlacement="outside"
+      bottomContent={bottomContent}
+      bottomContentPlacement="outside"
+      aria-label="Example static collection table"
+      className="max-w-full w-full flex-1"
+      checkboxesProps={{
+        classNames: {
+          wrapper: "text-background",
+        },
+      }}
+      selectedKeys={selectedKeys}
+      onSelectionChange={setSelectedKeys}
+    >
+      <TableHeader>
+        {columns.map((column) => (
+          <TableColumn key={column.key} allowsSorting>
+            {column.label}
+          </TableColumn>
+        ))}
+      </TableHeader>
+      <TableBody
+        emptyContent={"No rows found"}
+        items={incomes}
+        isLoading={isLoading}
+        loadingContent={<Spinner label="Loading..." />}
+      >
+        {(item: any) => (
+          <TableRow key={item.key}>
+            {(columnKey) => (
+              <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+            )}
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  );
+}
