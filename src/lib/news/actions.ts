@@ -15,7 +15,6 @@ export async function getNews(page?: number): Promise<NewsList> {
     );
     return data;
   } catch (err) {
-    console.log(err);
     return {
       results: [],
       error: "Error, try again later",
