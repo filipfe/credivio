@@ -10,20 +10,21 @@
   },
   "dependencies": {
     "@nextui-org/input": "^2.1.16",
-    "@nextui-org/react": "^2.2.9",
+    "@nextui-org/react": "^2.2.10",
     "@nextui-org/table": "^2.0.28",
-    "@react-stately/data": "^3.11.2",
     "@supabase/ssr": "^0.1.0",
     "@supabase/supabase-js": "^2.39.7",
     "axios": "^1.6.7",
     "framer-motion": "^11.0.8",
     "lucide-react": "^0.343.0",
     "next": "14.1.0",
+    "papaparse": "^5.4.1",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/papaparse": "^5.3.14",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",

@@ -1,10 +1,10 @@
 import {
-  HandCoinsIcon,
+  CoinsIcon,
   LayoutDashboardIcon,
   NewspaperIcon,
   SlidersIcon,
   UserCogIcon,
-  WalletIcon,
+  Wallet2Icon,
 } from "lucide-react";
 
 export const PAGES: Page[] = [
@@ -16,12 +16,12 @@ export const PAGES: Page[] = [
   {
     title: "Przychód",
     href: "/income",
-    icon: HandCoinsIcon,
+    icon: CoinsIcon,
   },
   {
     title: "Wydatki",
     href: "/expenses",
-    icon: WalletIcon,
+    icon: Wallet2Icon,
   },
   {
     title: "Aktualności",
@@ -44,5 +44,16 @@ export const SETTINGS_PAGES: (Page & { description: string })[] = [
     icon: UserCogIcon,
     description:
       "Kliknij tutaj, aby zarządzać ustawieniami wyświetlania, powiadomień i innymi.",
+  },
+];
+
+export const ADD_METHODS: AddMethod[] = [
+  {
+    title: "Import CSV",
+    type: "csv",
+  },
+  {
+    title: "Ręcznie",
+    type: "manual",
   },
 ];

@@ -11,20 +11,36 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#4169E1",
+        primary: "#177981",
         font: "#000000",
         light: "#FAFAFA",
         background: "#FFFFFF",
+        success: "#3CC92F",
+        "success-light": "#EFFCEE",
+        danger: "#C93C2F",
+        "danger-light": "#FCEEEE",
       },
     },
   },
   darkMode: "class",
   plugins: [
     nextui({
+      defaultTheme: "light",
+      layout: {
+        radius: {
+          small: "2px",
+          medium: "6px",
+          large: "12px",
+        },
+      },
       themes: {
         light: {
           colors: {
-            primary: "#4169E1",
+            primary: "#177981",
+            content1: "#FFF",
+          },
+          layout: {
+            hoverOpacity: 95,
           },
         },
       },
