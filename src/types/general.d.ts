@@ -2,6 +2,7 @@ type Page = {
   title: string;
   href: string;
   icon: LucideIcon;
+  links?: Page[];
 };
 
 type SettingsPage = Page & {
@@ -25,6 +26,7 @@ type Operation = {
   currency_date?: string;
   budget_after?: string;
   type?: OperationType;
+  label?: string;
 };
 
 type Option = { name: string; value: number };

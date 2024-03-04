@@ -2,6 +2,7 @@ import {
   CoinsIcon,
   LayoutDashboardIcon,
   NewspaperIcon,
+  PlusIcon,
   SlidersIcon,
   UserCogIcon,
   Wallet2Icon,
@@ -9,7 +10,7 @@ import {
 
 export const PAGES: Page[] = [
   {
-    title: "Dashboard",
+    title: "Panel",
     href: "/",
     icon: LayoutDashboardIcon,
   },
@@ -17,16 +18,31 @@ export const PAGES: Page[] = [
     title: "Przychód",
     href: "/income",
     icon: CoinsIcon,
+    links: [
+      {
+        title: "Dodaj",
+        icon: PlusIcon,
+        href: "/income/add",
+      },
+    ],
   },
   {
     title: "Wydatki",
     href: "/expenses",
     icon: Wallet2Icon,
+    links: [
+      {
+        title: "Dodaj",
+        icon: PlusIcon,
+        href: "/expenses/add",
+      },
+    ],
   },
   {
     title: "Aktualności",
     href: "/news",
     icon: NewspaperIcon,
+    links: [],
   },
 ];
 

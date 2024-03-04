@@ -13,6 +13,8 @@ export async function signInWithEmail(formData: FormData) {
       emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/confirm`,
     },
   });
+
+  return error;
 }
 
 export async function signOut() {
