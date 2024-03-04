@@ -18,7 +18,7 @@ export default async function Page({
         <h1 className="text-3xl">Przychody</h1>
         {incomes.length > 0 && <Add type="income" />}
       </div>
-      <IncomeTable incomes={incomes} count={count || 0} />
+      <IncomeTable operations={incomes} count={count || 0} />
       {incomes.length > 0 ? (
         <OperationList operations={incomes} type="income" />
       ) : (
