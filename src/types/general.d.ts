@@ -25,3 +25,5 @@ type Operation = {
   budget_after?: string;
   type?: OperationType;
 };
+
+type Option = { name: string; value: number };
