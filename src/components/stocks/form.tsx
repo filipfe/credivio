@@ -14,38 +14,46 @@ import {
 import { CheckIcon, EyeIcon, PaperclipIcon } from "lucide-react";
 import { ChangeEvent, Fragment, useState, useTransition } from "react";
 import parseCSV from "@/utils/operation/parse-csv";
-import { addOperations } from "@/lib/operation/actions";
+import { addStocks } from "@/lib/stocks/actions";
 
-const formatter = (data: string[][]) => {
-  return data.map((record) => {
-    let [
-      issued_at,
-      currency_date,
-      title,
-      amount,
-      currency,
-      budget_after,
-      description,
-    ] = record;
-    amount = amount.slice(1);
-    budget_after = budget_after.slice(1);
-    return {
-      issued_at,
-      currency_date,
-      title,
-      amount,
-      currency,
-      budget_after,
-      description,
-    };
-  });
+const formatter = (data: string[][]): Omit<StockTransaction, "id">[] => {
+  return data
+    .map((record) => {
+      let [
+        issued_at,
+        symbol,
+        ,
+        ,
+        transaction_type,
+        quantity,
+        price,
+        ,
+        value,
+        ,
+        commission,
+      ] = record;
+      price = price.replace(",", ".");
+      commission = commission.replace(",", ".");
+      value = value.replace(",", ".");
+      const result = {
+        issued_at,
+        symbol,
+        transaction_type,
+        quantity,
+        value,
+        price,
+        commission,
+      };
+      return result;
+    })
+    .filter((item) => item.symbol);
 };
 
-export default function AddForm({ type }: { type: OperationType }) {
+export default function AddForm() {
   const [isPending, startTransition] = useTransition();
   const [method, setMethod] = useState<AddMethodKey>("manual");
   const [fileName, setFileName] = useState("");
-  const [records, setRecords] = useState<Operation[]>([]);
+  const [records, setRecords] = useState<Omit<StockTransaction, "id">[]>([]);
   const [singleRecord, setSingleRecord] = useState<Operation>({
     title: "",
     issued_at: new Date().toISOString().substring(0, 10),
@@ -58,9 +66,7 @@ export default function AddForm({ type }: { type: OperationType }) {
     const file = e.target.files?.item(0);
     if (!file) return;
     setFileName(file.name);
-    await parseCSV(file, (results) => setRecords(formatter(results)), {
-      type,
-    });
+    await parseCSV(file, (results) => setRecords(formatter(results)));
   };
 
   const isPreviewHidden =
@@ -77,7 +83,7 @@ export default function AddForm({ type }: { type: OperationType }) {
         className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col"
         action={(e) =>
           startTransition(async () => {
-            const { error } = await addOperations(e);
+            const { error } = await addStocks(e);
           })
         }
       >
@@ -201,35 +207,10 @@ export default function AddForm({ type }: { type: OperationType }) {
                 }))
               }
             />
-            {/* <div className="flex items-center relative">
-              <Input
-                classNames={{ inputWrapper: "!bg-light" }}
-                name="label"
-                label="Etykieta"
-                placeholder="Wakacje"
-                value={singleRecord.label}
-                onChange={(e) =>
-                  setSingleRecord((prev) => ({
-                    ...prev,
-                    label: e.target.value,
-                  }))
-                }
-              />
-              <Tooltip
-                className="text-[12px]"
-                content="Służy do grupowania wydatków"
-              >
-                <HelpCircleIcon
-                  size={16}
-                  className="absolute right-3 text-primary"
-                />
-              </Tooltip>
-            </div> */}
           </div>
         )}
 
         <input type="hidden" name="method" value={method} />
-        <input type="hidden" name="type" value={type} />
         <input
           type="hidden"
           name="data"

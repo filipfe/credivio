@@ -1,7 +1,11 @@
 import {
+  AlignHorizontalDistributeCenterIcon,
+  ArrowRightLeftIcon,
+  BarChart4Icon,
   CoinsIcon,
   LayoutDashboardIcon,
   NewspaperIcon,
+  PieChartIcon,
   PlusIcon,
   SlidersIcon,
   UserCogIcon,
@@ -16,7 +20,7 @@ export const PAGES: Page[] = [
   },
   {
     title: "Przychód",
-    href: "/income",
+    href: "/incomes",
     icon: CoinsIcon,
     links: [
       {
@@ -35,6 +39,28 @@ export const PAGES: Page[] = [
         title: "Dodaj",
         icon: PlusIcon,
         href: "/expenses/add",
+      },
+    ],
+  },
+  {
+    title: "Akcje",
+    href: "/stocks",
+    icon: AlignHorizontalDistributeCenterIcon,
+    links: [
+      {
+        title: "Notowania",
+        icon: BarChart4Icon,
+        href: "/stocks",
+      },
+      {
+        title: "Transakcje",
+        icon: ArrowRightLeftIcon,
+        href: "/stocks/transactions",
+      },
+      {
+        title: "Dywidendy",
+        icon: PieChartIcon,
+        href: "/stocks/dividends",
       },
     ],
   },

@@ -30,7 +30,10 @@ export default function Header({
       </header>
       <header className="flex items-center gap-4 justify-between px-10 h-20 sticky top-0 bg-white z-50">
         <nav className="flex items-center gap-1.5">
-          {links && links.map((item) => <NavLink {...item} key={item.href} />)}
+          {links &&
+            links.map((item) => (
+              <NavLink {...item} matchPath key={item.href} />
+            ))}
         </nav>
         <form action={signOut}>
           <button className="py-3 px-6 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-light bg-white">

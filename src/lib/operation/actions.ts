@@ -95,7 +95,7 @@ export async function addOperations(
     };
   }
 
-  const path = type === "expense" ? "/expenses" : "/income";
+  const path = type === "expense" ? "/expenses" : "/incomes";
 
   revalidatePath(path);
   revalidatePath("/");

@@ -55,7 +55,7 @@ export default async function Home() {
       </div>
       <h2 className="text-3xl col-span-6">Skróty</h2>
       <Link
-        href="/income/add"
+        href="/incomes/add"
         className="bg-white rounded-lg py-8 px-10 flex flex-col items-center gap-4"
       >
         <CoinsIcon size={48} strokeWidth={1} />

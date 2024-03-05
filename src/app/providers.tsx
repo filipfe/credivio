@@ -9,7 +9,9 @@ import { useState } from "react";
 export function Providers({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isMenuHidden, setIsMenuHidden] = useState(false);
-  const sublinks = PAGES.find(({ href }) => href === pathname)?.links;
+  const page = PAGES.find(({ href }) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href)
+  );
   return (
     <div
       className={`min-h-screen grid grid-rows-[80px_1fr] ${
@@ -17,7 +19,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       } transition-[grid-template-columns]`}
     >
       <Header
-        links={sublinks}
+        links={page?.links}
         isMenuHidden={isMenuHidden}
         setIsMenuHidden={setIsMenuHidden}
       />
