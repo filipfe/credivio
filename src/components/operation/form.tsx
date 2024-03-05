@@ -21,6 +21,7 @@ import {
 import { ChangeEvent, Fragment, useState, useTransition } from "react";
 import parseCSV from "@/utils/operation/parse-csv";
 import { addOperations } from "@/lib/operation/actions";
+import OperationTable from "./table";
 
 export default function AddForm({ type }: { type: OperationType }) {
   const [isPending, startTransition] = useTransition();
@@ -241,7 +242,13 @@ export default function AddForm({ type }: { type: OperationType }) {
       <div className="bg-white rounded-lg px-10 py-8 flex flex-col gap-4">
         <h2 className="text-lg">Podgląd</h2>
         {isPreviewHidden ? (
-          <div></div>
+          <div>
+            <OperationTable
+              operations={records}
+              count={records.length}
+              viewOnly
+            />
+          </div>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-center gap-2 w-full self-center max-w-[16rem]">
             <EyeIcon size={48} strokeWidth={1} />

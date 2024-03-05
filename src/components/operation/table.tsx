@@ -8,7 +8,6 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  getKeyValue,
   SortDescriptor,
   Spinner,
   Pagination,
@@ -18,8 +17,8 @@ import { usePathname, useSearchParams, useRouter } from "next/navigation";
 const columns = [
   { key: "issued_at", label: "DATA" },
   { key: "title", label: "TYTUŁ" },
-  { key: "amount", label: "KWOTA" },
   { key: "description", label: "OPIS" },
+  { key: "amount", label: "KWOTA" },
   { key: "currency", label: "WALUTA" },
   // { key: "budget_after", label: "BUDGET AFTER" },
 ];
@@ -27,12 +26,14 @@ const columns = [
 type Props = {
   operations: Operation[];
   count: number;
+  viewOnly?: boolean;
 };
 
-export default function IncomeTable({ operations, count }: Props) {
+export default function OperationTable({ operations, count, viewOnly }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [items, setItems] = useState<Operation[]>(operations);
   const [selectedKeys, setSelectedKeys] = React.useState<Set<any> | "all">(
     new Set([])
   );
@@ -43,21 +44,36 @@ export default function IncomeTable({ operations, count }: Props) {
   });
   const { page, sort } = searchQuery;
 
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", page.toString());
-    sort && params.set("sort", sort);
-    router.push(`${pathname}?${params.toString()}`);
-  }, [searchQuery]);
+  if (viewOnly) {
+    React.useMemo(() => {
+      const start = (page - 1) * 10;
+      const end = start + 10;
+
+      return setItems(operations.slice(start, end));
+    }, [page, operations]);
+  } else {
+    useEffect(() => {
+      const params = new URLSearchParams(searchParams);
+      params.set("page", page.toString());
+      sort && params.set("sort", sort);
+      router.push(`${pathname}?${params.toString()}`);
+    }, [searchQuery]);
+  }
 
   const bottomContent = React.useMemo(() => {
     return (
-      <div className="py-2 px-2 flex justify-between items-start">
-        <span className="text-small text-default-400">
-          {selectedKeys === "all"
-            ? "All items selected"
-            : `${selectedKeys.size} of ${count} selected`}
-        </span>
+      <div
+        className={`py-2 px-2 flex ${
+          viewOnly ? "justify-end" : "justify-between"
+        } items-start`}
+      >
+        {!viewOnly && (
+          <span className="text-small text-default-400">
+            {selectedKeys === "all"
+              ? "All items selected"
+              : `${selectedKeys.size} of ${count} selected`}
+          </span>
+        )}
         <Pagination
           isCompact
           showControls
@@ -72,13 +88,49 @@ export default function IncomeTable({ operations, count }: Props) {
         />
       </div>
     );
-  }, [operations.length, page, pages, selectedKeys]);
+  }, [items.length, page, pages, selectedKeys]);
+
+  const renderCell = React.useCallback((item: any, columnKey: any) => {
+    const cellValue = item[columnKey];
+
+    if (viewOnly) {
+      switch (columnKey) {
+        case "title":
+          return (
+            <span className="line-clamp-1 break-all xl:max-w-[5vw]">
+              {cellValue}
+            </span>
+          );
+        case "description":
+          return (
+            <span className="line-clamp-1 break-all xl:max-w-[10vw]">
+              {cellValue}
+            </span>
+          );
+        case "issued_at":
+          return (
+            <span className="line-clamp-1 break-all w-[10ch]">{cellValue}</span>
+          );
+        default:
+          return <span className="line-clamp-1 break-all">{cellValue}</span>;
+      }
+    } else {
+      switch (columnKey) {
+        case "issued_at":
+          return (
+            <span className="line-clamp-1 break-all w-[10ch]">{cellValue}</span>
+          );
+        default:
+          return <span className="line-clamp-1 break-all">{cellValue}</span>;
+      }
+    }
+  }, []);
 
   return (
     <Table
       shadow="none"
       color="primary"
-      selectionMode="multiple"
+      selectionMode={viewOnly ? "single" : "multiple"}
       sortDescriptor={{
         column: sort?.includes("-") ? sort?.split("-")[1] : sort?.toString(),
         direction: sort?.includes("-") ? "descending" : "ascending",
@@ -91,34 +143,40 @@ export default function IncomeTable({ operations, count }: Props) {
             descriptor.column,
         })
       }
-      bottomContent={bottomContent}
+      bottomContent={count > 0 && bottomContent}
       bottomContentPlacement="outside"
       aria-label="Example static collection table"
-      className="max-w-full w-full flex-1"
+      className={`max-w-full w-full flex-1`}
       checkboxesProps={{
         classNames: {
           wrapper: "text-background",
         },
       }}
+      classNames={{
+        wrapper: "p-0",
+      }}
       selectedKeys={selectedKeys}
-      onSelectionChange={setSelectedKeys}
+      onSelectionChange={viewOnly ? undefined : setSelectedKeys}
     >
       <TableHeader>
         {columns.map((column) => (
-          <TableColumn key={column.key} allowsSorting>
+          <TableColumn
+            key={column.key}
+            allowsSorting={count > 0 && !viewOnly ? true : undefined}
+          >
             {column.label}
           </TableColumn>
         ))}
       </TableHeader>
       <TableBody
         emptyContent={"No rows found"}
-        items={operations}
+        items={items}
         loadingContent={<Spinner label="Loading..." />}
       >
         {(item: any) => (
-          <TableRow key={item.key}>
+          <TableRow key={item.id || 0}>
             {(columnKey) => (
-              <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+              <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}
           </TableRow>
         )}
