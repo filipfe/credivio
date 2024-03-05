@@ -21,7 +21,7 @@ export const PAGES: Page[] = [
   {
     title: "Przychód",
     href: "/incomes",
-    icon: CoinsIcon,
+    icon: Wallet2Icon,
     links: [
       {
         title: "Dodaj",
@@ -33,7 +33,7 @@ export const PAGES: Page[] = [
   {
     title: "Wydatki",
     href: "/expenses",
-    icon: Wallet2Icon,
+    icon: CoinsIcon,
     links: [
       {
         title: "Dodaj",

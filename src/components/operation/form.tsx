@@ -26,7 +26,7 @@ import OperationTable from "./table";
 const defaultRecord = {
   title: "",
   issued_at: new Date().toISOString().substring(0, 10),
-  amount: "0",
+  amount: "",
   currency: "PLN",
   description: "",
 };
@@ -136,11 +136,12 @@ export default function AddForm({ type }: { type: OperationType }) {
               label="Kwota"
               placeholder="3600"
               isRequired
-              value={parseFloat(singleRecord.amount).toString()}
+              value={singleRecord.amount}
+              // value={parseFloat(singleRecord.amount).toString()}
               onChange={(e) => {
                 let { value } = e.target;
                 if (value === "")
-                  return setSingleRecord((prev) => ({ ...prev, amount: "0" }));
+                  return setSingleRecord((prev) => ({ ...prev, amount: "" }));
                 value = value.replace(/\D/g, "");
                 setSingleRecord((prev) => ({
                   ...prev,

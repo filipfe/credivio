@@ -15,13 +15,27 @@ export async function getOperations(
     if (searchParams?.sort) {
       const { sort } = searchParams;
       const page = Number(searchParams.page);
-      const { data, error } = await supabase
+      let query = supabase
         .from(`${type}s`)
         .select("*")
         .order(sort.includes("-") ? sort.split("-")[1] : sort, {
           ascending: sort.includes("-") ? false : true,
-        })
-        .range(page ? page * 10 - 10 : 0, page ? page * 10 - 1 : 9);
+        });
+
+      if (!sort.includes("issued_at")) {
+        query = query.order("issued_at", { ascending: false });
+      }
+
+      if (sort.includes("-issued_at")) {
+        query = query.order("created_at", { ascending: false });
+      } else {
+        query = query.order("created_at");
+      }
+
+      const { data, error } = await query.range(
+        page ? page * 10 - 10 : 0,
+        page ? page * 10 - 1 : 9
+      );
 
       const { count } = await supabase
         .from(`${type}s`)
@@ -37,6 +51,7 @@ export async function getOperations(
         .from(`${type}s`)
         .select("*")
         .order("issued_at", { ascending: false })
+        .order("created_at", { ascending: false })
         .range(page ? page * 10 - 10 : 0, page ? page * 10 - 1 : 9);
 
       const { count } = await supabase
