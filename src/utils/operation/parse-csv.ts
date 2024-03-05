@@ -2,13 +2,13 @@ import chardet from "chardet";
 import Papa from "papaparse";
 
 type Options = {
-  type?: "expense" | "income";
+  type?: "expense" | "income" | "stock";
   skipFirstLine?: boolean;
 };
 
 export default async function parseCSV(
   file: File,
-  callback: (results: Operation[]) => void,
+  callback: (results: string[][]) => void,
   options?: Options
 ) {
   const { type, skipFirstLine = true } = options || {};
@@ -31,30 +31,7 @@ export default async function parseCSV(
             (item) => item[3][0] !== (type === "expense" ? "+" : "-")
           );
         }
-        callback(
-          results.map((record) => {
-            let [
-              issued_at,
-              currency_date,
-              title,
-              amount,
-              currency,
-              budget_after,
-              description,
-            ] = record;
-            amount = amount.slice(1);
-            budget_after = budget_after.slice(1);
-            return {
-              issued_at,
-              currency_date,
-              title,
-              amount,
-              currency,
-              budget_after,
-              description,
-            };
-          })
-        );
+        callback(results);
       },
     });
   };

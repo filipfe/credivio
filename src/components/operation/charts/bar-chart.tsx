@@ -8,7 +8,7 @@ import {
   YAxis,
   XAxis,
   Cell,
-  Tooltip,
+  Legend,
 } from "recharts";
 
 type Props = {
