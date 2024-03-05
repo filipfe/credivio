@@ -78,22 +78,16 @@ export default function AddForm({ type }: { type: OperationType }) {
 
   const addRecord = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setRecords((prev) => [...prev, singleRecord]);
-
     setSingleRecord(defaultRecord);
   };
 
   return (
-    <form
-      action={(e) =>
-        startTransition(async () => {
-          await addOperations(e);
-        })
-      }
-      className="flex flex-col xl:grid grid-cols-2 gap-8 mt-8"
-    >
-      <div className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col">
+    <div className="flex flex-col xl:grid grid-cols-2 gap-8 mt-8">
+      <form
+        onSubmit={addRecord}
+        className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col"
+      >
         <h2 className="text-lg">Dane</h2>
         <RadioGroup
           label="Wybierz sposób"
@@ -217,48 +211,46 @@ export default function AddForm({ type }: { type: OperationType }) {
             />
           </div>
         )}
-
-        <input type="hidden" name="method" value={method} />
-        <input type="hidden" name="type" value={type} />
-        <input
-          type="hidden"
-          name="data"
-          value={
-            method === "csv"
-              ? JSON.stringify(records)
-              : JSON.stringify(singleRecord)
-          }
-        />
         <div className="flex-1 flex justify-end items-end gap-4">
           <Button
             color="secondary"
-            type="button"
+            type="submit"
             className="h-9 text-white"
             isIconOnly
-            onClick={addRecord}
           >
             <PlusIcon className="mt-0.5" size={16} />
           </Button>
         </div>
-      </div>
+      </form>
       <div className="bg-white rounded-lg px-10 py-8 flex flex-col gap-4">
         <h2 className="text-lg">Podgląd</h2>
         <OperationTable operations={records} count={records.length} viewOnly />
-        <Button
-          isDisabled={isPending}
-          color="primary"
-          type="submit"
-          className="h-9 w-24 text-white self-end"
+        <form
+          className="flex flex-col"
+          action={(e) =>
+            startTransition(async () => {
+              const { error } = await addOperations(e);
+            })
+          }
         >
-          {isPending ? (
-            <Spinner color="white" size="sm" />
-          ) : (
-            <Fragment>
-              <CheckIcon className="mt-0.5" size={16} /> Zapisz
-            </Fragment>
-          )}
-        </Button>
+          <Button
+            isDisabled={isPending || records.length === 0}
+            color="primary"
+            type="submit"
+            className="h-9 w-24 text-white self-end"
+          >
+            {isPending ? (
+              <Spinner color="white" size="sm" />
+            ) : (
+              <Fragment>
+                <CheckIcon className="mt-0.5" size={16} /> Zapisz
+              </Fragment>
+            )}
+          </Button>
+          <input type="hidden" name="type" value={type} />
+          <input type="hidden" name="data" value={JSON.stringify(records)} />
+        </form>
       </div>
-    </form>
+    </div>
   );
 }

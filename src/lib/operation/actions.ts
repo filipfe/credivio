@@ -57,29 +57,12 @@ export async function getOperations(
 
 export async function addOperations(
   formData: FormData
-): Promise<SupabaseResponse<Expense>> {
+): Promise<SupabaseResponse<Operation>> {
   const type = formData.get("type")?.toString() as OperationType;
-  const method = formData.get("method")?.toString() as AddMethodKey;
   const data = formData.get("data")!.toString();
 
-  let results: Expense[] = [];
-
   try {
-    switch (method) {
-      case "csv":
-        results = JSON.parse(data);
-        break;
-      case "manual":
-        console.log(data);
-        results = [JSON.parse(data)];
-        break;
-      default:
-        return {
-          error: "Nieprawidłowa metoda!",
-          results,
-        };
-    }
-
+    const results: Operation[] = JSON.parse(data);
     const { error } = await supabase.from(`${type}s`).insert(results);
     console.log(error);
     if (error) {
@@ -91,7 +74,7 @@ export async function addOperations(
   } catch (err) {
     return {
       error: "Parse error",
-      results,
+      results: [],
     };
   }
 
