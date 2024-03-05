@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
+import axios from "axios";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -83,4 +84,20 @@ export async function addOperations(
   revalidatePath(path);
   revalidatePath("/");
   redirect(path);
+}
+
+export async function getCurrencies(): Promise<SupabaseResponse<Currency>> {
+  try {
+    const { data: results } = await axios.get(
+      "https://bossa.pl/fl_api/API/FX/v1/Q/Currencies"
+    );
+    return {
+      results,
+    };
+  } catch (err) {
+    return {
+      results: [],
+      error: "Wystąpił błąd, spróbuj ponownie później!",
+    };
+  }
 }
