@@ -4,9 +4,6 @@ import { getDividendInfo } from "@/lib/stocks/actions";
 export default async function Page() {
   const { results: dividends } = await getDividendInfo();
   const date = new Date();
-  dividends.forEach((div) =>
-    console.log(new Date(div.date), div.company, div.date)
-  );
   const { future, past } = dividends.reduce(
     (prev, curr) => {
       const past = { ...prev, past: [...prev.past, curr] };
