@@ -58,14 +58,14 @@ export default async function Home() {
         href="/incomes/add"
         className="bg-white rounded-lg py-8 px-10 flex flex-col items-center gap-4"
       >
-        <CoinsIcon size={48} strokeWidth={1} />
+        <Wallet2Icon size={48} strokeWidth={1} />
         <p className="font-medium text-center">Dodaj przychód</p>
       </Link>
       <Link
         href="/expenses/add"
         className="bg-white rounded-lg py-8 px-10 flex flex-col items-center gap-4"
       >
-        <Wallet2Icon size={48} strokeWidth={1} />
+        <CoinsIcon size={48} strokeWidth={1} />
         <p className="font-medium text-center">Dodaj wydatek</p>
       </Link>
       <Link
