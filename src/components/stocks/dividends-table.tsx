@@ -43,12 +43,7 @@ export default function DividendsTable({
     <Table
       shadow="none"
       color="primary"
-      className="max-w-full w-full flex-1"
-      checkboxesProps={{
-        classNames: {
-          wrapper: "text-background",
-        },
-      }}
+      className="max-w-full w-full flex-1 rounded-t-lg"
       classNames={{
         wrapper: "p-0",
       }}
@@ -63,7 +58,10 @@ export default function DividendsTable({
         loadingContent={<Spinner label="Loading..." />}
       >
         {(item) => (
-          <TableRow key={item.company + item.date}>
+          <TableRow
+            key={item.company + item.date}
+            className="hover:bg-[#f7f7f8]"
+          >
             {(columnKey) => (
               <TableCell>
                 {renderCell(item, columnKey as keyof Dividend)}
