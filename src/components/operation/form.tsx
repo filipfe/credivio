@@ -17,52 +17,59 @@ import {
   EyeIcon,
   HelpCircleIcon,
   PaperclipIcon,
+  PlusIcon,
 } from "lucide-react";
 import { ChangeEvent, Fragment, useState, useTransition } from "react";
 import parseCSV from "@/utils/operation/parse-csv";
 import { addOperations } from "@/lib/operation/actions";
 import OperationTable from "./table";
 
+const defaultRecord = {
+  title: "",
+  issued_at: new Date().toISOString().substring(0, 10),
+  amount: "0",
+  currency: "PLN",
+  description: "",
+};
+
 export default function AddForm({ type }: { type: OperationType }) {
   const [isPending, startTransition] = useTransition();
   const [method, setMethod] = useState<AddMethodKey>("manual");
   const [fileName, setFileName] = useState("");
   const [records, setRecords] = useState<Operation[]>([]);
-  const [singleRecord, setSingleRecord] = useState<Operation>({
-    title: "",
-    issued_at: new Date().toISOString().substring(0, 10),
-    amount: "0",
-    currency: "PLN",
-    description: "",
-  });
+  const [singleRecord, setSingleRecord] = useState<Operation>(defaultRecord);
 
   const onFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.item(0);
     if (!file) return;
     setFileName(file.name);
-    await parseCSV(file, (results) => setRecords(results), {
-      type,
-    });
+    await parseCSV(
+      file,
+      (results) => setRecords((prev) => [...prev, ...results]),
+      {
+        type,
+      }
+    );
   };
 
-  const isPreviewHidden =
-    method === "csv"
-      ? !!fileName
-      : Object.keys(singleRecord).some((key) => {
-          const value = singleRecord[key as keyof Expense];
-          return !!value && value !== "0";
-        });
+  const addRecord = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    setRecords((prev) => [...prev, singleRecord]);
+
+    setSingleRecord(defaultRecord);
+  };
 
   return (
-    <div className="flex flex-col xl:grid grid-cols-2 gap-8 mt-8">
-      <form
-        className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col"
-        action={(e) =>
-          startTransition(async () => {
-            const { error } = await addOperations(e);
-          })
-        }
-      >
+    <form
+      action={(e) =>
+        startTransition(async () => {
+          await addOperations(e);
+        })
+      }
+      className="flex flex-col xl:grid grid-cols-2 gap-8 mt-8"
+    >
+      <div className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col">
         <h2 className="text-lg">Dane</h2>
         <RadioGroup
           label="Wybierz sposób"
@@ -124,6 +131,7 @@ export default function AddForm({ type }: { type: OperationType }) {
               }}
             />
             <Autocomplete
+              name="currency"
               label="Waluta"
               placeholder="PLN"
               isClearable={false}
@@ -172,7 +180,7 @@ export default function AddForm({ type }: { type: OperationType }) {
             <Textarea
               className="col-span-2"
               classNames={{ inputWrapper: "!bg-light" }}
-              name="number"
+              name="description"
               label="Opis"
               placeholder="Wynagrodzenie za luty"
               value={singleRecord.description}
@@ -183,30 +191,6 @@ export default function AddForm({ type }: { type: OperationType }) {
                 }))
               }
             />
-            {/* <div className="flex items-center relative">
-              <Input
-                classNames={{ inputWrapper: "!bg-light" }}
-                name="label"
-                label="Etykieta"
-                placeholder="Wakacje"
-                value={singleRecord.label}
-                onChange={(e) =>
-                  setSingleRecord((prev) => ({
-                    ...prev,
-                    label: e.target.value,
-                  }))
-                }
-              />
-              <Tooltip
-                className="text-[12px]"
-                content="Służy do grupowania wydatków"
-              >
-                <HelpCircleIcon
-                  size={16}
-                  className="absolute right-3 text-primary"
-                />
-              </Tooltip>
-            </div> */}
           </div>
         )}
 
@@ -222,42 +206,35 @@ export default function AddForm({ type }: { type: OperationType }) {
           }
         />
         <div className="flex-1 flex justify-end items-end gap-4">
-          <div></div>
           <Button
-            isDisabled={isPending}
-            color="primary"
-            type="submit"
-            className="h-9 w-24 text-white"
+            color="secondary"
+            type="button"
+            className="h-9 text-white"
+            isIconOnly
+            onClick={addRecord}
           >
-            {isPending ? (
-              <Spinner color="white" size="sm" />
-            ) : (
-              <Fragment>
-                <CheckIcon className="mt-0.5" size={16} /> Zapisz
-              </Fragment>
-            )}
+            <PlusIcon className="mt-0.5" size={16} />
           </Button>
         </div>
-      </form>
+      </div>
       <div className="bg-white rounded-lg px-10 py-8 flex flex-col gap-4">
         <h2 className="text-lg">Podgląd</h2>
-        {isPreviewHidden ? (
-          <div>
-            <OperationTable
-              operations={records}
-              count={records.length}
-              viewOnly
-            />
-          </div>
-        ) : (
-          <div className="flex-1 flex flex-col items-center justify-center text-center gap-2 w-full self-center max-w-[16rem]">
-            <EyeIcon size={48} strokeWidth={1} />
-            <p className="text-sm">
-              Wypełnij formularz, aby zobaczyć podgląd swoich wydatków
-            </p>
-          </div>
-        )}
+        <OperationTable operations={records} count={records.length} viewOnly />
+        <Button
+          isDisabled={isPending}
+          color="primary"
+          type="submit"
+          className="h-9 w-24 text-white self-end"
+        >
+          {isPending ? (
+            <Spinner color="white" size="sm" />
+          ) : (
+            <Fragment>
+              <CheckIcon className="mt-0.5" size={16} /> Zapisz
+            </Fragment>
+          )}
+        </Button>
       </div>
-    </div>
+    </form>
   );
 }

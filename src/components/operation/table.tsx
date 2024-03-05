@@ -130,7 +130,7 @@ export default function OperationTable({ operations, count, viewOnly }: Props) {
     <Table
       shadow="none"
       color="primary"
-      selectionMode={viewOnly ? "single" : "multiple"}
+      selectionMode={"multiple"}
       sortDescriptor={{
         column: sort?.includes("-") ? sort?.split("-")[1] : sort?.toString(),
         direction: sort?.includes("-") ? "descending" : "ascending",
@@ -156,7 +156,7 @@ export default function OperationTable({ operations, count, viewOnly }: Props) {
         wrapper: "p-0",
       }}
       selectedKeys={selectedKeys}
-      onSelectionChange={viewOnly ? undefined : setSelectedKeys}
+      onSelectionChange={setSelectedKeys}
     >
       <TableHeader>
         {columns.map((column) => (
@@ -170,11 +170,11 @@ export default function OperationTable({ operations, count, viewOnly }: Props) {
       </TableHeader>
       <TableBody
         emptyContent={"No rows found"}
-        items={items}
+        items={viewOnly ? items : operations}
         loadingContent={<Spinner label="Loading..." />}
       >
         {(item: any) => (
-          <TableRow key={item.id || 0}>
+          <TableRow key={item.id || item.title + item.amount + item.issued_at}>
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}
