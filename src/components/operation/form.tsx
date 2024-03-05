@@ -141,7 +141,7 @@ export default function AddForm({ type }: { type: OperationType }) {
               onChange={(e) => {
                 let { value } = e.target;
                 if (value === "")
-                  return setSingleRecord((prev) => ({ ...prev, amount: "0" }));
+                  return setSingleRecord((prev) => ({ ...prev, amount: "" }));
                 value = value.replace(/\D/g, "");
                 setSingleRecord((prev) => ({
                   ...prev,
