@@ -101,18 +101,22 @@ export async function addOperations(
   redirect(path);
 }
 
-export async function getCurrencies(): Promise<SupabaseResponse<Currency>> {
-  try {
-    const { data: results } = await axios.get(
-      "https://bossa.pl/fl_api/API/FX/v1/Q/Currencies"
-    );
-    return {
-      results,
-    };
-  } catch (err) {
+export async function getSpecificOperation(
+  id: string,
+  type: "income" | "expense"
+): Promise<SupabaseResponse<Operation>> {
+  const { data, error } = await supabase
+    .from(`${type}s`)
+    .select("*")
+    .eq("id", id)
+    .single();
+  if (error) {
     return {
       results: [],
-      error: "Wystąpił błąd, spróbuj ponownie później!",
+      error: error.message,
     };
   }
+  return {
+    results: [data],
+  };
 }

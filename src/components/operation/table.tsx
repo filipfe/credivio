@@ -15,6 +15,7 @@ import {
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import Add from "./cta/add";
 import Delete from "./cta/delete";
+import Edit from "./cta/edit";
 
 const columns = [
   { key: "issued_at", label: "DATA" },
@@ -29,7 +30,9 @@ type Props = {
   operations: Operation[];
   count: number;
   viewOnly?: boolean;
-  type: "expense" | "income";
+  type?: "expense" | "income";
+  title?: string;
+  children?: React.ReactNode;
 };
 
 export default function OperationTable({
@@ -37,6 +40,8 @@ export default function OperationTable({
   count,
   viewOnly,
   type,
+  title,
+  children,
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
@@ -126,14 +131,21 @@ export default function OperationTable({
   }, []);
 
   return (
-    <div className="bg-white rounded-lg py-8 px-10 flex flex-col gap-4  mb-8">
+    <div className="bg-white rounded-lg py-8 px-10 flex flex-col gap-4">
       <div className="flex items-center justify-between gap-4 mb-2">
-        <h1 className="text-lg">Wydatki</h1>
+        <h1 className="text-lg">{title}</h1>
         <div className="flex items-center gap-1.5">
           {(selectedKeys === "all" || selectedKeys.size > 0) && (
-            <Delete type={type} items={Array.from(selectedKeys)} />
+            <Delete items={Array.from(selectedKeys)} />
           )}
-          {operations.length > 0 && <Add type={type} />}
+          {type && (selectedKeys === "all" || selectedKeys.size > 0) && (
+            <Edit
+              type={type}
+              id={Array.from(selectedKeys)[0]}
+              isDisabled={selectedKeys === "all" || selectedKeys.size > 1}
+            />
+          )}
+          {type && operations.length > 0 && <Add type={type} />}
         </div>
       </div>
       <Table
@@ -193,6 +205,7 @@ export default function OperationTable({
           )}
         </TableBody>
       </Table>
+      {children}
     </div>
   );
 }

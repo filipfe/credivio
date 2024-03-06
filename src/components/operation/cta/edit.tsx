@@ -1,12 +1,24 @@
 import { Button } from "@nextui-org/react";
-import { PlusIcon } from "lucide-react";
+import { SquarePenIcon } from "lucide-react";
 import Link from "next/link";
 
-export default function Edit({ type }: { type: OperationType | "stock" }) {
-  return (
-    <Link href={`${process.env.NEXT_PUBLIC_SITE_URL}/${type}s/add`}>
+export default function Edit({
+  type,
+  id,
+  isDisabled,
+}: {
+  type: OperationType | "stock";
+  id: string;
+  isDisabled?: boolean;
+}) {
+  return isDisabled ? (
+    <Button color="primary" isDisabled className="text-sm" variant="light">
+      <SquarePenIcon size={14} /> Edytuj
+    </Button>
+  ) : (
+    <Link href={`${process.env.NEXT_PUBLIC_SITE_URL}/${type}s/add?id=${id}`}>
       <Button color="primary" className="text-sm" variant="light" as="div">
-        <PlusIcon size={16} /> Dodaj nowy
+        <SquarePenIcon size={14} /> Edytuj
       </Button>
     </Link>
   );

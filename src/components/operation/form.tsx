@@ -23,7 +23,7 @@ import parseCSV from "@/utils/operation/parse-csv";
 import { addOperations } from "@/lib/operation/actions";
 import OperationTable from "./table";
 
-const defaultRecord = {
+const defaultRecord: Operation = {
   title: "",
   issued_at: new Date().toISOString().substring(0, 10),
   amount: "",
@@ -56,12 +56,22 @@ const formatter = (data: string[][]) => {
   });
 };
 
-export default function AddForm({ type }: { type: OperationType }) {
+export default function AddForm({
+  type,
+  defaultValue,
+}: {
+  type: OperationType;
+  defaultValue: Operation | null;
+}) {
   const [isPending, startTransition] = useTransition();
   const [method, setMethod] = useState<AddMethodKey>("manual");
   const [fileName, setFileName] = useState("");
-  const [records, setRecords] = useState<Operation[]>([]);
-  const [singleRecord, setSingleRecord] = useState<Operation>(defaultRecord);
+  const [records, setRecords] = useState<Operation[]>(
+    defaultValue ? [defaultValue] : []
+  );
+  const [singleRecord, setSingleRecord] = useState<Operation>(
+    defaultValue || defaultRecord
+  );
 
   const onFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.item(0);
@@ -223,9 +233,12 @@ export default function AddForm({ type }: { type: OperationType }) {
           </Button>
         </div>
       </form>
-      <div className="bg-white rounded-lg px-10 py-8 flex flex-col gap-4">
-        <h2 className="text-lg">Podgląd</h2>
-        <OperationTable operations={records} count={records.length} viewOnly />
+      <OperationTable
+        title="Podgląd"
+        operations={records}
+        count={records.length}
+        viewOnly
+      >
         <form
           className="flex flex-col"
           action={(e) =>
@@ -251,7 +264,7 @@ export default function AddForm({ type }: { type: OperationType }) {
           <input type="hidden" name="type" value={type} />
           <input type="hidden" name="data" value={JSON.stringify(records)} />
         </form>
-      </div>
+      </OperationTable>
     </div>
   );
 }

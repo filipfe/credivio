@@ -14,11 +14,12 @@ export default async function Page({
   );
   return (
     <div className="px-12 pt-8 pb-24 flex flex-col h-full">
-      <div className="flex items-center justify-between gap-4 mb-8">
-        <h1 className="text-3xl">Przychody</h1>
-        {incomes.length > 0 && <Add type="income" />}
-      </div>
-      <IncomeTable operations={incomes} count={count || 0} />
+      <IncomeTable
+        title="Przychody"
+        operations={incomes}
+        count={count || 0}
+        type="income"
+      />
       {incomes.length > 0 ? (
         <OperationList operations={incomes} type="income" />
       ) : (
