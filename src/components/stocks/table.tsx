@@ -12,42 +12,56 @@ import {
 import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 import { useCallback } from "react";
 
-const columns = [
-  { key: "symbol", label: "INSTRUMENT" },
-  { key: "change", label: "ZMIANA" },
-  { key: "bid_size", label: "SPRZEDAŻ" },
-  { key: "ask_size", label: "KUPNO" },
-  { key: "quote", label: "KURS" },
+const columns = (quantity?: boolean) => [
+  { key: "_symbol", label: "INSTRUMENT" },
+  { key: "_change", label: "ZMIANA" },
+  { key: "_bid_size", label: "SPRZEDAŻ" },
+  { key: "_ask_size", label: "KUPNO" },
+  { key: "_quote", label: "KURS" },
+  ...(quantity ? [{ key: "quantity", label: "ILOŚĆ" }] : []),
 ];
 
-export default function StockTable({ stocks }: { stocks: Stock[] }) {
-  const renderCell = useCallback((stock: Stock, columnKey: keyof Stock) => {
-    const cellValue = stock[columnKey];
+type TableStock = Stock & { quantity?: number };
 
-    switch (columnKey) {
-      case "_change":
-        const isUp = cellValue?.toString().startsWith("+");
-        const isDown = cellValue?.toString().startsWith("-");
-        return (
-          <div
-            className={`flex items-center gap-2 ${
-              isUp ? "text-success" : isDown ? "text-danger" : ""
-            }`}
-          >
-            {isUp ? (
-              <TrendingUpIcon size={16} />
-            ) : isDown ? (
-              <TrendingDownIcon size={16} />
-            ) : (
-              <></>
-            )}
-            <span className="font-medium">{cellValue}%</span>
-          </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+export default function StockTable({
+  stocks,
+  quantityVisible,
+}: {
+  stocks: TableStock[];
+  quantityVisible?: boolean;
+}) {
+  const renderCell = useCallback(
+    (stock: TableStock, columnKey: keyof TableStock) => {
+      const cellValue = stock[columnKey];
+
+      switch (columnKey) {
+        case "_change":
+          const isUp =
+            cellValue?.toString().startsWith("+") &&
+            !cellValue?.toString().endsWith("0.00");
+          const isDown = cellValue?.toString().startsWith("-");
+          return (
+            <div
+              className={`flex items-center gap-2 ${
+                isUp ? "text-success" : isDown ? "text-danger" : "text-font/70"
+              }`}
+            >
+              {isUp ? (
+                <TrendingUpIcon size={16} />
+              ) : isDown ? (
+                <TrendingDownIcon size={16} />
+              ) : (
+                <></>
+              )}
+              <span className="font-medium">{cellValue}%</span>
+            </div>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    []
+  );
   return (
     <Table
       shadow="none"
@@ -63,7 +77,7 @@ export default function StockTable({ stocks }: { stocks: Stock[] }) {
       }}
     >
       <TableHeader>
-        {columns.map((column) => (
+        {columns(quantityVisible).map((column) => (
           <TableColumn key={column.key}>{column.label}</TableColumn>
         ))}
       </TableHeader>
@@ -72,7 +86,7 @@ export default function StockTable({ stocks }: { stocks: Stock[] }) {
           <TableRow key={item._symbol}>
             {(columnKey) => (
               <TableCell>
-                {renderCell(item, `_${columnKey}` as keyof Stock)}
+                {renderCell(item, columnKey as keyof TableStock)}
               </TableCell>
             )}
           </TableRow>

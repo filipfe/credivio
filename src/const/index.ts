@@ -7,6 +7,7 @@ import {
   NewspaperIcon,
   PieChartIcon,
   PlusIcon,
+  ScrollTextIcon,
   SlidersIcon,
   UserCogIcon,
   Wallet2Icon,
@@ -64,6 +65,23 @@ export const PAGES: Page[] = [
       },
     ],
   },
+  // {
+  //   title: "Obligacje",
+  //   href: "/bonds",
+  //   icon: ScrollTextIcon,
+  //   links: [
+  //     {
+  //       title: "Notowania",
+  //       icon: BarChart4Icon,
+  //       href: "/stocks",
+  //     },
+  //     {
+  //       title: "Transakcje",
+  //       icon: ArrowRightLeftIcon,
+  //       href: "/stocks/transactions",
+  //     },
+  //   ],
+  // },
   {
     title: "Aktualności",
     href: "/news",
@@ -101,3 +119,25 @@ export const ADD_METHODS: AddMethod[] = [
 ];
 
 export const CURRENCIES = ["USD", "PLN", "GBP", "AUD"];
+
+export const TRANSACTION_TYPES: Option<string>[] = [
+  {
+    name: "Sprzedaż",
+    value: "sell",
+  },
+  {
+    name: "Kupno",
+    value: "buy",
+  },
+];
+
+export const COLORS = [
+  "#177981", // Primary color
+  "#ffc000", // Secondary color
+  "#3f51b5", // Light blue
+  "#ff9800", // Light orange
+  "#c02942", // Red
+  "#9e9e9e", // Gray
+  "#28a745", // Green
+  "#ffc107", // Yellow
+];

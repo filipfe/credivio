@@ -1,7 +1,7 @@
 export default function prepareChartData(data: Operation[]) {
   return data
     .map(({ amount, title }) => ({ value: parseFloat(amount), name: title }))
-    .reduce((prev: Option[], curr) => {
+    .reduce((prev: Option<number>[], curr) => {
       const groupIndex = prev.findIndex((item) => item.name === curr.name);
       if (groupIndex !== -1) {
         let temp = [...prev];

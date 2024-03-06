@@ -1,7 +1,10 @@
+import PortfolioStructure from "@/components/dashboard/portfolio-structure";
 import Stat from "@/components/dashboard/stat";
+import AreaChart from "@/components/operation/charts/area-chart";
 import BarChart from "@/components/operation/charts/bar-chart";
-import PieChart from "@/components/operation/charts/pie-chart";
 import { getOperations } from "@/lib/operation/actions";
+import { getOwnStocks, getSpecificStocks } from "@/lib/stocks/actions";
+import getStockHoldings from "@/utils/stocks/get-stock-holdings";
 import prepareChartData from "@/utils/operation/prepare-chart-data";
 import { CoinsIcon, SettingsIcon, Wallet2Icon } from "lucide-react";
 import Link from "next/link";
@@ -9,6 +12,14 @@ import Link from "next/link";
 export default async function Home() {
   const { results: expenses } = await getOperations("expense");
   const { results: incomes } = await getOperations("income");
+  const { results: ownStocks } = await getOwnStocks();
+  const ownStocksNames: string[] = ownStocks.reduce(
+    (prev, curr) =>
+      prev.includes(curr.symbol) ? prev : [...prev, curr.symbol],
+    [] as string[]
+  );
+  const { results: ownStocksList } = await getSpecificStocks(ownStocksNames);
+  const holdings = getStockHoldings(ownStocks);
   const totalIncome = incomes.reduce(
     (prev, curr) => prev + parseFloat(curr.amount),
     0
@@ -19,7 +30,7 @@ export default async function Home() {
   );
   const totalProfit = totalIncome - totalExpenses;
   const expenseChartData = prepareChartData(expenses);
-  const incomeChartData = prepareChartData(incomes);
+  // const incomeChartData = prepareChartData(incomes);
   return (
     <div className="px-12 py-8 pb-24 flex flex-col xl:grid grid-cols-6 gap-6">
       {/* <h2 className="text-3xl col-span-6">Budżet</h2>
@@ -47,11 +58,21 @@ export default async function Home() {
         description=""
         previous={{ amount: "100" }}
       />
-      <div className="xl:col-span-4 bg-white rounded-lg px-10 pt-10 pb-4">
+      <div className="xl:col-span-3 bg-white rounded-lg px-10 py-8">
+        <h3 className="mb-4 text-center">Wydatki wg Etykieta</h3>
         <BarChart data={expenseChartData} />
       </div>
-      <div className="xl:col-span-2 bg-white rounded-lg">
-        <PieChart data={incomeChartData} />
+      <div className="xl:col-span-3 bg-white rounded-lg px-10 py-8">
+        <h3 className="mb-4 text-center">Zysk wg Miesiąc</h3>
+        <AreaChart data={expenseChartData} />
+      </div>
+      <h2 className="text-3xl col-span-6">Struktura portfela</h2>
+      <div className="bg-white rounded-lg py-8 px-10 space-y-4 col-span-6">
+        <PortfolioStructure
+          holdings={holdings}
+          stocks={ownStocksList.filter((item) => holdings[item._symbol] !== 0)}
+          cash={totalProfit}
+        />
       </div>
       <h2 className="text-3xl col-span-6">Skróty</h2>
       <Link

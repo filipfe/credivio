@@ -13,6 +13,8 @@ import {
   Pagination,
 } from "@nextui-org/react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import Add from "./cta/add";
+import Delete from "./cta/delete";
 
 const columns = [
   { key: "issued_at", label: "DATA" },
@@ -27,14 +29,19 @@ type Props = {
   operations: Operation[];
   count: number;
   viewOnly?: boolean;
+  type: "expense" | "income";
 };
 
-export default function OperationTable({ operations, count, viewOnly }: Props) {
+export default function OperationTable({
+  operations,
+  count,
+  viewOnly,
+  type,
+}: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [items, setItems] = useState<Operation[]>(operations);
-  const [selectedKeys, setSelectedKeys] = React.useState<Set<any> | "all">(
+  const [selectedKeys, setSelectedKeys] = useState<Set<any> | "all">(
     new Set([])
   );
   const pages = Math.ceil(count / 10);
@@ -44,21 +51,13 @@ export default function OperationTable({ operations, count, viewOnly }: Props) {
   });
   const { page, sort } = searchQuery;
 
-  if (viewOnly) {
-    React.useMemo(() => {
-      const start = (page - 1) * 10;
-      const end = start + 10;
-
-      return setItems(operations.slice(start, end));
-    }, [page, operations]);
-  } else {
-    useEffect(() => {
-      const params = new URLSearchParams(searchParams);
-      params.set("page", page.toString());
-      sort && params.set("sort", sort);
-      router.push(`${pathname}?${params.toString()}`);
-    }, [searchQuery]);
-  }
+  useEffect(() => {
+    if (viewOnly) return;
+    const params = new URLSearchParams(searchParams);
+    params.set("page", page.toString());
+    sort && params.set("sort", sort);
+    router.push(`${pathname}?${params.toString()}`);
+  }, [searchQuery]);
 
   const bottomContent = React.useMemo(() => {
     return (
@@ -88,7 +87,7 @@ export default function OperationTable({ operations, count, viewOnly }: Props) {
         />
       </div>
     );
-  }, [items.length, page, pages, selectedKeys]);
+  }, [operations, page, pages, selectedKeys]);
 
   const renderCell = React.useCallback((item: any, columnKey: any) => {
     const cellValue = item[columnKey];
@@ -127,60 +126,73 @@ export default function OperationTable({ operations, count, viewOnly }: Props) {
   }, []);
 
   return (
-    <Table
-      shadow="none"
-      color="primary"
-      selectionMode={"multiple"}
-      sortDescriptor={{
-        column: sort?.includes("-") ? sort?.split("-")[1] : sort?.toString(),
-        direction: sort?.includes("-") ? "descending" : "ascending",
-      }}
-      onSortChange={(descriptor: SortDescriptor) =>
-        setSearchQuery({
-          page: 1,
-          sort:
-            (descriptor.direction === "descending" ? "-" : "") +
-            descriptor.column,
-        })
-      }
-      bottomContent={count > 0 && bottomContent}
-      bottomContentPlacement="outside"
-      aria-label="Example static collection table"
-      className={`max-w-full w-full flex-1 mb-8`}
-      checkboxesProps={{
-        classNames: {
-          wrapper: "text-background",
-        },
-      }}
-      classNames={{
-        wrapper: "p-0",
-      }}
-      selectedKeys={selectedKeys}
-      onSelectionChange={setSelectedKeys}
-    >
-      <TableHeader>
-        {columns.map((column) => (
-          <TableColumn
-            key={column.key}
-            allowsSorting={count > 0 && !viewOnly ? true : undefined}
-          >
-            {column.label}
-          </TableColumn>
-        ))}
-      </TableHeader>
-      <TableBody
-        emptyContent={"No rows found"}
-        items={viewOnly ? items : operations}
-        loadingContent={<Spinner label="Loading..." />}
+    <div className="bg-white rounded-lg py-8 px-10 flex flex-col gap-4  mb-8">
+      <div className="flex items-center justify-between gap-4 mb-2">
+        <h1 className="text-lg">Wydatki</h1>
+        <div className="flex items-center gap-1.5">
+          {(selectedKeys === "all" || selectedKeys.size > 0) && (
+            <Delete type={type} items={Array.from(selectedKeys)} />
+          )}
+          {operations.length > 0 && <Add type={type} />}
+        </div>
+      </div>
+      <Table
+        shadow="none"
+        color="primary"
+        selectionMode={"multiple"}
+        sortDescriptor={{
+          column: sort?.includes("-") ? sort?.split("-")[1] : sort?.toString(),
+          direction: sort?.includes("-") ? "descending" : "ascending",
+        }}
+        onSortChange={(descriptor: SortDescriptor) =>
+          setSearchQuery({
+            page: 1,
+            sort:
+              (descriptor.direction === "descending" ? "-" : "") +
+              descriptor.column,
+          })
+        }
+        bottomContent={count > 0 && bottomContent}
+        bottomContentPlacement="outside"
+        aria-label="Example static collection table"
+        className={`max-w-full w-full flex-1`}
+        checkboxesProps={{
+          classNames: {
+            wrapper: "text-background",
+          },
+        }}
+        classNames={{
+          wrapper: "p-0",
+        }}
+        selectedKeys={selectedKeys}
+        onSelectionChange={setSelectedKeys}
       >
-        {(item: any) => (
-          <TableRow key={item.id || item.title + item.amount + item.issued_at}>
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+        <TableHeader>
+          {columns.map((column) => (
+            <TableColumn
+              key={column.key}
+              allowsSorting={count > 0 && !viewOnly ? true : undefined}
+            >
+              {column.label}
+            </TableColumn>
+          ))}
+        </TableHeader>
+        <TableBody
+          emptyContent={"No rows found"}
+          items={operations}
+          loadingContent={<Spinner label="Loading..." />}
+        >
+          {(item: any) => (
+            <TableRow
+              key={item.id || item.title + item.amount + item.issued_at}
+            >
+              {(columnKey) => (
+                <TableCell>{renderCell(item, columnKey)}</TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
   );
 }
