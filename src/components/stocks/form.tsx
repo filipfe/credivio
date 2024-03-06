@@ -1,6 +1,6 @@
 "use client";
 
-import { ADD_METHODS, CURRENCIES } from "@/const";
+import { ADD_METHODS, TRANSACTION_TYPES } from "@/const";
 import {
   Autocomplete,
   AutocompleteItem,
@@ -8,10 +8,11 @@ import {
   Input,
   Radio,
   RadioGroup,
+  Select,
+  SelectItem,
   Spinner,
-  Textarea,
 } from "@nextui-org/react";
-import { CheckIcon, EyeIcon, PaperclipIcon } from "lucide-react";
+import { CheckIcon, PaperclipIcon } from "lucide-react";
 import { ChangeEvent, Fragment, useState, useTransition } from "react";
 import parseCSV from "@/utils/operation/parse-csv";
 import { addStocks } from "@/lib/stocks/actions";
@@ -23,7 +24,7 @@ const formatter = (data: string[][]): Omit<StockTransaction, "id">[] => {
         issued_at,
         symbol,
         ,
-        ,
+        currency,
         transaction_type,
         quantity,
         price,
@@ -38,28 +39,42 @@ const formatter = (data: string[][]): Omit<StockTransaction, "id">[] => {
       const result = {
         issued_at,
         symbol,
-        transaction_type,
-        quantity,
-        value,
-        price,
-        commission,
+        transaction_type:
+          transaction_type === "Kupno" ? "buy" : ("sell" as "buy" | "sell"),
+        quantity: parseInt(quantity),
+        value: parseFloat(value),
+        price: parseFloat(price),
+        commission: parseFloat(commission),
+        currency,
       };
       return result;
     })
     .filter((item) => item.symbol);
 };
 
-export default function AddForm() {
+export default function AddForm({ stocks }: { stocks: Stock[] }) {
   const [isPending, startTransition] = useTransition();
   const [method, setMethod] = useState<AddMethodKey>("manual");
   const [fileName, setFileName] = useState("");
   const [records, setRecords] = useState<Omit<StockTransaction, "id">[]>([]);
-  const [singleRecord, setSingleRecord] = useState<Operation>({
-    title: "",
+  const [singleRecord, setSingleRecord] = useState<
+    Omit<StockTransaction, "id">
+  >({
+    symbol: "",
+    commission: 0,
+    transaction_type: "buy",
+    value: 0,
+    price: 0,
     issued_at: new Date().toISOString().substring(0, 10),
-    amount: "0",
+    quantity: 1,
     currency: "PLN",
-    description: "",
+  });
+
+  const { currency } = singleRecord;
+
+  const numberFormatter = new Intl.NumberFormat("pl-PL", {
+    style: "currency",
+    currency,
   });
 
   const onFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -68,14 +83,6 @@ export default function AddForm() {
     setFileName(file.name);
     await parseCSV(file, (results) => setRecords(formatter(results)));
   };
-
-  const isPreviewHidden =
-    method === "csv"
-      ? !!fileName
-      : Object.keys(singleRecord).some((key) => {
-          const value = singleRecord[key as keyof Expense];
-          return !!value && value !== "0";
-        });
 
   return (
     <div className="flex flex-col xl:grid grid-cols-2 gap-8 mt-8">
@@ -118,46 +125,19 @@ export default function AddForm() {
           </label>
         ) : (
           <div className="grid grid-cols-2 gap-4 my-4">
-            <Input
-              classNames={{ inputWrapper: "!bg-light" }}
-              name="title"
-              label="Tytuł"
-              placeholder="Wynagrodzenie"
-              isRequired
-              value={singleRecord.title}
-              onChange={(e) =>
-                setSingleRecord((prev) => ({ ...prev, title: e.target.value }))
-              }
-            />
-            <Input
-              classNames={{ inputWrapper: "!bg-light" }}
-              name="amount"
-              label="Kwota"
-              placeholder="3600"
-              isRequired
-              value={parseFloat(singleRecord.amount).toString()}
-              onChange={(e) => {
-                let { value } = e.target;
-                if (value === "")
-                  return setSingleRecord((prev) => ({ ...prev, amount: "0" }));
-                value = value.replace(/\D/g, "");
-                setSingleRecord((prev) => ({
-                  ...prev,
-                  amount: value,
-                }));
-              }}
-            />
             <Autocomplete
-              label="Waluta"
-              placeholder="PLN"
+              label="Walor"
+              placeholder="PKNORLEN"
               isClearable={false}
               isRequired
-              value={singleRecord.currency}
-              selectedKey={singleRecord.currency}
-              onSelectionChange={(curr) =>
+              value={singleRecord.symbol}
+              selectedKey={singleRecord.symbol}
+              defaultItems={stocks}
+              onSelectionChange={(symb) =>
+                symb &&
                 setSingleRecord((prev) => ({
                   ...prev,
-                  currency: curr.toString(),
+                  symbol: symb.toString(),
                 }))
               }
               inputProps={{
@@ -166,22 +146,23 @@ export default function AddForm() {
                 },
               }}
             >
-              {CURRENCIES.map((curr) => (
+              {(stock) => (
                 <AutocompleteItem
-                  value={curr}
+                  textValue={stock._symbol}
                   classNames={{
                     base: "!bg-white hover:!bg-light",
                   }}
-                  key={curr}
+                  key={stock._symbol}
                 >
-                  {curr}
+                  {stock._symbol}{" "}
+                  <span className="text-secondary">{stock._symbol_short}</span>
                 </AutocompleteItem>
-              ))}
+              )}
             </Autocomplete>
             <Input
               classNames={{ inputWrapper: "!bg-light" }}
               name="issued_at"
-              label="Data uiszczenia"
+              label="Data zakupu"
               placeholder="24.01.2024"
               type="date"
               isRequired
@@ -193,7 +174,96 @@ export default function AddForm() {
                 }))
               }
             />
-            <Textarea
+            <Select
+              classNames={{ trigger: "!bg-light" }}
+              name="transaction_type"
+              label="Typ transakcji"
+              isRequired
+              value={singleRecord.transaction_type}
+              selectedKeys={[singleRecord.transaction_type]}
+              onChange={(e) =>
+                setSingleRecord((prev) => ({
+                  ...prev,
+                  transaction_type: e.target.value as "sell" | "buy",
+                }))
+              }
+            >
+              {TRANSACTION_TYPES.map(({ value, name }) => (
+                <SelectItem value={value} key={value}>
+                  {name}
+                </SelectItem>
+              ))}
+            </Select>
+
+            <Input
+              classNames={{ inputWrapper: "!bg-light" }}
+              name="amount"
+              label="Ilość"
+              placeholder="4"
+              isRequired
+              value={singleRecord.quantity.toString()}
+              onChange={(e) => {
+                let { value } = e.target;
+                if (value === "")
+                  return setSingleRecord((prev) => ({ ...prev, quantity: 0 }));
+                value = value.replace(/\D/g, "");
+                setSingleRecord((prev) => ({
+                  ...prev,
+                  quantity: parseInt(value),
+                }));
+              }}
+            />
+            <Input
+              classNames={{ inputWrapper: "!bg-light" }}
+              name="price"
+              label="Cena"
+              placeholder={numberFormatter.format(78)}
+              isRequired
+              value={singleRecord.price.toString()}
+              onChange={(e) => {
+                let { value } = e.target;
+                if (value === "")
+                  return setSingleRecord((prev) => ({ ...prev, price: 0 }));
+                value = value.replace(/\D/g, "");
+                setSingleRecord((prev) => ({
+                  ...prev,
+                  price: parseFloat(value),
+                }));
+              }}
+            />
+            <Input
+              classNames={{ inputWrapper: "!bg-light" }}
+              name="commission"
+              label="Prowizja"
+              placeholder={numberFormatter.format(5)}
+              isDisabled={!singleRecord.price || !singleRecord.quantity}
+              isRequired
+              value={singleRecord.commission.toString()}
+              onChange={(e) => {
+                let { value } = e.target;
+                if (value === "")
+                  return setSingleRecord((prev) => ({
+                    ...prev,
+                    commission: 0,
+                  }));
+                value = value.replace(/\D/g, "");
+                setSingleRecord((prev) => ({
+                  ...prev,
+                  commission: parseFloat(value),
+                }));
+              }}
+            />
+            <Input
+              classNames={{ base: "col-span-2", inputWrapper: "!bg-light" }}
+              name="value"
+              label="Wartość"
+              readOnly
+              isRequired
+              value={numberFormatter.format(
+                singleRecord.price * singleRecord.quantity
+              )}
+            />
+            {/* <Textarea
               className="col-span-2"
               classNames={{ inputWrapper: "!bg-light" }}
               name="number"
@@ -206,7 +276,7 @@ export default function AddForm() {
                   description: e.target.value,
                 }))
               }
-            />
+            /> */}
           </div>
         )}
 
@@ -240,16 +310,7 @@ export default function AddForm() {
       </form>
       <div className="bg-white rounded-lg px-10 py-8 flex flex-col gap-4">
         <h2 className="text-lg">Podgląd</h2>
-        {isPreviewHidden ? (
-          <div></div>
-        ) : (
-          <div className="flex-1 flex flex-col items-center justify-center text-center gap-2 w-full self-center max-w-[16rem]">
-            <EyeIcon size={48} strokeWidth={1} />
-            <p className="text-sm">
-              Wypełnij formularz, aby zobaczyć podgląd swoich wydatków
-            </p>
-          </div>
-        )}
+        <div></div>
       </div>
     </div>
   );

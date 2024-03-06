@@ -10,7 +10,8 @@ import {
   TableRow,
   getKeyValue,
 } from "@nextui-org/table";
-import Add from "../operation/add";
+import Add from "../operation/cta/add";
+import { TRANSACTION_TYPES } from "@/const";
 
 const columns = [
   { key: "issued_at", label: "DATA ZAWARCIA" },
@@ -32,6 +33,7 @@ export default function TransactionTable({
     <Table
       shadow="none"
       color="primary"
+      aria-label="transactions-table"
       className="max-w-full w-full flex-1"
       checkboxesProps={{
         classNames: {
@@ -44,9 +46,7 @@ export default function TransactionTable({
     >
       <TableHeader>
         {columns.map((column) => (
-          <TableColumn key={column.key} allowsSorting>
-            {column.label}
-          </TableColumn>
+          <TableColumn key={column.key}>{column.label}</TableColumn>
         ))}
       </TableHeader>
       <TableBody
@@ -62,7 +62,13 @@ export default function TransactionTable({
         {(item) => (
           <TableRow key={item.id}>
             {(columnKey) => (
-              <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+              <TableCell>
+                {columnKey === "transaction_type"
+                  ? TRANSACTION_TYPES.find(
+                      (tt) => tt.value === item[columnKey]
+                    )!.name
+                  : getKeyValue(item, columnKey)}
+              </TableCell>
             )}
           </TableRow>
         )}

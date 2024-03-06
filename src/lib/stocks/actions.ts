@@ -42,26 +42,10 @@ export async function getOwnStocks(): Promise<
 export async function addStocks(
   formData: FormData
 ): Promise<SupabaseResponse<StockTransaction>> {
-  const method = formData.get("method")?.toString() as AddMethodKey;
   const data = formData.get("data")!.toString();
 
-  let results: StockTransaction[] = [];
-
   try {
-    switch (method) {
-      case "csv":
-        results = JSON.parse(data);
-        break;
-      case "manual":
-        results = [JSON.parse(data)];
-        break;
-      default:
-        return {
-          error: "Nieprawidłowa metoda!",
-          results,
-        };
-    }
-
+    const results: StockTransaction[] = JSON.parse(data);
     const { error } = await supabase.from(`stocks`).insert(results);
     console.log(error);
     if (error) {
@@ -73,7 +57,7 @@ export async function addStocks(
   } catch (err) {
     return {
       error: "Parse error",
-      results,
+      results: [],
     };
   }
 
@@ -139,6 +123,30 @@ export async function getSpecificStocks(
     );
     return {
       results,
+    };
+  } catch (err) {
+    return {
+      results: [],
+      error: "Wystąpił błąd, spróbuj ponownie później!",
+    };
+  }
+}
+
+export async function getAllStocks(): Promise<SupabaseResponse<Stock>> {
+  try {
+    const { data } = await axios.get(
+      "https://bossa.pl/fl_api/API/GPW/v2/Q/C/_cat_shares"
+    );
+
+    if (data.message !== "OK") {
+      return {
+        results: [],
+        error: "Wystąpił błąd, spróbuj ponownie później!",
+      };
+    }
+
+    return {
+      results: data._d[0]._t,
     };
   } catch (err) {
     return {

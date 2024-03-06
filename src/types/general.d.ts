@@ -29,7 +29,7 @@ type Operation = {
   label?: string;
 };
 
-type Option = { name: string; value: number };
+type Option<T> = { name: string; value: T };
 
 type OperationSearchParams = {
   sort?: string;
@@ -47,4 +47,12 @@ type Currency = {
   _bid_day_change_pcnt: string;
   _q_tm: string;
   _q_tm_lc: string;
+};
+
+type Group = {
+  name: string;
+  value: number;
+  label: string;
+  color: string;
+  children: React.ReactNode;
 };

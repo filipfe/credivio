@@ -3,6 +3,7 @@ type Stock = {
   _symbol_short: string;
   _group: string;
   _isin: string;
+  _quote: string;
   _quote_date: string;
   _quote_time: string;
   _time: string;
@@ -47,21 +48,28 @@ type Stock = {
 type StockTransaction = {
   id: string;
   symbol: string;
-  transaction_type: string;
-  price: string;
-  commission: string;
-  value: string;
+  transaction_type: "sell" | "buy";
+  price: number;
+  commission: number;
+  commission_type?: "percentage" | "value";
+  value: number;
   issued_at: string;
+  quantity: number;
+  currency: string;
 };
 
 type Dividend = {
   company: string;
   date: string;
   payment_date: string;
-  amount: number;
+  amount: string;
   currency: string;
   ratio: number;
   for_year: string;
+};
+
+type Holdings = {
+  [key: string]: number;
 };
 
 type GPWIndex = "wig20" | "mwig40" | "swig80";

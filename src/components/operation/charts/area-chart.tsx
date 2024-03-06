@@ -2,19 +2,18 @@
 
 import {
   ResponsiveContainer,
-  BarChart as BarChartWrapper,
-  Bar,
+  LineChart as LineChartWrapper,
+  Line,
   CartesianGrid,
   YAxis,
   XAxis,
-  Cell,
 } from "recharts";
 
 type Props = {
   data: Option<number>[];
 };
 
-export default function BarChart({ data }: Props) {
+export default function AreaChart({ data }: Props) {
   const numberFormat = new Intl.NumberFormat("pl-PL", {
     style: "currency",
     currency: "PLN",
@@ -22,10 +21,16 @@ export default function BarChart({ data }: Props) {
   });
   return (
     <ResponsiveContainer width="100%" height={360}>
-      <BarChartWrapper
+      <LineChartWrapper
         data={data.sort((a, b) => b.value - a.value).slice(0, 4)}
         margin={{ top: 0, left: 5, right: 0, bottom: 0 }}
       >
+        <defs>
+          <linearGradient id="area-chart-gradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#177981" stopOpacity={1} />
+            <stop offset="95%" stopColor="#fdbb2d" stopOpacity={1} />
+          </linearGradient>
+        </defs>
         <CartesianGrid vertical={false} />
         <YAxis
           tick={{ fontSize: 12 }}
@@ -33,12 +38,8 @@ export default function BarChart({ data }: Props) {
           tickFormatter={(value) => numberFormat.format(value)}
         />
         <XAxis dataKey="name" tick={{ fontSize: 14 }} />
-        <Bar dataKey="value" radius={[24, 24, 0, 0]}>
-          {data.map((item, k) => (
-            <Cell fill={k % 2 === 0 ? "#177981" : "#ffc000"} key={item.name} />
-          ))}
-        </Bar>
-      </BarChartWrapper>
+        <Line dataKey="value" stroke="#177981" strokeWidth={2}></Line>
+      </LineChartWrapper>
     </ResponsiveContainer>
   );
 }
