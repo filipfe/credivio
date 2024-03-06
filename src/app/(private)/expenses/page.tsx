@@ -13,8 +13,13 @@ export default async function Page({
     searchParams
   );
   return (
-    <div className="px-12 pt-8 pb-24 flex flex-col h-full">
-      <OperationTable type="expense" operations={expenses} count={count || 0} />
+    <div className="px-12 pt-8 pb-24 flex flex-col h-full gap-8">
+      <OperationTable
+        title="Wydatki"
+        type="expense"
+        operations={expenses}
+        count={count || 0}
+      />
       {expenses.length > 0 ? (
         <OperationList operations={expenses} type="expense" />
       ) : (

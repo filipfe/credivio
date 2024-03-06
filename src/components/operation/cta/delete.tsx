@@ -11,7 +11,6 @@ import { Trash2Icon } from "lucide-react";
 import { Fragment } from "react";
 
 type Props = {
-  type: string;
   items: any[];
 };
 
@@ -27,7 +26,7 @@ export default function Delete({ items }: Props) {
         <ModalContent>
           {(onClose) => (
             <Fragment>
-              <ModalFooter></ModalFooter>
+              <ModalHeader></ModalHeader>
               <ModalBody className="font-normal text-center">
                 Czy na pewno chcesz usunąć przedmioty?
               </ModalBody>
