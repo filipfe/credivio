@@ -197,7 +197,7 @@ export default function OperationTable({
         bottomContent={count > 0 && bottomContent}
         bottomContentPlacement="outside"
         aria-label="Example static collection table"
-        className={`max-w-full w-full flex-1`}
+        className="max-w-full w-full flex-1"
         checkboxesProps={{
           classNames: {
             wrapper: "text-background",
