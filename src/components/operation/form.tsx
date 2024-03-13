@@ -11,13 +11,7 @@ import {
   Spinner,
   Textarea,
 } from "@nextui-org/react";
-import {
-  CheckIcon,
-  EyeIcon,
-  HelpCircleIcon,
-  PaperclipIcon,
-  PlusIcon,
-} from "lucide-react";
+import { CheckIcon, PaperclipIcon, PlusIcon } from "lucide-react";
 import { ChangeEvent, Fragment, useState, useTransition } from "react";
 import parseCSV from "@/utils/operation/parse-csv";
 import { addOperations } from "@/lib/operation/actions";
@@ -249,7 +243,7 @@ export default function AddForm({
         title="Podgląd"
         operations={records}
         count={records.length}
-        viewOnly
+        setOperations={setRecords}
       >
         <form
           className="flex flex-col"

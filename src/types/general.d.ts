@@ -18,7 +18,7 @@ type SupabaseResponse<T> = {
 type OperationType = "expense" | "income";
 
 type Operation = {
-  id: string;
+  id?: string;
   issued_at: string;
   title: string;
   amount: string;
