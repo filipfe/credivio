@@ -9,7 +9,7 @@ const supabase = createClient();
 export async function getOperations(
   type: OperationType,
   searchParams?: OperationSearchParams
-): Promise<SupabaseResponse<Expense>> {
+): Promise<SupabaseResponse<Operation>> {
   try {
     if (searchParams?.sort) {
       const { sort } = searchParams;
@@ -110,4 +110,47 @@ export async function getSpecificOperation(
   return {
     results: [data],
   };
+}
+
+export async function deleteOperations(
+  formData: FormData
+): Promise<SupabaseResponse<Operation>> {
+  const type = formData.get("type")!.toString();
+  const data = formData.get("data")!.toString();
+  try {
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+    if (!user || authError) {
+      return {
+        results: [],
+        error: "Błąd autoryzacji, spróbuj zalogować się ponownie!",
+      };
+    }
+    let query = supabase.from(`${type}s`).delete();
+    if (data === "all") {
+      query = query.eq("user_id", user.id);
+    } else {
+      const ids: string[] = JSON.parse(data);
+      query = query.in("id", ids);
+    }
+    const { error } = await query;
+    if (error) {
+      return {
+        results: [],
+        error: error.message,
+      };
+    }
+    revalidatePath(`${type}s`);
+    return {
+      results: [],
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      error: "Wystąpił błąd, spróbuj ponownie później!",
+      results: [],
+    };
+  }
 }

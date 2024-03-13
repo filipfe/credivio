@@ -120,8 +120,8 @@ export default function OperationTable({
       <div className="flex items-center justify-between gap-4 mb-2">
         <h1 className="text-lg">{title}</h1>
         <div className="flex items-center gap-1.5">
-          {(selectedKeys === "all" || selectedKeys.size > 0) && (
-            <Delete items={Array.from(selectedKeys)} />
+          {type && (selectedKeys === "all" || selectedKeys.size > 0) && (
+            <Delete items={selectedKeys} count={count} type={type} />
           )}
           {type && (selectedKeys === "all" || selectedKeys.size > 0) && (
             <Edit
@@ -147,10 +147,10 @@ export default function OperationTable({
         }}
         onSortChange={({ direction, column }: SortDescriptor) => {
           setIsLoading(true);
-          setSearchQuery((prev) => ({
-            ...prev,
+          setSearchQuery({
+            page: 1,
             sort: `${direction === "descending" ? "-" : ""}${column}`,
-          }));
+          });
         }}
         // bottomContent={count > 0 && bottomContent}
         bottomContentPlacement="outside"
@@ -184,7 +184,9 @@ export default function OperationTable({
           loadingContent={<Spinner />}
         >
           {(viewOnly ? items : operations).map((operation, i) => (
-            <TableRow key={`operation:${i}:${searchQuery.page}`}>
+            <TableRow
+              key={operation.id || `operation:${i}:${searchQuery.page}`}
+            >
               {(columnKey) => (
                 <TableCell>{renderCell(operation, columnKey)}</TableCell>
               )}
@@ -218,21 +220,6 @@ export default function OperationTable({
             setSearchQuery((prev) => ({ ...prev, page }));
           }}
         />
-        {/* <div className="flex items-center gap-4">
-          {Array.from(Array(4)).map((_, i) => (
-            <button
-              onClick={() => {
-                setIsLoading(true);
-                console.log(searchQuery);
-                router.push(
-                  `${pathname}?page=${i + 1}${sort ? "&sort=" + sort : ""}`
-                );
-              }}
-            >
-              {i + 1}
-            </button>
-          ))}
-        </div> */}
       </div>
       {children}
     </div>
