@@ -12,10 +12,22 @@ import {
   SelectItem,
   Spinner,
 } from "@nextui-org/react";
-import { CheckIcon, PaperclipIcon } from "lucide-react";
+import { CheckIcon, PaperclipIcon, PlusIcon } from "lucide-react";
 import { ChangeEvent, Fragment, useState, useTransition } from "react";
 import parseCSV from "@/utils/operation/parse-csv";
 import { addStocks } from "@/lib/stocks/actions";
+import TransactionTable from "./transactions-table";
+
+const defaultRecord: Omit<StockTransaction, "id"> = {
+  symbol: "",
+  commission: "0",
+  transaction_type: "buy",
+  value: 0,
+  price: "",
+  issued_at: new Date().toISOString().substring(0, 10),
+  quantity: "",
+  currency: "PLN",
+};
 
 const formatter = (data: string[][]): Omit<StockTransaction, "id">[] => {
   return data
@@ -33,18 +45,18 @@ const formatter = (data: string[][]): Omit<StockTransaction, "id">[] => {
         ,
         commission,
       ] = record;
-      price = price.replace(",", ".");
-      commission = commission.replace(",", ".");
-      value = value.replace(",", ".");
+      price = price;
+      commission = commission;
+      value = value;
       const result = {
         issued_at,
         symbol,
         transaction_type:
           transaction_type === "Kupno" ? "buy" : ("sell" as "buy" | "sell"),
-        quantity: parseInt(quantity),
+        quantity,
         value: parseFloat(value),
-        price: parseFloat(price),
-        commission: parseFloat(commission),
+        price,
+        commission,
         currency,
       };
       return result;
@@ -57,25 +69,10 @@ export default function AddForm({ stocks }: { stocks: Stock[] }) {
   const [method, setMethod] = useState<AddMethodKey>("manual");
   const [fileName, setFileName] = useState("");
   const [records, setRecords] = useState<Omit<StockTransaction, "id">[]>([]);
-  const [singleRecord, setSingleRecord] = useState<
-    Omit<StockTransaction, "id">
-  >({
-    symbol: "",
-    commission: 0,
-    transaction_type: "buy",
-    value: 0,
-    price: 0,
-    issued_at: new Date().toISOString().substring(0, 10),
-    quantity: 1,
-    currency: "PLN",
-  });
+  const [singleRecord, setSingleRecord] =
+    useState<Omit<StockTransaction, "id">>(defaultRecord);
 
   const { currency } = singleRecord;
-
-  const numberFormatter = new Intl.NumberFormat("pl-PL", {
-    style: "currency",
-    currency,
-  });
 
   const onFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.item(0);
@@ -84,15 +81,20 @@ export default function AddForm({ stocks }: { stocks: Stock[] }) {
     await parseCSV(file, (results) => setRecords(formatter(results)));
   };
 
+  const addRecord = (e: React.FormEvent) => {
+    e.preventDefault();
+    setRecords((prev) => [...prev, singleRecord]);
+    setSingleRecord(defaultRecord);
+  };
+
+  const value =
+    parseFloat(singleRecord.price) * parseInt(singleRecord.quantity);
+
   return (
     <div className="flex flex-col xl:grid grid-cols-2 gap-8 mt-8">
       <form
         className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col"
-        action={(e) =>
-          startTransition(async () => {
-            const { error } = await addStocks(e);
-          })
-        }
+        onSubmit={addRecord}
       >
         <h2 className="text-lg">Dane</h2>
         <RadioGroup
@@ -140,11 +142,7 @@ export default function AddForm({ stocks }: { stocks: Stock[] }) {
                   symbol: symb.toString(),
                 }))
               }
-              inputProps={{
-                classNames: {
-                  inputWrapper: "!bg-light",
-                },
-              }}
+              inputProps={{ classNames: { inputWrapper: "!bg-light" } }}
             >
               {(stock) => (
                 <AutocompleteItem
@@ -159,21 +157,6 @@ export default function AddForm({ stocks }: { stocks: Stock[] }) {
                 </AutocompleteItem>
               )}
             </Autocomplete>
-            <Input
-              classNames={{ inputWrapper: "!bg-light" }}
-              name="issued_at"
-              label="Data zakupu"
-              placeholder="24.01.2024"
-              type="date"
-              isRequired
-              value={singleRecord.issued_at}
-              onChange={(e) =>
-                setSingleRecord((prev) => ({
-                  ...prev,
-                  issued_at: e.target.value,
-                }))
-              }
-            />
             <Select
               classNames={{ trigger: "!bg-light" }}
               name="transaction_type"
@@ -194,22 +177,30 @@ export default function AddForm({ stocks }: { stocks: Stock[] }) {
                 </SelectItem>
               ))}
             </Select>
-
             <Input
               classNames={{ inputWrapper: "!bg-light" }}
-              name="amount"
+              name="quantity"
               label="Ilość"
-              placeholder="4"
+              placeholder="124"
               isRequired
-              value={singleRecord.quantity.toString()}
+              value={singleRecord.quantity}
+              onBlur={(e) => {
+                const value = parseInt(singleRecord.quantity);
+
+                !isNaN(value) &&
+                  setSingleRecord((prev) => ({
+                    ...prev,
+                    quantity: value === 0 ? "" : value.toString(),
+                  }));
+              }}
               onChange={(e) => {
                 let { value } = e.target;
-                if (value === "")
-                  return setSingleRecord((prev) => ({ ...prev, quantity: 0 }));
-                value = value.replace(/\D/g, "");
+
+                value = value.match(/[0-9]*/g)![0];
+
                 setSingleRecord((prev) => ({
                   ...prev,
-                  quantity: parseInt(value),
+                  quantity: value,
                 }));
               }}
             />
@@ -217,17 +208,30 @@ export default function AddForm({ stocks }: { stocks: Stock[] }) {
               classNames={{ inputWrapper: "!bg-light" }}
               name="price"
               label="Cena"
-              placeholder={numberFormatter.format(78)}
+              placeholder="0.00"
               isRequired
               value={singleRecord.price.toString()}
+              onBlur={(e) => {
+                const value = parseFloat(singleRecord.price);
+
+                !isNaN(value) &&
+                  setSingleRecord((prev) => ({
+                    ...prev,
+                    price: value == 0 ? "" : value.toString(),
+                  }));
+              }}
               onChange={(e) => {
                 let { value } = e.target;
-                if (value === "")
-                  return setSingleRecord((prev) => ({ ...prev, price: 0 }));
-                value = value.replace(/\D/g, "");
+
+                value = value
+                  .match(/([0-9]*[\.|\,]{0,1}[0-9]{0,2})/g)![0]
+                  .replace(",", ".");
+
+                value = value.startsWith(".") ? "0" + value : value;
+
                 setSingleRecord((prev) => ({
                   ...prev,
-                  price: parseFloat(value),
+                  price: value,
                 }));
               }}
             />
@@ -235,68 +239,91 @@ export default function AddForm({ stocks }: { stocks: Stock[] }) {
               classNames={{ inputWrapper: "!bg-light" }}
               name="commission"
               label="Prowizja"
-              placeholder={numberFormatter.format(5)}
-              isDisabled={!singleRecord.price || !singleRecord.quantity}
-              isRequired
-              value={singleRecord.commission.toString()}
-              onChange={(e) => {
-                let { value } = e.target;
-                if (value === "")
+              placeholder="0.00"
+              isDisabled={value <= 0}
+              value={singleRecord.commission}
+              onBlur={(e) => {
+                if (singleRecord.commission == "") {
                   return setSingleRecord((prev) => ({
                     ...prev,
-                    commission: 0,
+                    commission: "0",
                   }));
-                value = value.replace(/\D/g, "");
+                }
+
+                const float = parseFloat(singleRecord.commission);
+                !isNaN(float) &&
+                  setSingleRecord((prev) => ({
+                    ...prev,
+                    commission: float.toString(),
+                  }));
+              }}
+              onChange={(e) => {
+                let { value } = e.target;
+
+                value = value
+                  .match(/([0-9]*[\.|\,]{0,1}[0-9]{0,2})/g)![0]
+                  .replace(",", ".");
+
+                value = value.startsWith(".") ? "0" + value : value;
+
                 setSingleRecord((prev) => ({
                   ...prev,
-                  commission: parseFloat(value),
+                  commission: value,
                 }));
+              }}
+              onFocus={(e) => {
+                if (singleRecord.commission == "0") {
+                  setSingleRecord((prev) => ({
+                    ...prev,
+                    commission: "",
+                  }));
+                }
               }}
             />
             <Input
-              classNames={{ base: "col-span-2", inputWrapper: "!bg-light" }}
-              name="value"
-              label="Wartość"
-              readOnly
-              isRequired
-              value={numberFormatter.format(
-                singleRecord.price * singleRecord.quantity
-              )}
-            />
-            {/* <Textarea
-              className="col-span-2"
               classNames={{ inputWrapper: "!bg-light" }}
-              name="number"
-              label="Opis"
-              placeholder="Wynagrodzenie za luty"
-              value={singleRecord.description}
+              name="issued_at"
+              label="Data zawarcia"
+              placeholder="24.01.2024"
+              type="date"
+              isRequired
+              value={singleRecord.issued_at}
               onChange={(e) =>
                 setSingleRecord((prev) => ({
                   ...prev,
-                  description: e.target.value,
+                  issued_at: e.target.value,
                 }))
               }
-            /> */}
+            />
           </div>
         )}
-
-        <input type="hidden" name="method" value={method} />
-        <input
-          type="hidden"
-          name="data"
-          value={
-            method === "csv"
-              ? JSON.stringify(records)
-              : JSON.stringify(singleRecord)
-          }
-        />
         <div className="flex-1 flex justify-end items-end gap-4">
-          <div></div>
           <Button
-            isDisabled={isPending}
+            color="secondary"
+            type="submit"
+            className="h-9 text-white"
+            isIconOnly
+          >
+            <PlusIcon className="mt-0.5" size={16} />
+          </Button>
+        </div>
+      </form>
+      <div className="bg-white rounded-lg px-10 py-8 flex flex-col gap-4">
+        <h2 className="text-lg">Podgląd</h2>
+        <TransactionTable stocks={records} count={records.length} viewOnly />
+        <form
+          className="flex flex-col"
+          action={(e) =>
+            startTransition(async () => {
+              const { error } = await addStocks(e);
+            })
+          }
+        >
+          <Button
+            isDisabled={isPending || records.length === 0}
             color="primary"
             type="submit"
-            className="h-9 w-24 text-white"
+            className="h-9 w-24 text-white self-end"
           >
             {isPending ? (
               <Spinner color="white" size="sm" />
@@ -306,11 +333,8 @@ export default function AddForm({ stocks }: { stocks: Stock[] }) {
               </Fragment>
             )}
           </Button>
-        </div>
-      </form>
-      <div className="bg-white rounded-lg px-10 py-8 flex flex-col gap-4">
-        <h2 className="text-lg">Podgląd</h2>
-        <div></div>
+          <input type="hidden" name="data" value={JSON.stringify(records)} />
+        </form>
       </div>
     </div>
   );

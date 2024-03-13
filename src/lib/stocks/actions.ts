@@ -27,7 +27,13 @@ export async function getStocks(
 export async function getOwnStocks(): Promise<
   SupabaseResponse<StockTransaction>
 > {
-  const { data: results, error } = await supabase.from("stocks").select("*");
+  const {
+    data: results,
+    count,
+    error,
+  } = await supabase
+    .from("stocks")
+    .select("*", { count: "exact", head: false });
   if (error) {
     return {
       results: [],
@@ -36,6 +42,7 @@ export async function getOwnStocks(): Promise<
   }
   return {
     results,
+    count,
   };
 }
 

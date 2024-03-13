@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -33,6 +33,8 @@ type Props = {
   type?: "expense" | "income";
   title?: string;
   children?: React.ReactNode;
+  page?: string;
+  sort?: string;
 };
 
 export default function OperationTable({
@@ -41,58 +43,39 @@ export default function OperationTable({
   viewOnly,
   type,
   title,
+  page,
+  sort,
   children,
 }: Props) {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const [items, setItems] = useState<Operation[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<Set<any> | "all">(
     new Set([])
   );
   const pages = Math.ceil(count / 10);
-  const [searchQuery, setSearchQuery] = useState({
-    page: 1,
-    sort: "",
-  });
-  const { page, sort } = searchQuery;
+  const defaultQuery = {
+    page: page ? parseInt(page) : 1,
+    sort: sort || "",
+  };
+  const [searchQuery, setSearchQuery] = useState(defaultQuery);
 
   useEffect(() => {
-    if (viewOnly) return;
-    const params = new URLSearchParams(searchParams);
-    params.set("page", page.toString());
-    sort && params.set("sort", sort);
-    router.push(`${pathname}?${params.toString()}`);
-  }, [searchQuery]);
+    if (!viewOnly) return;
+    const start = (searchQuery.page - 1) * 10;
+    const end = start + 10;
+    return setItems(operations.slice(start, end));
+  }, [operations]);
 
-  const bottomContent = React.useMemo(() => {
-    return (
-      <div
-        className={`py-2 px-2 flex ${
-          viewOnly ? "justify-end" : "justify-between"
-        } items-start`}
-      >
-        {!viewOnly && (
-          <span className="text-small text-default-400">
-            {selectedKeys === "all"
-              ? "All items selected"
-              : `${selectedKeys.size} of ${count} selected`}
-          </span>
-        )}
-        <Pagination
-          isCompact
-          showControls
-          showShadow
-          color="primary"
-          className="text-background"
-          page={page}
-          total={pages}
-          onChange={(page: number) =>
-            setSearchQuery((prev) => ({ ...prev, page }))
-          }
-        />
-      </div>
-    );
-  }, [operations, page, pages, selectedKeys]);
+  useEffect(() => {
+    setIsLoading(false);
+    setSearchQuery(defaultQuery);
+  }, [page, sort]);
+
+  useEffect(() => {
+    console.log("effect", searchQuery);
+  }, [searchQuery]);
 
   const renderCell = React.useCallback((item: any, columnKey: any) => {
     const cellValue = item[columnKey];
@@ -130,6 +113,15 @@ export default function OperationTable({
     }
   }, []);
 
+  const onPageChange = useCallback(
+    (page: number) => {
+      setIsLoading(true);
+      console.log(searchQuery);
+      router.push(`${pathname}?page=${page}${sort ? "&sort=" + sort : ""}`);
+    },
+    [sort]
+  );
+
   return (
     <div className="bg-white rounded-lg py-8 px-10 flex flex-col gap-4">
       <div className="flex items-center justify-between gap-4 mb-2">
@@ -153,18 +145,20 @@ export default function OperationTable({
         color="primary"
         selectionMode={"multiple"}
         sortDescriptor={{
-          column: sort?.includes("-") ? sort?.split("-")[1] : sort?.toString(),
-          direction: sort?.includes("-") ? "descending" : "ascending",
+          column: sort?.startsWith("-") ? sort.slice(1) : sort,
+          direction: searchQuery.sort.includes("-")
+            ? "descending"
+            : "ascending",
         }}
-        onSortChange={(descriptor: SortDescriptor) =>
-          setSearchQuery({
-            page: 1,
-            sort:
-              (descriptor.direction === "descending" ? "-" : "") +
-              descriptor.column,
-          })
-        }
-        bottomContent={count > 0 && bottomContent}
+        onSortChange={({ direction, column }: SortDescriptor) => {
+          setIsLoading(true);
+          router.push(
+            `${pathname}?page=1&sort=${
+              direction === "descending" ? "-" : ""
+            }${column}`
+          );
+        }}
+        // bottomContent={count > 0 && bottomContent}
         bottomContentPlacement="outside"
         aria-label="Example static collection table"
         className={`max-w-full w-full flex-1`}
@@ -190,21 +184,59 @@ export default function OperationTable({
           ))}
         </TableHeader>
         <TableBody
+          isLoading={isLoading}
           emptyContent={"No rows found"}
-          items={operations}
-          loadingContent={<Spinner label="Loading..." />}
+          items={viewOnly ? items : operations}
+          loadingContent={<Spinner />}
         >
-          {(item: any) => (
-            <TableRow
-              key={item.id || item.title + item.amount + item.issued_at}
-            >
+          {(viewOnly ? items : operations).map((operation, i) => (
+            <TableRow key={`operation:${i}:${page}`}>
               {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
+                <TableCell>{renderCell(operation, columnKey)}</TableCell>
               )}
             </TableRow>
-          )}
+          ))}
         </TableBody>
       </Table>
+      <div
+        className={`py-2 px-2 flex ${
+          viewOnly ? "justify-end" : "justify-between"
+        } items-start`}
+      >
+        {!viewOnly && (
+          <span className="text-small text-default-400">
+            {selectedKeys === "all"
+              ? "All items selected"
+              : `${selectedKeys.size} of ${count} selected`}
+          </span>
+        )}
+        <Pagination
+          isCompact
+          showControls
+          showShadow
+          color="primary"
+          className="text-background"
+          page={searchQuery.page}
+          isDisabled={isLoading}
+          total={pages}
+          onChange={onPageChange}
+        />
+        {/* <div className="flex items-center gap-4">
+          {Array.from(Array(4)).map((_, i) => (
+            <button
+              onClick={() => {
+                setIsLoading(true);
+                console.log(searchQuery);
+                router.push(
+                  `${pathname}?page=${i + 1}${sort ? "&sort=" + sort : ""}`
+                );
+              }}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div> */}
+      </div>
       {children}
     </div>
   );

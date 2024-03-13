@@ -20,6 +20,7 @@ export default async function Page({
           operations={incomes}
           count={count || 0}
           type="income"
+          {...searchParams}
         />
       )}
       {incomes.length > 0 ? (

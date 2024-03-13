@@ -46,15 +46,14 @@ type Stock = {
 };
 
 type StockTransaction = {
-  id: string;
   symbol: string;
   transaction_type: "sell" | "buy";
-  price: number;
-  commission: number;
+  price: string;
+  commission: string;
   commission_type?: "percentage" | "value";
   value: number;
   issued_at: string;
-  quantity: number;
+  quantity: string;
   currency: string;
 };
 
