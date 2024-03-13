@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -115,6 +115,38 @@ export default function OperationTable({
     }
   }, []);
 
+  const bottomContent = useMemo(() => {
+    return (
+      <div
+        className={`py-2 px-2 flex ${
+          viewOnly ? "justify-end" : "justify-between"
+        } items-start`}
+      >
+        {!viewOnly && (
+          <span className="text-small text-default-400">
+            {selectedKeys === "all"
+              ? "All items selected"
+              : `${selectedKeys.size} of ${count} selected`}
+          </span>
+        )}
+        <Pagination
+          isCompact
+          showControls
+          showShadow
+          color="primary"
+          className="text-background"
+          page={searchQuery.page}
+          isDisabled={isLoading}
+          total={pages}
+          onChange={(page: number) => {
+            setIsLoading(true);
+            setSearchQuery((prev) => ({ ...prev, page }));
+          }}
+        />
+      </div>
+    );
+  }, [selectedKeys, count, searchQuery, operations]);
+
   return (
     <div className="bg-white rounded-lg py-8 px-10 flex flex-col gap-4">
       <div className="flex items-center justify-between gap-4 mb-2">
@@ -152,7 +184,7 @@ export default function OperationTable({
             sort: `${direction === "descending" ? "-" : ""}${column}`,
           }));
         }}
-        // bottomContent={count > 0 && bottomContent}
+        bottomContent={count > 0 && bottomContent}
         bottomContentPlacement="outside"
         aria-label="Example static collection table"
         className={`max-w-full w-full flex-1`}
@@ -192,48 +224,6 @@ export default function OperationTable({
           ))}
         </TableBody>
       </Table>
-      <div
-        className={`py-2 px-2 flex ${
-          viewOnly ? "justify-end" : "justify-between"
-        } items-start`}
-      >
-        {!viewOnly && (
-          <span className="text-small text-default-400">
-            {selectedKeys === "all"
-              ? "All items selected"
-              : `${selectedKeys.size} of ${count} selected`}
-          </span>
-        )}
-        <Pagination
-          isCompact
-          showControls
-          showShadow
-          color="primary"
-          className="text-background"
-          page={searchQuery.page}
-          isDisabled={isLoading}
-          total={pages}
-          onChange={(page: number) => {
-            setIsLoading(true);
-            setSearchQuery((prev) => ({ ...prev, page }));
-          }}
-        />
-        {/* <div className="flex items-center gap-4">
-          {Array.from(Array(4)).map((_, i) => (
-            <button
-              onClick={() => {
-                setIsLoading(true);
-                console.log(searchQuery);
-                router.push(
-                  `${pathname}?page=${i + 1}${sort ? "&sort=" + sort : ""}`
-                );
-              }}
-            >
-              {i + 1}
-            </button>
-          ))}
-        </div> */}
-      </div>
       {children}
     </div>
   );
