@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   Table,
   TableHeader,
@@ -29,7 +36,7 @@ const columns = [
 type Props = {
   operations: Operation[];
   count: number;
-  viewOnly?: boolean;
+  setOperations?: Dispatch<SetStateAction<Operation[]>>;
   type?: "expense" | "income";
   title?: string;
   children?: React.ReactNode;
@@ -43,7 +50,7 @@ type SearchQuery = {
 export default function OperationTable({
   operations,
   count,
-  viewOnly,
+  setOperations,
   type,
   title,
   children,
@@ -56,22 +63,24 @@ export default function OperationTable({
     new Set([])
   );
   const pages = Math.ceil(count / 10);
+  const viewOnly = !!setOperations;
   const [searchQuery, setSearchQuery] = useState<SearchQuery>({
     page: 1,
   });
 
   useEffect(() => {
     if (!viewOnly) return;
-    const start = (searchQuery.page - 1) * 10;
+    const start = ((searchQuery.page || 1) - 1) * 10;
     const end = start + 10;
     return setItems(operations.slice(start, end));
-  }, [searchQuery.page]);
+  }, [operations, searchQuery.page]);
 
   useEffect(() => {
     setIsLoading(false);
   }, [operations]);
 
   useEffect(() => {
+    if (viewOnly) return;
     const searchParams = new URLSearchParams();
     Object.keys(searchQuery).map((key: string) => {
       searchParams.set(
@@ -79,7 +88,7 @@ export default function OperationTable({
         String(searchQuery[key as keyof typeof searchQuery])
       );
     });
-    router.push(`${pathname}?${searchParams.toString()}`);
+    router.push(`${pathname}?${searchParams.toString()}`, { scroll: false });
   }, [searchQuery]);
 
   const renderCell = useCallback((item: any, columnKey: any) => {
@@ -129,7 +138,7 @@ export default function OperationTable({
           <span className="text-small text-default-400">
             {selectedKeys === "all"
               ? "All items selected"
-              : `${selectedKeys.size} of ${count} selected`}
+              : `Zaznaczono ${selectedKeys.size} z ${count}`}
           </span>
         )}
         <Pagination
@@ -160,7 +169,24 @@ export default function OperationTable({
               items={selectedKeys}
               count={count}
               type={type}
+              viewOnly={viewOnly}
               callback={() => {
+                if (viewOnly) {
+                  const keys: string[] =
+                    selectedKeys === "all"
+                      ? []
+                      : Array.from(selectedKeys.values());
+                  const toDelete: number[] = keys.reduce((prev, curr) => {
+                    const [_, index, page] = curr.split(":");
+                    const id = (parseInt(page) - 1) * 10 + parseInt(index);
+                    return [...prev, id];
+                  }, [] as number[]);
+                  setOperations((prev) =>
+                    selectedKeys === "all"
+                      ? []
+                      : prev.filter((_, i) => !toDelete.includes(i))
+                  );
+                }
                 setSelectedKeys(new Set([]));
               }}
             />
