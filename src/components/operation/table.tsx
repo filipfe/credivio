@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -33,7 +33,10 @@ type Props = {
   type?: "expense" | "income";
   title?: string;
   children?: React.ReactNode;
-  page?: string;
+};
+
+type SearchQuery = {
+  page: number;
   sort?: string;
 };
 
@@ -43,8 +46,6 @@ export default function OperationTable({
   viewOnly,
   type,
   title,
-  page,
-  sort,
   children,
 }: Props) {
   const [isLoading, setIsLoading] = useState(false);
@@ -55,13 +56,12 @@ export default function OperationTable({
     new Set([])
   );
   const pages = Math.ceil(count / 10);
-  const defaultQuery = {
-    page: page ? parseInt(page) : 1,
-    sort: sort || "",
-  };
-  const [searchQuery, setSearchQuery] = useState(defaultQuery);
+  const [searchQuery, setSearchQuery] = useState<SearchQuery>({
+    page: 1,
+  });
 
   useEffect(() => {
+    setIsLoading(false);
     if (!viewOnly) return;
     const start = (searchQuery.page - 1) * 10;
     const end = start + 10;
@@ -69,15 +69,17 @@ export default function OperationTable({
   }, [operations]);
 
   useEffect(() => {
-    setIsLoading(false);
-    setSearchQuery(defaultQuery);
-  }, [page, sort]);
-
-  useEffect(() => {
-    console.log("effect", searchQuery);
+    const searchParams = new URLSearchParams();
+    Object.keys(searchQuery).map((key: string) => {
+      searchParams.set(
+        key,
+        String(searchQuery[key as keyof typeof searchQuery])
+      );
+    });
+    router.push(`${pathname}?${searchParams.toString()}`);
   }, [searchQuery]);
 
-  const renderCell = React.useCallback((item: any, columnKey: any) => {
+  const renderCell = useCallback((item: any, columnKey: any) => {
     const cellValue = item[columnKey];
 
     if (viewOnly) {
@@ -113,15 +115,6 @@ export default function OperationTable({
     }
   }, []);
 
-  const onPageChange = useCallback(
-    (page: number) => {
-      setIsLoading(true);
-      console.log(searchQuery);
-      router.push(`${pathname}?page=${page}${sort ? "&sort=" + sort : ""}`);
-    },
-    [sort]
-  );
-
   return (
     <div className="bg-white rounded-lg py-8 px-10 flex flex-col gap-4">
       <div className="flex items-center justify-between gap-4 mb-2">
@@ -145,18 +138,19 @@ export default function OperationTable({
         color="primary"
         selectionMode={"multiple"}
         sortDescriptor={{
-          column: sort?.startsWith("-") ? sort.slice(1) : sort,
-          direction: searchQuery.sort.includes("-")
+          column: searchQuery.sort?.startsWith("-")
+            ? searchQuery.sort.slice(1)
+            : searchQuery.sort,
+          direction: searchQuery.sort?.startsWith("-")
             ? "descending"
             : "ascending",
         }}
         onSortChange={({ direction, column }: SortDescriptor) => {
           setIsLoading(true);
-          router.push(
-            `${pathname}?page=1&sort=${
-              direction === "descending" ? "-" : ""
-            }${column}`
-          );
+          setSearchQuery((prev) => ({
+            ...prev,
+            sort: `${direction === "descending" ? "-" : ""}${column}`,
+          }));
         }}
         // bottomContent={count > 0 && bottomContent}
         bottomContentPlacement="outside"
@@ -190,7 +184,7 @@ export default function OperationTable({
           loadingContent={<Spinner />}
         >
           {(viewOnly ? items : operations).map((operation, i) => (
-            <TableRow key={`operation:${i}:${page}`}>
+            <TableRow key={`operation:${i}:${searchQuery.page}`}>
               {(columnKey) => (
                 <TableCell>{renderCell(operation, columnKey)}</TableCell>
               )}
@@ -219,7 +213,10 @@ export default function OperationTable({
           page={searchQuery.page}
           isDisabled={isLoading}
           total={pages}
-          onChange={onPageChange}
+          onChange={(page: number) => {
+            setIsLoading(true);
+            setSearchQuery((prev) => ({ ...prev, page }));
+          }}
         />
         {/* <div className="flex items-center gap-4">
           {Array.from(Array(4)).map((_, i) => (
