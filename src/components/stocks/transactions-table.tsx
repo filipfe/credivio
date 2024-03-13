@@ -23,15 +23,18 @@ const columns = [
   { key: "commission", label: "PROWIZJA" },
 ];
 
-export default function TransactionTable({
-  stocks,
-}: {
+type Props = {
   stocks: StockTransaction[];
-}) {
+  count: number;
+  viewOnly?: boolean;
+};
+
+export default function TransactionTable({ stocks, count, viewOnly }: Props) {
   return (
     <Table
       shadow="none"
       color="primary"
+      selectionMode={"multiple"}
       className="max-w-full w-full flex-1"
       checkboxesProps={{
         classNames: {
@@ -44,7 +47,10 @@ export default function TransactionTable({
     >
       <TableHeader>
         {columns.map((column) => (
-          <TableColumn key={column.key} allowsSorting>
+          <TableColumn
+            key={column.key}
+            allowsSorting={count > 0 && !viewOnly ? true : undefined}
+          >
             {column.label}
           </TableColumn>
         ))}
@@ -54,13 +60,23 @@ export default function TransactionTable({
         loadingContent={<Spinner label="Loading..." />}
         emptyContent={
           <div className="text-center flex-1 justify-center flex flex-col items-center gap-4">
-            <p>Nie masz jeszcze żadnych akcji!</p>
-            <Add type="stock" />
+            {viewOnly ? (
+              <p>Dodaj akcje, aby zobaczyć je na podglądzie.</p>
+            ) : (
+              <>
+                <p>Nie masz jeszcze żadnych akcji!</p>
+                <Add type="stock" />
+              </>
+            )}
           </div>
         }
       >
-        {(item) => (
-          <TableRow key={item.id}>
+        {(item: any) => (
+          <TableRow
+            key={
+              item.id || item.issued_at + item.price + item.value + item.symbol
+            }
+          >
             {(columnKey) => (
               <TableCell>{getKeyValue(item, columnKey)}</TableCell>
             )}

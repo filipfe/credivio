@@ -44,21 +44,19 @@ export default function OperationTable({ operations, count, viewOnly }: Props) {
   });
   const { page, sort } = searchQuery;
 
-  if (viewOnly) {
-    React.useMemo(() => {
+  useEffect(() => {
+    if (viewOnly) {
       const start = (page - 1) * 10;
       const end = start + 10;
 
       return setItems(operations.slice(start, end));
-    }, [page, operations]);
-  } else {
-    useEffect(() => {
+    } else {
       const params = new URLSearchParams(searchParams);
       params.set("page", page.toString());
       sort && params.set("sort", sort);
       router.push(`${pathname}?${params.toString()}`);
-    }, [searchQuery]);
-  }
+    }
+  }, [searchQuery, operations]);
 
   const bottomContent = React.useMemo(() => {
     return (

@@ -134,15 +134,27 @@ export default function AddForm({ type }: { type: OperationType }) {
               classNames={{ inputWrapper: "!bg-light" }}
               name="amount"
               label="Kwota"
-              placeholder="3600"
+              placeholder="0.00"
               isRequired
               value={singleRecord.amount}
-              // value={parseFloat(singleRecord.amount).toString()}
+              onBlur={(e) => {
+                const value = parseFloat(singleRecord.amount);
+
+                !isNaN(value) &&
+                  setSingleRecord((prev) => ({
+                    ...prev,
+                    amount: value == 0 ? "" : value.toString(),
+                  }));
+              }}
               onChange={(e) => {
                 let { value } = e.target;
-                if (value === "")
-                  return setSingleRecord((prev) => ({ ...prev, amount: "" }));
-                value = value.replace(/\D/g, "");
+
+                value = value
+                  .match(/([0-9]*[\.|\,]{0,1}[0-9]{0,2})/g)![0]
+                  .replace(",", ".");
+
+                value = value.startsWith(".") ? "0" + value : value;
+
                 setSingleRecord((prev) => ({
                   ...prev,
                   amount: value,

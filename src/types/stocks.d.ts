@@ -45,12 +45,12 @@ type Stock = {
 };
 
 type StockTransaction = {
-  id: string;
   symbol: string;
   transaction_type: string;
   price: string;
   commission: string;
-  value: string;
+  value?: string;
+  quantity: string;
   issued_at: string;
 };
 

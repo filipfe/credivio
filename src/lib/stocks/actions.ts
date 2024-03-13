@@ -34,8 +34,12 @@ export async function getOwnStocks(): Promise<
       error: error.message,
     };
   }
+  const { count } = await supabase
+    .from("stocks")
+    .select("*", { count: "exact", head: true });
   return {
     results,
+    count,
   };
 }
 
@@ -45,24 +49,9 @@ export async function addStocks(
   const method = formData.get("method")?.toString() as AddMethodKey;
   const data = formData.get("data")!.toString();
 
-  let results: StockTransaction[] = [];
-
   try {
-    switch (method) {
-      case "csv":
-        results = JSON.parse(data);
-        break;
-      case "manual":
-        results = [JSON.parse(data)];
-        break;
-      default:
-        return {
-          error: "Nieprawidłowa metoda!",
-          results,
-        };
-    }
-
-    const { error } = await supabase.from(`stocks`).insert(results);
+    const results: Operation[] = JSON.parse(data);
+    const { error } = await supabase.from("stocks").insert(results);
     console.log(error);
     if (error) {
       return {
@@ -73,7 +62,7 @@ export async function addStocks(
   } catch (err) {
     return {
       error: "Parse error",
-      results,
+      results: [],
     };
   }
 

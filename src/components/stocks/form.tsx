@@ -1,20 +1,29 @@
 "use client";
 
-import { ADD_METHODS, CURRENCIES } from "@/const";
+import { ADD_METHODS } from "@/const";
 import {
-  Autocomplete,
-  AutocompleteItem,
   Button,
   Input,
   Radio,
   RadioGroup,
+  Select,
+  SelectItem,
   Spinner,
-  Textarea,
 } from "@nextui-org/react";
-import { CheckIcon, EyeIcon, PaperclipIcon } from "lucide-react";
+import { CheckIcon, PaperclipIcon, PlusIcon } from "lucide-react";
 import { ChangeEvent, Fragment, useState, useTransition } from "react";
 import parseCSV from "@/utils/operation/parse-csv";
 import { addStocks } from "@/lib/stocks/actions";
+import TransactionTable from "./transactions-table";
+
+const defaultRecord = {
+  symbol: "",
+  transaction_type: "buy",
+  price: "",
+  commission: "0",
+  quantity: "",
+  issued_at: new Date().toISOString().substring(0, 10),
+};
 
 const formatter = (data: string[][]): Omit<StockTransaction, "id">[] => {
   return data
@@ -32,9 +41,9 @@ const formatter = (data: string[][]): Omit<StockTransaction, "id">[] => {
         ,
         commission,
       ] = record;
-      price = price.replace(",", ".");
-      commission = commission.replace(",", ".");
-      value = value.replace(",", ".");
+      price = price;
+      commission = commission;
+      value = value;
       const result = {
         issued_at,
         symbol,
@@ -54,13 +63,8 @@ export default function AddForm() {
   const [method, setMethod] = useState<AddMethodKey>("manual");
   const [fileName, setFileName] = useState("");
   const [records, setRecords] = useState<Omit<StockTransaction, "id">[]>([]);
-  const [singleRecord, setSingleRecord] = useState<Operation>({
-    title: "",
-    issued_at: new Date().toISOString().substring(0, 10),
-    amount: "0",
-    currency: "PLN",
-    description: "",
-  });
+  const [singleRecord, setSingleRecord] =
+    useState<StockTransaction>(defaultRecord);
 
   const onFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.item(0);
@@ -69,23 +73,17 @@ export default function AddForm() {
     await parseCSV(file, (results) => setRecords(formatter(results)));
   };
 
-  const isPreviewHidden =
-    method === "csv"
-      ? !!fileName
-      : Object.keys(singleRecord).some((key) => {
-          const value = singleRecord[key as keyof Expense];
-          return !!value && value !== "0";
-        });
+  const addRecord = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setRecords((prev) => [...prev, singleRecord]);
+    setSingleRecord(defaultRecord);
+  };
 
   return (
     <div className="flex flex-col xl:grid grid-cols-2 gap-8 mt-8">
       <form
         className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col"
-        action={(e) =>
-          startTransition(async () => {
-            const { error } = await addStocks(e);
-          })
-        }
+        onSubmit={addRecord}
       >
         <h2 className="text-lg">Dane</h2>
         <RadioGroup
@@ -120,68 +118,158 @@ export default function AddForm() {
           <div className="grid grid-cols-2 gap-4 my-4">
             <Input
               classNames={{ inputWrapper: "!bg-light" }}
-              name="title"
-              label="Tytuł"
-              placeholder="Wynagrodzenie"
+              name="symbol"
+              label="Instrument"
+              placeholder="PEPCO"
               isRequired
-              value={singleRecord.title}
+              value={singleRecord.symbol}
               onChange={(e) =>
-                setSingleRecord((prev) => ({ ...prev, title: e.target.value }))
+                setSingleRecord((prev) => ({
+                  ...prev,
+                  symbol: e.target.value.toUpperCase(),
+                }))
               }
             />
             <Input
               classNames={{ inputWrapper: "!bg-light" }}
-              name="amount"
-              label="Kwota"
-              placeholder="3600"
+              name="quantity"
+              label="Ilość"
+              placeholder="0"
               isRequired
-              value={parseFloat(singleRecord.amount).toString()}
+              value={singleRecord.quantity}
+              onBlur={(e) => {
+                const value = parseFloat(singleRecord.quantity);
+
+                !isNaN(value) &&
+                  setSingleRecord((prev) => ({
+                    ...prev,
+                    quantity: value == 0 ? "" : value.toString(),
+                  }));
+              }}
               onChange={(e) => {
                 let { value } = e.target;
-                if (value === "")
-                  return setSingleRecord((prev) => ({ ...prev, amount: "0" }));
-                value = value.replace(/\D/g, "");
+
+                value = value
+                  .match(/([0-9]*[\.|\,]{0,1}[0-9]{0,2})/g)![0]
+                  .replace(",", ".");
+
+                value = value.startsWith(".") ? "0" + value : value;
+
                 setSingleRecord((prev) => ({
                   ...prev,
-                  amount: value,
+                  quantity: value,
                 }));
               }}
             />
-            <Autocomplete
-              label="Waluta"
-              placeholder="PLN"
-              isClearable={false}
+            <Input
+              classNames={{ inputWrapper: "!bg-light" }}
+              name="price"
+              label="Cena"
+              placeholder="0.00"
               isRequired
-              value={singleRecord.currency}
-              selectedKey={singleRecord.currency}
-              onSelectionChange={(curr) =>
+              value={singleRecord.price}
+              onBlur={(e) => {
+                const value = parseFloat(singleRecord.price);
+
+                !isNaN(value) &&
+                  setSingleRecord((prev) => ({
+                    ...prev,
+                    price: value == 0 ? "" : value.toString(),
+                  }));
+              }}
+              onChange={(e) => {
+                let { value } = e.target;
+
+                value = value
+                  .match(/([0-9]*[\.|\,]{0,1}[0-9]{0,2})/g)![0]
+                  .replace(",", ".");
+
+                value = value.startsWith(".") ? "0" + value : value;
+
                 setSingleRecord((prev) => ({
                   ...prev,
-                  currency: curr.toString(),
+                  price: value,
+                }));
+              }}
+            />
+            <Input
+              classNames={{ inputWrapper: "!bg-light" }}
+              name="commission"
+              label="Prowizja"
+              placeholder="0.00"
+              value={singleRecord.commission}
+              onBlur={(e) => {
+                if (singleRecord.commission == "") {
+                  return setSingleRecord((prev) => ({
+                    ...prev,
+                    commission: "0",
+                  }));
+                }
+
+                !isNaN(parseFloat(singleRecord.commission)) &&
+                  setSingleRecord((prev) => ({
+                    ...prev,
+                    commission: parseFloat(singleRecord.commission).toString(),
+                  }));
+              }}
+              onChange={(e) => {
+                let { value } = e.target;
+
+                value = value
+                  .match(/([0-9]*[\.|\,]{0,1}[0-9]{0,2})/g)![0]
+                  .replace(",", ".");
+
+                value = value.startsWith(".") ? "0" + value : value;
+
+                setSingleRecord((prev) => ({
+                  ...prev,
+                  commission: value,
+                }));
+              }}
+              onFocus={(e) => {
+                if (singleRecord.commission == "0") {
+                  setSingleRecord((prev) => ({
+                    ...prev,
+                    commission: "",
+                  }));
+                }
+              }}
+            />
+            <Select
+              classNames={{ trigger: "!bg-light" }}
+              label="Typ transakcji"
+              placeholder="Buy"
+              value={singleRecord.transaction_type}
+              selectionMode="single"
+              onSelectionChange={(e) =>
+                setSingleRecord((prev) => ({
+                  ...prev,
+                  transaction_type: e.values().next().value,
                 }))
               }
-              inputProps={{
-                classNames: {
-                  inputWrapper: "!bg-light",
-                },
-              }}
+              selectedKeys={[singleRecord.transaction_type]}
+              disallowEmptySelection
+              isRequired
             >
-              {CURRENCIES.map((curr) => (
-                <AutocompleteItem
-                  value={curr}
-                  classNames={{
-                    base: "!bg-white hover:!bg-light",
-                  }}
-                  key={curr}
-                >
-                  {curr}
-                </AutocompleteItem>
-              ))}
-            </Autocomplete>
+              <SelectItem
+                key="buy"
+                value="buy"
+                className="!bg-white hover:!bg-light"
+              >
+                Buy
+              </SelectItem>
+              <SelectItem
+                key="sell"
+                value="sell"
+                className="!bg-white hover:!bg-light"
+              >
+                Sell
+              </SelectItem>
+            </Select>
             <Input
               classNames={{ inputWrapper: "!bg-light" }}
               name="issued_at"
-              label="Data uiszczenia"
+              label="Data zawarcia"
               placeholder="24.01.2024"
               type="date"
               isRequired
@@ -193,40 +281,35 @@ export default function AddForm() {
                 }))
               }
             />
-            <Textarea
-              className="col-span-2"
-              classNames={{ inputWrapper: "!bg-light" }}
-              name="number"
-              label="Opis"
-              placeholder="Wynagrodzenie za luty"
-              value={singleRecord.description}
-              onChange={(e) =>
-                setSingleRecord((prev) => ({
-                  ...prev,
-                  description: e.target.value,
-                }))
-              }
-            />
           </div>
         )}
-
-        <input type="hidden" name="method" value={method} />
-        <input
-          type="hidden"
-          name="data"
-          value={
-            method === "csv"
-              ? JSON.stringify(records)
-              : JSON.stringify(singleRecord)
-          }
-        />
         <div className="flex-1 flex justify-end items-end gap-4">
-          <div></div>
           <Button
-            isDisabled={isPending}
+            color="secondary"
+            type="submit"
+            className="h-9 text-white"
+            isIconOnly
+          >
+            <PlusIcon className="mt-0.5" size={16} />
+          </Button>
+        </div>
+      </form>
+      <div className="bg-white rounded-lg px-10 py-8 flex flex-col gap-4">
+        <h2 className="text-lg">Podgląd</h2>
+        <TransactionTable stocks={records} count={records.length} viewOnly />
+        <form
+          className="flex flex-col"
+          action={(e) =>
+            startTransition(async () => {
+              const { error } = await addStocks(e);
+            })
+          }
+        >
+          <Button
+            isDisabled={isPending || records.length === 0}
             color="primary"
             type="submit"
-            className="h-9 w-24 text-white"
+            className="h-9 w-24 text-white self-end"
           >
             {isPending ? (
               <Spinner color="white" size="sm" />
@@ -236,20 +319,8 @@ export default function AddForm() {
               </Fragment>
             )}
           </Button>
-        </div>
-      </form>
-      <div className="bg-white rounded-lg px-10 py-8 flex flex-col gap-4">
-        <h2 className="text-lg">Podgląd</h2>
-        {isPreviewHidden ? (
-          <div></div>
-        ) : (
-          <div className="flex-1 flex flex-col items-center justify-center text-center gap-2 w-full self-center max-w-[16rem]">
-            <EyeIcon size={48} strokeWidth={1} />
-            <p className="text-sm">
-              Wypełnij formularz, aby zobaczyć podgląd swoich wydatków
-            </p>
-          </div>
-        )}
+          <input type="hidden" name="data" value={JSON.stringify(records)} />
+        </form>
       </div>
     </div>
   );
