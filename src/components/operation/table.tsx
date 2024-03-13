@@ -61,11 +61,14 @@ export default function OperationTable({
   });
 
   useEffect(() => {
-    setIsLoading(false);
     if (!viewOnly) return;
     const start = (searchQuery.page - 1) * 10;
     const end = start + 10;
     return setItems(operations.slice(start, end));
+  }, [searchQuery.page]);
+
+  useEffect(() => {
+    setIsLoading(false);
   }, [operations]);
 
   useEffect(() => {
@@ -139,13 +142,13 @@ export default function OperationTable({
           isDisabled={isLoading}
           total={pages}
           onChange={(page: number) => {
-            setIsLoading(true);
+            !viewOnly && setIsLoading(true);
             setSearchQuery((prev) => ({ ...prev, page }));
           }}
         />
       </div>
     );
-  }, [selectedKeys, count, searchQuery, operations]);
+  }, [selectedKeys, count, searchQuery, operations, isLoading]);
 
   return (
     <div className="bg-white rounded-lg py-8 px-10 flex flex-col gap-4">
@@ -153,7 +156,14 @@ export default function OperationTable({
         <h1 className="text-lg">{title}</h1>
         <div className="flex items-center gap-1.5">
           {(selectedKeys === "all" || selectedKeys.size > 0) && (
-            <Delete items={Array.from(selectedKeys)} />
+            <Delete
+              items={selectedKeys}
+              count={count}
+              type={type}
+              callback={() => {
+                setSelectedKeys(new Set([]));
+              }}
+            />
           )}
           {type && (selectedKeys === "all" || selectedKeys.size > 0) && (
             <Edit
@@ -179,10 +189,10 @@ export default function OperationTable({
         }}
         onSortChange={({ direction, column }: SortDescriptor) => {
           setIsLoading(true);
-          setSearchQuery((prev) => ({
-            ...prev,
+          setSearchQuery({
+            page: 1,
             sort: `${direction === "descending" ? "-" : ""}${column}`,
-          }));
+          });
         }}
         bottomContent={count > 0 && bottomContent}
         bottomContentPlacement="outside"
@@ -216,7 +226,9 @@ export default function OperationTable({
           loadingContent={<Spinner />}
         >
           {(viewOnly ? items : operations).map((operation, i) => (
-            <TableRow key={`operation:${i}:${searchQuery.page}`}>
+            <TableRow
+              key={operation.id || `operation:${i}:${searchQuery.page}`}
+            >
               {(columnKey) => (
                 <TableCell>{renderCell(operation, columnKey)}</TableCell>
               )}
