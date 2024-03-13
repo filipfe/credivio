@@ -20,9 +20,7 @@ type ColumnKey = keyof Dividend | "profit";
 
 type TableDividend = Dividend & { profit?: string };
 
-const columns: (
-  profitVisible?: boolean
-) => { key: ColumnKey; label: string }[] = (profitVisible) => [
+const columns = (profitVisible?: boolean) => [
   { key: "company", label: "SPÓŁKA" },
   { key: "amount", label: "WYSOKOŚĆ" },
   { key: "ratio", label: "STOPA" },
@@ -30,7 +28,10 @@ const columns: (
   { key: "payment_date", label: "DZIEŃ WYPŁATY" },
   { key: "for_year", label: "ZA ROK OBROTOWY" },
   ...(profitVisible
-    ? [{ key: "profit" as ColumnKey, label: "TWÓJ ZYSK" }]
+    ? [{ key: "net_profit" as ColumnKey, label: "ZYSK (NETTO)" }]
+    : []),
+  ...(profitVisible
+    ? [{ key: "profit" as ColumnKey, label: "ZYSK (BRUTTO)" }]
     : []),
 ];
 
@@ -53,24 +54,27 @@ export default function DividendsTable({ dividends, holdings }: Props) {
   const validItems = holdings
     ? dividends.map((item) => {
         if (!holdings) return item;
-        const profitFloat =
-          parseFloat(item.amount) * (holdings[item.company] || 0);
-        const profit = new Intl.NumberFormat("pl-PL", {
+        const numberFormatter = new Intl.NumberFormat("pl-PL", {
           style: "currency",
           currency: item.currency,
-        }).format(profitFloat);
+        });
+        const profitFloat =
+          parseFloat(item.amount) * (holdings[item.company] || 0);
+        const netProfitFloat = profitFloat * 0.81;
+        const profit = numberFormatter.format(profitFloat);
+        const net_profit = numberFormatter.format(netProfitFloat);
         return {
           ...item,
+          net_profit,
           profit,
         };
       })
     : dividends;
 
-  console.log(validItems);
-
   return (
     <Table
       shadow="none"
+      aria-label="dividend-table"
       color="primary"
       className="max-w-full w-full flex-1 rounded-t-lg"
       classNames={{

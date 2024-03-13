@@ -15,8 +15,8 @@ type Props = {
 
 export default function PieChart({ data, legend, height }: Props) {
   return (
-    <div className="flex flex-col gap-4 items-center">
-      <ResponsiveContainer width="100%" height={height || 400}>
+    <div className="flex flex-col items-center" style={{ height }}>
+      <ResponsiveContainer width="100%" height="100%">
         <PieChartWrapper>
           <Pie data={data} dataKey="value" nameKey="name" cx="50%" cy="50%">
             {data.map((item, k) => (

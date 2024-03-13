@@ -14,12 +14,14 @@ export default async function Page({
   );
   return (
     <div className="px-12 pt-8 pb-24 flex flex-col h-full gap-8">
-      <IncomeTable
-        title="Przychody"
-        operations={incomes}
-        count={count || 0}
-        type="income"
-      />
+      {incomes.length > 0 && (
+        <IncomeTable
+          title="Przychody"
+          operations={incomes}
+          count={count || 0}
+          type="income"
+        />
+      )}
       {incomes.length > 0 ? (
         <OperationList operations={incomes} type="income" />
       ) : (

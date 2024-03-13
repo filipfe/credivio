@@ -46,7 +46,7 @@ export default function PortfolioStructure({ stocks, cash, holdings }: Props) {
     .map((item, k) => ({ ...item, color: COLORS[k % COLORS.length] }));
 
   return (
-    <div className="flex flex-col xl:grid grid-cols-5 gap-8 items-start min-h-[30rem]">
+    <div className="flex flex-col xl:grid grid-cols-5 gap-8 items-start">
       <Accordion defaultExpandedKeys={[data[0].name]} className="col-span-3">
         {data.map(({ children, name, value, color, label }, k) => (
           <AccordionItem

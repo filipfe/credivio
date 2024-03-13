@@ -58,15 +58,18 @@ export default async function Home() {
         description=""
         previous={{ amount: "100" }}
       />
-      <div className="xl:col-span-3 bg-white rounded-lg px-10 py-8">
-        <h3 className="mb-4 text-center">Wydatki wg Etykieta</h3>
-        <BarChart data={expenseChartData} />
-      </div>
-      <div className="xl:col-span-3 bg-white rounded-lg px-10 py-8">
-        <h3 className="mb-4 text-center">Zysk wg Miesiąc</h3>
-        <AreaChart data={expenseChartData} />
-      </div>
-      <h2 className="text-3xl col-span-6">Struktura portfela</h2>
+      {expenseChartData.length > 0 && (
+        <div className="xl:col-span-3 bg-white rounded-lg px-10 py-8">
+          <h3 className="mb-4 text-center">Wydatki wg Etykieta</h3>
+          <BarChart data={expenseChartData} />
+        </div>
+      )}
+      {expenseChartData.length > 0 && (
+        <div className="xl:col-span-3 bg-white rounded-lg px-10 py-8">
+          <h3 className="mb-4 text-center">Zysk wg Miesiąc</h3>
+          <AreaChart data={expenseChartData} />
+        </div>
+      )}
       <div className="bg-white rounded-lg py-8 px-10 space-y-4 col-span-6">
         <PortfolioStructure
           holdings={holdings}
@@ -74,7 +77,6 @@ export default async function Home() {
           cash={totalProfit}
         />
       </div>
-      <h2 className="text-3xl col-span-6">Skróty</h2>
       <Link
         href="/incomes/add"
         className="bg-white rounded-lg py-8 px-10 flex flex-col items-center gap-4"
