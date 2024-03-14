@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 export async function signInWithEmail(formData: FormData) {
   const supabase = createClient();
 
-  const { data, error } = await supabase.auth.signInWithOtp({
+  const { error } = await supabase.auth.signInWithOtp({
     email: formData.get("email")?.toString() || "",
     options: {
       shouldCreateUser: true,
@@ -20,7 +20,7 @@ export async function signInWithEmail(formData: FormData) {
 export async function signOut() {
   const supabase = createClient();
 
-  const { error } = await supabase.auth.signOut();
+  await supabase.auth.signOut();
 
   redirect("/sign-in");
 }

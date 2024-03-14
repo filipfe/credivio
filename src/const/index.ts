@@ -2,13 +2,17 @@ import {
   AlignHorizontalDistributeCenterIcon,
   ArrowRightLeftIcon,
   BarChart4Icon,
+  Building2Icon,
+  CheckCircleIcon,
   CoinsIcon,
   LayoutDashboardIcon,
   NewspaperIcon,
   PieChartIcon,
   PlusIcon,
+  RepeatIcon,
   ScrollTextIcon,
   SlidersIcon,
+  TrendingUpIcon,
   UserCogIcon,
   Wallet2Icon,
 } from "lucide-react";
@@ -20,48 +24,84 @@ export const PAGES: Page[] = [
     icon: LayoutDashboardIcon,
   },
   {
-    title: "Przychód",
-    href: "/incomes",
-    icon: Wallet2Icon,
+    title: "Operacje",
+    href: "/operations",
+    icon: RepeatIcon,
     links: [
       {
-        title: "Dodaj",
-        icon: PlusIcon,
-        href: "/income/add",
+        title: "Przychód",
+        href: "/incomes",
+        icon: Wallet2Icon,
+        links: [
+          {
+            title: "Dodaj",
+            icon: PlusIcon,
+            href: "/incomes/add",
+          },
+        ],
+      },
+      {
+        title: "Wydatki",
+        href: "/expenses",
+        icon: CoinsIcon,
+        links: [
+          {
+            title: "Dodaj",
+            icon: PlusIcon,
+            href: "/expenses/add",
+          },
+        ],
+      },
+      {
+        title: "Cele",
+        href: "/goals",
+        icon: CheckCircleIcon,
+        links: [
+          {
+            title: "Dodaj",
+            icon: PlusIcon,
+            href: "/goals/add",
+          },
+        ],
       },
     ],
   },
   {
-    title: "Wydatki",
-    href: "/expenses",
-    icon: CoinsIcon,
+    title: "Inwestycje",
+    href: "/investments",
+    icon: TrendingUpIcon,
     links: [
       {
-        title: "Dodaj",
-        icon: PlusIcon,
-        href: "/expenses/add",
-      },
-    ],
-  },
-  {
-    title: "Akcje",
-    href: "/stocks",
-    icon: AlignHorizontalDistributeCenterIcon,
-    links: [
-      {
-        title: "Notowania",
-        icon: BarChart4Icon,
+        title: "Akcje",
         href: "/stocks",
+        icon: AlignHorizontalDistributeCenterIcon,
+        links: [
+          {
+            title: "Notowania",
+            icon: BarChart4Icon,
+            href: "/stocks",
+          },
+          {
+            title: "Transakcje",
+            icon: ArrowRightLeftIcon,
+            href: "/stocks/transactions",
+          },
+          {
+            title: "Dywidendy",
+            icon: PieChartIcon,
+            href: "/stocks/dividends",
+          },
+        ],
       },
       {
-        title: "Transakcje",
-        icon: ArrowRightLeftIcon,
-        href: "/stocks/transactions",
+        title: "Obligacje",
+        href: "/bonds",
+        icon: ScrollTextIcon,
       },
       {
-        title: "Dywidendy",
-        icon: PieChartIcon,
-        href: "/stocks/dividends",
+        title: "Nieruchomości",
+        href: "/immovables",
+        icon: Building2Icon,
       },
     ],
   },
@@ -86,9 +126,10 @@ export const PAGES: Page[] = [
     title: "Aktualności",
     href: "/news",
     icon: NewspaperIcon,
-    links: [],
   },
 ];
+
+export const LINKS = PAGES.flatMap((page) => page.links || [page]);
 
 export const SETTINGS_PAGES: (Page & { description: string })[] = [
   {

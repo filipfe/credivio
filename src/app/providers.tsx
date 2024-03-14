@@ -2,14 +2,14 @@
 
 import Header from "@/components/ui/header";
 import Sidebar from "@/components/ui/sidebar";
-import { PAGES } from "@/const";
+import { LINKS } from "@/const";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isMenuHidden, setIsMenuHidden] = useState(false);
-  const page = PAGES.find(({ href }) =>
+  const page = LINKS.find(({ href }) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href)
   );
   return (

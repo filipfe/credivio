@@ -10,11 +10,23 @@ import {
   RadioGroup,
   Spinner,
   Textarea,
+  Tooltip,
 } from "@nextui-org/react";
-import { CheckIcon, PaperclipIcon, PlusIcon } from "lucide-react";
-import { ChangeEvent, Fragment, useState, useTransition } from "react";
+import {
+  CheckIcon,
+  HelpCircleIcon,
+  PaperclipIcon,
+  PlusIcon,
+} from "lucide-react";
+import {
+  ChangeEvent,
+  Fragment,
+  useEffect,
+  useState,
+  useTransition,
+} from "react";
 import parseCSV from "@/utils/operation/parse-csv";
-import { addOperations } from "@/lib/operation/actions";
+import { addOperations, getLabels } from "@/lib/operation/actions";
 import OperationTable from "./table";
 
 const defaultRecord: Operation = {
@@ -66,6 +78,7 @@ export default function AddForm({
   const [singleRecord, setSingleRecord] = useState<Operation>(
     defaultValue || defaultRecord
   );
+  const [labels, setLabels] = useState<Label[]>([]);
 
   const onFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.item(0);
@@ -85,6 +98,14 @@ export default function AddForm({
     setRecords((prev) => [...prev, singleRecord]);
     setSingleRecord(defaultRecord);
   };
+
+  useEffect(() => {
+    if (records.length === 0) return;
+    startTransition(async () => {
+      const { results } = await getLabels(type);
+      setLabels(results);
+    });
+  }, [records]);
 
   return (
     <div className="flex flex-col xl:grid grid-cols-2 gap-8 mt-8">
@@ -246,13 +267,53 @@ export default function AddForm({
         setOperations={setRecords}
       >
         <form
-          className="flex flex-col"
+          className="flex flex-col gap-8"
           action={(e) =>
             startTransition(async () => {
               const { error } = await addOperations(e);
             })
           }
         >
+          <div className="relative flex items-center">
+            <Autocomplete
+              name="label"
+              label="Etykieta"
+              placeholder="Jedzenie"
+              isClearable={false}
+              allowsCustomValue
+              allowsEmptyCollection={false}
+              isLoading={isPending}
+              isDisabled={records.length === 0}
+              inputProps={{
+                classNames: {
+                  inputWrapper: "!bg-light",
+                },
+              }}
+              showScrollIndicators
+            >
+              {labels.map((label) => (
+                <AutocompleteItem
+                  value={label.title}
+                  classNames={{
+                    base: "!bg-white hover:!bg-light",
+                  }}
+                  key={label.title}
+                >
+                  {label.title}{" "}
+                  <span className="text-font/80">{`(${label.count[0].count})`}</span>
+                </AutocompleteItem>
+              ))}
+            </Autocomplete>
+            <div className="absolute left-[3.75rem] top-[11px]">
+              <Tooltip
+                isDisabled={records.length === 0}
+                size="sm"
+                content="Dodaj etykietę, aby pogrupować operacje"
+              >
+                <HelpCircleIcon size={12} className="text-primary" />
+              </Tooltip>
+            </div>
+          </div>
           <Button
             isDisabled={isPending || records.length === 0}
             color="primary"
