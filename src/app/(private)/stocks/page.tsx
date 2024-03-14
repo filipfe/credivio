@@ -8,8 +8,12 @@ import {
 import getStockHoldings from "@/utils/stocks/get-stock-holdings";
 
 export default async function Page() {
-  const { results: wig20 } = await getStocks("wig20");
-  const { results: ownStocks } = await getOwnStocks();
+  const wig20data = getStocks("wig20");
+  const ownStocksData = getOwnStocks();
+  const [{ results: wig20 }, { results: ownStocks }] = await Promise.all([
+    wig20data,
+    ownStocksData,
+  ]);
   const ownStocksNames: string[] = ownStocks.reduce(
     (prev, curr) =>
       prev.includes(curr.symbol) ? prev : [...prev, curr.symbol],

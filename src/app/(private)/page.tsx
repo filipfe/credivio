@@ -10,9 +10,11 @@ import { CoinsIcon, SettingsIcon, Wallet2Icon } from "lucide-react";
 import Link from "next/link";
 
 export default async function Home() {
-  const { results: expenses } = await getOperations("expense");
-  const { results: incomes } = await getOperations("income");
-  const { results: ownStocks } = await getOwnStocks();
+  const expensesData = getOperations("expense");
+  const incomesData = getOperations("income");
+  const ownStocksData = getOwnStocks();
+  const [{ results: expenses }, { results: incomes }, { results: ownStocks }] =
+    await Promise.all([expensesData, incomesData, ownStocksData]);
   const ownStocksNames: string[] = ownStocks.reduce(
     (prev, curr) =>
       prev.includes(curr.symbol) ? prev : [...prev, curr.symbol],
@@ -30,7 +32,6 @@ export default async function Home() {
   );
   const totalProfit = totalIncome - totalExpenses;
   const expenseChartData = prepareChartData(expenses);
-  // const incomeChartData = prepareChartData(incomes);
   return (
     <div className="px-12 py-8 pb-24 flex flex-col xl:grid grid-cols-6 gap-6">
       {/* <h2 className="text-3xl col-span-6">Budżet</h2>

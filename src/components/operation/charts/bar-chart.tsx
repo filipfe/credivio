@@ -33,7 +33,7 @@ export default function BarChart({ data }: Props) {
           tickFormatter={(value) => numberFormat.format(value)}
         />
         <XAxis dataKey="name" tick={{ fontSize: 14 }} />
-        <Bar dataKey="value" radius={[24, 24, 0, 0]}>
+        <Bar maxBarSize={120} dataKey="value" radius={[24, 24, 0, 0]}>
           {data.map((item, k) => (
             <Cell fill={k % 2 === 0 ? "#177981" : "#ffc000"} key={item.name} />
           ))}
