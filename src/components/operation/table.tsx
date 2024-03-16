@@ -1,6 +1,12 @@
 "use client";
 
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import {
   Table,
   TableHeader,
@@ -16,15 +22,6 @@ import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import Add from "./cta/add";
 import Delete from "./cta/delete";
 import Edit from "./cta/edit";
-
-const columns = [
-  { key: "issued_at", label: "DATA" },
-  { key: "title", label: "TYTUŁ" },
-  { key: "description", label: "OPIS" },
-  { key: "amount", label: "KWOTA" },
-  { key: "currency", label: "WALUTA" },
-  // { key: "budget_after", label: "BUDGET AFTER" },
-];
 
 type Props = {
   operations: Operation[];
@@ -95,7 +92,19 @@ export default function OperationTable({
     );
   }, [operations, page, pages, selectedKeys]);
 
-  const renderCell = React.useCallback((item: any, columnKey: any) => {
+  const columns = useCallback(
+    (hasLabel: boolean) => [
+      { key: "issued_at", label: "DATA" },
+      { key: "title", label: "TYTUŁ" },
+      { key: "description", label: "OPIS" },
+      { key: "amount", label: "KWOTA" },
+      { key: "currency", label: "WALUTA" },
+      ...(hasLabel ? [{ key: "label", label: "ETYKIETA" }] : []),
+    ],
+    [page]
+  );
+
+  const renderCell = useCallback((item: any, columnKey: any) => {
     const cellValue = item[columnKey];
 
     if (viewOnly) {
@@ -125,6 +134,8 @@ export default function OperationTable({
           return (
             <span className="line-clamp-1 break-all w-[10ch]">{cellValue}</span>
           );
+        case "label":
+          return cellValue?.title || "-";
         default:
           return <span className="line-clamp-1 break-all">{cellValue}</span>;
       }
@@ -206,7 +217,7 @@ export default function OperationTable({
         onSelectionChange={setSelectedKeys}
       >
         <TableHeader>
-          {columns.map((column) => (
+          {columns(operations.some((item) => item.label)).map((column) => (
             <TableColumn
               key={column.key}
               allowsSorting={count > 0 && !viewOnly ? true : undefined}

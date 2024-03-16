@@ -10,7 +10,7 @@ type Operation = {
   currency_date?: string;
   budget_after?: string;
   type?: OperationType;
-  label?: string;
+  label?: Label;
 };
 
 type Label = {
