@@ -1,8 +1,9 @@
 import { Fragment } from "react";
 import { signOut } from "@/lib/auth/actions";
-import { Button } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button } from "@nextui-org/react";
 import { AlignJustifyIcon, LogOutIcon } from "lucide-react";
-import NavLink from "./nav-link";
+import { LINKS } from "@/const";
+import { usePathname } from "next/navigation";
 
 type Props = {
   links?: Page[];
@@ -10,11 +11,13 @@ type Props = {
   setIsMenuHidden: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function Header({
-  links,
-  isMenuHidden,
-  setIsMenuHidden,
-}: Props) {
+export default function Header({ isMenuHidden, setIsMenuHidden }: Props) {
+  const pathname = usePathname();
+  const flatten = (arr: Page[]): Page[] =>
+    arr.flatMap(({ links, ...page }) => [page, ...flatten(links || [])]);
+  const links = flatten(LINKS).filter(({ href }) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href)
+  );
   return (
     <Fragment>
       <header className="h-20 sticky top-0 bg-white flex items-center justify-between z-50 px-4">
@@ -29,12 +32,25 @@ export default function Header({
         </Button>
       </header>
       <header className="flex items-center gap-4 justify-between px-10 h-20 sticky top-0 bg-white z-50">
-        <nav className="flex items-center gap-1.5">
-          {links &&
-            links.map((item) => (
-              <NavLink {...item} matchPath key={item.href} />
-            ))}
-        </nav>
+        {/* {links.length === 1 ? (
+          <div></div>
+        ) : ( */}
+        <Breadcrumbs
+          itemClasses={{
+            item: "px-2 flex items-center gap-2.5 text-[13px] data-[current=true]:font-medium",
+          }}
+        >
+          {links.map((link) => (
+            <BreadcrumbItem
+              startContent={<link.icon size={14} />}
+              key={link.href}
+              href={link.href}
+            >
+              {link.title}
+            </BreadcrumbItem>
+          ))}
+        </Breadcrumbs>
+        {/* )} */}
         <form action={signOut}>
           <button className="py-3 px-6 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-light bg-white">
             <LogOutIcon size={16} />

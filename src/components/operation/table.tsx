@@ -1,6 +1,6 @@
 "use client";
 
-import {
+import React, {
   Dispatch,
   SetStateAction,
   useCallback,
@@ -19,77 +19,89 @@ import {
   Spinner,
   Pagination,
 } from "@nextui-org/react";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import Add from "./cta/add";
 import Delete from "./cta/delete";
 import Edit from "./cta/edit";
-
-const columns = [
-  { key: "issued_at", label: "DATA" },
-  { key: "title", label: "TYTUŁ" },
-  { key: "description", label: "OPIS" },
-  { key: "amount", label: "KWOTA" },
-  { key: "currency", label: "WALUTA" },
-  // { key: "budget_after", label: "BUDGET AFTER" },
-];
+import useTableQuery from "@/hooks/useTableQuery";
 
 type Props = {
   operations: Operation[];
   count: number;
-  setOperations?: Dispatch<SetStateAction<Operation[]>>;
   type?: "expense" | "income";
   title?: string;
   children?: React.ReactNode;
-};
-
-type SearchQuery = {
-  page: number;
-  sort?: string;
+  setOperations?: Dispatch<SetStateAction<Operation[]>>;
 };
 
 export default function OperationTable({
   operations,
   count,
-  setOperations,
   type,
   title,
+  setOperations,
   children,
 }: Props) {
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
-  const pathname = usePathname();
-  const [items, setItems] = useState<Operation[]>([]);
+  const viewOnly = !!setOperations;
   const [selectedKeys, setSelectedKeys] = useState<Set<any> | "all">(
     new Set([])
   );
   const pages = Math.ceil(count / 10);
-  const viewOnly = !!setOperations;
-  const [searchQuery, setSearchQuery] = useState<SearchQuery>({
-    page: 1,
-  });
-
-  useEffect(() => {
-    if (!viewOnly) return;
-    const start = ((searchQuery.page || 1) - 1) * 10;
-    const end = start + 10;
-    return setItems(operations.slice(start, end));
-  }, [operations, searchQuery.page]);
+  const { isLoading, setIsLoading, searchQuery, setSearchQuery } =
+    useTableQuery(viewOnly);
+  const { page, sort } = searchQuery;
 
   useEffect(() => {
     setIsLoading(false);
   }, [operations]);
 
   useEffect(() => {
-    if (viewOnly) return;
-    const searchParams = new URLSearchParams();
-    Object.keys(searchQuery).map((key: string) => {
-      searchParams.set(
-        key,
-        String(searchQuery[key as keyof typeof searchQuery])
-      );
-    });
-    router.push(`${pathname}?${searchParams.toString()}`, { scroll: false });
-  }, [searchQuery]);
+    if (!viewOnly) return;
+    const start = (page - 1) * 10;
+    const end = start + 10;
+    return setOperations(operations.slice(start, end));
+  }, [page]);
+
+  const bottomContent = useMemo(() => {
+    return (
+      <div
+        className={`py-2 px-2 flex ${
+          viewOnly ? "justify-end" : "justify-between"
+        } items-start`}
+      >
+        {!viewOnly && (
+          <span className="text-small text-default-400">
+            {selectedKeys === "all"
+              ? "All items selected"
+              : `${selectedKeys.size} of ${count} selected`}
+          </span>
+        )}
+        <Pagination
+          isCompact
+          showControls
+          color="primary"
+          className="text-background"
+          page={page}
+          total={pages}
+          onChange={(page: number) => {
+            setIsLoading(true);
+            setSearchQuery((prev) => ({ ...prev, page }));
+          }}
+        />
+      </div>
+    );
+  }, [operations, page, pages, selectedKeys]);
+
+  const columns = useCallback(
+    (hasLabel: boolean) => [
+      { key: "issued_at", label: "DATA" },
+      { key: "title", label: "TYTUŁ" },
+      { key: "description", label: "OPIS" },
+      { key: "amount", label: "KWOTA" },
+      { key: "currency", label: "WALUTA" },
+      ...(hasLabel ? [{ key: "label", label: "ETYKIETA" }] : []),
+    ],
+    [page]
+  );
 
   const renderCell = useCallback((item: any, columnKey: any) => {
     const cellValue = item[columnKey];
@@ -121,47 +133,17 @@ export default function OperationTable({
           return (
             <span className="line-clamp-1 break-all w-[10ch]">{cellValue}</span>
           );
+        case "label":
+          return cellValue?.title || "-";
         default:
           return <span className="line-clamp-1 break-all">{cellValue}</span>;
       }
     }
   }, []);
 
-  const bottomContent = useMemo(() => {
-    return (
-      <div
-        className={`py-2 px-2 flex ${
-          viewOnly ? "justify-end" : "justify-between"
-        } items-start`}
-      >
-        {!viewOnly && (
-          <span className="text-small text-default-400">
-            {selectedKeys === "all"
-              ? "All items selected"
-              : `Zaznaczono ${selectedKeys.size} z ${count}`}
-          </span>
-        )}
-        <Pagination
-          isCompact
-          showControls
-          showShadow
-          color="primary"
-          className="text-background"
-          page={searchQuery.page}
-          isDisabled={isLoading}
-          total={pages}
-          onChange={(page: number) => {
-            !viewOnly && setIsLoading(true);
-            setSearchQuery((prev) => ({ ...prev, page }));
-          }}
-        />
-      </div>
-    );
-  }, [selectedKeys, count, searchQuery, operations, isLoading]);
-
   return (
     <div className="bg-white rounded-lg py-8 px-10 flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-4 mb-2">
+      <div className="flex items-center justify-between gap-4 h-10">
         <h1 className="text-lg">{title}</h1>
         <div className="flex items-center gap-1.5">
           {(selectedKeys === "all" || selectedKeys.size > 0) && (
@@ -186,6 +168,7 @@ export default function OperationTable({
                       ? []
                       : prev.filter((_, i) => !toDelete.includes(i))
                   );
+                  setSearchQuery((prev) => ({ ...prev, page: 1 }));
                 }
                 setSelectedKeys(new Set([]));
               }}
@@ -206,20 +189,17 @@ export default function OperationTable({
         color="primary"
         selectionMode={"multiple"}
         sortDescriptor={{
-          column: searchQuery.sort?.startsWith("-")
-            ? searchQuery.sort.slice(1)
-            : searchQuery.sort,
-          direction: searchQuery.sort?.startsWith("-")
-            ? "descending"
-            : "ascending",
+          column: sort?.includes("-") ? sort?.split("-")[1] : sort?.toString(),
+          direction: sort?.includes("-") ? "descending" : "ascending",
         }}
-        onSortChange={({ direction, column }: SortDescriptor) => {
-          setIsLoading(true);
+        onSortChange={(descriptor: SortDescriptor) =>
           setSearchQuery({
             page: 1,
-            sort: `${direction === "descending" ? "-" : ""}${column}`,
-          });
-        }}
+            sort:
+              (descriptor.direction === "descending" ? "-" : "") +
+              descriptor.column,
+          })
+        }
         bottomContent={count > 0 && bottomContent}
         bottomContentPlacement="outside"
         aria-label="Example static collection table"
@@ -236,7 +216,7 @@ export default function OperationTable({
         onSelectionChange={setSelectedKeys}
       >
         <TableHeader>
-          {columns.map((column) => (
+          {columns(operations.some((item) => item.label)).map((column) => (
             <TableColumn
               key={column.key}
               allowsSorting={count > 0 && !viewOnly ? true : undefined}
@@ -246,20 +226,20 @@ export default function OperationTable({
           ))}
         </TableHeader>
         <TableBody
-          isLoading={isLoading}
           emptyContent={"No rows found"}
-          items={viewOnly ? items : operations}
+          items={operations}
+          isLoading={isLoading}
           loadingContent={<Spinner />}
         >
-          {(viewOnly ? items : operations).map((operation, i) => (
+          {(item: any) => (
             <TableRow
-              key={operation.id || `operation:${i}:${searchQuery.page}`}
+              key={item.id || item.title + item.amount + item.issued_at}
             >
               {(columnKey) => (
-                <TableCell>{renderCell(operation, columnKey)}</TableCell>
+                <TableCell>{renderCell(item, columnKey)}</TableCell>
               )}
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
       {children}
