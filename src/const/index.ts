@@ -12,7 +12,6 @@ import {
   RepeatIcon,
   ScrollTextIcon,
   SlidersIcon,
-  TrendingUpIcon,
   UserCogIcon,
   Wallet2Icon,
 } from "lucide-react";
@@ -69,7 +68,7 @@ export const PAGES: Page[] = [
   {
     title: "Inwestycje",
     href: "/investments",
-    icon: TrendingUpIcon,
+    icon: BarChart4Icon,
     links: [
       {
         title: "Akcje",
