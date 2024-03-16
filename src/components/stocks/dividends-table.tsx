@@ -14,19 +14,27 @@ import { useCallback } from "react";
 type Props = {
   dividends: Dividend[];
   holdings?: Holdings;
+  simplified?: boolean;
 };
 
 type ColumnKey = keyof Dividend | "profit";
 
 type TableDividend = Dividend & { profit?: string };
 
-const columns = (profitVisible?: boolean) => [
+const columns = ({
+  simplified,
+  profitVisible,
+}: Pick<Props, "simplified"> & { profitVisible?: boolean }) => [
   { key: "company", label: "SPÓŁKA" },
   { key: "amount", label: "WYSOKOŚĆ" },
   { key: "ratio", label: "STOPA" },
   { key: "date", label: "DZIEŃ DYWIDENDY" },
-  { key: "payment_date", label: "DZIEŃ WYPŁATY" },
-  { key: "for_year", label: "ZA ROK OBROTOWY" },
+  ...(simplified
+    ? []
+    : [
+        { key: "payment_date", label: "DZIEŃ WYPŁATY" },
+        { key: "for_year", label: "ZA ROK OBROTOWY" },
+      ]),
   ...(profitVisible
     ? [{ key: "net_profit" as ColumnKey, label: "ZYSK (NETTO)" }]
     : []),
@@ -35,7 +43,11 @@ const columns = (profitVisible?: boolean) => [
     : []),
 ];
 
-export default function DividendsTable({ dividends, holdings }: Props) {
+export default function DividendsTable({
+  dividends,
+  simplified,
+  holdings,
+}: Props) {
   const renderCell = useCallback(
     (dividend: TableDividend, columnKey: ColumnKey) => {
       const cellValue = dividend[columnKey];
@@ -44,6 +56,8 @@ export default function DividendsTable({ dividends, holdings }: Props) {
           return `${cellValue} PLN`;
         case "ratio":
           return cellValue + "%";
+        case "for_year":
+          return cellValue || "-";
         default:
           return cellValue;
       }
@@ -82,7 +96,7 @@ export default function DividendsTable({ dividends, holdings }: Props) {
       }}
     >
       <TableHeader>
-        {columns(!!holdings).map((column) => (
+        {columns({ profitVisible: !!holdings, simplified }).map((column) => (
           <TableColumn key={column.key}>{column.label}</TableColumn>
         ))}
       </TableHeader>

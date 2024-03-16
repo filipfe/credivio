@@ -29,7 +29,7 @@ export const PAGES: Page[] = [
     icon: RepeatIcon,
     links: [
       {
-        title: "Przychód",
+        title: "Przychody",
         href: "/incomes",
         icon: Wallet2Icon,
         links: [
@@ -77,14 +77,16 @@ export const PAGES: Page[] = [
         icon: AlignHorizontalDistributeCenterIcon,
         links: [
           {
-            title: "Notowania",
-            icon: BarChart4Icon,
-            href: "/stocks",
-          },
-          {
             title: "Transakcje",
             icon: ArrowRightLeftIcon,
             href: "/stocks/transactions",
+            links: [
+              {
+                title: "Dodaj",
+                icon: PlusIcon,
+                href: "/stocks/transactions/add",
+              },
+            ],
           },
           {
             title: "Dywidendy",

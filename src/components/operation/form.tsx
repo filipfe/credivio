@@ -69,6 +69,7 @@ export default function AddForm({
   type: OperationType;
   defaultValue: Operation | null;
 }) {
+  const [label, setLabel] = useState("");
   const [isPending, startTransition] = useTransition();
   const [method, setMethod] = useState<AddMethodKey>("manual");
   const [fileName, setFileName] = useState("");
@@ -284,16 +285,20 @@ export default function AddForm({
               allowsEmptyCollection={false}
               isLoading={isPending}
               isDisabled={records.length === 0}
+              value={label}
               inputProps={{
                 classNames: {
                   inputWrapper: "!bg-light",
                 },
               }}
+              maxLength={48}
               showScrollIndicators
+              onSelectionChange={(key) => setLabel(key.toString())}
             >
               {labels.map((label) => (
                 <AutocompleteItem
                   value={label.title}
+                  textValue={label.title}
                   classNames={{
                     base: "!bg-white hover:!bg-light",
                   }}
@@ -304,7 +309,7 @@ export default function AddForm({
                 </AutocompleteItem>
               ))}
             </Autocomplete>
-            <div className="absolute left-[3.75rem] top-[11px]">
+            <div className="absolute left-[3.7rem] top-[11px]">
               <Tooltip
                 isDisabled={records.length === 0}
                 size="sm"

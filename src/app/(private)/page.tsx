@@ -39,7 +39,7 @@ export default async function Home() {
       <Budget amount="819,23" currency="USD" />
       <h2 className="text-3xl col-span-6">Statystyki</h2> */}
       <Stat
-        title="Przychód"
+        title="Przychody"
         amount={totalIncome.toFixed(2).toString()}
         currency="PLN"
         description=""

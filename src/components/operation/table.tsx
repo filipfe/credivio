@@ -5,6 +5,7 @@ import React, {
   SetStateAction,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import {
@@ -18,10 +19,11 @@ import {
   Spinner,
   Pagination,
 } from "@nextui-org/react";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Add from "./cta/add";
 import Delete from "./cta/delete";
 import Edit from "./cta/edit";
+import useTableQuery from "@/hooks/useTableQuery";
 
 type Props = {
   operations: Operation[];
@@ -40,29 +42,20 @@ export default function OperationTable({
   setOperations,
   children,
 }: Props) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const viewOnly = !!setOperations;
   const [selectedKeys, setSelectedKeys] = useState<Set<any> | "all">(
     new Set([])
   );
-  const viewOnly = !!setOperations;
   const pages = Math.ceil(count / 10);
-  const [searchQuery, setSearchQuery] = useState({
-    page: 1,
-    sort: "",
-  });
+  const { isLoading, setIsLoading, searchQuery, setSearchQuery } =
+    useTableQuery(viewOnly);
   const { page, sort } = searchQuery;
 
   useEffect(() => {
-    if (viewOnly) return;
-    const params = new URLSearchParams(searchParams);
-    params.set("page", page.toString());
-    sort && params.set("sort", sort);
-    router.push(`${pathname}?${params.toString()}`);
-  }, [searchQuery]);
+    setIsLoading(false);
+  }, [operations]);
 
-  const bottomContent = React.useMemo(() => {
+  const bottomContent = useMemo(() => {
     return (
       <div
         className={`py-2 px-2 flex ${
@@ -79,14 +72,14 @@ export default function OperationTable({
         <Pagination
           isCompact
           showControls
-          showShadow
           color="primary"
           className="text-background"
           page={page}
           total={pages}
-          onChange={(page: number) =>
-            setSearchQuery((prev) => ({ ...prev, page }))
-          }
+          onChange={(page: number) => {
+            setIsLoading(true);
+            setSearchQuery((prev) => ({ ...prev, page }));
+          }}
         />
       </div>
     );
@@ -229,7 +222,8 @@ export default function OperationTable({
         <TableBody
           emptyContent={"No rows found"}
           items={operations}
-          loadingContent={<Spinner label="Loading..." />}
+          isLoading={isLoading}
+          loadingContent={<Spinner />}
         >
           {(item: any) => (
             <TableRow
