@@ -18,12 +18,12 @@ export default function PortfolioStructure({ stocks, cash, holdings }: Props) {
     (prev, curr) => (prev += parseFloat(curr._quote) * holdings[curr._symbol]),
     0
   );
-  const total = cash + stocksTotal;
+  const total = (cash < 0 ? 0 : cash) + stocksTotal;
 
   const data: Group[] = [
     {
       label: "Gotówka",
-      value: cash,
+      value: cash < 0 ? 0 : cash,
       name: "cash",
       children: <></>,
     },
