@@ -8,13 +8,22 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-  getKeyValue,
 } from "@nextui-org/table";
 import Add from "../operation/cta/add";
 import { TRANSACTION_TYPES } from "@/const";
 import { useCallback } from "react";
 
-const columns = (viewOnly?: boolean) => [
+type Props = {
+  stocks: StockTransaction[];
+  count: number;
+  viewOnly?: boolean;
+  simplified?: boolean;
+};
+
+const columns = ({
+  viewOnly,
+  simplified,
+}: Pick<Props, "simplified" | "viewOnly">) => [
   ...(!viewOnly ? [{ key: "issued_at", label: "DATA ZAWARCIA" }] : []),
   { key: "symbol", label: "INSTRUMENT" },
   { key: "transaction_type", label: "TYP TRANSAKCJI" },
@@ -22,18 +31,21 @@ const columns = (viewOnly?: boolean) => [
   { key: "price", label: "CENA" },
   ...(!viewOnly ? [{ key: "value", label: "WARTOŚĆ" }] : []),
   ...(!viewOnly ? [{ key: "currency", label: "WALUTA" }] : []),
-  { key: "commission", label: "PROWIZJA" },
+  ...(!simplified ? [{ key: "commission", label: "PROWIZJA" }] : []),
 ];
 
-type Props = {
-  stocks: StockTransaction[];
-  count: number;
-  viewOnly?: boolean;
-};
-
-export default function TransactionTable({ stocks, count, viewOnly }: Props) {
+export default function TransactionTable({
+  stocks,
+  count,
+  simplified,
+  viewOnly,
+}: Props) {
   const renderCell = useCallback(
     (stock: StockTransaction, columnKey: keyof StockTransaction) => {
+      const formatter = new Intl.NumberFormat("pl-PL", {
+        currency: stock.currency,
+        style: "currency",
+      });
       const cellValue = stock[columnKey];
       switch (columnKey) {
         case "transaction_type":
@@ -41,11 +53,9 @@ export default function TransactionTable({ stocks, count, viewOnly }: Props) {
             (tt) => tt.value === stock.transaction_type
           )!.name;
         case "price":
-          const formatter = new Intl.NumberFormat("pl-PL", {
-            currency: stock.currency,
-            style: "currency",
-          });
           return formatter.format(parseFloat(stock.price));
+        case "commission":
+          return formatter.format(parseFloat(stock.commission));
         default:
           return cellValue;
       }
@@ -57,7 +67,7 @@ export default function TransactionTable({ stocks, count, viewOnly }: Props) {
       shadow="none"
       color="primary"
       aria-label="transactions-table"
-      selectionMode={"multiple"}
+      selectionMode={!simplified ? "multiple" : "none"}
       className="max-w-full w-full flex-1"
       checkboxesProps={{
         classNames: {
@@ -69,7 +79,7 @@ export default function TransactionTable({ stocks, count, viewOnly }: Props) {
       }}
     >
       <TableHeader>
-        {columns(viewOnly).map((column) => (
+        {columns({ viewOnly, simplified }).map((column) => (
           <TableColumn
             key={column.key}
             allowsSorting={count > 0 && !viewOnly ? true : undefined}
@@ -81,13 +91,15 @@ export default function TransactionTable({ stocks, count, viewOnly }: Props) {
       <TableBody
         loadingContent={<Spinner label="Loading..." />}
         emptyContent={
-          <div className="text-center flex-1 justify-center flex flex-col items-center gap-4">
+          <div className="text-center flex-1 justify-center flex flex-col items-center gap-3">
             {viewOnly ? (
               <p>Dodaj akcje, aby zobaczyć je na podglądzie.</p>
             ) : (
               <>
-                <p>Nie masz jeszcze żadnych akcji!</p>
-                <Add type="stock" />
+                <p className="text-font/80 text-sm">
+                  Nie masz jeszcze żadnych akcji!
+                </p>
+                <Add type="stocks/transaction" size="sm" />
               </>
             )}
           </div>

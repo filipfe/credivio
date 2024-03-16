@@ -12,13 +12,26 @@ import {
 import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 import { useCallback } from "react";
 
-const columns = (quantity?: boolean) => [
+type Props = {
+  stocks: TableStock[];
+  simplified?: boolean;
+  quantityVisible?: boolean;
+};
+
+const columns = ({
+  quantityVisible,
+  simplified,
+}: Pick<Props, "quantityVisible" | "simplified">) => [
   { key: "_symbol", label: "INSTRUMENT" },
   { key: "_change", label: "ZMIANA" },
-  { key: "_bid_size", label: "SPRZEDAŻ" },
-  { key: "_ask_size", label: "KUPNO" },
+  ...(simplified
+    ? []
+    : [
+        { key: "_bid_size", label: "SPRZEDAŻ" },
+        { key: "_ask_size", label: "KUPNO" },
+      ]),
   { key: "_quote", label: "KURS" },
-  ...(quantity ? [{ key: "quantity", label: "ILOŚĆ" }] : []),
+  ...(quantityVisible ? [{ key: "quantity", label: "ILOŚĆ" }] : []),
 ];
 
 type TableStock = Stock & { quantity?: number };
@@ -26,10 +39,8 @@ type TableStock = Stock & { quantity?: number };
 export default function StockTable({
   stocks,
   quantityVisible,
-}: {
-  stocks: TableStock[];
-  quantityVisible?: boolean;
-}) {
+  simplified,
+}: Props) {
   const renderCell = useCallback(
     (stock: TableStock, columnKey: keyof TableStock) => {
       const cellValue = stock[columnKey];
@@ -77,7 +88,7 @@ export default function StockTable({
       }}
     >
       <TableHeader>
-        {columns(quantityVisible).map((column) => (
+        {columns({ quantityVisible, simplified }).map((column) => (
           <TableColumn key={column.key}>{column.label}</TableColumn>
         ))}
       </TableHeader>

@@ -45,9 +45,9 @@ const formatter = (data: string[][]): Omit<StockTransaction, "id">[] => {
         ,
         commission,
       ] = record;
-      price = price;
-      commission = commission;
-      value = value;
+      price = price.replace(",", ".");
+      commission = commission.replace(",", ".");
+      value = value.replace(",", ".");
       const result = {
         issued_at,
         symbol,

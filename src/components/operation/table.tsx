@@ -1,6 +1,13 @@
 "use client";
 
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   Table,
   TableHeader,
@@ -12,19 +19,11 @@ import {
   Spinner,
   Pagination,
 } from "@nextui-org/react";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Add from "./cta/add";
 import Delete from "./cta/delete";
 import Edit from "./cta/edit";
-
-const columns = [
-  { key: "issued_at", label: "DATA" },
-  { key: "title", label: "TYTUŁ" },
-  { key: "description", label: "OPIS" },
-  { key: "amount", label: "KWOTA" },
-  { key: "currency", label: "WALUTA" },
-  // { key: "budget_after", label: "BUDGET AFTER" },
-];
+import useTableQuery from "@/hooks/useTableQuery";
 
 type Props = {
   operations: Operation[];
@@ -43,29 +42,20 @@ export default function OperationTable({
   setOperations,
   children,
 }: Props) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const viewOnly = !!setOperations;
   const [selectedKeys, setSelectedKeys] = useState<Set<any> | "all">(
     new Set([])
   );
-  const viewOnly = !!setOperations;
   const pages = Math.ceil(count / 10);
-  const [searchQuery, setSearchQuery] = useState({
-    page: 1,
-    sort: "",
-  });
+  const { isLoading, setIsLoading, searchQuery, setSearchQuery } =
+    useTableQuery(viewOnly);
   const { page, sort } = searchQuery;
 
   useEffect(() => {
-    if (viewOnly) return;
-    const params = new URLSearchParams(searchParams);
-    params.set("page", page.toString());
-    sort && params.set("sort", sort);
-    router.push(`${pathname}?${params.toString()}`);
-  }, [searchQuery]);
+    setIsLoading(false);
+  }, [operations]);
 
-  const bottomContent = React.useMemo(() => {
+  const bottomContent = useMemo(() => {
     return (
       <div
         className={`py-2 px-2 flex ${
@@ -82,20 +72,32 @@ export default function OperationTable({
         <Pagination
           isCompact
           showControls
-          showShadow
           color="primary"
           className="text-background"
           page={page}
           total={pages}
-          onChange={(page: number) =>
-            setSearchQuery((prev) => ({ ...prev, page }))
-          }
+          onChange={(page: number) => {
+            setIsLoading(true);
+            setSearchQuery((prev) => ({ ...prev, page }));
+          }}
         />
       </div>
     );
   }, [operations, page, pages, selectedKeys]);
 
-  const renderCell = React.useCallback((item: any, columnKey: any) => {
+  const columns = useCallback(
+    (hasLabel: boolean) => [
+      { key: "issued_at", label: "DATA" },
+      { key: "title", label: "TYTUŁ" },
+      { key: "description", label: "OPIS" },
+      { key: "amount", label: "KWOTA" },
+      { key: "currency", label: "WALUTA" },
+      ...(hasLabel ? [{ key: "label", label: "ETYKIETA" }] : []),
+    ],
+    [page]
+  );
+
+  const renderCell = useCallback((item: any, columnKey: any) => {
     const cellValue = item[columnKey];
 
     if (viewOnly) {
@@ -125,6 +127,8 @@ export default function OperationTable({
           return (
             <span className="line-clamp-1 break-all w-[10ch]">{cellValue}</span>
           );
+        case "label":
+          return cellValue?.title || "-";
         default:
           return <span className="line-clamp-1 break-all">{cellValue}</span>;
       }
@@ -206,7 +210,7 @@ export default function OperationTable({
         onSelectionChange={setSelectedKeys}
       >
         <TableHeader>
-          {columns.map((column) => (
+          {columns(operations.some((item) => item.label)).map((column) => (
             <TableColumn
               key={column.key}
               allowsSorting={count > 0 && !viewOnly ? true : undefined}
@@ -218,7 +222,8 @@ export default function OperationTable({
         <TableBody
           emptyContent={"No rows found"}
           items={operations}
-          loadingContent={<Spinner label="Loading..." />}
+          isLoading={isLoading}
+          loadingContent={<Spinner />}
         >
           {(item: any) => (
             <TableRow

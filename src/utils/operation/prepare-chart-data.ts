@@ -1,8 +1,8 @@
-export default function prepareChartData(data: Operation[]) {
+export default function prepareChartData(data: Operation[]): Option<number>[] {
   return data
     .map(({ amount, title, label }) => ({
       value: parseFloat(amount),
-      name: label || title,
+      name: label?.title || title,
     }))
     .reduce((prev: Option<number>[], curr) => {
       const groupIndex = prev.findIndex((item) => item.name === curr.name);

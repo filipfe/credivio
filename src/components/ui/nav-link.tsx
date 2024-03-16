@@ -35,9 +35,12 @@ export default function NavLink({
   return isGroup ? (
     <div>
       <button
+        disabled={defaultGroupActive}
         onClick={() => setIsGroupActive((prev) => !prev)}
         className={`h-11 px-6 rounded-lg text-sm font-medium flex items-center justify-between gap-4 w-full ${
-          isActive ? "bg-light" : "hover:bg-light bg-white text-font/75"
+          isActive
+            ? "bg-light"
+            : "hover:bg-light disabled:hover:bg-white bg-white text-font/70"
         }`}
       >
         <div className="flex items-center gap-4">
@@ -46,13 +49,15 @@ export default function NavLink({
             {title}
           </span>
         </div>
-        <div
-          className={`transition-transform ${
-            isGroupActive ? "-rotate-90" : "rotate-0"
-          }`}
-        >
-          <ChevronLeftIcon size={16} opacity={0.8} />
-        </div>
+        {!defaultGroupActive && (
+          <div
+            className={`transition-transform ${
+              isGroupActive ? "-rotate-90" : "rotate-0"
+            }`}
+          >
+            <ChevronLeftIcon size={16} opacity={0.8} />
+          </div>
+        )}
       </button>
       <div
         className={`grid ${
@@ -69,7 +74,7 @@ export default function NavLink({
   ) : (
     <Link
       className={`px-6 rounded-lg text-sm font-medium flex items-center gap-4 ${
-        isActive ? "bg-light" : "hover:bg-light bg-white text-font/75"
+        isActive ? "bg-light" : "hover:bg-light bg-white text-font/70"
       }`}
       href={href}
       style={{ fontSize: size - 2, height: size * 2.75 }}
