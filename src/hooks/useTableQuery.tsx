@@ -1,9 +1,10 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function useTableQuery(viewOnly?: boolean) {
+export default function useTableQuery(operations: any[], viewOnly?: boolean) {
   const router = useRouter();
   const pathname = usePathname();
+  const [items, setItems] = useState<Operation[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState({
     page: 1,
@@ -20,7 +21,15 @@ export default function useTableQuery(viewOnly?: boolean) {
     router.push(`${pathname}?${params.toString()}`);
   }, [searchQuery]);
 
+  useEffect(() => {
+    if (!viewOnly) return;
+    const start = ((searchQuery.page || 1) - 1) * 10;
+    const end = start + 10;
+    return setItems(operations.slice(start, end));
+  }, [operations, viewOnly, searchQuery.page]);
+
   return {
+    items,
     searchQuery,
     isLoading,
     setIsLoading,

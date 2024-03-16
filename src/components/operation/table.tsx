@@ -46,8 +46,8 @@ export default function OperationTable({
     new Set([])
   );
   const pages = Math.ceil(count / 10);
-  const { isLoading, setIsLoading, searchQuery, setSearchQuery } =
-    useTableQuery(viewOnly);
+  const { items, isLoading, setIsLoading, searchQuery, setSearchQuery } =
+    useTableQuery(operations, viewOnly);
   const { page, sort } = searchQuery;
 
   useEffect(() => {
@@ -83,7 +83,7 @@ export default function OperationTable({
           page={page}
           total={pages}
           onChange={(page: number) => {
-            setIsLoading(true);
+            !viewOnly && setIsLoading(true);
             setSearchQuery((prev) => ({ ...prev, page }));
           }}
         />
@@ -192,14 +192,15 @@ export default function OperationTable({
           column: sort?.includes("-") ? sort?.split("-")[1] : sort?.toString(),
           direction: sort?.includes("-") ? "descending" : "ascending",
         }}
-        onSortChange={(descriptor: SortDescriptor) =>
+        onSortChange={(descriptor: SortDescriptor) => {
+          !viewOnly && setIsLoading(true);
           setSearchQuery({
             page: 1,
             sort:
               (descriptor.direction === "descending" ? "-" : "") +
               descriptor.column,
-          })
-        }
+          });
+        }}
         bottomContent={count > 0 && bottomContent}
         bottomContentPlacement="outside"
         aria-label="Example static collection table"
@@ -226,20 +227,20 @@ export default function OperationTable({
           ))}
         </TableHeader>
         <TableBody
-          emptyContent={"No rows found"}
-          items={operations}
           isLoading={isLoading}
+          emptyContent="Nie znaleziono operacji"
+          items={viewOnly ? items : operations}
           loadingContent={<Spinner />}
         >
-          {(item: any) => (
+          {(viewOnly ? items : operations).map((operation, i) => (
             <TableRow
-              key={item.id || item.title + item.amount + item.issued_at}
+              key={operation.id || `operation:${i}:${searchQuery.page}`}
             >
               {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
+                <TableCell>{renderCell(operation, columnKey)}</TableCell>
               )}
             </TableRow>
-          )}
+          ))}
         </TableBody>
       </Table>
       {children}
