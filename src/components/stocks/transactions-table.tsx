@@ -1,6 +1,6 @@
 "use client";
 
-import { Spinner } from "@nextui-org/react";
+import { Button, Spinner } from "@nextui-org/react";
 import {
   Table,
   TableBody,
@@ -12,6 +12,7 @@ import {
 import Add from "../operation/cta/add";
 import { TRANSACTION_TYPES } from "@/const";
 import { useCallback } from "react";
+import { PlusIcon } from "lucide-react";
 
 type Props = {
   stocks: StockTransaction[];

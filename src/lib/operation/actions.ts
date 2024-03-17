@@ -16,7 +16,10 @@ export async function getOperations(
       const page = Number(searchParams.page);
       let query = supabase
         .from(`${type}s`)
-        .select("*, label(*)", { count: "exact", head: false })
+        .select(`*${type === "expense" ? ", label(*)" : ""}`, {
+          count: "exact",
+          head: false,
+        })
         .order(sort.includes("-") ? sort.split("-")[1] : sort, {
           ascending: sort.includes("-") ? false : true,
         });
@@ -39,12 +42,13 @@ export async function getOperations(
       if (error) {
         return { results: [], error: error.message };
       }
-      return { count, results: data };
+      return { count, results: data as unknown as Operation[] };
     } else {
       const page = Number(searchParams?.page);
+      const cols = type === "expense" ? "*, label(*)" : "*";
       const { data, count, error } = await supabase
         .from(`${type}s`)
-        .select("*, label(*)", { count: "exact", head: false })
+        .select(cols, { count: "exact", head: false })
         .order("issued_at", { ascending: false })
         .order("created_at", { ascending: false })
         .range(page ? page * 10 - 10 : 0, page ? page * 10 - 1 : 9);
@@ -52,9 +56,10 @@ export async function getOperations(
       if (error) {
         return { results: [], error: error.message };
       }
-      return { count, results: data };
+      return { count, results: data as unknown as Operation[] };
     }
   } catch (err) {
+    console.log(err);
     return {
       results: [],
       error: "Error",
