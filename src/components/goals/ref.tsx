@@ -3,13 +3,12 @@ import { CheckCircle2Icon, PlusIcon } from "lucide-react";
 
 export default function GoalRef({
   currency,
-  // saved,
-  created_at,
+  saved,
+  deadline,
   title,
   description,
   price,
 }: Goal) {
-  const saved = 10000;
   const isCompleted = saved >= price;
   const formatter = new Intl.NumberFormat("pl-PL", {
     style: "currency",
@@ -38,7 +37,7 @@ export default function GoalRef({
         </Button>
       )}
       <small className="text-primary">
-        {new Date(created_at).toLocaleDateString()}
+        {new Date(deadline).toLocaleDateString()}
       </small>
       <h3 className="text-lg line-clamp-1">{title}</h3>
       <Progress
