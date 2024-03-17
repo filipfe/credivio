@@ -2,7 +2,7 @@ import chardet from "chardet";
 import Papa from "papaparse";
 
 type Options = {
-  type?: "expense" | "income" | "stock";
+  type?: OperationType | "stock";
   skipFirstLine?: boolean;
 };
 

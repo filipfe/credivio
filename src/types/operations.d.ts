@@ -1,4 +1,4 @@
-type OperationType = "expense" | "income";
+type OperationType = "expense" | "income" | "goal";
 
 type Operation = {
   id?: string;

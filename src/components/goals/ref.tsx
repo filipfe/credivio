@@ -3,12 +3,13 @@ import { CheckCircle2Icon, PlusIcon } from "lucide-react";
 
 export default function GoalRef({
   currency,
-  saved,
+  // saved,
   created_at,
   title,
   description,
   price,
 }: Goal) {
+  const saved = 10000;
   const isCompleted = saved >= price;
   const formatter = new Intl.NumberFormat("pl-PL", {
     style: "currency",
