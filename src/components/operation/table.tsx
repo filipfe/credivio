@@ -19,7 +19,6 @@ import {
   Spinner,
   Pagination,
 } from "@nextui-org/react";
-import { usePathname, useRouter } from "next/navigation";
 import Add from "./cta/add";
 import Delete from "./cta/delete";
 import Edit from "./cta/edit";

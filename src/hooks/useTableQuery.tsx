@@ -18,7 +18,7 @@ export default function useTableQuery(operations: any[], viewOnly?: boolean) {
       const value = searchQuery[key as keyof typeof searchQuery];
       value && params.set(key, String(value));
     });
-    router.push(`${pathname}?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
   }, [searchQuery]);
 
   useEffect(() => {

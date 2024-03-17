@@ -17,16 +17,17 @@ import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 
 export default async function Page() {
-  const wig20data = getStocks("wig20");
-  const mwig40data = getStocks("mwig40");
-  const ownStocksData = getOwnStocks();
-  const dividendsData = getDividendInfo();
   const [
     { results: wig20 },
     { results: mwig40 },
     { results: ownStocks, count },
     { results: dividends },
-  ] = await Promise.all([wig20data, mwig40data, ownStocksData, dividendsData]);
+  ] = await Promise.all([
+    getStocks("wig20"),
+    getStocks("mwig40"),
+    getOwnStocks(),
+    getDividendInfo(),
+  ]);
   const { future } = groupDividends(dividends);
   let ownStocksList: Stock[] = [];
   let holdings: Holdings = {};
