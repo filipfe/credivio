@@ -95,6 +95,7 @@ export async function addOperations(
       }
     }
     const { error } = await supabase.from(`${type}s`).insert(results);
+
     if (error) {
       return {
         error: error.message,

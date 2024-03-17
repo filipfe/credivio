@@ -84,10 +84,10 @@ export default async function Page() {
         >
           {ownStocks.length > 0 ? (
             <TransactionTable
-              viewOnly
               count={count || 0}
               stocks={ownStocks.slice(0, 6)}
               simplified
+              viewOnly
             />
           ) : (
             <div className="text-center flex-1 justify-center flex flex-col items-center gap-3">

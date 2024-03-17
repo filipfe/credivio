@@ -12,14 +12,22 @@ import {
 } from "@nextui-org/table";
 import Add from "../operation/cta/add";
 import { TRANSACTION_TYPES } from "@/const";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import useTableQuery from "@/hooks/useTableQuery";
 
 type Props = {
   stocks: StockTransaction[];
   count: number;
-  viewOnly?: boolean;
   simplified?: boolean;
+  setStocks?: Dispatch<SetStateAction<StockTransaction[]>>;
+  viewOnly?: boolean;
 };
 
 const columns = ({
@@ -40,61 +48,40 @@ export default function TransactionTable({
   stocks,
   count,
   simplified,
+  setStocks,
   viewOnly,
 }: Props) {
-  const [items, setItems] = useState<StockTransaction[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<Set<any> | "all">(
     new Set([])
   );
   const pages = Math.ceil(count / 10);
-  const { isLoading, setIsLoading, searchQuery, setSearchQuery } =
-    useTableQuery(viewOnly);
+  const { items, isLoading, setIsLoading, searchQuery, setSearchQuery } =
+    useTableQuery(stocks, viewOnly);
   const { page, sort } = searchQuery;
-
-  useEffect(() => {
-    if (!viewOnly) return;
-    const start = (page - 1) * 10;
-    const end = start + 10;
-    return setItems(stocks.slice(start, end));
-  }, [page]);
 
   useEffect(() => {
     setIsLoading(false);
   }, [stocks]);
 
-  useEffect(() => {
-    const searchParams = new URLSearchParams();
-    Object.keys(searchQuery).map((key: string) => {
-      searchParams.set(
-        key,
-        String(searchQuery[key as keyof typeof searchQuery])
-      );
+  const renderCell = useCallback((stock: any, columnKey: any) => {
+    const formatter = new Intl.NumberFormat("pl-PL", {
+      currency: stock.currency,
+      style: "currency",
     });
-    router.push(`${pathname}?${searchParams.toString()}`);
-  }, [searchQuery]);
-
-  const renderCell = useCallback(
-    (stock: StockTransaction, columnKey: keyof StockTransaction) => {
-      const formatter = new Intl.NumberFormat("pl-PL", {
-        currency: stock.currency,
-        style: "currency",
-      });
-      const cellValue = stock[columnKey];
-      switch (columnKey) {
-        case "transaction_type":
-          return TRANSACTION_TYPES.find(
-            (tt) => tt.value === stock.transaction_type
-          )!.name;
-        case "price":
-          return formatter.format(parseFloat(stock.price));
-        case "commission":
-          return formatter.format(parseFloat(stock.commission));
-        default:
-          return cellValue;
-      }
-    },
-    []
-  );
+    const cellValue = stock[columnKey];
+    switch (columnKey) {
+      case "transaction_type":
+        return TRANSACTION_TYPES.find(
+          (tt) => tt.value === stock.transaction_type
+        )!.name;
+      case "price":
+        return formatter.format(parseFloat(stock.price));
+      case "commission":
+        return formatter.format(parseFloat(stock.commission));
+      default:
+        return cellValue;
+    }
+  }, []);
 
   const bottomContent = useMemo(() => {
     return (
@@ -113,10 +100,9 @@ export default function TransactionTable({
         <Pagination
           isCompact
           showControls
-          showShadow
           color="primary"
           className="text-background"
-          page={searchQuery.page}
+          page={page}
           isDisabled={isLoading}
           total={pages}
           onChange={(page: number) => {
@@ -126,7 +112,7 @@ export default function TransactionTable({
         />
       </div>
     );
-  }, [selectedKeys, count, searchQuery, stocks, isLoading]);
+  }, [selectedKeys, page, pages, stocks, isLoading]);
 
   return (
     <Table
@@ -134,6 +120,21 @@ export default function TransactionTable({
       color="primary"
       aria-label="transactions-table"
       selectionMode={!simplified ? "multiple" : "none"}
+      sortDescriptor={{
+        column: sort?.includes("-") ? sort?.split("-")[1] : sort?.toString(),
+        direction: sort?.includes("-") ? "descending" : "ascending",
+      }}
+      onSortChange={(descriptor: SortDescriptor) => {
+        !viewOnly && setIsLoading(true);
+        setSearchQuery({
+          page: 1,
+          sort:
+            (descriptor.direction === "descending" ? "-" : "") +
+            descriptor.column,
+        });
+      }}
+      bottomContent={count > 0 && !simplified && bottomContent}
+      bottomContentPlacement="outside"
       className="max-w-full w-full flex-1"
       checkboxesProps={{
         classNames: {
@@ -143,6 +144,8 @@ export default function TransactionTable({
       classNames={{
         wrapper: "p-0",
       }}
+      selectedKeys={selectedKeys}
+      onSelectionChange={setSelectedKeys}
     >
       <TableHeader>
         {columns({ viewOnly, simplified }).map((column) => (
@@ -155,7 +158,8 @@ export default function TransactionTable({
         ))}
       </TableHeader>
       <TableBody
-        loadingContent={<Spinner label="Loading..." />}
+        isLoading={isLoading}
+        loadingContent={<Spinner />}
         emptyContent={
           <div className="text-center flex-1 justify-center flex flex-col items-center gap-3">
             {viewOnly ? (
@@ -174,9 +178,7 @@ export default function TransactionTable({
         {(viewOnly ? items : stocks).map((stock, i) => (
           <TableRow key={stock.id || `stock:${i}:${searchQuery.page}`}>
             {(columnKey) => (
-              <TableCell>
-                {renderCell(stock, columnKey as keyof StockTransaction)}
-              </TableCell>
+              <TableCell>{renderCell(stock, columnKey)}</TableCell>
             )}
           </TableRow>
         ))}

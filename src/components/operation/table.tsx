@@ -54,13 +54,6 @@ export default function OperationTable({
     setIsLoading(false);
   }, [operations]);
 
-  useEffect(() => {
-    if (!viewOnly) return;
-    const start = (page - 1) * 10;
-    const end = start + 10;
-    return setOperations(operations.slice(start, end));
-  }, [page]);
-
   const bottomContent = useMemo(() => {
     return (
       <div
@@ -81,6 +74,7 @@ export default function OperationTable({
           color="primary"
           className="text-background"
           page={page}
+          isDisabled={isLoading}
           total={pages}
           onChange={(page: number) => {
             !viewOnly && setIsLoading(true);
@@ -89,7 +83,7 @@ export default function OperationTable({
         />
       </div>
     );
-  }, [operations, page, pages, selectedKeys]);
+  }, [operations, page, pages, selectedKeys, isLoading]);
 
   const columns = useCallback(
     (hasLabel: boolean) => [
@@ -203,7 +197,7 @@ export default function OperationTable({
         }}
         bottomContent={count > 0 && bottomContent}
         bottomContentPlacement="outside"
-        aria-label="Example static collection table"
+        aria-label="operations-table"
         className="max-w-full w-full flex-1"
         checkboxesProps={{
           classNames: {
@@ -229,7 +223,6 @@ export default function OperationTable({
         <TableBody
           isLoading={isLoading}
           emptyContent="Nie znaleziono operacji"
-          items={viewOnly ? items : operations}
           loadingContent={<Spinner />}
         >
           {(viewOnly ? items : operations).map((operation, i) => (
