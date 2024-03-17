@@ -275,50 +275,52 @@ export default function AddForm({
             })
           }
         >
-          <div className="relative flex items-center">
-            <Autocomplete
-              name="label"
-              label="Etykieta"
-              placeholder="Jedzenie"
-              isClearable={false}
-              allowsCustomValue
-              allowsEmptyCollection={false}
-              isLoading={isPending}
-              isDisabled={records.length === 0}
-              value={label}
-              inputProps={{
-                classNames: {
-                  inputWrapper: "!bg-light",
-                },
-              }}
-              maxLength={48}
-              showScrollIndicators
-              onSelectionChange={(key) => setLabel(key.toString())}
-            >
-              {labels.map((label) => (
-                <AutocompleteItem
-                  value={label.title}
-                  textValue={label.title}
-                  classNames={{
-                    base: "!bg-white hover:!bg-light",
-                  }}
-                  key={label.title}
-                >
-                  {label.title}{" "}
-                  <span className="text-font/80">{`(${label.count[0].count})`}</span>
-                </AutocompleteItem>
-              ))}
-            </Autocomplete>
-            <div className="absolute left-[3.7rem] top-[11px]">
-              <Tooltip
+          {type === "expense" && (
+            <div className="relative flex items-center">
+              <Autocomplete
+                name="label"
+                label="Etykieta"
+                placeholder="Jedzenie"
+                isClearable={false}
+                allowsCustomValue
+                allowsEmptyCollection={false}
+                isLoading={isPending}
                 isDisabled={records.length === 0}
-                size="sm"
-                content="Dodaj etykietę, aby pogrupować operacje"
+                value={label}
+                inputProps={{
+                  classNames: {
+                    inputWrapper: "!bg-light",
+                  },
+                }}
+                maxLength={48}
+                showScrollIndicators
+                onSelectionChange={(key) => setLabel(key.toString())}
               >
-                <HelpCircleIcon size={12} className="text-primary" />
-              </Tooltip>
+                {labels.map((label) => (
+                  <AutocompleteItem
+                    value={label.title}
+                    textValue={label.title}
+                    classNames={{
+                      base: "!bg-white hover:!bg-light",
+                    }}
+                    key={label.title}
+                  >
+                    {label.title}{" "}
+                    <span className="text-font/80">{`(${label.count[0].count})`}</span>
+                  </AutocompleteItem>
+                ))}
+              </Autocomplete>
+              <div className="absolute left-[3.7rem] top-[11px]">
+                <Tooltip
+                  isDisabled={records.length === 0}
+                  size="sm"
+                  content="Dodaj etykietę, aby pogrupować operacje"
+                >
+                  <HelpCircleIcon size={12} className="text-primary" />
+                </Tooltip>
+              </div>
             </div>
-          </div>
+          )}
           <Button
             isDisabled={isPending || records.length === 0}
             color="primary"

@@ -10,13 +10,14 @@ export async function getOperations(
   type: OperationType,
   searchParams?: OperationSearchParams
 ): Promise<SupabaseResponse<Operation>> {
+  const cols = type === "expense" ? "*, label(*)" : "*";
   try {
     if (searchParams?.sort) {
       const { sort } = searchParams;
       const page = Number(searchParams.page);
       let query = supabase
         .from(`${type}s`)
-        .select(`*${type === "expense" ? ", label(*)" : ""}`, {
+        .select(cols, {
           count: "exact",
           head: false,
         })
@@ -45,7 +46,6 @@ export async function getOperations(
       return { count, results: data as unknown as Operation[] };
     } else {
       const page = Number(searchParams?.page);
-      const cols = type === "expense" ? "*, label(*)" : "*";
       const { data, count, error } = await supabase
         .from(`${type}s`)
         .select(cols, { count: "exact", head: false })
