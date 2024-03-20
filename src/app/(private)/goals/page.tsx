@@ -4,7 +4,11 @@ import { getGoals } from "@/lib/goals/actions";
 
 export default async function Page() {
   const { results: goals } = await getGoals();
-  const havingDeadline = goals.filter((goal) => goal.deadline);
+  const havingDeadline = goals.filter(
+    (goal) =>
+      goal.deadline &&
+      new Date(goal.deadline).getTime() - new Date().getTime() >= 0
+  );
   return (
     <div className="px-12 pt-8 pb-24 flex flex-col h-full gap-8">
       <div
@@ -18,7 +22,8 @@ export default async function Page() {
         <Timeline
           goals={havingDeadline.sort(
             (a, b) =>
-              new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
+              new Date(a.deadline as string).getTime() -
+              new Date(b.deadline as string).getTime()
           )}
         />
       </div>
