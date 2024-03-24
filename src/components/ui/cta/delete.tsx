@@ -14,7 +14,7 @@ import { Fragment, useTransition } from "react";
 type Props = {
   items: Set<any> | "all";
   count: number;
-  type?: OperationType | "stock";
+  type?: OperationType;
   viewOnly?: boolean;
   callback?: () => void;
 };
@@ -56,9 +56,9 @@ export default function Delete({
                 </ModalBody>
                 <ModalFooter>
                   <form
-                    action={(e) =>
+                    action={(formData) =>
                       startTransition(async () => {
-                        const { error } = await deleteRows(e);
+                        const { error } = await deleteRows({ formData });
                         !error && callback && callback();
                         onClose();
                       })
