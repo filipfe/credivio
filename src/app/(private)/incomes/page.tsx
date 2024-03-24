@@ -1,14 +1,14 @@
 import IncomeTable from "@/components/operation/table";
 import Add from "@/components/ui/cta/add";
 import OperationList from "@/components/operation/list";
-import { getOperations } from "@/lib/operation/actions";
+import { getOwnRows } from "@/lib/general/actions";
 
 export default async function Page({
   searchParams,
 }: {
   searchParams: { sort?: string; page?: string };
 }) {
-  const { results: incomes, count } = await getOperations(
+  const { results: incomes, count } = await getOwnRows<Operation>(
     "income",
     searchParams
   );

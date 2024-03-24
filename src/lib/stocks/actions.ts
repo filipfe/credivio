@@ -24,65 +24,6 @@ export async function getStocks(
   };
 }
 
-export async function getOwnStocks(
-  searchParams?: SearchParams
-): Promise<SupabaseResponse<StockTransaction>> {
-  try {
-    if (searchParams?.sort) {
-      const { sort } = searchParams;
-      const page = Number(searchParams.page);
-      let query = supabase
-        .from("stocks")
-        .select("*", {
-          count: "exact",
-          head: false,
-        })
-        .order(sort.includes("-") ? sort.split("-")[1] : sort, {
-          ascending: sort.includes("-") ? false : true,
-        });
-
-      if (!sort.includes("issued_at")) {
-        query = query.order("issued_at", { ascending: false });
-      }
-
-      if (sort.includes("-issued_at")) {
-        query = query.order("created_at", { ascending: false });
-      } else {
-        query = query.order("created_at");
-      }
-
-      const { data, count, error } = await query.range(
-        page ? page * 10 - 10 : 0,
-        page ? page * 10 - 1 : 9
-      );
-
-      if (error) {
-        return { results: [], error: error.message };
-      }
-      return { count, results: data as unknown as StockTransaction[] };
-    } else {
-      const page = Number(searchParams?.page);
-      const { data, count, error } = await supabase
-        .from("stocks")
-        .select("*", { count: "exact", head: false })
-        .order("issued_at", { ascending: false })
-        .order("created_at", { ascending: false })
-        .range(page ? page * 10 - 10 : 0, page ? page * 10 - 1 : 9);
-
-      if (error) {
-        return { results: [], error: error.message };
-      }
-      return { count, results: data as unknown as StockTransaction[] };
-    }
-  } catch (err) {
-    console.log(err);
-    return {
-      results: [],
-      error: "Error",
-    };
-  }
-}
-
 export async function addStocks(
   formData: FormData
 ): Promise<SupabaseResponse<StockTransaction>> {

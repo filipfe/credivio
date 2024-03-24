@@ -1,5 +1,6 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 
 export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
   const router = useRouter();
@@ -9,7 +10,17 @@ export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
   const [searchQuery, setSearchQuery] = useState({
     page: 1,
     sort: "",
+    search: "",
   });
+
+  const handleSearch = useDebouncedCallback((value: string) => {
+    setIsLoading(true);
+    setSearchQuery((prev) => ({
+      ...prev,
+      page: 1,
+      search: value,
+    }));
+  }, 300);
 
   useEffect(() => {
     if (viewOnly) return;
@@ -35,5 +46,6 @@ export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
     isLoading,
     setIsLoading,
     setSearchQuery,
+    handleSearch,
   };
 }

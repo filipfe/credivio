@@ -11,9 +11,11 @@ import {
   SortDescriptor,
   Spinner,
   Pagination,
+  Input,
 } from "@nextui-org/react";
 import Add from "../ui/cta/add";
 import useTableQuery from "@/hooks/useTableQuery";
+import { SearchIcon } from "lucide-react";
 
 export default function OperationTable({
   rows,
@@ -31,12 +33,32 @@ export default function OperationTable({
     setIsLoading,
     searchQuery,
     setSearchQuery,
+    handleSearch,
   } = useTableQuery(rows, !!viewOnly);
-  const { page, sort } = searchQuery;
+  const { page, sort, search } = searchQuery;
 
   useEffect(() => {
     setIsLoading(false);
   }, [rows]);
+
+  const topContent = useMemo(() => {
+    return (
+      <div className="flex items-center justify-between gap-4 h-10">
+        <h1 className="text-lg">{title}</h1>
+        <Input
+          isClearable
+          className="sm:max-w-[22%]"
+          placeholder="Wyszukaj"
+          startContent={<SearchIcon />}
+          defaultValue={search}
+          onValueChange={handleSearch}
+        />
+        <div className="flex items-center gap-1.5">
+          {type && rows.length > 0 && <Add type={type} />}
+        </div>
+      </div>
+    );
+  }, [search, rows]);
 
   const bottomContent = useMemo(() => {
     return (
@@ -108,12 +130,6 @@ export default function OperationTable({
 
   return (
     <div className="bg-white rounded-lg py-8 px-10 flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-4 h-10">
-        <h1 className="text-lg">{title}</h1>
-        <div className="flex items-center gap-1.5">
-          {type && rows.length > 0 && <Add type={type} />}
-        </div>
-      </div>
       <Table
         shadow="none"
         color="primary"
@@ -123,13 +139,16 @@ export default function OperationTable({
         }}
         onSortChange={(descriptor: SortDescriptor) => {
           !viewOnly && setIsLoading(true);
-          setSearchQuery({
+          setSearchQuery((prev) => ({
+            ...prev,
             page: 1,
             sort:
               (descriptor.direction === "descending" ? "-" : "") +
               descriptor.column,
-          });
+          }));
         }}
+        topContent={topContent}
+        topContentPlacement="outside"
         bottomContent={count > 0 && bottomContent}
         bottomContentPlacement="outside"
         aria-label="operations-table"
