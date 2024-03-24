@@ -1,6 +1,6 @@
 "use client";
 
-import { Pagination, Spinner } from "@nextui-org/react";
+import { Input, Pagination, Spinner } from "@nextui-org/react";
 import {
   SortDescriptor,
   Table,
@@ -12,10 +12,9 @@ import {
 } from "@nextui-org/table";
 import Add from "../ui/cta/add";
 import { TRANSACTION_TYPES } from "@/const";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import useTableQuery from "@/hooks/useTableQuery";
-import Delete from "../ui/cta/delete";
-import Edit from "../ui/cta/edit";
+import { SearchIcon } from "lucide-react";
 
 const columns = ({
   viewOnly,
@@ -44,9 +43,15 @@ export default function TransactionTable({
   title,
 }: TableProps<StockTransaction>) {
   const pages = Math.ceil(count / 10);
-  const { items, isLoading, setIsLoading, searchQuery, setSearchQuery } =
-    useTableQuery<StockTransaction>(rows, !!viewOnly);
-  const { page, sort } = searchQuery;
+  const {
+    items,
+    isLoading,
+    setIsLoading,
+    searchQuery,
+    setSearchQuery,
+    handleSearch,
+  } = useTableQuery<StockTransaction>(rows, !!viewOnly);
+  const { page, sort, search } = searchQuery;
 
   useEffect(() => {
     setIsLoading(false);
@@ -76,7 +81,14 @@ export default function TransactionTable({
     return (
       <div className="flex items-center gap-4 justify-between h-10">
         <h2 className="text-lg">{title}</h2>
-
+        <Input
+          isClearable
+          className="sm:max-w-[22%]"
+          placeholder="Wyszukaj"
+          startContent={<SearchIcon />}
+          defaultValue={search}
+          onValueChange={handleSearch}
+        />
         {!viewOnly && count > 0 && <Add type={"stocks/transaction"} />}
       </div>
     );
@@ -111,12 +123,13 @@ export default function TransactionTable({
       }}
       onSortChange={(descriptor: SortDescriptor) => {
         !viewOnly && setIsLoading(true);
-        setSearchQuery({
+        setSearchQuery((prev) => ({
+          ...prev,
           page: 1,
           sort:
             (descriptor.direction === "descending" ? "-" : "") +
             descriptor.column,
-        });
+        }));
       }}
       topContent={!simplified && topContent}
       topContentPlacement="outside"

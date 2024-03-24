@@ -5,7 +5,6 @@ import TransactionTable from "@/components/stocks/transactions-table";
 import Block from "@/components/ui/block";
 import {
   getDividendInfo,
-  getOwnStocks,
   getSpecificStocks,
   getStocks,
 } from "@/lib/stocks/actions";
@@ -15,6 +14,7 @@ import sortDividends from "@/utils/stocks/sort-dividends";
 import { Button } from "@nextui-org/react";
 import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
+import { getOwnRows } from "@/lib/general/actions";
 
 export default async function Page() {
   const [
@@ -25,7 +25,7 @@ export default async function Page() {
   ] = await Promise.all([
     getStocks("wig20"),
     getStocks("mwig40"),
-    getOwnStocks(),
+    getOwnRows<StockTransaction>("stock"),
     getDividendInfo(),
   ]);
   const { future } = groupDividends(dividends);

@@ -20,6 +20,7 @@ type Option<T> = { name: string; value: T };
 type SearchParams = {
   sort?: string;
   page?: string;
+  search?: string;
 };
 
 type Currency = {

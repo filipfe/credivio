@@ -6,67 +6,6 @@ import { redirect } from "next/navigation";
 
 const supabase = createClient();
 
-export async function getOperations(
-  type: OperationType,
-  searchParams?: SearchParams
-): Promise<SupabaseResponse<Operation>> {
-  const cols = type === "expense" ? "*, label(*)" : "*";
-  try {
-    if (searchParams?.sort) {
-      const { sort } = searchParams;
-      const page = Number(searchParams.page);
-      let query = supabase
-        .from(`${type}s`)
-        .select(cols, {
-          count: "exact",
-          head: false,
-        })
-        .order(sort.includes("-") ? sort.split("-")[1] : sort, {
-          ascending: sort.includes("-") ? false : true,
-        });
-
-      if (!sort.includes("issued_at")) {
-        query = query.order("issued_at", { ascending: false });
-      }
-
-      if (sort.includes("-issued_at")) {
-        query = query.order("created_at", { ascending: false });
-      } else {
-        query = query.order("created_at");
-      }
-
-      const { data, count, error } = await query.range(
-        page ? page * 10 - 10 : 0,
-        page ? page * 10 - 1 : 9
-      );
-
-      if (error) {
-        return { results: [], error: error.message };
-      }
-      return { count, results: data as unknown as Operation[] };
-    } else {
-      const page = Number(searchParams?.page);
-      const { data, count, error } = await supabase
-        .from(`${type}s`)
-        .select(cols, { count: "exact", head: false })
-        .order("issued_at", { ascending: false })
-        .order("created_at", { ascending: false })
-        .range(page ? page * 10 - 10 : 0, page ? page * 10 - 1 : 9);
-
-      if (error) {
-        return { results: [], error: error.message };
-      }
-      return { count, results: data as unknown as Operation[] };
-    }
-  } catch (err) {
-    console.log(err);
-    return {
-      results: [],
-      error: "Error",
-    };
-  }
-}
-
 export async function addOperations(
   formData: FormData
 ): Promise<SupabaseResponse<Operation>> {
