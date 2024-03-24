@@ -1,13 +1,6 @@
 "use client";
 
-import React, {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -19,40 +12,36 @@ import {
   Spinner,
   Pagination,
 } from "@nextui-org/react";
-import Add from "../general/cta/add";
-import Delete from "../general/cta/delete";
-import Edit from "../general/cta/edit";
+import Add from "../ui/cta/add";
+import Delete from "../ui/cta/delete";
+import Edit from "../ui/cta/edit";
 import useTableQuery from "@/hooks/useTableQuery";
 
-type Props = {
-  operations: Operation[];
-  count: number;
-  type?: "expense" | "income";
-  title?: string;
-  children?: React.ReactNode;
-  setOperations?: Dispatch<SetStateAction<Operation[]>>;
-};
-
 export default function OperationTable({
-  operations,
+  rows,
   count,
   type,
   title,
-  setOperations,
+  viewOnly,
   children,
-}: Props) {
-  const viewOnly = !!setOperations;
+}: TableProps<Operation> & { type?: OperationType }) {
   const [selectedKeys, setSelectedKeys] = useState<Set<any> | "all">(
     new Set([])
   );
   const pages = Math.ceil(count / 10);
-  const { items, isLoading, setIsLoading, searchQuery, setSearchQuery } =
-    useTableQuery(operations, viewOnly);
+  const {
+    items,
+    setItems,
+    isLoading,
+    setIsLoading,
+    searchQuery,
+    setSearchQuery,
+  } = useTableQuery(rows, !!viewOnly);
   const { page, sort } = searchQuery;
 
   useEffect(() => {
     setIsLoading(false);
-  }, [operations]);
+  }, [rows]);
 
   const bottomContent = useMemo(() => {
     return (
@@ -83,7 +72,7 @@ export default function OperationTable({
         />
       </div>
     );
-  }, [operations, page, pages, selectedKeys, isLoading]);
+  }, [rows, page, pages, selectedKeys, isLoading]);
 
   const columns = useCallback(
     (hasLabel: boolean) => [
@@ -145,26 +134,18 @@ export default function OperationTable({
               items={selectedKeys}
               count={count}
               type={type}
-              viewOnly={viewOnly}
+              viewOnly={!!viewOnly}
               callback={() => {
-                if (viewOnly) {
-                  const keys: string[] =
-                    selectedKeys === "all"
-                      ? []
-                      : Array.from(selectedKeys.values());
-                  const toDelete: number[] = keys.reduce((prev, curr) => {
-                    const [_, index, page] = curr.split(":");
-                    const id = (parseInt(page) - 1) * 10 + parseInt(index);
-                    return [...prev, id];
-                  }, [] as number[]);
-                  setOperations((prev) =>
-                    selectedKeys === "all"
-                      ? []
-                      : prev.filter((_, i) => !toDelete.includes(i))
-                  );
-                  setSearchQuery((prev) => ({ ...prev, page: 1 }));
-                }
                 setSelectedKeys(new Set([]));
+                if (!viewOnly) return;
+                const { setRows } = viewOnly;
+                const toDelete = (prev: Operation[]) =>
+                  selectedKeys === "all"
+                    ? []
+                    : prev.filter((item) => !selectedKeys.has(item.id));
+                setItems(toDelete);
+                setRows(toDelete);
+                setSearchQuery((prev) => ({ ...prev, page: 1 }));
               }}
             />
           )}
@@ -175,7 +156,7 @@ export default function OperationTable({
               isDisabled={selectedKeys === "all" || selectedKeys.size > 1}
             />
           )}
-          {type && operations.length > 0 && <Add type={type} />}
+          {type && rows.length > 0 && <Add type={type} />}
         </div>
       </div>
       <Table
@@ -211,7 +192,7 @@ export default function OperationTable({
         onSelectionChange={setSelectedKeys}
       >
         <TableHeader>
-          {columns(operations.some((item) => item.label)).map((column) => (
+          {columns(rows.some((item) => item.label)).map((column) => (
             <TableColumn
               key={column.key}
               allowsSorting={count > 0 && !viewOnly ? true : undefined}
@@ -221,19 +202,18 @@ export default function OperationTable({
           ))}
         </TableHeader>
         <TableBody
+          items={viewOnly ? items : rows}
           isLoading={isLoading}
           emptyContent="Nie znaleziono operacji"
           loadingContent={<Spinner />}
         >
-          {(viewOnly ? items : operations).map((operation, i) => (
-            <TableRow
-              key={operation.id || `operation:${i}:${searchQuery.page}`}
-            >
+          {(operation) => (
+            <TableRow key={operation.id}>
               {(columnKey) => (
                 <TableCell>{renderCell(operation, columnKey)}</TableCell>
               )}
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
       {children}

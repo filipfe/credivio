@@ -28,38 +28,15 @@ import {
 import parseCSV from "@/utils/operation/parse-csv";
 import { addOperations, getLabels } from "@/lib/operation/actions";
 import OperationTable from "./table";
+import operationFormatter from "@/utils/formatters/operations";
+import { v4 } from "uuid";
 
-const defaultRecord: Operation = {
+const defaultRecord: Omit<Operation, "id"> = {
   title: "",
   issued_at: new Date().toISOString().substring(0, 10),
   amount: "",
   currency: "PLN",
   description: "",
-};
-
-const formatter = (data: string[][]) => {
-  return data.map((record) => {
-    let [
-      issued_at,
-      currency_date,
-      title,
-      amount,
-      currency,
-      budget_after,
-      description,
-    ] = record;
-    amount = amount.slice(1);
-    budget_after = budget_after.slice(1);
-    return {
-      issued_at,
-      currency_date,
-      title,
-      amount,
-      currency,
-      budget_after,
-      description,
-    };
-  });
 };
 
 export default function AddForm({
@@ -69,6 +46,7 @@ export default function AddForm({
   type: OperationType;
   defaultValue?: Operation | null;
 }) {
+  const [editMode, setEditMode] = useState(false);
   const [label, setLabel] = useState("");
   const [isPending, startTransition] = useTransition();
   const [method, setMethod] = useState<AddMethodKey>("manual");
@@ -77,7 +55,7 @@ export default function AddForm({
     defaultValue ? [defaultValue] : []
   );
   const [singleRecord, setSingleRecord] = useState<Operation>(
-    defaultValue || defaultRecord
+    defaultValue || { ...defaultRecord, id: v4() }
   );
   const [labels, setLabels] = useState<Label[]>([]);
 
@@ -87,17 +65,25 @@ export default function AddForm({
     setFileName(file.name);
     await parseCSV(
       file,
-      (results) => setRecords((prev) => [...prev, ...formatter(results)]),
+      (results) =>
+        setRecords((prev) => [...prev, ...operationFormatter(results)]),
       {
         type,
       }
     );
   };
 
+  const onRowSelect = (id: string) => {
+    const record = records.find((item) => item.id === id);
+    if (!record) return;
+    setSingleRecord(record);
+    setEditMode(true);
+  };
+
   const addRecord = async (e: React.FormEvent) => {
     e.preventDefault();
     setRecords((prev) => [...prev, singleRecord]);
-    setSingleRecord(defaultRecord);
+    setSingleRecord({ ...defaultRecord, id: v4() });
   };
 
   useEffect(() => {
@@ -263,9 +249,12 @@ export default function AddForm({
       </form>
       <OperationTable
         title="Podgląd"
-        operations={records}
+        rows={records}
         count={records.length}
-        setOperations={setRecords}
+        viewOnly={{
+          setRows: setRecords,
+          onRowSelect,
+        }}
       >
         <form
           className="flex flex-col gap-8"

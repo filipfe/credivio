@@ -1,5 +1,5 @@
 import IncomeTable from "@/components/operation/table";
-import Add from "@/components/general/cta/add";
+import Add from "@/components/ui/cta/add";
 import OperationList from "@/components/operation/list";
 import { getOperations } from "@/lib/operation/actions";
 
@@ -17,7 +17,7 @@ export default async function Page({
       {incomes.length > 0 && (
         <IncomeTable
           title="Przychody"
-          operations={incomes}
+          rows={incomes}
           count={count || 0}
           type="income"
         />

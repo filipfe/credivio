@@ -1,7 +1,7 @@
 type OperationType = "expense" | "income" | "goal";
 
 type Operation = {
-  id?: string;
+  id: string;
   issued_at: string;
   title: string;
   amount: string;

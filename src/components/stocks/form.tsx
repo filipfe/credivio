@@ -24,6 +24,7 @@ import parseCSV from "@/utils/operation/parse-csv";
 import { addStocks } from "@/lib/stocks/actions";
 import TransactionTable from "./transactions-table";
 import { v4 } from "uuid";
+import stocksFormatter from "@/utils/formatters/stocks";
 
 const defaultRecord: Omit<StockTransaction, "id"> = {
   symbol: "",
@@ -34,42 +35,6 @@ const defaultRecord: Omit<StockTransaction, "id"> = {
   issued_at: new Date().toISOString().substring(0, 10),
   quantity: "",
   currency: "PLN",
-};
-
-const formatter = (data: string[][]): StockTransaction[] => {
-  return data
-    .map((record) => {
-      let [
-        issued_at,
-        symbol,
-        ,
-        currency,
-        transaction_type,
-        quantity,
-        price,
-        ,
-        value,
-        ,
-        commission,
-      ] = record;
-      price = price.replace(",", ".");
-      commission = commission.replace(",", ".");
-      value = value.replace(",", ".");
-      const result = {
-        id: v4(),
-        issued_at,
-        symbol,
-        transaction_type:
-          transaction_type === "Kupno" ? "buy" : ("sell" as "buy" | "sell"),
-        quantity,
-        value: parseFloat(value),
-        price,
-        commission,
-        currency,
-      };
-      return result;
-    })
-    .filter((item) => item.symbol);
 };
 
 export default function Form({
@@ -90,16 +55,14 @@ export default function Form({
     defaultValue || { ...defaultRecord, id: v4() }
   );
 
-  const { currency } = singleRecord;
-
   const onFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.item(0);
     if (!file) return;
     setFileName(file.name);
-    await parseCSV(file, (results) => setRecords(formatter(results)));
+    await parseCSV(file, (results) => setRecords(stocksFormatter(results)));
   };
 
-  const onRowSelect = async (id: string) => {
+  const onRowSelect = (id: string) => {
     const record = records.find((item) => item.id === id);
     if (!record) return;
     setSingleRecord(record);
@@ -346,10 +309,12 @@ export default function Form({
       <div className="bg-white rounded-lg px-10 py-8 flex flex-col gap-4">
         <TransactionTable
           title="Podgląd"
-          stocks={records}
+          rows={records}
           count={records.length}
-          viewOnly
-          onRowSelect={onRowSelect}
+          viewOnly={{
+            setRows: setRecords,
+            onRowSelect,
+          }}
         />
         <form
           className="flex flex-col"

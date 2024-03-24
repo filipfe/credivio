@@ -10,53 +10,39 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/table";
-import Add from "../general/cta/add";
+import Add from "../ui/cta/add";
 import { TRANSACTION_TYPES } from "@/const";
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useTableQuery from "@/hooks/useTableQuery";
-import Delete from "../general/cta/delete";
-import Edit from "../general/cta/edit";
-
-type Props = {
-  stocks: StockTransaction[];
-  count: number;
-  simplified?: boolean;
-  setStocks?: Dispatch<SetStateAction<StockTransaction[]>>;
-  viewOnly?: boolean;
-  onRowSelect?: (id: string) => void;
-  title: string;
-};
+import Delete from "../ui/cta/delete";
+import Edit from "../ui/cta/edit";
 
 const columns = ({
   viewOnly,
   simplified,
-}: Pick<Props, "simplified" | "viewOnly">) => [
-  ...(!viewOnly ? [{ key: "issued_at", label: "DATA ZAWARCIA" }] : []),
+}: {
+  viewOnly: boolean;
+  simplified?: boolean;
+}) => [
+  ...(!viewOnly && !simplified
+    ? [{ key: "issued_at", label: "DATA ZAWARCIA" }]
+    : []),
   { key: "symbol", label: "INSTRUMENT" },
   { key: "transaction_type", label: "TYP TRANSAKCJI" },
   { key: "quantity", label: "ILOŚĆ" },
   { key: "price", label: "CENA" },
-  ...(!viewOnly ? [{ key: "value", label: "WARTOŚĆ" }] : []),
-  ...(!viewOnly ? [{ key: "currency", label: "WALUTA" }] : []),
+  ...(!viewOnly && !simplified ? [{ key: "value", label: "WARTOŚĆ" }] : []),
+  ...(!viewOnly && !simplified ? [{ key: "currency", label: "WALUTA" }] : []),
   ...(!simplified ? [{ key: "commission", label: "PROWIZJA" }] : []),
 ];
 
 export default function TransactionTable({
-  stocks,
+  rows,
   count,
   simplified,
-  setStocks,
   viewOnly,
-  onRowSelect,
   title,
-}: Props) {
+}: TableProps<StockTransaction>) {
   const [selectedKeys, setSelectedKeys] = useState<Set<any> | "all">(
     new Set([])
   );
@@ -68,12 +54,12 @@ export default function TransactionTable({
     setIsLoading,
     searchQuery,
     setSearchQuery,
-  } = useTableQuery<StockTransaction>(stocks, viewOnly);
+  } = useTableQuery<StockTransaction>(rows, !!viewOnly);
   const { page, sort } = searchQuery;
 
   useEffect(() => {
     setIsLoading(false);
-  }, [stocks]);
+  }, [rows]);
 
   const renderCell = useCallback((stock: any, columnKey: any) => {
     const formatter = new Intl.NumberFormat("pl-PL", {
@@ -105,22 +91,18 @@ export default function TransactionTable({
               items={selectedKeys}
               count={count}
               type={"stock"}
-              viewOnly={viewOnly}
+              viewOnly={!!viewOnly}
               callback={() => {
-                if (viewOnly) {
-                  const keys: string[] =
-                    selectedKeys === "all"
-                      ? []
-                      : Array.from(selectedKeys.values());
-                  setItems((prev) =>
-                    selectedKeys === "all"
-                      ? []
-                      : prev.filter((item) => !keys.includes(item.id))
-                  );
-
-                  setSearchQuery((prev) => ({ ...prev, page: 1 }));
-                }
                 setSelectedKeys(new Set([]));
+                if (!viewOnly) return;
+                const { setRows } = viewOnly;
+                const toDelete = (prev: StockTransaction[]) =>
+                  selectedKeys === "all"
+                    ? []
+                    : prev.filter((item) => !selectedKeys.has(item.id));
+                setItems(toDelete);
+                setRows(toDelete);
+                setSearchQuery((prev) => ({ ...prev, page: 1 }));
               }}
             />
           )}
@@ -135,7 +117,7 @@ export default function TransactionTable({
         </div>
       </div>
     );
-  }, [selectedKeys, page, pages, stocks, isLoading]);
+  }, [selectedKeys, page, pages, rows, isLoading]);
 
   const bottomContent = useMemo(() => {
     return (
@@ -166,7 +148,7 @@ export default function TransactionTable({
         />
       </div>
     );
-  }, [selectedKeys, page, pages, stocks, isLoading]);
+  }, [selectedKeys, page, pages, rows, isLoading]);
 
   return (
     <Table
@@ -205,13 +187,14 @@ export default function TransactionTable({
         setSelectedKeys(e);
         console.log(e);
         if (!viewOnly) return;
+        const { onRowSelect } = viewOnly;
         const keys = [...Array.from(e)];
         const lastKey = keys.length === 0 ? null : keys[0].toString();
-        lastKey && onRowSelect && onRowSelect(lastKey);
+        lastKey && onRowSelect(lastKey);
       }}
     >
       <TableHeader>
-        {columns({ viewOnly, simplified }).map((column) => (
+        {columns({ viewOnly: !!viewOnly, simplified }).map((column) => (
           <TableColumn
             key={column.key}
             allowsSorting={count > 0 && !viewOnly ? true : undefined}
@@ -223,7 +206,7 @@ export default function TransactionTable({
       <TableBody
         isLoading={isLoading}
         loadingContent={<Spinner />}
-        items={viewOnly ? items : stocks}
+        items={viewOnly ? items : rows}
         emptyContent={
           <div className="text-center flex-1 justify-center flex flex-col items-center gap-3">
             {viewOnly ? (
