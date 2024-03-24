@@ -17,7 +17,7 @@ type SupabaseResponse<T> = {
 
 type Option<T> = { name: string; value: T };
 
-type OperationSearchParams = {
+type SearchParams = {
   sort?: string;
   page?: string;
 };

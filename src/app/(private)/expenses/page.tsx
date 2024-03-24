@@ -1,4 +1,4 @@
-import Add from "@/components/operation/cta/add";
+import Add from "@/components/ui/cta/add";
 import OperationList from "@/components/operation/list";
 import OperationTable from "@/components/operation/table";
 import { getOperations } from "@/lib/operation/actions";
@@ -18,7 +18,7 @@ export default async function Page({
         <OperationTable
           title="Wydatki"
           type="expense"
-          operations={expenses}
+          rows={expenses}
           count={count || 0}
         />
       )}

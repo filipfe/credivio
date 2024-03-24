@@ -1,13 +1,6 @@
 "use client";
 
-import React, {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import {
   Table,
   TableHeader,
@@ -19,70 +12,49 @@ import {
   Spinner,
   Pagination,
 } from "@nextui-org/react";
-import Add from "./cta/add";
-import Delete from "./cta/delete";
-import Edit from "./cta/edit";
+import Add from "../ui/cta/add";
 import useTableQuery from "@/hooks/useTableQuery";
 
-type Props = {
-  operations: Operation[];
-  count: number;
-  type?: "expense" | "income";
-  title?: string;
-  children?: React.ReactNode;
-  setOperations?: Dispatch<SetStateAction<Operation[]>>;
-};
-
 export default function OperationTable({
-  operations,
+  rows,
   count,
   type,
   title,
-  setOperations,
+  viewOnly,
   children,
-}: Props) {
-  const viewOnly = !!setOperations;
-  const [selectedKeys, setSelectedKeys] = useState<Set<any> | "all">(
-    new Set([])
-  );
+}: TableProps<Operation> & { type?: OperationType }) {
   const pages = Math.ceil(count / 10);
-  const { items, isLoading, setIsLoading, searchQuery, setSearchQuery } =
-    useTableQuery(operations, viewOnly);
+  const {
+    items,
+    setItems,
+    isLoading,
+    setIsLoading,
+    searchQuery,
+    setSearchQuery,
+  } = useTableQuery(rows, !!viewOnly);
   const { page, sort } = searchQuery;
 
   useEffect(() => {
     setIsLoading(false);
-  }, [operations]);
+  }, [rows]);
 
   const bottomContent = useMemo(() => {
     return (
-      <div
-        className={`py-2 px-2 flex ${
-          viewOnly ? "justify-end" : "justify-between"
-        } items-start`}
-      >
-        {!viewOnly && (
-          <span className="text-small text-default-400">
-            {selectedKeys === "all"
-              ? "All items selected"
-              : `${selectedKeys.size} of ${count} selected`}
-          </span>
-        )}
-        <Pagination
-          isCompact
-          showControls
-          color="primary"
-          className="text-background"
-          page={page}
-          total={pages}
-          onChange={(page: number) => {
-            !viewOnly && setIsLoading(true);
-            setSearchQuery((prev) => ({ ...prev, page }));
-          }}
-        />
-      </div>
+      <Pagination
+        isCompact
+        showControls
+        color="primary"
+        className="text-background mt-2 ml-auto mr-2"
+        page={page}
+        isDisabled={isLoading}
+        total={pages}
+        onChange={(page: number) => {
+          !viewOnly && setIsLoading(true);
+          setSearchQuery((prev) => ({ ...prev, page }));
+        }}
+      />
     );
-  }, [operations, page, pages, selectedKeys]);
+  }, [rows, page, pages, isLoading]);
 
   const columns = useCallback(
     (hasLabel: boolean) => [
@@ -139,48 +111,12 @@ export default function OperationTable({
       <div className="flex items-center justify-between gap-4 h-10">
         <h1 className="text-lg">{title}</h1>
         <div className="flex items-center gap-1.5">
-          {(selectedKeys === "all" || selectedKeys.size > 0) && (
-            <Delete
-              items={selectedKeys}
-              count={count}
-              type={type}
-              viewOnly={viewOnly}
-              callback={() => {
-                if (viewOnly) {
-                  const keys: string[] =
-                    selectedKeys === "all"
-                      ? []
-                      : Array.from(selectedKeys.values());
-                  const toDelete: number[] = keys.reduce((prev, curr) => {
-                    const [_, index, page] = curr.split(":");
-                    const id = (parseInt(page) - 1) * 10 + parseInt(index);
-                    return [...prev, id];
-                  }, [] as number[]);
-                  setOperations((prev) =>
-                    selectedKeys === "all"
-                      ? []
-                      : prev.filter((_, i) => !toDelete.includes(i))
-                  );
-                  setSearchQuery((prev) => ({ ...prev, page: 1 }));
-                }
-                setSelectedKeys(new Set([]));
-              }}
-            />
-          )}
-          {type && (selectedKeys === "all" || selectedKeys.size > 0) && (
-            <Edit
-              type={type}
-              id={Array.from(selectedKeys)[0]}
-              isDisabled={selectedKeys === "all" || selectedKeys.size > 1}
-            />
-          )}
-          {type && operations.length > 0 && <Add type={type} />}
+          {type && rows.length > 0 && <Add type={type} />}
         </div>
       </div>
       <Table
         shadow="none"
         color="primary"
-        selectionMode={"multiple"}
         sortDescriptor={{
           column: sort?.includes("-") ? sort?.split("-")[1] : sort?.toString(),
           direction: sort?.includes("-") ? "descending" : "ascending",
@@ -196,8 +132,8 @@ export default function OperationTable({
         }}
         bottomContent={count > 0 && bottomContent}
         bottomContentPlacement="outside"
-        aria-label="Example static collection table"
-        className={`max-w-full w-full flex-1`}
+        aria-label="operations-table"
+        className="max-w-full w-full flex-1"
         checkboxesProps={{
           classNames: {
             wrapper: "text-background",
@@ -206,11 +142,9 @@ export default function OperationTable({
         classNames={{
           wrapper: "p-0",
         }}
-        selectedKeys={selectedKeys}
-        onSelectionChange={setSelectedKeys}
       >
         <TableHeader>
-          {columns(operations.some((item) => item.label)).map((column) => (
+          {columns(rows.some((item) => item.label)).map((column) => (
             <TableColumn
               key={column.key}
               allowsSorting={count > 0 && !viewOnly ? true : undefined}
@@ -220,20 +154,18 @@ export default function OperationTable({
           ))}
         </TableHeader>
         <TableBody
+          items={viewOnly ? items : rows}
           isLoading={isLoading}
           emptyContent="Nie znaleziono operacji"
-          items={viewOnly ? items : operations}
           loadingContent={<Spinner />}
         >
-          {(viewOnly ? items : operations).map((operation, i) => (
-            <TableRow
-              key={operation.id || `operation:${i}:${searchQuery.page}`}
-            >
+          {(operation) => (
+            <TableRow key={operation.id}>
               {(columnKey) => (
                 <TableCell>{renderCell(operation, columnKey)}</TableCell>
               )}
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
       {children}

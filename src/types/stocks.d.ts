@@ -46,6 +46,7 @@ type Stock = {
 };
 
 type StockTransaction = {
+  id: string;
   symbol: string;
   transaction_type: "sell" | "buy";
   price: string;
