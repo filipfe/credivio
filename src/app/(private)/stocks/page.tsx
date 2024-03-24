@@ -1,4 +1,4 @@
-import Add from "@/components/operation/cta/add";
+import Add from "@/components/ui/cta/add";
 import DividendsTable from "@/components/stocks/dividends-table";
 import StockTable from "@/components/stocks/table";
 import TransactionTable from "@/components/stocks/transactions-table";
@@ -85,9 +85,9 @@ export default async function Page() {
         >
           {ownStocks.length > 0 ? (
             <TransactionTable
-              viewOnly
+              title={"Ostatnie transakcje"}
               count={count || 0}
-              stocks={ownStocks.slice(0, 6)}
+              rows={ownStocks.slice(0, 6)}
               simplified
             />
           ) : (
