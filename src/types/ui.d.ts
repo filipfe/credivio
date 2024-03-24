@@ -6,6 +6,5 @@ type TableProps<T> = {
   children?: React.ReactNode;
   viewOnly?: {
     setRows: React.Dispatch<React.SetStateAction<T[]>>;
-    onRowSelect: (id: string) => void;
   };
 };

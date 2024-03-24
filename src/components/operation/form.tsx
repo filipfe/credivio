@@ -46,7 +46,6 @@ export default function AddForm({
   type: OperationType;
   defaultValue?: Operation | null;
 }) {
-  const [editMode, setEditMode] = useState(false);
   const [label, setLabel] = useState("");
   const [isPending, startTransition] = useTransition();
   const [method, setMethod] = useState<AddMethodKey>("manual");
@@ -71,13 +70,6 @@ export default function AddForm({
         type,
       }
     );
-  };
-
-  const onRowSelect = (id: string) => {
-    const record = records.find((item) => item.id === id);
-    if (!record) return;
-    setSingleRecord(record);
-    setEditMode(true);
   };
 
   const addRecord = async (e: React.FormEvent) => {
@@ -253,7 +245,6 @@ export default function AddForm({
         count={records.length}
         viewOnly={{
           setRows: setRecords,
-          onRowSelect,
         }}
       >
         <form

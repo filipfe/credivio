@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import {
   Table,
   TableHeader,
@@ -13,8 +13,6 @@ import {
   Pagination,
 } from "@nextui-org/react";
 import Add from "../ui/cta/add";
-import Delete from "../ui/cta/delete";
-import Edit from "../ui/cta/edit";
 import useTableQuery from "@/hooks/useTableQuery";
 
 export default function OperationTable({
@@ -25,9 +23,6 @@ export default function OperationTable({
   viewOnly,
   children,
 }: TableProps<Operation> & { type?: OperationType }) {
-  const [selectedKeys, setSelectedKeys] = useState<Set<any> | "all">(
-    new Set([])
-  );
   const pages = Math.ceil(count / 10);
   const {
     items,
@@ -45,34 +40,21 @@ export default function OperationTable({
 
   const bottomContent = useMemo(() => {
     return (
-      <div
-        className={`py-2 px-2 flex ${
-          viewOnly ? "justify-end" : "justify-between"
-        } items-start`}
-      >
-        {!viewOnly && (
-          <span className="text-small text-default-400">
-            {selectedKeys === "all" || selectedKeys.size === count
-              ? "Wszystkie elementy wybrane"
-              : `${selectedKeys.size} z ${count} wybranych`}
-          </span>
-        )}
-        <Pagination
-          isCompact
-          showControls
-          color="primary"
-          className="text-background"
-          page={page}
-          isDisabled={isLoading}
-          total={pages}
-          onChange={(page: number) => {
-            !viewOnly && setIsLoading(true);
-            setSearchQuery((prev) => ({ ...prev, page }));
-          }}
-        />
-      </div>
+      <Pagination
+        isCompact
+        showControls
+        color="primary"
+        className="text-background mt-2 ml-auto mr-2"
+        page={page}
+        isDisabled={isLoading}
+        total={pages}
+        onChange={(page: number) => {
+          !viewOnly && setIsLoading(true);
+          setSearchQuery((prev) => ({ ...prev, page }));
+        }}
+      />
     );
-  }, [rows, page, pages, selectedKeys, isLoading]);
+  }, [rows, page, pages, isLoading]);
 
   const columns = useCallback(
     (hasLabel: boolean) => [
@@ -129,40 +111,12 @@ export default function OperationTable({
       <div className="flex items-center justify-between gap-4 h-10">
         <h1 className="text-lg">{title}</h1>
         <div className="flex items-center gap-1.5">
-          {(selectedKeys === "all" || selectedKeys.size > 0) && (
-            <Delete
-              items={selectedKeys}
-              count={count}
-              type={type}
-              viewOnly={!!viewOnly}
-              callback={() => {
-                setSelectedKeys(new Set([]));
-                if (!viewOnly) return;
-                const { setRows } = viewOnly;
-                const toDelete = (prev: Operation[]) =>
-                  selectedKeys === "all"
-                    ? []
-                    : prev.filter((item) => !selectedKeys.has(item.id));
-                setItems(toDelete);
-                setRows(toDelete);
-                setSearchQuery((prev) => ({ ...prev, page: 1 }));
-              }}
-            />
-          )}
-          {type && (selectedKeys === "all" || selectedKeys.size > 0) && (
-            <Edit
-              type={type}
-              id={Array.from(selectedKeys)[0]}
-              isDisabled={selectedKeys === "all" || selectedKeys.size > 1}
-            />
-          )}
           {type && rows.length > 0 && <Add type={type} />}
         </div>
       </div>
       <Table
         shadow="none"
         color="primary"
-        selectionMode={"multiple"}
         sortDescriptor={{
           column: sort?.includes("-") ? sort?.split("-")[1] : sort?.toString(),
           direction: sort?.includes("-") ? "descending" : "ascending",
@@ -188,8 +142,6 @@ export default function OperationTable({
         classNames={{
           wrapper: "p-0",
         }}
-        selectedKeys={selectedKeys}
-        onSelectionChange={setSelectedKeys}
       >
         <TableHeader>
           {columns(rows.some((item) => item.label)).map((column) => (

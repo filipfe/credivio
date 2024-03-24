@@ -44,7 +44,6 @@ export default function Form({
   stocks: Stock[];
   defaultValue?: StockTransaction | null;
 }) {
-  const [editMode, setEditMode] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [method, setMethod] = useState<AddMethodKey>("manual");
   const [fileName, setFileName] = useState("");
@@ -62,27 +61,10 @@ export default function Form({
     await parseCSV(file, (results) => setRecords(stocksFormatter(results)));
   };
 
-  const onRowSelect = (id: string) => {
-    const record = records.find((item) => item.id === id);
-    if (!record) return;
-    setSingleRecord(record);
-    setEditMode(true);
-  };
-
-  useEffect(() => {
-    editMode &&
-      setRecords((prevRecords) =>
-        prevRecords.map((record) =>
-          record.id === singleRecord.id ? singleRecord : record
-        )
-      );
-  }, [singleRecord]);
-
   const addRecord = (e: React.FormEvent) => {
     e.preventDefault();
     setRecords((prev) => [...prev, singleRecord]);
     setSingleRecord({ ...defaultRecord, id: v4() });
-    editMode && setEditMode(false);
   };
 
   const value =
@@ -313,7 +295,6 @@ export default function Form({
           count={records.length}
           viewOnly={{
             setRows: setRecords,
-            onRowSelect,
           }}
         />
         <form

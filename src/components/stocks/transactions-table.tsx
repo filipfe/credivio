@@ -43,18 +43,9 @@ export default function TransactionTable({
   viewOnly,
   title,
 }: TableProps<StockTransaction>) {
-  const [selectedKeys, setSelectedKeys] = useState<Set<any> | "all">(
-    new Set([])
-  );
   const pages = Math.ceil(count / 10);
-  const {
-    setItems,
-    items,
-    isLoading,
-    setIsLoading,
-    searchQuery,
-    setSearchQuery,
-  } = useTableQuery<StockTransaction>(rows, !!viewOnly);
+  const { items, isLoading, setIsLoading, searchQuery, setSearchQuery } =
+    useTableQuery<StockTransaction>(rows, !!viewOnly);
   const { page, sort } = searchQuery;
 
   useEffect(() => {
@@ -85,77 +76,35 @@ export default function TransactionTable({
     return (
       <div className="flex items-center gap-4 justify-between h-10">
         <h2 className="text-lg">{title}</h2>
-        <div className="flex items-center gap-1.5">
-          {(selectedKeys === "all" || selectedKeys.size > 0) && (
-            <Delete
-              items={selectedKeys}
-              count={count}
-              type={"stock"}
-              viewOnly={!!viewOnly}
-              callback={() => {
-                setSelectedKeys(new Set([]));
-                if (!viewOnly) return;
-                const { setRows } = viewOnly;
-                const toDelete = (prev: StockTransaction[]) =>
-                  selectedKeys === "all"
-                    ? []
-                    : prev.filter((item) => !selectedKeys.has(item.id));
-                setItems(toDelete);
-                setRows(toDelete);
-                setSearchQuery((prev) => ({ ...prev, page: 1 }));
-              }}
-            />
-          )}
-          {!viewOnly && (selectedKeys === "all" || selectedKeys.size > 0) && (
-            <Edit
-              type={"stocks/transaction"}
-              id={Array.from(selectedKeys)[0]}
-              isDisabled={selectedKeys === "all" || selectedKeys.size > 1}
-            />
-          )}
-          {!viewOnly && count > 0 && <Add type={"stocks/transaction"} />}
-        </div>
+
+        {!viewOnly && count > 0 && <Add type={"stocks/transaction"} />}
       </div>
     );
-  }, [selectedKeys, page, pages, rows, isLoading]);
+  }, [page, pages, rows, isLoading]);
 
   const bottomContent = useMemo(() => {
     return (
-      <div
-        className={`py-2 px-2 flex ${
-          viewOnly ? "justify-end" : "justify-between"
-        } items-start`}
-      >
-        {!viewOnly && (
-          <span className="text-small text-default-400">
-            {selectedKeys === "all" || selectedKeys.size === count
-              ? "Wszystkie elementy wybrane"
-              : `${selectedKeys.size} z ${count} wybranych`}
-          </span>
-        )}
-        <Pagination
-          isCompact
-          showControls
-          color="primary"
-          className="text-background"
-          page={page}
-          isDisabled={isLoading}
-          total={pages}
-          onChange={(page: number) => {
-            !viewOnly && setIsLoading(true);
-            setSearchQuery((prev) => ({ ...prev, page }));
-          }}
-        />
-      </div>
+      <Pagination
+        isCompact
+        showControls
+        color="primary"
+        className="text-background mt-2 ml-auto mr-2"
+        page={page}
+        isDisabled={isLoading}
+        total={pages}
+        onChange={(page: number) => {
+          !viewOnly && setIsLoading(true);
+          setSearchQuery((prev) => ({ ...prev, page }));
+        }}
+      />
     );
-  }, [selectedKeys, page, pages, rows, isLoading]);
+  }, [page, pages, rows, isLoading]);
 
   return (
     <Table
       shadow="none"
       color="primary"
       aria-label="transactions-table"
-      selectionMode={simplified ? "none" : viewOnly ? "single" : "multiple"}
       sortDescriptor={{
         column: sort?.includes("-") ? sort?.split("-")[1] : sort?.toString(),
         direction: sort?.includes("-") ? "descending" : "ascending",
@@ -181,16 +130,6 @@ export default function TransactionTable({
       }}
       classNames={{
         wrapper: "p-0",
-      }}
-      selectedKeys={selectedKeys}
-      onSelectionChange={(e) => {
-        setSelectedKeys(e);
-        console.log(e);
-        if (!viewOnly) return;
-        const { onRowSelect } = viewOnly;
-        const keys = [...Array.from(e)];
-        const lastKey = keys.length === 0 ? null : keys[0].toString();
-        lastKey && onRowSelect(lastKey);
       }}
     >
       <TableHeader>
