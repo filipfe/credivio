@@ -1,3 +1,4 @@
+import { SortDescriptor } from "@nextui-org/table";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -22,6 +23,21 @@ export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
     }));
   }, 300);
 
+  const handleSort = (descriptor: SortDescriptor) => {
+    !viewOnly && setIsLoading(true);
+    setSearchQuery((prev) => ({
+      ...prev,
+      page: 1,
+      sort:
+        (descriptor.direction === "descending" ? "-" : "") + descriptor.column,
+    }));
+  };
+
+  const handlePageChange = (page: number) => (page: number) => {
+    !viewOnly && setIsLoading(true);
+    setSearchQuery((prev) => ({ ...prev, page }));
+  };
+
   useEffect(() => {
     if (viewOnly) return;
     const params = new URLSearchParams();
@@ -40,12 +56,13 @@ export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
   }, [rows, viewOnly, searchQuery.page]);
 
   return {
-    setItems,
     items,
     searchQuery,
     isLoading,
     setIsLoading,
     setSearchQuery,
     handleSearch,
+    handleSort,
+    handlePageChange,
   };
 }
