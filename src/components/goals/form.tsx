@@ -1,130 +1,42 @@
 "use client";
 
-import { ADD_METHODS } from "@/const";
-import {
-  Autocomplete,
-  AutocompleteItem,
-  Button,
-  Input,
-  Radio,
-  RadioGroup,
-  Spinner,
-  Textarea,
-  Tooltip,
-} from "@nextui-org/react";
-import {
-  CheckIcon,
-  HelpCircleIcon,
-  PaperclipIcon,
-  PlusIcon,
-} from "lucide-react";
-import {
-  ChangeEvent,
-  Fragment,
-  useEffect,
-  useState,
-  useTransition,
-} from "react";
-import parseCSV from "@/utils/operation/parse-csv";
-import { addOperations, getLabels } from "@/lib/operation/actions";
-import OperationTable from "./table";
-import formatAmount from "@/utils/operation/format-amount";
+import { Button, Input, Slider, Textarea } from "@nextui-org/react";
+import { PlusIcon } from "lucide-react";
+import { useState, useTransition } from "react";
 import CurrencySelect from "../ui/currency-select";
-import operationFormatter from "@/utils/formatters/operations";
-import { v4 } from "uuid";
+import formatAmount from "@/utils/operation/format-amount";
 
-const defaultRecord: Omit<Operation, "id"> = {
+type Props = {
+  defaultValue?: Goal;
+  hideCSV?: boolean;
+};
+
+const defaultRecord: Goal = {
+  id: "",
   title: "",
-  issued_at: new Date().toISOString().substring(0, 10),
-  amount: "",
+  price: 0,
+  saved: 0,
   currency: "PLN",
   description: "",
 };
 
-export default function AddForm({
-  type,
-  defaultValue,
-}: {
-  type: OperationType;
-  defaultValue?: Operation | null;
-}) {
-  const [label, setLabel] = useState("");
+export default function GoalForm({ defaultValue, hideCSV }: Props) {
   const [isPending, startTransition] = useTransition();
-  const [method, setMethod] = useState<AddMethodKey>("manual");
-  const [fileName, setFileName] = useState("");
-  const [records, setRecords] = useState<Operation[]>(
-    defaultValue ? [defaultValue] : []
+  const [singleRecord, setSingleRecord] = useState<Goal>(
+    defaultValue || defaultRecord
   );
-  const [singleRecord, setSingleRecord] = useState<Operation>(
-    defaultValue || { ...defaultRecord, id: v4() }
-  );
-  const [labels, setLabels] = useState<Label[]>([]);
-
-  const onFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.item(0);
-    if (!file) return;
-    setFileName(file.name);
-    await parseCSV(
-      file,
-      (results) =>
-        setRecords((prev) => [...prev, ...operationFormatter(results)]),
-      {
-        type,
-      }
-    );
-  };
 
   const addRecord = async (e: React.FormEvent) => {
     e.preventDefault();
-    setRecords((prev) => [...prev, singleRecord]);
-    setSingleRecord({ ...defaultRecord, id: v4() });
+    setSingleRecord(defaultRecord);
   };
 
-  useEffect(() => {
-    if (records.length === 0) return;
-    startTransition(async () => {
-      const { results } = await getLabels(type);
-      setLabels(results);
-    });
-  }, [records]);
-
   return (
-    <div className="flex flex-col xl:grid grid-cols-2 gap-8 mt-8">
-      <form
-        onSubmit={addRecord}
-        className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col"
-      >
-        <h2 className="text-lg">Dane</h2>
-        <RadioGroup
-          label="Wybierz sposób"
-          value={method}
-          onChange={(e) => setMethod(e.target.value as AddMethodKey)}
-        >
-          {ADD_METHODS.map(({ title, type }) => (
-            <Radio value={type} key={type}>
-              {title}
-            </Radio>
-          ))}
-        </RadioGroup>
-
-        {method === "csv" ? (
-          <label
-            className="flex items-center gap-2 text-primary cursor-pointer opacity-80 hover:opacity-80 transition-opacity"
-            htmlFor="csv-file"
-          >
-            <PaperclipIcon className="mt-0.5" size={16} />
-            <span>{fileName || "Dodaj plik"}</span>
-            <input
-              type="file"
-              id="csv-file"
-              required
-              className="opacity-0 -z-50 pointer-events-none absolute"
-              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-              onChange={onFileChange}
-            />
-          </label>
-        ) : (
-          <div className="grid grid-cols-2 gap-4 my-4">
+    <form>
+      <div className="flex flex-col xl:grid grid-cols-2 gap-8 mt-8">
+        <div className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col">
+          <h2 className="text-lg">Dane</h2>
+          <div className="grid grid-cols-2 gap-4 mb-4">
             <Input
               classNames={{ inputWrapper: "!bg-light" }}
               name="title"
@@ -142,9 +54,9 @@ export default function AddForm({
               label="Kwota"
               placeholder="0.00"
               isRequired
-              value={singleRecord.amount}
+              value={singleRecord.price.toString()}
               onBlur={(e) => {
-                const value = parseFloat(singleRecord.amount);
+                const value = singleRecord.price;
 
                 !isNaN(value) &&
                   setSingleRecord((prev) => ({
@@ -171,12 +83,11 @@ export default function AddForm({
             />
             <Input
               classNames={{ inputWrapper: "!bg-light" }}
-              name="issued_at"
-              label="Data uiszczenia"
+              name="deadline"
+              label="Termin ostateczny"
               placeholder="24.01.2024"
               type="date"
-              isRequired
-              value={singleRecord.issued_at}
+              value={singleRecord.deadline}
               onChange={(e) =>
                 setSingleRecord((prev) => ({
                   ...prev,
@@ -199,25 +110,45 @@ export default function AddForm({
               }
             />
           </div>
-        )}
-        <div className="flex-1 flex justify-end items-end gap-4">
-          <Button
-            color="secondary"
-            type="submit"
-            className="h-9 text-white"
-            isIconOnly
-          >
-            <PlusIcon className="mt-0.5" size={16} />
-          </Button>
         </div>
-      </form>
-      <OperationTable
+        <div className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col">
+          <h2 className="text-lg">Grupuj</h2>
+          <Input
+            classNames={{ inputWrapper: "!bg-light" }}
+            name="label"
+            label="Etykieta"
+            placeholder="Rozrywka"
+            value={singleRecord.label}
+            onChange={(e) =>
+              setSingleRecord((prev) => ({
+                ...prev,
+                label: e.target.value,
+              }))
+            }
+          />
+          <Slider
+            className="mt-2"
+            color="primary"
+            step={10}
+            label="Priorytet"
+            name="priority"
+            showSteps
+            maxValue={100}
+            minValue={0}
+            defaultValue={50}
+            getValue={(value) => {
+              if (value === 50) return "Neutralne";
+              if ((value as number) > 80) return "Pilne";
+              if ((value as number) < 20) return "";
+              return "";
+            }}
+          />
+        </div>
+        {/* <OperationTable
         title="Podgląd"
-        rows={records}
+        operations={records}
         count={records.length}
-        viewOnly={{
-          setRows: setRecords,
-        }}
+        setOperations={setRecords}
       >
         <form
           className="flex flex-col gap-8"
@@ -290,7 +221,8 @@ export default function AddForm({
           <input type="hidden" name="type" value={type} />
           <input type="hidden" name="data" value={JSON.stringify(records)} />
         </form>
-      </OperationTable>
-    </div>
+      </OperationTable> */}
+      </div>
+    </form>
   );
 }
