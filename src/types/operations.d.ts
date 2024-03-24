@@ -14,8 +14,6 @@ type Operation = {
 };
 
 type Label = {
-  id: string;
-  title: string;
-  created_at: string;
-  count: { count: number }[];
+  name: string;
+  count: number;
 };

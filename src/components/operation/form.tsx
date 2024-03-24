@@ -83,7 +83,7 @@ export default function AddForm({
   useEffect(() => {
     if (records.length === 0) return;
     startTransition(async () => {
-      const { results } = await getLabels(type);
+      const { results } = await getLabels();
       setLabels(results);
     });
   }, [records]);
@@ -250,15 +250,15 @@ export default function AddForm({
               >
                 {labels.map((label) => (
                   <AutocompleteItem
-                    value={label.title}
-                    textValue={label.title}
+                    value={label.name}
+                    textValue={label.name}
                     classNames={{
                       base: "!bg-white hover:!bg-light",
                     }}
-                    key={label.title}
+                    key={label.name}
                   >
-                    {label.title}{" "}
-                    <span className="text-font/80">{`(${label.count[0].count})`}</span>
+                    {label.name}{" "}
+                    <span className="text-font/80">{`(${label.count})`}</span>
                   </AutocompleteItem>
                 ))}
               </Autocomplete>

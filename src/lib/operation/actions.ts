@@ -60,12 +60,14 @@ export async function addOperations(
   redirect(path);
 }
 
-export async function getLabels(
-  type: OperationType
-): Promise<SupabaseResponse<Label>> {
-  const { data: results, error } = await supabase
-    .from("labels")
-    .select(`id, title, created_at, count:${type}s(count)`);
+export async function getLabels(): Promise<SupabaseResponse<Label>> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { data: results, error } = await supabase.rpc("get_own_labels", {
+    user_id: user?.id,
+  });
+  console.log(results);
 
   if (error) {
     return {
