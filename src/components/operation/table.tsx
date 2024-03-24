@@ -8,32 +8,28 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  SortDescriptor,
   Spinner,
   Pagination,
-  Input,
 } from "@nextui-org/react";
-import Add from "../ui/cta/add";
 import useTableQuery from "@/hooks/useTableQuery";
-import { SearchIcon } from "lucide-react";
+import TopContent from "../ui/table/top-content";
 
 export default function OperationTable({
   rows,
   count,
-  type,
-  title,
   viewOnly,
   children,
-}: TableProps<Operation> & { type?: OperationType }) {
+  ...props
+}: TableProps<Operation>) {
   const pages = Math.ceil(count / 10);
   const {
     items,
-    setItems,
     isLoading,
     setIsLoading,
     searchQuery,
-    setSearchQuery,
     handleSearch,
+    handleSort,
+    handlePageChange,
   } = useTableQuery(rows, !!viewOnly);
   const { page, sort, search } = searchQuery;
 
@@ -41,27 +37,8 @@ export default function OperationTable({
     setIsLoading(false);
   }, [rows]);
 
-  const topContent = useMemo(() => {
-    return (
-      <div className="flex items-center justify-between gap-4 h-10">
-        <h1 className="text-lg">{title}</h1>
-        <Input
-          isClearable
-          className="sm:max-w-[22%]"
-          placeholder="Wyszukaj"
-          startContent={<SearchIcon />}
-          defaultValue={search}
-          onValueChange={handleSearch}
-        />
-        <div className="flex items-center gap-1.5">
-          {type && rows.length > 0 && <Add type={type} />}
-        </div>
-      </div>
-    );
-  }, [search, rows]);
-
-  const bottomContent = useMemo(() => {
-    return (
+  const bottomContent = useMemo(
+    () => (
       <Pagination
         isCompact
         showControls
@@ -70,13 +47,11 @@ export default function OperationTable({
         page={page}
         isDisabled={isLoading}
         total={pages}
-        onChange={(page: number) => {
-          !viewOnly && setIsLoading(true);
-          setSearchQuery((prev) => ({ ...prev, page }));
-        }}
+        onChange={handlePageChange}
       />
-    );
-  }, [rows, page, pages, isLoading]);
+    ),
+    [rows, page, pages, isLoading]
+  );
 
   const columns = useCallback(
     (hasLabel: boolean) => [
@@ -137,17 +112,15 @@ export default function OperationTable({
           column: sort?.includes("-") ? sort?.split("-")[1] : sort?.toString(),
           direction: sort?.includes("-") ? "descending" : "ascending",
         }}
-        onSortChange={(descriptor: SortDescriptor) => {
-          !viewOnly && setIsLoading(true);
-          setSearchQuery((prev) => ({
-            ...prev,
-            page: 1,
-            sort:
-              (descriptor.direction === "descending" ? "-" : "") +
-              descriptor.column,
-          }));
-        }}
-        topContent={topContent}
+        onSortChange={handleSort}
+        topContent={
+          <TopContent
+            {...props}
+            rows={rows}
+            handleSearch={handleSearch}
+            search={search}
+          />
+        }
         topContentPlacement="outside"
         bottomContent={count > 0 && bottomContent}
         bottomContentPlacement="outside"

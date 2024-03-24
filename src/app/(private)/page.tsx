@@ -8,8 +8,13 @@ import getStockHoldings from "@/utils/stocks/get-stock-holdings";
 import prepareChartData from "@/utils/operation/prepare-chart-data";
 import { CoinsIcon, SettingsIcon, Wallet2Icon } from "lucide-react";
 import Link from "next/link";
+import { getOwnRows } from "@/lib/general/actions";
+import Budget from "@/components/dashboard/budget";
 
 export default async function Home() {
+  const expensesData = getOwnRows<Operation>("expense");
+  const incomesData = getOwnRows<Operation>("income");
+  const ownStocksData = getOwnRows<StockTransaction>("stock");
   const expensesData = getOwnRows<Operation>("expense");
   const incomesData = getOwnRows<Operation>("income");
   const ownStocksData = getOwnRows<StockTransaction>("stock");
@@ -34,10 +39,6 @@ export default async function Home() {
   const expenseChartData = prepareChartData(expenses);
   return (
     <div className="px-12 py-8 pb-24 flex flex-col xl:grid grid-cols-6 gap-6">
-      {/* <h2 className="text-3xl col-span-6">Budżet</h2>
-      <Budget amount="4162,92" currency="PLN" />
-      <Budget amount="819,23" currency="USD" />
-      <h2 className="text-3xl col-span-6">Statystyki</h2> */}
       <Stat
         title="Przychody"
         amount={totalIncome.toFixed(2).toString()}
