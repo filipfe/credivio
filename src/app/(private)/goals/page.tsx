@@ -9,6 +9,7 @@ export default async function Page() {
       goal.deadline &&
       new Date(goal.deadline).getTime() - new Date().getTime() >= 0
   );
+
   return (
     <div className="px-12 pt-8 pb-24 flex flex-col h-full gap-8">
       <div
