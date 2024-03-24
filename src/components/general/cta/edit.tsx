@@ -7,7 +7,7 @@ export default function Edit({
   id,
   isDisabled,
 }: {
-  type: OperationType | "stock";
+  type: string;
   id: string;
   isDisabled?: boolean;
 }) {
@@ -16,7 +16,7 @@ export default function Edit({
       <SquarePenIcon size={14} /> Edytuj
     </Button>
   ) : (
-    <Link href={`${process.env.NEXT_PUBLIC_SITE_URL}/${type}s/add?id=${id}`}>
+    <Link href={`${process.env.NEXT_PUBLIC_SITE_URL}/${type}s/edit?id=${id}`}>
       <Button color="primary" className="text-sm" variant="light" as="div">
         <SquarePenIcon size={14} /> Edytuj
       </Button>

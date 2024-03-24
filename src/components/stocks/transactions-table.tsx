@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/table";
-import Add from "../operation/cta/add";
+import Add from "../general/cta/add";
 import { TRANSACTION_TYPES } from "@/const";
 import {
   Dispatch,
@@ -21,6 +21,8 @@ import {
   useState,
 } from "react";
 import useTableQuery from "@/hooks/useTableQuery";
+import Delete from "../general/cta/delete";
+import Edit from "../general/cta/edit";
 
 type Props = {
   stocks: StockTransaction[];
@@ -28,6 +30,8 @@ type Props = {
   simplified?: boolean;
   setStocks?: Dispatch<SetStateAction<StockTransaction[]>>;
   viewOnly?: boolean;
+  onRowSelect?: (id: string) => void;
+  title: string;
 };
 
 const columns = ({
@@ -50,13 +54,21 @@ export default function TransactionTable({
   simplified,
   setStocks,
   viewOnly,
+  onRowSelect,
+  title,
 }: Props) {
   const [selectedKeys, setSelectedKeys] = useState<Set<any> | "all">(
     new Set([])
   );
   const pages = Math.ceil(count / 10);
-  const { items, isLoading, setIsLoading, searchQuery, setSearchQuery } =
-    useTableQuery(stocks, viewOnly);
+  const {
+    setItems,
+    items,
+    isLoading,
+    setIsLoading,
+    searchQuery,
+    setSearchQuery,
+  } = useTableQuery<StockTransaction>(stocks, viewOnly);
   const { page, sort } = searchQuery;
 
   useEffect(() => {
@@ -83,6 +95,48 @@ export default function TransactionTable({
     }
   }, []);
 
+  const topContent = useMemo(() => {
+    return (
+      <div className="flex items-center gap-4 justify-between h-10">
+        <h2 className="text-lg">{title}</h2>
+        <div className="flex items-center gap-1.5">
+          {(selectedKeys === "all" || selectedKeys.size > 0) && (
+            <Delete
+              items={selectedKeys}
+              count={count}
+              type={"stock"}
+              viewOnly={viewOnly}
+              callback={() => {
+                if (viewOnly) {
+                  const keys: string[] =
+                    selectedKeys === "all"
+                      ? []
+                      : Array.from(selectedKeys.values());
+                  setItems((prev) =>
+                    selectedKeys === "all"
+                      ? []
+                      : prev.filter((item) => !keys.includes(item.id))
+                  );
+
+                  setSearchQuery((prev) => ({ ...prev, page: 1 }));
+                }
+                setSelectedKeys(new Set([]));
+              }}
+            />
+          )}
+          {!viewOnly && (selectedKeys === "all" || selectedKeys.size > 0) && (
+            <Edit
+              type={"stocks/transaction"}
+              id={Array.from(selectedKeys)[0]}
+              isDisabled={selectedKeys === "all" || selectedKeys.size > 1}
+            />
+          )}
+          {!viewOnly && count > 0 && <Add type={"stocks/transaction"} />}
+        </div>
+      </div>
+    );
+  }, [selectedKeys, page, pages, stocks, isLoading]);
+
   const bottomContent = useMemo(() => {
     return (
       <div
@@ -92,9 +146,9 @@ export default function TransactionTable({
       >
         {!viewOnly && (
           <span className="text-small text-default-400">
-            {selectedKeys === "all"
-              ? "All items selected"
-              : `${selectedKeys.size} of ${count} selected`}
+            {selectedKeys === "all" || selectedKeys.size === count
+              ? "Wszystkie elementy wybrane"
+              : `${selectedKeys.size} z ${count} wybranych`}
           </span>
         )}
         <Pagination
@@ -119,7 +173,7 @@ export default function TransactionTable({
       shadow="none"
       color="primary"
       aria-label="transactions-table"
-      selectionMode={!simplified ? "multiple" : "none"}
+      selectionMode={simplified ? "none" : viewOnly ? "single" : "multiple"}
       sortDescriptor={{
         column: sort?.includes("-") ? sort?.split("-")[1] : sort?.toString(),
         direction: sort?.includes("-") ? "descending" : "ascending",
@@ -133,6 +187,8 @@ export default function TransactionTable({
             descriptor.column,
         });
       }}
+      topContent={!simplified && topContent}
+      topContentPlacement="outside"
       bottomContent={count > 0 && !simplified && bottomContent}
       bottomContentPlacement="outside"
       className="max-w-full w-full flex-1"
@@ -145,7 +201,14 @@ export default function TransactionTable({
         wrapper: "p-0",
       }}
       selectedKeys={selectedKeys}
-      onSelectionChange={setSelectedKeys}
+      onSelectionChange={(e) => {
+        setSelectedKeys(e);
+        console.log(e);
+        if (!viewOnly) return;
+        const keys = [...Array.from(e)];
+        const lastKey = keys.length === 0 ? null : keys[0].toString();
+        lastKey && onRowSelect && onRowSelect(lastKey);
+      }}
     >
       <TableHeader>
         {columns({ viewOnly, simplified }).map((column) => (
@@ -160,6 +223,7 @@ export default function TransactionTable({
       <TableBody
         isLoading={isLoading}
         loadingContent={<Spinner />}
+        items={viewOnly ? items : stocks}
         emptyContent={
           <div className="text-center flex-1 justify-center flex flex-col items-center gap-3">
             {viewOnly ? (
@@ -175,13 +239,13 @@ export default function TransactionTable({
           </div>
         }
       >
-        {(viewOnly ? items : stocks).map((stock, i) => (
-          <TableRow key={stock.id || `stock:${i}:${searchQuery.page}`}>
+        {(item) => (
+          <TableRow key={item.id}>
             {(columnKey) => (
-              <TableCell>{renderCell(stock, columnKey)}</TableCell>
+              <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}
           </TableRow>
-        ))}
+        )}
       </TableBody>
     </Table>
   );

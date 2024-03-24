@@ -1,4 +1,4 @@
-import Add from "@/components/operation/cta/add";
+import Add from "@/components/general/cta/add";
 import OperationList from "@/components/operation/list";
 import OperationTable from "@/components/operation/table";
 import { getOperations } from "@/lib/operation/actions";

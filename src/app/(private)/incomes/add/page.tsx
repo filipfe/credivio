@@ -1,5 +1,5 @@
 import AddForm from "@/components/operation/form";
-import { getSpecificOperation } from "@/lib/operation/actions";
+import { getSpecificRow } from "@/lib/general/actions";
 
 export default async function Page({
   searchParams,
@@ -9,7 +9,7 @@ export default async function Page({
   const { id } = searchParams;
   let income: Operation | null = null;
   if (id) {
-    const { results } = await getSpecificOperation(id, "income");
+    const { results } = await getSpecificRow<Operation>(id, "income");
     income = results[0];
   }
   {

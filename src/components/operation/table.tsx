@@ -19,9 +19,9 @@ import {
   Spinner,
   Pagination,
 } from "@nextui-org/react";
-import Add from "./cta/add";
-import Delete from "./cta/delete";
-import Edit from "./cta/edit";
+import Add from "../general/cta/add";
+import Delete from "../general/cta/delete";
+import Edit from "../general/cta/edit";
 import useTableQuery from "@/hooks/useTableQuery";
 
 type Props = {
@@ -63,9 +63,9 @@ export default function OperationTable({
       >
         {!viewOnly && (
           <span className="text-small text-default-400">
-            {selectedKeys === "all"
-              ? "All items selected"
-              : `${selectedKeys.size} of ${count} selected`}
+            {selectedKeys === "all" || selectedKeys.size === count
+              ? "Wszystkie elementy wybrane"
+              : `${selectedKeys.size} z ${count} wybranych`}
           </span>
         )}
         <Pagination

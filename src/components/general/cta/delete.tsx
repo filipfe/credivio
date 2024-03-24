@@ -1,4 +1,4 @@
-import { deleteOperations } from "@/lib/operation/actions";
+import { deleteRows } from "@/lib/general/actions";
 import {
   Button,
   Modal,
@@ -58,7 +58,7 @@ export default function Delete({
                   <form
                     action={(e) =>
                       startTransition(async () => {
-                        const { error } = await deleteOperations(e);
+                        const { error } = await deleteRows(e);
                         !error && callback && callback();
                         onClose();
                       })

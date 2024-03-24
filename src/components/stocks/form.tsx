@@ -13,10 +13,17 @@ import {
   Spinner,
 } from "@nextui-org/react";
 import { CheckIcon, PaperclipIcon, PlusIcon } from "lucide-react";
-import { ChangeEvent, Fragment, useState, useTransition } from "react";
+import {
+  ChangeEvent,
+  Fragment,
+  useEffect,
+  useState,
+  useTransition,
+} from "react";
 import parseCSV from "@/utils/operation/parse-csv";
 import { addStocks } from "@/lib/stocks/actions";
 import TransactionTable from "./transactions-table";
+import { v4 } from "uuid";
 
 const defaultRecord: Omit<StockTransaction, "id"> = {
   symbol: "",
@@ -29,7 +36,7 @@ const defaultRecord: Omit<StockTransaction, "id"> = {
   currency: "PLN",
 };
 
-const formatter = (data: string[][]): Omit<StockTransaction, "id">[] => {
+const formatter = (data: string[][]): StockTransaction[] => {
   return data
     .map((record) => {
       let [
@@ -49,6 +56,7 @@ const formatter = (data: string[][]): Omit<StockTransaction, "id">[] => {
       commission = commission.replace(",", ".");
       value = value.replace(",", ".");
       const result = {
+        id: v4(),
         issued_at,
         symbol,
         transaction_type:
@@ -64,13 +72,23 @@ const formatter = (data: string[][]): Omit<StockTransaction, "id">[] => {
     .filter((item) => item.symbol);
 };
 
-export default function AddForm({ stocks }: { stocks: Stock[] }) {
+export default function Form({
+  stocks,
+  defaultValue,
+}: {
+  stocks: Stock[];
+  defaultValue?: StockTransaction | null;
+}) {
+  const [editMode, setEditMode] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [method, setMethod] = useState<AddMethodKey>("manual");
   const [fileName, setFileName] = useState("");
-  const [records, setRecords] = useState<Omit<StockTransaction, "id">[]>([]);
-  const [singleRecord, setSingleRecord] =
-    useState<Omit<StockTransaction, "id">>(defaultRecord);
+  const [records, setRecords] = useState<StockTransaction[]>(
+    defaultValue ? [defaultValue] : []
+  );
+  const [singleRecord, setSingleRecord] = useState<StockTransaction>(
+    defaultValue || { ...defaultRecord, id: v4() }
+  );
 
   const { currency } = singleRecord;
 
@@ -81,10 +99,27 @@ export default function AddForm({ stocks }: { stocks: Stock[] }) {
     await parseCSV(file, (results) => setRecords(formatter(results)));
   };
 
+  const onRowSelect = async (id: string) => {
+    const record = records.find((item) => item.id === id);
+    if (!record) return;
+    setSingleRecord(record);
+    setEditMode(true);
+  };
+
+  useEffect(() => {
+    editMode &&
+      setRecords((prevRecords) =>
+        prevRecords.map((record) =>
+          record.id === singleRecord.id ? singleRecord : record
+        )
+      );
+  }, [singleRecord]);
+
   const addRecord = (e: React.FormEvent) => {
     e.preventDefault();
     setRecords((prev) => [...prev, singleRecord]);
-    setSingleRecord(defaultRecord);
+    setSingleRecord({ ...defaultRecord, id: v4() });
+    editMode && setEditMode(false);
   };
 
   const value =
@@ -309,8 +344,13 @@ export default function AddForm({ stocks }: { stocks: Stock[] }) {
         </div>
       </form>
       <div className="bg-white rounded-lg px-10 py-8 flex flex-col gap-4">
-        <h2 className="text-lg">Podgląd</h2>
-        <TransactionTable stocks={records} count={records.length} viewOnly />
+        <TransactionTable
+          title="Podgląd"
+          stocks={records}
+          count={records.length}
+          viewOnly
+          onRowSelect={onRowSelect}
+        />
         <form
           className="flex flex-col"
           action={(e) =>

@@ -67,7 +67,7 @@ export default function AddForm({
   defaultValue,
 }: {
   type: OperationType;
-  defaultValue: Operation | null;
+  defaultValue?: Operation | null;
 }) {
   const [label, setLabel] = useState("");
   const [isPending, startTransition] = useTransition();
