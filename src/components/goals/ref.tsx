@@ -59,7 +59,7 @@ export default function GoalRef({
           <CrudList
             id={id}
             type="goal"
-            onEdit={() => setIsSavedEditable(true)}
+            onAdd={() => setIsSavedEditable(true)}
           />
         </div>
       )}
