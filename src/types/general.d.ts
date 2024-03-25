@@ -21,6 +21,7 @@ type SearchParams = {
   sort?: string;
   page?: string;
   search?: string;
+  label?: string; //expense
 };
 
 type Currency = {

@@ -12,9 +12,10 @@ import {
 } from "@nextui-org/table";
 import Add from "../ui/cta/add";
 import { TRANSACTION_TYPES } from "@/const";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useTableQuery from "@/hooks/useTableQuery";
 import { SearchIcon } from "lucide-react";
+import TopContent from "../ui/table/top-content";
 
 const columns = ({
   viewOnly,
@@ -111,7 +112,7 @@ export default function TransactionTable({
       />
     );
   }, [page, pages, rows, isLoading]);
-
+  const [syf, setSyf] = useState(false);
   return (
     <Table
       shadow="none"
@@ -131,7 +132,17 @@ export default function TransactionTable({
             descriptor.column,
         }));
       }}
-      topContent={!simplified && topContent}
+      topContent={
+        !simplified && (
+          <TopContent
+            title={title}
+            type={"stocks/transaction"}
+            rows={rows}
+            handleSearch={handleSearch}
+            search={search}
+          />
+        )
+      }
       topContentPlacement="outside"
       bottomContent={count > 0 && !simplified && bottomContent}
       bottomContentPlacement="outside"
@@ -175,7 +186,7 @@ export default function TransactionTable({
         }
       >
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow key={item.id} className="hover:bg-[#f7f7f8]">
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}

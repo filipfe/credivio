@@ -19,6 +19,7 @@ export default function OperationTable({
   count,
   viewOnly,
   children,
+  labels,
   ...props
 }: TableProps<Operation>) {
   const pages = Math.ceil(count / 10);
@@ -30,8 +31,9 @@ export default function OperationTable({
     handleSearch,
     handleSort,
     handlePageChange,
+    handleLabelChange,
   } = useTableQuery(rows, !!viewOnly);
-  const { page, sort, search } = searchQuery;
+  const { page, sort, search, label } = searchQuery;
 
   useEffect(() => {
     setIsLoading(false);
@@ -96,7 +98,7 @@ export default function OperationTable({
             <span className="line-clamp-1 break-all w-[10ch]">{cellValue}</span>
           );
         case "label":
-          return cellValue?.title || "-";
+          return cellValue || "-";
         default:
           return <span className="line-clamp-1 break-all">{cellValue}</span>;
       }
@@ -119,6 +121,9 @@ export default function OperationTable({
             rows={rows}
             handleSearch={handleSearch}
             search={search}
+            labels={labels}
+            handleLabelChange={handleLabelChange}
+            label={label}
           />
         }
         topContentPlacement="outside"
@@ -152,7 +157,7 @@ export default function OperationTable({
           loadingContent={<Spinner />}
         >
           {(operation) => (
-            <TableRow key={operation.id}>
+            <TableRow key={operation.id} className="hover:bg-[#f7f7f8]">
               {(columnKey) => (
                 <TableCell>{renderCell(operation, columnKey)}</TableCell>
               )}

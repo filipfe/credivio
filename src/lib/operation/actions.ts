@@ -67,7 +67,6 @@ export async function getLabels(): Promise<SupabaseResponse<Label>> {
   const { data: results, error } = await supabase.rpc("get_own_labels", {
     user_id: user?.id,
   });
-  console.log(results);
 
   if (error) {
     return {
