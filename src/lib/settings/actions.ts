@@ -3,9 +3,8 @@
 import { Account } from "@/types/auth";
 import { createClient } from "@/utils/supabase/server";
 
-const supabase = createClient();
-
 export async function getAccount(): Promise<SupabaseResponse<Account>> {
+  const supabase = createClient();
   const { data: account, error: accountError } = await supabase
     .from("profiles")
     .select("first_name, last_name")

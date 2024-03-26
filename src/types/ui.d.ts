@@ -7,4 +7,5 @@ type TableProps<T> = {
   viewOnly?: {
     setRows: React.Dispatch<React.SetStateAction<T[]>>;
   };
+  type?: string;
 };

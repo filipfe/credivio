@@ -3,14 +3,13 @@
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 
-const supabase = createClient();
-
 export async function getOwnRows<T>(
   type: "income" | "expense" | "stock",
   searchParams?: SearchParams
 ): Promise<SupabaseResponse<T>> {
   try {
     const cols = type === "expense" ? "*, label(*)" : "*";
+    const supabase = createClient();
     let query = supabase.from(`${type}s`).select(cols, {
       count: "exact",
       head: false,
@@ -70,10 +69,33 @@ export async function getOwnRows<T>(
   }
 }
 
+export async function updateRow(
+  id: string,
+  type: OperationType,
+  fields: { [key: string]: any }
+) {
+  const supabase = createClient();
+  const { error } = await supabase.from(`${type}s`).update(fields).eq("id", id);
+  console.log(error);
+  if (error) {
+    return {
+      error,
+      results: [],
+    };
+  }
+
+  revalidatePath(`/${type}s`);
+
+  return {
+    results: [],
+  };
+}
+
 export async function getSpecificRow<T>(
   id: string,
   type: "income" | "expense" | "stock"
 ): Promise<SupabaseResponse<T>> {
+  const supabase = createClient();
   const { data, error } = await supabase
     .from(`${type}s`)
     .select("*")
@@ -90,12 +112,24 @@ export async function getSpecificRow<T>(
   };
 }
 
-export async function deleteRows<T>(
-  formData: FormData
-): Promise<SupabaseResponse<T>> {
-  const type = formData.get("type")!.toString();
-  const data = formData.get("data")!.toString();
+export async function deleteRows<T>({
+  formData,
+  body,
+}: {
+  formData?: FormData;
+  body?: { data: string; type: string };
+}): Promise<SupabaseResponse<T>> {
+  let type: string;
+  let data: string;
+  if (formData) {
+    type = formData.get("type")!.toString();
+    data = formData.get("data")!.toString();
+  } else {
+    type = body!.type;
+    data = body!.data;
+  }
   try {
+    const supabase = createClient();
     const {
       data: { user },
       error: authError,
@@ -110,7 +144,7 @@ export async function deleteRows<T>(
     if (data === "all") {
       query = query.eq("user_id", user.id);
     } else {
-      const ids: string[] = JSON.parse(data);
+      const ids: string[] = formData ? JSON.parse(data) : [data];
       query = query.in("id", ids);
     }
     const { error } = await query;
