@@ -2,7 +2,7 @@ export default function prepareChartData(data: Operation[]): Option<number>[] {
   return data
     .map(({ amount, title, label }) => ({
       value: parseFloat(amount),
-      name: label?.title || title,
+      name: label || title,
     }))
     .reduce((prev: Option<number>[], curr) => {
       const groupIndex = prev.findIndex((item) => item.name === curr.name);
