@@ -1,10 +1,9 @@
 "use client";
 
-import { Button, Input, Slider, Textarea } from "@nextui-org/react";
-import { PlusIcon } from "lucide-react";
-import { useState, useTransition } from "react";
+import { Input, Slider, Textarea } from "@nextui-org/react";
 import CurrencySelect from "../ui/currency-select";
 import formatAmount from "@/utils/operation/format-amount";
+import { useState } from "react";
 
 type Props = {
   defaultValue?: Goal;
@@ -21,7 +20,6 @@ const defaultRecord: Goal = {
 };
 
 export default function GoalForm({ defaultValue, hideCSV }: Props) {
-  const [isPending, startTransition] = useTransition();
   const [singleRecord, setSingleRecord] = useState<Goal>(
     defaultValue || defaultRecord
   );
