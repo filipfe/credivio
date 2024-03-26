@@ -1,7 +1,7 @@
 import PortfolioStructure from "@/components/dashboard/portfolio-structure";
 import Stat from "@/components/dashboard/stat";
-import AreaChart from "@/components/operation/charts/area-chart";
-import BarChart from "@/components/operation/charts/bar-chart";
+import AreaChart from "@/components/ui/charts/area-chart";
+import BarChart from "@/components/ui/charts/bar-chart";
 import { getSpecificStocks } from "@/lib/stocks/actions";
 import getStockHoldings from "@/utils/stocks/get-stock-holdings";
 import prepareChartData from "@/utils/operation/prepare-chart-data";

@@ -1,12 +1,12 @@
 "use client";
 
-import { Button, Input, Progress, Spinner, input } from "@nextui-org/react";
+import { Button, Input, Progress } from "@nextui-org/react";
 import { CheckCircle2Icon, PlusIcon } from "lucide-react";
-import CrudList from "../ui/cta/list";
-import { FormEvent, useCallback, useRef, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import formatAmount, { formatMax } from "@/utils/operation/format-amount";
 import { updateRow } from "@/lib/general/actions";
 import useOutsideObserver from "@/hooks/useOutsideObserver";
+import Menu from "./menu";
 
 export default function GoalRef({
   id,
@@ -26,7 +26,6 @@ export default function GoalRef({
     style: "currency",
     currency,
   });
-
   function handleAdd() {
     if (isPending || saved === defaultSaved?.toString()) return;
     const valid = (prev: string) =>
@@ -56,11 +55,7 @@ export default function GoalRef({
         </div>
       ) : (
         <div className="absolute right-10 top-8">
-          <CrudList
-            id={id}
-            type="goal"
-            onAdd={() => setIsSavedEditable(true)}
-          />
+          <Menu id={id} type="goal" onAdd={() => setIsSavedEditable(true)} />
         </div>
       )}
       {deadline && (

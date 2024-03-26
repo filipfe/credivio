@@ -8,4 +8,5 @@ type Goal = {
   price: number;
   deadline?: string;
   label?: string;
+  is_priority?: boolean;
 };

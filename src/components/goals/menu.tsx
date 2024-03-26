@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteRows } from "@/lib/general/actions";
+import { deleteRows, updateRow } from "@/lib/general/actions";
 import { TimelineContext } from "@/providers/goals/timeline";
 import {
   Button,
@@ -10,24 +10,48 @@ import {
   DropdownTrigger,
 } from "@nextui-org/react";
 import {
-  EditIcon,
+  AlertOctagonIcon,
   LocateIcon,
   MoreVerticalIcon,
   PlusIcon,
   Trash2Icon,
 } from "lucide-react";
-import { useContext, useState } from "react";
+import { Key, useContext, useState } from "react";
 
 type Props = {
   id: string;
   type: string;
   onAdd?: () => void;
-  onEdit?: () => void;
 };
 
-export default function CrudList({ id, type, onAdd, onEdit }: Props) {
+export default function Menu({ id, type, onAdd }: Props) {
   const { setActiveRecord } = useContext(TimelineContext);
   const [loadingKey, setLoadingKey] = useState<string | null>(null);
+
+  async function onAction(key: Key) {
+    setLoadingKey(key.toString());
+    switch (key) {
+      case "add":
+        onAdd && onAdd();
+        break;
+      case "priority":
+        const { error: updateError } = await updateRow(id, "goal", {
+          is_priority: true,
+        });
+        console.log(updateError);
+      case "locate":
+        setActiveRecord(id);
+        break;
+
+      case "delete":
+        const { error: deleteError } = await deleteRows({
+          body: { type, data: id },
+        });
+        break;
+    }
+    setLoadingKey(null);
+  }
+
   return (
     <Dropdown shadow="sm">
       <DropdownTrigger>
@@ -39,21 +63,7 @@ export default function CrudList({ id, type, onAdd, onEdit }: Props) {
         disabledKeys={loadingKey ? [loadingKey] : []}
         variant="faded"
         aria-label="Dropdown menu with description"
-        onAction={async (key) => {
-          setLoadingKey(key.toString());
-          switch (key) {
-            case "delete":
-              const { error } = await deleteRows({ body: { type, data: id } });
-              break;
-            case "add":
-              onAdd && onAdd();
-              break;
-            case "locate":
-              setActiveRecord(id);
-              break;
-          }
-          setLoadingKey(null);
-        }}
+        onAction={onAction}
       >
         <DropdownItem
           key="add"
@@ -64,21 +74,22 @@ export default function CrudList({ id, type, onAdd, onEdit }: Props) {
           Dodaj
         </DropdownItem>
         <DropdownItem
+          key="priority"
+          shortcut="⌘N"
+          description="Ustaw ten cel jako priorytet"
+          startContent={<AlertOctagonIcon size={16} />}
+          closeOnSelect={false}
+        >
+          Ustaw priorytet
+        </DropdownItem>
+        <DropdownItem
           key="locate"
           shortcut="⌘N"
           description="Pokaż element na osi czasu"
           startContent={<LocateIcon size={16} />}
-        >
-          Zaznacz na osi
-        </DropdownItem>
-        <DropdownItem
-          key="edit"
-          shortcut="⌘N"
-          description="Edytuj szczegóły wydatku"
-          startContent={<EditIcon size={16} />}
           showDivider
         >
-          Edytuj
+          Zaznacz na osi
         </DropdownItem>
         <DropdownItem
           closeOnSelect={false}
