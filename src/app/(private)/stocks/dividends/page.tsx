@@ -1,5 +1,6 @@
 import DividendsTable from "@/components/stocks/dividends-table";
-import { getDividendInfo, getOwnStocks } from "@/lib/stocks/actions";
+import { getOwnRows } from "@/lib/general/actions";
+import { getDividendInfo } from "@/lib/stocks/actions";
 import getStockHoldings from "@/utils/stocks/get-stock-holdings";
 import groupDividends from "@/utils/stocks/group-dividends";
 import sortDividends from "@/utils/stocks/sort-dividends";
@@ -7,7 +8,7 @@ import sortDividends from "@/utils/stocks/sort-dividends";
 export default async function Page() {
   const [{ results: dividends }, { results: ownStocks }] = await Promise.all([
     getDividendInfo(),
-    getOwnStocks(),
+    getOwnRows<StockTransaction>("stock"),
   ]);
   const { future, past } = groupDividends(dividends);
   const holdings = getStockHoldings(ownStocks);
