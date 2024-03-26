@@ -1,14 +1,14 @@
 import Priority from "@/components/goals/priority";
 import GoalRef from "@/components/goals/ref";
 import Timeline from "@/components/goals/timeline";
-import { getGoals } from "@/lib/goals/actions";
+import { getOwnRows } from "@/lib/general/actions";
 import TimelineProvider from "@/providers/goals/timeline";
 import { Button } from "@nextui-org/react";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 
 export default async function Page() {
-  const { results: goals } = await getGoals();
+  const { results: goals } = await getOwnRows<Goal>("goal");
   const havingDeadline = goals.filter(
     (goal) =>
       goal.deadline &&

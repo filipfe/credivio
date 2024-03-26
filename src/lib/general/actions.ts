@@ -4,7 +4,7 @@ import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 
 export async function getOwnRows<T>(
-  type: "income" | "expense" | "stock",
+  type: OperationType,
   searchParams?: SearchParams
 ): Promise<SupabaseResponse<T>> {
   try {
@@ -45,9 +45,10 @@ export async function getOwnRows<T>(
         query = query.order("created_at");
       }
     } else {
-      query = query
-        .order("issued_at", { ascending: false })
-        .order("created_at", { ascending: false });
+      if (type !== "goal") {
+        query = query.order("issued_at", { ascending: false });
+      }
+      query = query.order("created_at", { ascending: false });
     }
 
     const page = Number(searchParams?.page);
