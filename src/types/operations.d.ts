@@ -10,12 +10,10 @@ type Operation = {
   currency_date?: string;
   budget_after?: string;
   type?: OperationType;
-  label?: Label;
+  label?: string;
 };
 
 type Label = {
-  id: string;
-  title: string;
-  created_at: string;
-  count: { count: number }[];
+  name: string;
+  count: number;
 };

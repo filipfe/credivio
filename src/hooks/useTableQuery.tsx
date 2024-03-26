@@ -1,6 +1,6 @@
 import { SortDescriptor } from "@nextui-org/table";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
@@ -12,7 +12,17 @@ export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
     page: 1,
     sort: "",
     search: "",
+    label: "",
   });
+
+  const handleLabelChange = (selectedKey?: string) => {
+    !viewOnly && setIsLoading(true);
+    setSearchQuery((prev) => ({
+      ...prev,
+      page: 1,
+      label: selectedKey ? selectedKey : "",
+    }));
+  };
 
   const handleSearch = useDebouncedCallback((value: string) => {
     setIsLoading(true);
@@ -33,7 +43,7 @@ export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
     }));
   };
 
-  const handlePageChange = (page: number) => (page: number) => {
+  const handlePageChange = (page: number) => {
     !viewOnly && setIsLoading(true);
     setSearchQuery((prev) => ({ ...prev, page }));
   };
@@ -64,5 +74,6 @@ export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
     handleSearch,
     handleSort,
     handlePageChange,
+    handleLabelChange,
   };
 }

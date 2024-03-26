@@ -6,7 +6,7 @@ import { getOwnRows } from "@/lib/general/actions";
 export default async function Page({
   searchParams,
 }: {
-  searchParams: { sort?: string; page?: string };
+  searchParams: { sort?: string; page?: string; search?: string };
 }) {
   const { results: incomes, count } = await getOwnRows<Operation>(
     "income",

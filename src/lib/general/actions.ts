@@ -8,12 +8,15 @@ export async function getOwnRows<T>(
   searchParams?: SearchParams
 ): Promise<SupabaseResponse<T>> {
   try {
-    const cols = type === "expense" ? "*, label(*)" : "*";
     const supabase = createClient();
-    let query = supabase.from(`${type}s`).select(cols, {
+    let query = supabase.from(`${type}s`).select("*", {
       count: "exact",
       head: false,
     });
+
+    if (type === "expense" && searchParams?.label) {
+      query = query.eq("label", searchParams.label);
+    }
 
     if (searchParams?.search) {
       const { search } = searchParams;

@@ -8,7 +8,6 @@ import prepareChartData from "@/utils/operation/prepare-chart-data";
 import { CoinsIcon, SettingsIcon, Wallet2Icon } from "lucide-react";
 import Link from "next/link";
 import { getOwnRows } from "@/lib/general/actions";
-import Budget from "@/components/dashboard/budget";
 
 export default async function Home() {
   const expensesData = getOwnRows<Operation>("expense");

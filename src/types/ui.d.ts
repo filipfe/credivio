@@ -8,4 +8,5 @@ type TableProps<T> = {
     setRows: React.Dispatch<React.SetStateAction<T[]>>;
   };
   type?: string;
+  labels?: Label[];
 };
