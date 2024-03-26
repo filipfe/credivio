@@ -5,8 +5,6 @@ import axios from "axios";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-const supabase = createClient();
-
 export async function getStocks(
   index: GPWIndex
 ): Promise<SupabaseResponse<Stock>> {
@@ -31,6 +29,7 @@ export async function addStocks(
 
   try {
     const results: StockTransaction[] = JSON.parse(data);
+    const supabase = createClient();
     const { error } = await supabase.from(`stocks`).insert(results);
     console.log(error);
     if (error) {

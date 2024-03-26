@@ -23,7 +23,7 @@ export default function Timeline({ goals }: { goals: Goal[] }) {
             <DayRef
               goal={goal}
               prevGoal={{
-                deadline: i === 0 ? new Date() : new Date(arr[i - 1].deadline),
+                deadline: i === 0 ? new Date() : new Date(arr[i - 1].deadline!),
               }}
               key={goal.id}
             />
@@ -41,12 +41,12 @@ const DayRef = ({
   goal: Goal;
   prevGoal: { deadline: Date };
 }) => {
-  const isCompleted = saved >= price;
+  const isCompleted = saved! >= price;
   // const timeDiffForPrev = new Date(deadline).getTime() - prevDeadline.getTime();
-  const timeDiffForToday = new Date(deadline).getTime() - new Date().getTime();
+  const timeDiffForToday = new Date(deadline!).getTime() - new Date().getTime();
   // const daysLeftFromPrev = Math.round(timeDiffForPrev / (1000 * 3600 * 24));
   const daysLeftFromToday = Math.round(timeDiffForToday / (1000 * 3600 * 24));
-  const left = price - saved;
+  const left = price - saved!;
 
   return (
     <Fragment>
@@ -68,7 +68,7 @@ const DayRef = ({
             }`}
           >
             <span className="text-primary text-[12px] font-medium">
-              {new Date(deadline).toLocaleDateString()}
+              {new Date(deadline!).toLocaleDateString()}
             </span>
             <h3 className="text-sm line-clamp-2">{title}</h3>
           </div>

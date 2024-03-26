@@ -4,8 +4,6 @@ import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-const supabase = createClient();
-
 export async function addOperations(
   formData: FormData
 ): Promise<SupabaseResponse<Operation>> {
@@ -15,6 +13,7 @@ export async function addOperations(
 
   try {
     let results: Operation[] = JSON.parse(data);
+    const supabase = createClient();
     if (label) {
       const { data: existingLabel } = await supabase
         .from("labels")
@@ -63,6 +62,7 @@ export async function addOperations(
 export async function getLabels(
   type: OperationType
 ): Promise<SupabaseResponse<Label>> {
+  const supabase = createClient();
   const { data: results, error } = await supabase
     .from("labels")
     .select(`id, title, created_at, count:${type}s(count)`);

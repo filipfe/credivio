@@ -3,14 +3,13 @@
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 
-const supabase = createClient();
-
 export async function getOwnRows<T>(
   type: "income" | "expense" | "stock",
   searchParams?: SearchParams
 ): Promise<SupabaseResponse<T>> {
   try {
     const cols = type === "expense" ? "*, label(*)" : "*";
+    const supabase = createClient();
     let query = supabase.from(`${type}s`).select(cols, {
       count: "exact",
       head: false,
@@ -75,6 +74,7 @@ export async function updateRow(
   type: OperationType,
   fields: { [key: string]: any }
 ) {
+  const supabase = createClient();
   const { error } = await supabase.from(`${type}s`).update(fields).eq("id", id);
   console.log(error);
   if (error) {
@@ -95,6 +95,7 @@ export async function getSpecificRow<T>(
   id: string,
   type: "income" | "expense" | "stock"
 ): Promise<SupabaseResponse<T>> {
+  const supabase = createClient();
   const { data, error } = await supabase
     .from(`${type}s`)
     .select("*")
@@ -128,6 +129,7 @@ export async function deleteRows<T>({
     data = body!.data;
   }
   try {
+    const supabase = createClient();
     const {
       data: { user },
       error: authError,
