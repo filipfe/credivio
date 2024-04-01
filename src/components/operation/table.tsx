@@ -98,6 +98,7 @@ export default function OperationTable({
             <span className="line-clamp-1 break-all w-[10ch]">{cellValue}</span>
           );
         case "label":
+        case "description":
           return cellValue || "-";
         default:
           return <span className="line-clamp-1 break-all">{cellValue}</span>;

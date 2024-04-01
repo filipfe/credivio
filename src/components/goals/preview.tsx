@@ -1,9 +1,16 @@
+"use client";
+
+import { useContext } from "react";
 import Block from "../ui/block";
 import RadialChart from "../ui/charts/radial-chart";
+import { TimelineContext } from "@/providers/goals/timeline";
 
-export default function Priority({ saved, price }: Goal) {
+export default function Preview(priority: Goal) {
+  const { activeRecord } = useContext(TimelineContext);
+  const goal = activeRecord || priority;
+  const { title, saved, price } = goal;
   return (
-    <Block title="Priorytet">
+    <Block title={title}>
       {/* <div className="grid grid-cols-2 flex-1"> */}
       {/* <div></div> */}
       <div className="relative flex-1">

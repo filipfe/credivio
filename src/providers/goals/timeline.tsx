@@ -3,8 +3,8 @@
 import { Dispatch, SetStateAction, createContext, useState } from "react";
 
 type TimelineContextType = {
-  activeRecord: string | null;
-  setActiveRecord: Dispatch<SetStateAction<string | null>>;
+  activeRecord: Goal | null;
+  setActiveRecord: Dispatch<SetStateAction<Goal | null>>;
 };
 
 export const TimelineContext = createContext<TimelineContextType>(null!);
@@ -14,7 +14,7 @@ export default function TimelineProvider({
 }: {
   children: React.ReactNode[];
 }) {
-  const [activeRecord, setActiveRecord] = useState<string | null>(null);
+  const [activeRecord, setActiveRecord] = useState<Goal | null>(null);
   return (
     <TimelineContext.Provider value={{ activeRecord, setActiveRecord }}>
       {children}

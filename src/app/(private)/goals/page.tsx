@@ -1,11 +1,8 @@
-import Priority from "@/components/goals/priority";
+import Priority from "@/components/goals/preview";
 import GoalRef from "@/components/goals/ref";
 import Timeline from "@/components/goals/timeline";
 import { getOwnRows } from "@/lib/general/actions";
 import TimelineProvider from "@/providers/goals/timeline";
-import { Button } from "@nextui-org/react";
-import { PlusIcon } from "lucide-react";
-import Link from "next/link";
 
 export default async function Page() {
   const { results: goals } = await getOwnRows<Goal>("goal");
@@ -29,7 +26,7 @@ export default async function Page() {
           {priority && <Priority {...priority} />}
         </div>
         <section className="flex flex-col lg:grid grid-cols-2 xl:grid-cols-4 gap-6">
-          <Link href="/goals/add">
+          {/* <Link href="/goals/add">
             <Button
               variant="flat"
               color="primary"
@@ -39,7 +36,7 @@ export default async function Page() {
               <PlusIcon size={16} />
               Nowy
             </Button>
-          </Link>
+          </Link> */}
           {goals.map((item, k) => (
             <GoalRef {...item} key={`goal:${k}`} />
           ))}

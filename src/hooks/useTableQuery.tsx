@@ -1,6 +1,6 @@
 import { SortDescriptor } from "@nextui-org/table";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {

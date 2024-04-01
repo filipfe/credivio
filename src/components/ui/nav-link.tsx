@@ -7,7 +7,6 @@ type Props = {
   hideText?: boolean;
   isGroup?: boolean;
   matchPath?: boolean;
-  size?: number;
 };
 
 export default function NavLink({
@@ -17,7 +16,6 @@ export default function NavLink({
   links,
   isGroup,
   hideText,
-  size = 16,
   matchPath,
 }: Page & Props) {
   const pathname = usePathname();
@@ -29,28 +27,29 @@ export default function NavLink({
     : pathname.startsWith(href);
   return isGroup ? (
     <div>
-      <div
-        className={`h-11 px-6 rounded-lg text-sm font-medium flex items-center gap-4 w-full text-font/70`}
-      >
-        <span className={hideText ? "opacity-0 absolute" : "opacity-100"}>
+      <div className={`px-5 rounded-lg font-medium w-full text-font/70`}>
+        <span
+          style={{ fontSize: 13 }}
+          className={hideText ? "opacity-0 absolute" : "opacity-100"}
+        >
           {title}
         </span>
       </div>
       <div className="space-y-1.5 px-4 mt-1.5">
         {links?.map((link) => (
-          <NavLink {...link} size={15} hideText={hideText} key={link.href} />
+          <NavLink {...link} hideText={hideText} key={link.href} />
         ))}
       </div>
     </div>
   ) : (
     <Link
-      className={`px-6 rounded-lg text-sm font-medium flex items-center gap-4 ${
+      className={`px-5 rounded-lg text-sm font-medium flex items-center gap-4 ${
         isActive ? "bg-light" : "hover:bg-light bg-white text-font/70"
       }`}
       href={href}
-      style={{ fontSize: size - 2, height: size * 2.5 }}
+      style={{ fontSize: 13, height: 34 }}
     >
-      <Icon size={size} />
+      <Icon size={15} />
       <span className={hideText ? "opacity-0 absolute" : "opacity-100"}>
         {title}
       </span>

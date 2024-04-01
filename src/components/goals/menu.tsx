@@ -17,15 +17,15 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { Key, useContext, useState } from "react";
+import toast from "react-hot-toast";
 
 type Props = {
-  id: string;
-  type: string;
+  goal: Goal;
   onAdd?: () => void;
 };
 
-export default function Menu({ id, type, onAdd }: Props) {
-  const { setActiveRecord } = useContext(TimelineContext);
+export default function Menu({ goal, onAdd }: Props) {
+  const { activeRecord, setActiveRecord } = useContext(TimelineContext);
   const [loadingKey, setLoadingKey] = useState<string | null>(null);
 
   async function onAction(key: Key) {
@@ -35,22 +35,27 @@ export default function Menu({ id, type, onAdd }: Props) {
         onAdd && onAdd();
         break;
       case "priority":
-        const { error: updateError } = await updateRow(id, "goal", {
+        const { error: updateError } = await updateRow(goal.id, "goal", {
           is_priority: true,
         });
-        console.log(updateError);
+        updateError && toast.error(updateError.message);
       case "locate":
-        setActiveRecord(id);
+        setActiveRecord(goal);
         break;
 
       case "delete":
         const { error: deleteError } = await deleteRows({
-          body: { type, data: id },
+          body: { type: "goal", data: goal.id },
         });
+        deleteError && toast.error(deleteError);
         break;
     }
     setLoadingKey(null);
   }
+
+  const disabledKeys = loadingKey ? [loadingKey] : [];
+  (!goal.deadline || activeRecord?.id === goal.id) &&
+    disabledKeys.push("locate");
 
   return (
     <Dropdown shadow="sm">
@@ -60,7 +65,7 @@ export default function Menu({ id, type, onAdd }: Props) {
         </Button>
       </DropdownTrigger>
       <DropdownMenu
-        disabledKeys={loadingKey ? [loadingKey] : []}
+        disabledKeys={disabledKeys}
         variant="faded"
         aria-label="Dropdown menu with description"
         onAction={onAction}
