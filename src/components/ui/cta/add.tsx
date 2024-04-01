@@ -13,9 +13,9 @@ export default function Add({
     <Link href={`${process.env.NEXT_PUBLIC_SITE_URL}/${type}s/add`}>
       <Button
         color="primary"
-        className="text-sm"
+        className="font-medium"
         size={size}
-        variant="light"
+        variant="flat"
         as="div"
       >
         <PlusIcon size={16} /> Dodaj

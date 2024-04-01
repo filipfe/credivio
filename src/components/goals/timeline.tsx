@@ -1,13 +1,26 @@
-import { Fragment } from "react";
+"use client";
+
+import { Fragment, useContext, useEffect, useRef } from "react";
 import Block from "../ui/block";
 import { Button, Chip, ScrollShadow } from "@nextui-org/react";
 import { CheckIcon, PlusIcon } from "lucide-react";
+import { TimelineContext } from "@/providers/goals/timeline";
 
 export default function Timeline({ goals }: { goals: Goal[] }) {
+  const listRef = useRef<HTMLDivElement>(null);
+  const { activeRecord } = useContext(TimelineContext);
+
+  useEffect(() => {
+    if (!activeRecord || !listRef.current) return;
+    const element = document.getElementById(activeRecord.id);
+    element?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [listRef.current, activeRecord]);
+
   if (goals.length === 0) return;
+
   return (
     <Block title="Oś czasu">
-      <ScrollShadow orientation="horizontal" hideScrollBar>
+      <ScrollShadow orientation="horizontal" ref={listRef} hideScrollBar>
         <div className="bg-primary rounded-full h-0.5 flex items-center justify-between gap-32 mx-8 mt-10 mb-24 min-w-max">
           <div className="bg-white grid place-content-center h-5 w-5">
             <div className="bg-primary rounded-full h-2.5 w-2.5 flex flex-col items-center relative">
@@ -19,8 +32,12 @@ export default function Timeline({ goals }: { goals: Goal[] }) {
               </div>
             </div>
           </div>
-          {goals.map((goal, i, arr) => (
-            <DayRef goal={goal} key={goal.id} />
+          {goals.map((goal) => (
+            <DayRef
+              goal={goal}
+              isActive={goal.id === activeRecord?.id}
+              key={goal.id}
+            />
           ))}
         </div>
       </ScrollShadow>
@@ -29,9 +46,11 @@ export default function Timeline({ goals }: { goals: Goal[] }) {
 }
 
 const DayRef = ({
-  goal: { title, deadline, price, saved, currency },
+  goal: { id, title, deadline, price, saved, currency },
+  isActive,
 }: {
   goal: Goal;
+  isActive: boolean;
 }) => {
   const isCompleted = saved! >= price;
   const timeDiffForToday = new Date(deadline!).getTime() - new Date().getTime();
@@ -45,7 +64,7 @@ const DayRef = ({
           <Chip
             size="sm"
             color="primary"
-            variant="flat"
+            variant={isCompleted ? "solid" : "flat"}
             startContent={isCompleted ? <CheckIcon size={12} /> : undefined}
           >
             {isCompleted
@@ -57,8 +76,8 @@ const DayRef = ({
           </Chip>
         </div>
       </div>
-      <div className="bg-white grid place-content-center h-5 w-5">
-        <div className="bg-primary rounded-full h-2.5 w-2.5 flex flex-col items-center justify-center relative">
+      <div className="bg-white grid place-content-center h-5 w-5" id={id}>
+        <div className="bg-primary/20 rounded-full h-2.5 w-2.5 flex flex-col items-center justify-center relative">
           <div
             className={`absolute top-[calc(100%+8px)] flex flex-col items-center text-center `}
           >
@@ -74,9 +93,13 @@ const DayRef = ({
           </div>
           {isCompleted ? (
             <div className="bg-white h-3 w-3 absolute grid place-content-center">
-              <div className="w-5 h-5 bg-primary/20 text-primary rounded-full grid place-content-center">
+              <div className="w-5 h-5 bg-primary text-white rounded-full grid place-content-center">
                 <CheckIcon size={12} />
               </div>
+            </div>
+          ) : isActive ? (
+            <div className="bg-white h-3 w-3 absolute grid place-content-center">
+              <div className="w-4 h-4 bg-secondary rounded-full" />
             </div>
           ) : (
             <div className="bg-white h-3 w-3 absolute opacity-0 hover:opacity-100 grid place-content-center">

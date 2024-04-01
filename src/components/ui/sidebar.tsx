@@ -6,7 +6,7 @@ export default function Sidebar({ isMenuHidden }: { isMenuHidden: boolean }) {
   const links = isMenuHidden ? LINKS : PAGES;
   return (
     <aside className="sticky top-20 max-h-[calc(100vh-80px)] px-4 flex flex-col justify-between pb-4">
-      <nav className="flex flex-col gap-1.5">
+      <nav className="flex flex-col gap-3">
         {links.map((group) => (
           <NavLink
             {...group}

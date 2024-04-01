@@ -8,14 +8,8 @@ import { updateRow } from "@/lib/general/actions";
 import useOutsideObserver from "@/hooks/useOutsideObserver";
 import Menu from "./menu";
 
-export default function GoalRef({
-  id,
-  currency,
-  saved: defaultSaved,
-  deadline,
-  title,
-  price,
-}: Goal) {
+export default function GoalRef(props: Goal) {
+  const { id, currency, saved: defaultSaved, deadline, title, price } = props;
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
   const [saved, setSaved] = useState(defaultSaved?.toString() || "0");
@@ -62,7 +56,7 @@ export default function GoalRef({
             <CheckCircle2Icon />
           </div>
         ) : (
-          <Menu id={id} type="goal" onAdd={() => setIsSavedEditable(true)} />
+          <Menu goal={props} onAdd={() => setIsSavedEditable(true)} />
         )}
       </div>
       <div>

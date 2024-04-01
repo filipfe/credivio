@@ -46,14 +46,16 @@ export default function TopContent({
             onValueChange={handleSearch}
           />
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-4">
           {labels && handleLabelChange && (
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button
-                  endContent={<ChevronDownIcon className="text-small" />}
                   size="sm"
+                  endContent={<ChevronDownIcon size={16} />}
+                  disableAnimation
                   variant="flat"
+                  className="bg-light"
                 >
                   {label ? label : "Wybierz etykietę"}
                 </Button>
@@ -64,18 +66,33 @@ export default function TopContent({
                 selectionMode="single"
                 onSelectionChange={(keys) => {
                   const selectedKey = Array.from(keys)[0]?.toString();
-                  handleLabelChange(selectedKey);
+                  handleLabelChange(selectedKey === "all" ? "" : selectedKey);
                 }}
               >
-                {labels.map((label) => (
-                  <DropdownItem key={label.name}>
-                    {`${label.name} (${label.count})`}
-                  </DropdownItem>
+                {
+                  (label && (
+                    <DropdownItem
+                      className="!bg-white hover:!bg-light"
+                      key="all"
+                    >
+                      Wszystkie
+                    </DropdownItem>
+                  )) as any
+                }
+                {labels.map(({ name, count }) => (
+                  <DropdownItem
+                    className={`${
+                      label === name ? "!bg-light" : "!bg-white hover:!bg-light"
+                    }`}
+                    title={name}
+                    description={`${count} wydatków`}
+                    key={name}
+                  />
                 ))}
               </DropdownMenu>
             </Dropdown>
           )}
-          {type && rows.length > 0 && <Add type={type} />}
+          {type && rows.length > 0 && <Add size="sm" type={type} />}
         </div>
       </div>
     );

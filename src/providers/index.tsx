@@ -14,7 +14,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <NextUIProvider navigate={push}>
       <div
         className={`min-h-screen grid grid-rows-[80px_1fr] ${
-          isMenuHidden ? "grid-cols-[6rem_1fr]" : "grid-cols-[16rem_1fr]"
+          isMenuHidden ? "grid-cols-[6rem_1fr]" : "grid-cols-[15rem_1fr]"
         } transition-[grid-template-columns]`}
       >
         <Header isMenuHidden={isMenuHidden} setIsMenuHidden={setIsMenuHidden} />
