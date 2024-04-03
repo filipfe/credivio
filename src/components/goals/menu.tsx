@@ -1,7 +1,7 @@
 "use client";
 
 import { deleteRows, updateRow } from "@/lib/general/actions";
-import { TimelineContext } from "@/providers/goals/timeline";
+import { TimelineContext } from "@/app/(private)/goals/providers";
 import {
   Button,
   Dropdown,

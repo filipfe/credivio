@@ -4,7 +4,7 @@ import { Fragment, useContext, useEffect, useRef } from "react";
 import Block from "../ui/block";
 import { Button, Chip, ScrollShadow } from "@nextui-org/react";
 import { CheckIcon, PlusIcon } from "lucide-react";
-import { TimelineContext } from "@/providers/goals/timeline";
+import { TimelineContext } from "@/app/(private)/goals/providers";
 
 export default function Timeline({ goals }: { goals: Goal[] }) {
   const listRef = useRef<HTMLDivElement>(null);
