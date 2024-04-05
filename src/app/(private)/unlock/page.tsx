@@ -37,16 +37,12 @@ export default async function Page({
           <span className="font-normal">/ miesiąc</span>
         </strong>
         <p className="text-sm opacity-60">{description}</p>
-        <div className="flex items-center gap-3 w-min mt-4">
-          <Button color="primary" variant="flat">
-            Oferta
+
+        <Link href={`/settings/subscription?selected=${name}`}>
+          <Button color="primary" as="div">
+            Odblokuj
           </Button>
-          <Link href={`/settings/subscription?selected=${name}`}>
-            <Button color="primary" as="div">
-              Odblokuj
-            </Button>
-          </Link>
-        </div>
+        </Link>
       </Block>
     </div>
   );
