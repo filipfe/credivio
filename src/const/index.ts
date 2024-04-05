@@ -3,8 +3,10 @@ import {
   ArrowRightLeftIcon,
   BarChart4Icon,
   Building2Icon,
+  CalendarDaysIcon,
   CheckCircleIcon,
   CoinsIcon,
+  LayersIcon,
   LayoutDashboardIcon,
   NewspaperIcon,
   PieChartIcon,
@@ -139,6 +141,13 @@ export const SETTINGS_PAGES: (Page & { description: string })[] = [
     icon: SlidersIcon,
     description:
       "Kliknij tutaj, aby zarządzać ustawieniami wyświetlania, powiadomień i innymi.",
+  },
+  {
+    title: "Subskrypcje i usługi",
+    href: "/subscription",
+    icon: LayersIcon,
+    description:
+      "Kliknij tutaj, aby zarządzać swoim planem subskrypcyjnym i dostępem do usług.",
   },
   {
     title: "Konto",

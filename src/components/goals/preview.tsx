@@ -3,7 +3,7 @@
 import { useContext } from "react";
 import Block from "../ui/block";
 import RadialChart from "../ui/charts/radial-chart";
-import { TimelineContext } from "@/providers/goals/timeline";
+import { TimelineContext } from "@/app/(private)/goals/providers";
 
 export default function Preview(priority: Goal) {
   const { activeRecord } = useContext(TimelineContext);

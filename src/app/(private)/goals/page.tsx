@@ -2,7 +2,7 @@ import Priority from "@/components/goals/preview";
 import GoalRef from "@/components/goals/ref";
 import Timeline from "@/components/goals/timeline";
 import { getOwnRows } from "@/lib/general/actions";
-import TimelineProvider from "@/providers/goals/timeline";
+import TimelineProvider from "@/app/(private)/goals/providers";
 
 export default async function Page() {
   const { results: goals } = await getOwnRows<Goal>("goal");
