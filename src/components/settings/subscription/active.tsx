@@ -53,9 +53,11 @@ export default function ActiveService({
           <sub className="text-sm font-medium">/ miesiąc</sub>
         </strong>
         <div className="flex items-center gap-2 mt-auto">
-          <Button variant="light" isDisabled={isActive} color="primary">
-            Wypróbuj
-          </Button>
+          {!isActive && (
+            <Button variant="light" color="primary">
+              Wypróbuj
+            </Button>
+          )}
           <Button
             variant={isActive ? "flat" : "shadow"}
             color="primary"
@@ -123,7 +125,7 @@ export default function ActiveService({
                   <input
                     type="hidden"
                     name="is-active"
-                    value={String(activeService)}
+                    value={String(isActive)}
                   />
                 </form>
               </ModalFooter>
