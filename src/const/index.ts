@@ -132,31 +132,31 @@ export const PAGES: Page[] = [
   },
 ];
 
-export const LINKS = PAGES.flatMap((page) => page.links || [page]);
-
-export const SETTINGS_PAGES: (Page & { description: string })[] = [
+export const SETTINGS_PAGES: Page[] = [
   {
     title: "Preferencje",
-    href: "/preferences",
+    href: "/settings/preferences",
     icon: SlidersIcon,
     description:
       "Kliknij tutaj, aby zarządzać ustawieniami wyświetlania, powiadomień i innymi.",
   },
   {
     title: "Subskrypcje i usługi",
-    href: "/subscription",
+    href: "/settings/subscription",
     icon: LayersIcon,
     description:
       "Kliknij tutaj, aby zarządzać swoim planem subskrypcyjnym i dostępem do usług.",
   },
   {
     title: "Konto",
-    href: "/account",
+    href: "/settings/account",
     icon: UserCogIcon,
     description:
       "Kliknij tutaj, aby zarządzać ustawieniami wyświetlania, powiadomień i innymi.",
   },
 ];
+
+export const LINKS = PAGES.flatMap((page) => page.links || [page]);
 
 export const ADD_METHODS: AddMethod[] = [
   {

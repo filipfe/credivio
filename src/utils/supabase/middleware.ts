@@ -77,11 +77,11 @@ export async function updateSession(request: NextRequest) {
     if (service) {
       const { data } = await supabase
         .from("user_services")
-        .select("is_enabled")
+        .select("id")
         .eq("user_id", user.id)
         .eq("service_id", service.id)
         .single();
-      return data?.is_enabled
+      return data
         ? response
         : NextResponse.redirect(`${origin}/unlock?name=${service.name}`);
     }

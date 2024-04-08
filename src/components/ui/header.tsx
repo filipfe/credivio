@@ -1,8 +1,8 @@
 import { Fragment } from "react";
 import { signOut } from "@/lib/auth/actions";
 import { BreadcrumbItem, Breadcrumbs, Button } from "@nextui-org/react";
-import { AlignJustifyIcon, LogOutIcon } from "lucide-react";
-import { LINKS } from "@/const";
+import { AlignJustifyIcon, LogOutIcon, SettingsIcon } from "lucide-react";
+import { LINKS, SETTINGS_PAGES } from "@/const";
 import { usePathname } from "next/navigation";
 
 type Props = {
@@ -11,11 +11,18 @@ type Props = {
   setIsMenuHidden: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+const settingsPage: Page = {
+  href: "/settings",
+  title: "Ustawienia",
+  icon: SettingsIcon,
+  links: SETTINGS_PAGES,
+};
+
 export default function Header({ isMenuHidden, setIsMenuHidden }: Props) {
   const pathname = usePathname();
   const flatten = (arr: Page[]): Page[] =>
     arr.flatMap(({ links, ...page }) => [page, ...flatten(links || [])]);
-  const links = flatten(LINKS).filter(({ href }) =>
+  const links = flatten([...LINKS, settingsPage]).filter(({ href }) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href)
   );
   return (
@@ -32,9 +39,6 @@ export default function Header({ isMenuHidden, setIsMenuHidden }: Props) {
         </Button>
       </header>
       <header className="flex items-center gap-4 justify-between px-10 h-20 sticky top-0 bg-white z-50">
-        {/* {links.length === 1 ? (
-          <div></div>
-        ) : ( */}
         <Breadcrumbs
           itemClasses={{
             item: "px-2 flex items-center gap-2.5 text-[13px] data-[current=true]:font-medium",
