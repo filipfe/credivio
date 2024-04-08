@@ -2,6 +2,7 @@ type Page = {
   title: string;
   href: string;
   icon: LucideIcon;
+  description?: string;
   links?: Page[];
 };
 

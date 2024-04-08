@@ -14,13 +14,10 @@ export default async function Settings() {
   );
 }
 
-function LinkRef({ title, href, icon, description }: SettingsPage) {
+function LinkRef({ title, href, icon, description }: Page) {
   const Icon = icon;
   return (
-    <Link
-      href={`/settings${href}`}
-      className="bg-white rounded-lg px-10 py-8 space-y-4"
-    >
+    <Link href={href} className="bg-white rounded-lg px-10 py-8 space-y-4">
       <Icon size={48} />
       <h3 className="text-lg font-medium">{title}</h3>
       <p className="text-sm text-font/80">{description}</p>
