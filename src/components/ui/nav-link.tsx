@@ -1,10 +1,12 @@
 "use client";
 
+import { MenuContext } from "@/app/(private)/providers";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useContext } from "react";
 
 type Props = {
-  hideText?: boolean;
+  isMenuHidden?: boolean;
   isGroup?: boolean;
   matchPath?: boolean;
 };
@@ -15,9 +17,9 @@ export default function NavLink({
   icon,
   links,
   isGroup,
-  hideText,
   matchPath,
 }: Page & Props) {
+  const { isMenuHidden } = useContext(MenuContext);
   const pathname = usePathname();
   const Icon = icon;
   const isActive = matchPath
@@ -25,19 +27,19 @@ export default function NavLink({
     : href === "/"
     ? pathname === "/"
     : pathname.startsWith(href);
-  return isGroup ? (
+  return isGroup && !isMenuHidden ? (
     <div>
       <div className={`px-5 rounded-lg font-medium w-full text-font/70`}>
         <span
           style={{ fontSize: 13 }}
-          className={hideText ? "opacity-0 absolute" : "opacity-100"}
+          className={isMenuHidden ? "opacity-0 absolute" : "opacity-100"}
         >
           {title}
         </span>
       </div>
       <div className="space-y-1.5 px-4 mt-1.5">
         {links?.map((link) => (
-          <NavLink {...link} hideText={hideText} key={link.href} />
+          <NavLink {...link} key={link.href} />
         ))}
       </div>
     </div>
@@ -50,7 +52,7 @@ export default function NavLink({
       style={{ fontSize: 13, height: 34 }}
     >
       <Icon size={15} />
-      <span className={hideText ? "opacity-0 absolute" : "opacity-100"}>
+      <span className={isMenuHidden ? "opacity-0 absolute" : "opacity-100"}>
         {title}
       </span>
     </Link>
