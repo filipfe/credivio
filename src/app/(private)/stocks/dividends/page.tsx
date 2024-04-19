@@ -1,4 +1,4 @@
-import DividendsTable from "@/components/stocks/dividends-table";
+import DividendsTable from "@/components/stocks/dividends/dividends-table";
 import { getOwnRows } from "@/lib/general/actions";
 import { getDividendInfo } from "@/lib/stocks/actions";
 import getStockHoldings from "@/utils/stocks/get-stock-holdings";

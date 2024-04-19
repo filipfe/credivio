@@ -73,3 +73,8 @@ type Holdings = {
 };
 
 type GPWIndex = "wig20" | "mwig40" | "swig80";
+
+type StocksIndex = {
+  name: GPWIndex;
+  title: string;
+};
