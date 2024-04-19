@@ -3,7 +3,7 @@
 import { Accordion, AccordionItem } from "@nextui-org/react";
 import StockTable from "../stocks/table";
 import { ResponsiveContainer } from "recharts";
-import PieChart from "../operation/charts/pie-chart";
+import PieChart from "../ui/charts/pie-chart";
 import React from "react";
 import { COLORS } from "@/const";
 

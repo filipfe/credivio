@@ -56,16 +56,35 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
+  const { pathname, origin } = request.nextUrl;
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user && !PUBLIC_ROUTES.includes(request.nextUrl.pathname)) {
-    return NextResponse.redirect(new URL(`${request.nextUrl.origin}/sign-in`));
+  if (!user && !PUBLIC_ROUTES.includes(pathname)) {
+    return NextResponse.redirect(new URL(`${origin}/sign-in`));
   }
 
-  if (user && PUBLIC_ROUTES.includes(request.nextUrl.pathname)) {
-    return NextResponse.redirect(new URL(`${request.nextUrl.origin}/`));
+  if (user) {
+    if (PUBLIC_ROUTES.includes(pathname)) {
+      return NextResponse.redirect(new URL(`${origin}/`));
+    }
+    const { data: services } = await supabase
+      .from("services")
+      .select("id, href, name");
+    const service = services?.find(({ href }) => pathname.startsWith(href));
+    if (service) {
+      const { data } = await supabase
+        .from("user_services")
+        .select("is_enabled")
+        .eq("user_id", user.id)
+        .eq("service_id", service.id)
+        .single();
+      return data?.is_enabled
+        ? response
+        : NextResponse.redirect(`${origin}/unlock?name=${service.name}`);
+    }
   }
 
   return response;

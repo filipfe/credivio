@@ -8,7 +8,8 @@ export default function getStockHoldings(transactions: StockTransaction[]) {
       holdings[symbol] = 0;
     }
 
-    holdings[symbol] += transaction_type === "buy" ? quantity : -quantity;
+    holdings[symbol] +=
+      transaction_type === "buy" ? parseInt(quantity) : -parseInt(quantity);
   }
 
   return holdings;

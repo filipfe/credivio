@@ -1,115 +1,135 @@
 "use client";
 
-import { Input, Slider, Textarea } from "@nextui-org/react";
+import { Button, Input, Spinner, Textarea } from "@nextui-org/react";
 import CurrencySelect from "../ui/currency-select";
 import formatAmount from "@/utils/operation/format-amount";
-import { useState } from "react";
+import { useState, useTransition } from "react";
+import { CheckIcon } from "lucide-react";
+import { insertRows } from "@/lib/general/actions";
+import toast from "react-hot-toast";
+import { v4 } from "uuid";
 
 type Props = {
-  defaultValue?: Goal;
-  hideCSV?: boolean;
+  defaultValue?: SupabaseGoal;
 };
 
-const defaultRecord: Goal = {
-  id: "",
+const defaultRecord: Omit<SupabaseGoal, "id"> = {
   title: "",
-  price: 0,
+  price: "",
   saved: 0,
   currency: "PLN",
   description: "",
 };
 
-export default function GoalForm({ defaultValue, hideCSV }: Props) {
-  const [singleRecord, setSingleRecord] = useState<Goal>(
-    defaultValue || defaultRecord
+export default function GoalForm({ defaultValue }: Props) {
+  const [isPending, startTransition] = useTransition();
+  const [singleRecord, setSingleRecord] = useState<SupabaseGoal>(
+    defaultValue || { ...defaultRecord, id: v4() }
   );
 
-  const addRecord = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSingleRecord(defaultRecord);
-  };
-
   return (
-    <form>
-      <div className="flex flex-col xl:grid grid-cols-2 gap-8 mt-8">
-        <div className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col">
-          <h2 className="text-lg">Dane</h2>
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <Input
-              classNames={{ inputWrapper: "!bg-light" }}
-              name="title"
-              label="Tytuł"
-              placeholder="Wynagrodzenie"
-              isRequired
-              value={singleRecord.title}
-              onChange={(e) =>
-                setSingleRecord((prev) => ({ ...prev, title: e.target.value }))
-              }
-            />
-            <Input
-              classNames={{ inputWrapper: "!bg-light" }}
-              name="amount"
-              label="Kwota"
-              placeholder="0.00"
-              isRequired
-              value={singleRecord.price.toString()}
-              onBlur={(e) => {
-                const value = singleRecord.price;
-
-                !isNaN(value) &&
-                  setSingleRecord((prev) => ({
-                    ...prev,
-                    amount: value == 0 ? "" : value.toString(),
-                  }));
-              }}
-              onChange={(e) =>
+    <div className="flex flex-col mx-auto max-w-4xl gap-8 w-full h-max my-auto">
+      <div className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col">
+        <h2 className="text-lg">Nowy cel</h2>
+        <form
+          action={(formData) =>
+            startTransition(async () => {
+              const { error } = await insertRows({ formData });
+              error && toast.error(error);
+            })
+          }
+          className="grid grid-cols-2 gap-4"
+        >
+          <Input
+            classNames={{ inputWrapper: "!bg-light" }}
+            name="title"
+            label="Tytuł"
+            placeholder="Mieszkanie"
+            isRequired
+            value={singleRecord.title}
+            onChange={(e) =>
+              setSingleRecord((prev) => ({ ...prev, title: e.target.value }))
+            }
+          />
+          <Input
+            classNames={{ inputWrapper: "!bg-light" }}
+            name="amount"
+            label="Kwota"
+            placeholder="0.00"
+            isRequired
+            value={singleRecord.price}
+            onBlur={(_) => {
+              const value = parseFloat(singleRecord.price);
+              !isNaN(value) &&
                 setSingleRecord((prev) => ({
                   ...prev,
-                  amount: formatAmount(e.target.value),
-                }))
-              }
-            />
-            <CurrencySelect
-              value={singleRecord.currency}
-              selectedKey={singleRecord.currency}
-              onSelectionChange={(curr) =>
-                setSingleRecord((prev) => ({
-                  ...prev,
-                  currency: curr.toString(),
-                }))
-              }
-            />
-            <Input
-              classNames={{ inputWrapper: "!bg-light" }}
-              name="deadline"
-              label="Termin ostateczny"
-              placeholder="24.01.2024"
-              type="date"
-              value={singleRecord.deadline}
-              onChange={(e) =>
-                setSingleRecord((prev) => ({
-                  ...prev,
-                  issued_at: e.target.value,
-                }))
-              }
-            />
-            <Textarea
-              className="col-span-2"
-              classNames={{ inputWrapper: "!bg-light" }}
-              name="description"
-              label="Opis"
-              placeholder="Wynagrodzenie za luty"
-              value={singleRecord.description}
-              onChange={(e) =>
-                setSingleRecord((prev) => ({
-                  ...prev,
-                  description: e.target.value,
-                }))
-              }
-            />
+                  price: value == 0 ? "" : value.toString(),
+                }));
+            }}
+            onChange={(e) =>
+              setSingleRecord((prev) => ({
+                ...prev,
+                price: formatAmount(e.target.value),
+              }))
+            }
+          />
+          <CurrencySelect
+            value={singleRecord.currency}
+            selectedKey={singleRecord.currency}
+            onSelectionChange={(curr) =>
+              setSingleRecord((prev) => ({
+                ...prev,
+                currency: curr.toString(),
+              }))
+            }
+          />
+          <Input
+            classNames={{ inputWrapper: "!bg-light" }}
+            name="deadline"
+            label="Termin ostateczny"
+            placeholder="24.01.2024"
+            type="date"
+            value={singleRecord.deadline}
+            onChange={(e) =>
+              setSingleRecord((prev) => ({
+                ...prev,
+                deadline: e.target.value,
+              }))
+            }
+          />
+          <Textarea
+            className="col-span-2"
+            classNames={{ inputWrapper: "!bg-light" }}
+            name="description"
+            label="Opis"
+            placeholder="Miejsce zamieszkania"
+            value={singleRecord.description}
+            onChange={(e) =>
+              setSingleRecord((prev) => ({
+                ...prev,
+                description: e.target.value,
+              }))
+            }
+          />
+          <div className="col-span-2 flex justify-end mt-4">
+            <Button color="primary" type="submit" isDisabled={isPending}>
+              {isPending ? (
+                <Spinner color="white" size="sm" />
+              ) : (
+                <CheckIcon size={16} />
+              )}
+              Zapisz
+            </Button>
           </div>
-        </div>
-        <div className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col">
+          <input
+            type="hidden"
+            value={JSON.stringify(singleRecord)}
+            name="data"
+          />
+          <input type="hidden" value="goal" name="type" />
+        </form>
+      </div>
+      {/* <div className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col">
           <h2 className="text-lg">Grupuj</h2>
           <Input
             classNames={{ inputWrapper: "!bg-light" }}
@@ -126,23 +146,34 @@ export default function GoalForm({ defaultValue, hideCSV }: Props) {
           />
           <Slider
             className="mt-2"
-            color="primary"
-            step={10}
+            color={
+              singleRecord.priority === 2
+                ? "warning"
+                : singleRecord.priority === 3
+                ? "danger"
+                : "primary"
+            }
+            step={1}
             label="Priorytet"
             name="priority"
             showSteps
-            maxValue={100}
-            minValue={0}
-            defaultValue={50}
+            maxValue={3}
+            minValue={1}
+            value={singleRecord.priority}
+            onChange={(value) =>
+              setSingleRecord((prev) => ({
+                ...prev,
+                priority: value as number,
+              }))
+            }
             getValue={(value) => {
-              if (value === 50) return "Neutralne";
-              if ((value as number) > 80) return "Pilne";
-              if ((value as number) < 20) return "";
-              return "";
+              if (value[0] === 3) return "Pilne";
+              if (value[0] === 1) return "";
+              return "Neutralne";
             }}
           />
-        </div>
-        {/* <OperationTable
+        </div> */}
+      {/* <OperationTable
         title="Podgląd"
         operations={records}
         count={records.length}
@@ -220,7 +251,6 @@ export default function GoalForm({ defaultValue, hideCSV }: Props) {
           <input type="hidden" name="data" value={JSON.stringify(records)} />
         </form>
       </OperationTable> */}
-      </div>
-    </form>
+    </div>
   );
 }

@@ -4,8 +4,6 @@ import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-const supabase = createClient();
-
 export async function addOperations(
   formData: FormData
 ): Promise<SupabaseResponse<Operation>> {
@@ -15,6 +13,7 @@ export async function addOperations(
 
   try {
     let results: Operation[] = JSON.parse(data);
+    const supabase = createClient();
     if (label) {
       const { data: existingLabel } = await supabase
         .from("labels")
@@ -63,6 +62,7 @@ export async function addOperations(
 export async function getDailyTotalAmount(): Promise<
   SupabaseResponse<DailyAmount>
 > {
+  const supabase = createClient();
   const { data: results, error } = await supabase.rpc("get_daily_total_amount");
 
   if (error) {
@@ -80,6 +80,7 @@ export async function getDailyTotalAmount(): Promise<
 export async function getDashboardStats(): Promise<
   SupabaseResponse<DashboardStats>
 > {
+  const supabase = createClient();
   const { data: results, error } = await supabase.rpc("get_dashboard_stats");
 
   if (error) {
@@ -95,6 +96,7 @@ export async function getDashboardStats(): Promise<
 }
 
 export async function getLabels(): Promise<SupabaseResponse<Label>> {
+  const supabase = createClient();
   const { data: results, error } = await supabase.rpc("get_own_labels");
 
   if (error) {
@@ -110,6 +112,7 @@ export async function getLabels(): Promise<SupabaseResponse<Label>> {
 }
 
 export async function getChartLabels(): Promise<SupabaseResponse<ChartLabel>> {
+  const supabase = createClient();
   const { data: results, error } = await supabase.rpc("get_chart_labels");
 
   if (error) {

@@ -2,14 +2,14 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
-
-const supabase = createClient();
+import { redirect } from "next/navigation";
 
 export async function getOwnRows<T>(
-  type: "income" | "expense" | "stock",
+  type: OperationType,
   searchParams?: SearchParams
 ): Promise<SupabaseResponse<T>> {
   try {
+    const supabase = createClient();
     let query = supabase.from(`${type}s`).select("*", {
       count: "exact",
       head: false,
@@ -46,9 +46,10 @@ export async function getOwnRows<T>(
         query = query.order("created_at");
       }
     } else {
-      query = query
-        .order("issued_at", { ascending: false })
-        .order("created_at", { ascending: false });
+      if (type !== "goal") {
+        query = query.order("issued_at", { ascending: false });
+      }
+      query = query.order("created_at", { ascending: false });
     }
 
     const page = Number(searchParams?.page);
@@ -77,6 +78,7 @@ export async function updateRow(
   type: OperationType,
   fields: { [key: string]: any }
 ) {
+  const supabase = createClient();
   const { error } = await supabase.from(`${type}s`).update(fields).eq("id", id);
   console.log(error);
   if (error) {
@@ -97,6 +99,7 @@ export async function getSpecificRow<T>(
   id: string,
   type: "income" | "expense" | "stock"
 ): Promise<SupabaseResponse<T>> {
+  const supabase = createClient();
   const { data, error } = await supabase
     .from(`${type}s`)
     .select("*")
@@ -130,6 +133,7 @@ export async function deleteRows<T>({
     data = body!.data;
   }
   try {
+    const supabase = createClient();
     const {
       data: { user },
       error: authError,
@@ -154,7 +158,7 @@ export async function deleteRows<T>({
         error: error.message,
       };
     }
-    revalidatePath(`${type}s`);
+    revalidatePath(`/${type}s`);
     return {
       results: [],
     };
@@ -165,4 +169,53 @@ export async function deleteRows<T>({
       results: [],
     };
   }
+}
+
+export async function insertRows<T>({
+  formData,
+  body,
+}: {
+  formData?: FormData;
+  body?: { data: { [key: string]: any }; type: string };
+}): Promise<SupabaseResponse<T>> {
+  let type: string;
+  try {
+    if (formData) {
+      type = formData.get("type")!.toString();
+    } else {
+      type = body!.type;
+    }
+    const supabase = createClient();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+    if (!user || authError) {
+      return {
+        results: [],
+        error: "Błąd autoryzacji, spróbuj zalogować się ponownie!",
+      };
+    }
+    const data = formData
+      ? JSON.parse(formData.get("data")!.toString())
+      : body!.data;
+    const { error } = await supabase
+      .from(`${type}s`)
+      .insert({ ...data, user_id: user.id });
+
+    if (error) {
+      return {
+        results: [],
+        error: error.message,
+      };
+    }
+  } catch (err) {
+    console.log(err);
+    return {
+      error: "Wystąpił błąd, spróbuj ponownie później!",
+      results: [],
+    };
+  }
+  revalidatePath(`/${type}s`);
+  redirect(`/${type}s`);
 }

@@ -1,8 +1,7 @@
 import PortfolioStructure from "@/components/dashboard/portfolio-structure";
 import Stat from "@/components/dashboard/stat";
-import AreaChart from "@/components/operation/charts/area-chart";
-import BarChart from "@/components/operation/charts/bar-chart";
-import { getOwnRows } from "@/lib/general/actions";
+import AreaChart from "@/components/ui/charts/area-chart";
+import BarChart from "@/components/ui/charts/bar-chart";
 import { getSpecificStocks } from "@/lib/stocks/actions";
 import getStockHoldings from "@/utils/stocks/get-stock-holdings";
 import { CoinsIcon, SettingsIcon, Wallet2Icon } from "lucide-react";
@@ -14,6 +13,7 @@ import {
   getDailyTotalAmount,
   getDashboardStats,
 } from "@/lib/operation/actions";
+import { getOwnRows } from "@/lib/general/actions";
 
 export default async function Home() {
   const expensesData = getOwnRows<Operation>("expense");

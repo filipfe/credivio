@@ -1,30 +1,21 @@
+import Priority from "@/components/goals/preview";
 import GoalRef from "@/components/goals/ref";
 import Timeline from "@/components/goals/timeline";
-import { getGoals } from "@/lib/goals/actions";
-import TimelineProvider from "@/providers/goals/timeline";
-import { Button } from "@nextui-org/react";
-import { PlusIcon } from "lucide-react";
-import Link from "next/link";
+import { getOwnRows } from "@/lib/general/actions";
+import TimelineProvider from "@/app/(private)/goals/providers";
 
 export default async function Page() {
-  const { results: goals } = await getGoals();
+  const { results: goals } = await getOwnRows<Goal>("goal");
   const havingDeadline = goals.filter(
     (goal) =>
       goal.deadline &&
       new Date(goal.deadline).getTime() - new Date().getTime() >= 0
   );
-
+  const priority = goals.find((item) => item.is_priority);
   return (
     <div className="px-12 pt-8 pb-24 flex flex-col h-full gap-8">
       <TimelineProvider>
-        <div
-          className={`grid gap-6 ${
-            havingDeadline.length > 2
-              ? "grid-cols-1"
-              : "2xl:grid-cols-2 grid-cols-1"
-          }
-      `}
-        >
+        <div className="grid gap-6 2xl:grid-cols-2 grid-cols-1">
           <Timeline
             goals={havingDeadline.sort(
               (a, b) =>
@@ -32,9 +23,10 @@ export default async function Page() {
                 new Date(b.deadline as string).getTime()
             )}
           />
+          {priority && <Priority {...priority} />}
         </div>
         <section className="flex flex-col lg:grid grid-cols-2 xl:grid-cols-4 gap-6">
-          <Link href="/goals/add">
+          {/* <Link href="/goals/add">
             <Button
               variant="flat"
               color="primary"
@@ -44,7 +36,7 @@ export default async function Page() {
               <PlusIcon size={16} />
               Nowy
             </Button>
-          </Link>
+          </Link> */}
           {goals.map((item, k) => (
             <GoalRef {...item} key={`goal:${k}`} />
           ))}

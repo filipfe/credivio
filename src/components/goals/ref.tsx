@@ -1,22 +1,15 @@
 "use client";
 
-import { Button, Input, Progress, Spinner, input } from "@nextui-org/react";
+import { Button, Input, Progress } from "@nextui-org/react";
 import { CheckCircle2Icon, PlusIcon } from "lucide-react";
-import CrudList from "../ui/cta/list";
-import { FormEvent, useCallback, useRef, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import formatAmount, { formatMax } from "@/utils/operation/format-amount";
 import { updateRow } from "@/lib/general/actions";
 import useOutsideObserver from "@/hooks/useOutsideObserver";
+import Menu from "./menu";
 
-export default function GoalRef({
-  id,
-  currency,
-  saved: defaultSaved,
-  deadline,
-  title,
-  description,
-  price,
-}: Goal) {
+export default function GoalRef(props: Goal) {
+  const { id, currency, saved: defaultSaved, deadline, title, price } = props;
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
   const [saved, setSaved] = useState(defaultSaved?.toString() || "0");
@@ -26,7 +19,6 @@ export default function GoalRef({
     style: "currency",
     currency,
   });
-
   function handleAdd() {
     if (isPending || saved === defaultSaved?.toString()) return;
     const valid = (prev: string) =>
@@ -46,77 +38,76 @@ export default function GoalRef({
 
   return (
     <div
-      className={`bg-white rounded-lg py-8 px-10 relative ${
+      className={`bg-white rounded-lg py-8 px-10 flex flex-col justify-between relative ${
         isCompleted ? "opacity-80" : "opacity-100"
       }`}
     >
-      {isCompleted ? (
-        <div className="absolute right-10 top-8 text-primary">
-          <CheckCircle2Icon />
+      <div className="flex items-center justify-between">
+        <div>
+          {deadline && (
+            <small className="text-primary">
+              {new Date(deadline).toLocaleDateString()}
+            </small>
+          )}
+          <h3 className="text-lg line-clamp-1">{title}</h3>
         </div>
-      ) : (
-        <div className="absolute right-10 top-8">
-          <CrudList
-            id={id}
-            type="goal"
-            onAdd={() => setIsSavedEditable(true)}
-          />
-        </div>
-      )}
-      {deadline && (
-        <small className="text-primary">
-          {new Date(deadline).toLocaleDateString()}
-        </small>
-      )}
-      <h3 className="text-lg line-clamp-1">{title}</h3>
-      <Progress
-        color="primary"
-        value={parseFloat(saved)}
-        maxValue={price}
-        aria-label={title}
-        label="Zebrano"
-        showValueLabel
-        size="sm"
-        className="my-2"
-      />
-      <div className="text-xl my-4 flex items-center gap-4 justify-between">
-        {isSavedEditable ? (
-          <form
-            ref={formRef}
-            className="relative flex items-center"
-            action={handleAdd}
-          >
-            <Input
-              isDisabled={isPending}
-              classNames={{ inputWrapper: "!border-[1px]" }}
-              variant="bordered"
-              value={saved}
-              onChange={(e) =>
-                setSaved(formatAmount(e.target.value, { max: price }))
-              }
-            />
-            <Button
-              onClick={() =>
-                setSaved((prev) =>
-                  formatMax(parseFloat(prev) + price / 10, price)
-                )
-              }
-              isDisabled={isPending}
-              className="absolute right-2 !w-6 min-w-0 h-6 grid place-content-center"
-              color="primary"
-              variant="flat"
-              size="sm"
-            >
-              <PlusIcon size={16} />
-            </Button>
-          </form>
+        {isCompleted ? (
+          <div className=" text-primary">
+            <CheckCircle2Icon />
+          </div>
         ) : (
-          <span>{formatter.format(parseFloat(saved))}</span>
+          <Menu goal={props} onAdd={() => setIsSavedEditable(true)} />
         )}
-        <span>/</span>
-        <span>{formatter.format(price)}</span>
       </div>
-      {description && <p className="text-sm mt-4">{description}</p>}
+      <div>
+        <Progress
+          color="primary"
+          value={parseFloat(saved)}
+          maxValue={price}
+          aria-label={title}
+          label="Zebrano"
+          showValueLabel
+          size="sm"
+          className="my-2"
+        />
+        <div className="text-xl my-4 flex items-center gap-4 justify-between">
+          {isSavedEditable ? (
+            <form
+              ref={formRef}
+              className="relative flex items-center"
+              action={handleAdd}
+            >
+              <Input
+                isDisabled={isPending}
+                classNames={{ inputWrapper: "!border-[1px]" }}
+                variant="bordered"
+                value={saved}
+                onChange={(e) =>
+                  setSaved(formatAmount(e.target.value, { max: price }))
+                }
+              />
+              <Button
+                onClick={() =>
+                  setSaved((prev) =>
+                    formatMax(parseFloat(prev) + price / 10, price)
+                  )
+                }
+                isDisabled={isPending}
+                className="absolute right-2 !w-6 min-w-0 h-6 grid place-content-center"
+                color="primary"
+                variant="flat"
+                size="sm"
+              >
+                <PlusIcon size={16} />
+              </Button>
+            </form>
+          ) : (
+            <span>{formatter.format(parseFloat(saved))}</span>
+          )}
+          <span>/</span>
+          <span>{formatter.format(price)}</span>
+        </div>
+      </div>
     </div>
   );
 }
