@@ -60,13 +60,57 @@ export async function addOperations(
   redirect(path);
 }
 
+export async function getDailyTotalAmount(): Promise<
+  SupabaseResponse<DailyAmount>
+> {
+  const { data: results, error } = await supabase.rpc("get_daily_total_amount");
+
+  if (error) {
+    return {
+      results: [],
+      error: error.message,
+    };
+  }
+
+  return {
+    results,
+  };
+}
+
+export async function getDashboardStats(): Promise<
+  SupabaseResponse<DashboardStats>
+> {
+  const { data: results, error } = await supabase.rpc("get_dashboard_stats");
+
+  if (error) {
+    return {
+      results: [],
+      error: error.message,
+    };
+  }
+
+  return {
+    results,
+  };
+}
+
 export async function getLabels(): Promise<SupabaseResponse<Label>> {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const { data: results, error } = await supabase.rpc("get_own_labels", {
-    user_id: user?.id,
-  });
+  const { data: results, error } = await supabase.rpc("get_own_labels");
+
+  if (error) {
+    return {
+      results: [],
+      error: error.message,
+    };
+  }
+
+  return {
+    results,
+  };
+}
+
+export async function getChartLabels(): Promise<SupabaseResponse<ChartLabel>> {
+  const { data: results, error } = await supabase.rpc("get_chart_labels");
 
   if (error) {
     return {
