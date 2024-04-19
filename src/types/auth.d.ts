@@ -12,4 +12,5 @@ export type Service = {
   title: string;
   description: string;
   price: number;
+  created_at?: string;
 };
