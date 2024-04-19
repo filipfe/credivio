@@ -1,15 +1,10 @@
-import { Fragment } from "react";
+import { Fragment, useContext } from "react";
 import { signOut } from "@/lib/auth/actions";
 import { BreadcrumbItem, Breadcrumbs, Button } from "@nextui-org/react";
 import { AlignJustifyIcon, LogOutIcon, SettingsIcon } from "lucide-react";
 import { LINKS, SETTINGS_PAGES } from "@/const";
 import { usePathname } from "next/navigation";
-
-type Props = {
-  links?: Page[];
-  isMenuHidden: boolean;
-  setIsMenuHidden: React.Dispatch<React.SetStateAction<boolean>>;
-};
+import { MenuContext } from "@/app/(private)/providers";
 
 const settingsPage: Page = {
   href: "/settings",
@@ -18,7 +13,8 @@ const settingsPage: Page = {
   links: SETTINGS_PAGES,
 };
 
-export default function Header({ isMenuHidden, setIsMenuHidden }: Props) {
+export default function Header() {
+  const { isMenuHidden, setIsMenuHidden } = useContext(MenuContext);
   const pathname = usePathname();
   const flatten = (arr: Page[]): Page[] =>
     arr.flatMap(({ links, ...page }) => [page, ...flatten(links || [])]);
