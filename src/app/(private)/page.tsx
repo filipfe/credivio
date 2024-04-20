@@ -33,7 +33,7 @@ export default async function Home() {
   const totalProfit = totalIncome - totalExpenses;
   const expenseChartData = prepareChartData(expenses);
   return (
-    <div className="px-12 py-8 pb-24 flex flex-col xl:grid grid-cols-6 gap-6">
+    <div className="px-6 sm:px-10 py-6 sm:pt-8 sm:pb-24 flex flex-col xl:grid grid-cols-6 gap-6">
       <Stat
         title="Przychody"
         amount={totalIncome.toFixed(2).toString()}

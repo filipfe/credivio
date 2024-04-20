@@ -1,6 +1,5 @@
 import { getOwnRows } from "@/lib/general/actions";
 import { Fragment, Suspense } from "react";
-import StockTable from "./table";
 import TransactionTable from "./transactions-table";
 import Add from "../ui/cta/add";
 import { ChevronRightIcon } from "lucide-react";
