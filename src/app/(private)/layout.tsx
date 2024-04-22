@@ -1,5 +1,11 @@
-import { Providers } from "@/app/(private)/providers";
+import { WebVitals } from "@/components/web-vitals";
+import { Providers } from "./providers";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return <Providers>{children}</Providers>;
+  return (
+    <Providers>
+      <WebVitals />
+      {children}
+    </Providers>
+  );
 }

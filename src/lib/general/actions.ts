@@ -59,7 +59,6 @@ export async function getOwnRows<T>(
     );
 
     if (error) {
-      console.log(error);
       return { results: [], error: error.message };
     }
     return {
