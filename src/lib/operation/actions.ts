@@ -81,8 +81,9 @@ export async function getDashboardStats(): Promise<
   SupabaseResponse<DashboardStats>
 > {
   const supabase = createClient();
-  const { data: results, error } = await supabase.rpc("get_dashboard_stats");
-
+  const { data: results, error } = await supabase
+    .rpc("get_dashboard_stats")
+    .returns<DashboardStats[]>();
   if (error) {
     return {
       results: [],

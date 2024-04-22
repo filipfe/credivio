@@ -43,6 +43,12 @@ const config: Config = {
             },
             secondary: "#fdbb2d",
             content1: "#FFF",
+            content3: {
+              DEFAULT: "#F0F0F0",
+            },
+            content4: {
+              DEFAULT: "#e0e0e0",
+            },
           },
           layout: {
             hoverOpacity: 95,
