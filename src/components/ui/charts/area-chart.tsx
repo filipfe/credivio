@@ -2,14 +2,11 @@
 
 import {
   ResponsiveContainer,
-  LineChart as LineChartWrapper,
   Line,
   CartesianGrid,
   YAxis,
   XAxis,
-  AreaChart as AreaChartRecharts,
   Tooltip,
-  Area,
   LineChart,
 } from "recharts";
 
