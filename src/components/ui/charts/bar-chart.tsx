@@ -15,7 +15,14 @@ type Props = {
   data: ChartLabel[];
 };
 
-const renderCustomBarLabel = ({ payload, x, y, width, height, value }) => {
+const renderCustomBarLabel = ({
+  payload: _payload,
+  x,
+  y,
+  width,
+  height: _height,
+  value,
+}: any) => {
   return (
     <text x={x + width / 2} y={y} fill="#666" textAnchor="middle" dy={-6}>
       {value} zł
