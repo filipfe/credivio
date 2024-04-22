@@ -7,7 +7,7 @@ import NavLink from "./nav-link";
 
 export default function Nav() {
   const { isMenuHidden } = useContext(MenuContext);
-  const links = isMenuHidden ? LINKS : PAGES;
+  const links = isMenuHidden.desktop ? LINKS : PAGES;
   return (
     <nav className="flex flex-col gap-3">
       {links.map((group) => (

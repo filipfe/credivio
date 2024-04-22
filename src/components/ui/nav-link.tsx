@@ -27,15 +27,10 @@ export default function NavLink({
     : href === "/"
     ? pathname === "/"
     : pathname.startsWith(href);
-  return isGroup && !isMenuHidden ? (
+  return isGroup && !isMenuHidden.desktop ? (
     <div>
       <div className={`px-5 rounded-lg font-medium w-full text-font/70`}>
-        <span
-          style={{ fontSize: 13 }}
-          className={isMenuHidden ? "opacity-0 absolute" : "opacity-100"}
-        >
-          {title}
-        </span>
+        <span style={{ fontSize: 13 }}>{title}</span>
       </div>
       <div className="space-y-1.5 px-4 mt-1.5">
         {links?.map((link) => (
@@ -45,14 +40,18 @@ export default function NavLink({
     </div>
   ) : (
     <Link
-      className={`px-5 rounded-lg text-sm font-medium flex items-center gap-4 ${
+      className={`px-5 rounded-lg text-sm font-medium flex justify-center items-center gap-4 ${
         isActive ? "bg-light" : "hover:bg-light bg-white text-font/70"
       }`}
       href={href}
       style={{ fontSize: 13, height: 34 }}
     >
       <Icon size={15} />
-      <span className={isMenuHidden ? "opacity-0 absolute" : "opacity-100"}>
+      <span
+        className={`flex-1 ${
+          isMenuHidden.desktop ? "sm:opacity-0 sm:absolute" : "opacity-100"
+        }`}
+      >
         {title}
       </span>
     </Link>

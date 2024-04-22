@@ -5,17 +5,27 @@ type Props = {
   description: string;
   currency: string;
   stat: DashboardStat;
+  cta?: React.ReactNode;
 };
 
-export default function Stat({ title, description, currency, stat }: Props) {
+export default function Stat({
+  title,
+  description,
+  currency,
+  cta,
+  stat,
+}: Props) {
   const numberFormat = new Intl.NumberFormat("pl-PL", {
     style: "currency",
     currency,
   });
 
   return (
-    <div className="xl:col-span-2 bg-white rounded-lg py-8 px-10 space-y-4">
-      <h3 className="text-lg">{title}</h3>
+    <div className="xl:col-span-2 bg-white rounded-lg py-8 px-6 sm:px-10 space-y-4">
+      <div className="flex items-center gap-4 justify-between">
+        <h3 className="text-lg">{title}</h3>
+        {cta}
+      </div>
       <div className="flex items-center gap-2">
         <h4 className="text-3xl">{numberFormat.format(stat.amount)}</h4>
         {stat.difference ? (

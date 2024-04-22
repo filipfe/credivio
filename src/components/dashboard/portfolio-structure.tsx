@@ -63,7 +63,7 @@ export default async function PortfolioStructure() {
     .map((item, k) => ({ ...item, color: COLORS[k % COLORS.length] }));
 
   return (
-    <div className="bg-white rounded-lg py-8 px-10 space-y-4 col-span-6">
+    <div className="bg-white sm:rounded-md py-8 px-10 space-y-4 col-span-6">
       <div className="flex flex-col xl:grid grid-cols-5 gap-8 items-start">
         {/* <Accordion defaultExpandedKeys={[data[0].name]} className="col-span-3">
           {data.map(({ children, name, value, color, label }, k) => (

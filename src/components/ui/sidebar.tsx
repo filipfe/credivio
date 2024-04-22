@@ -1,15 +1,34 @@
+"use client";
+
 import NavLink from "./nav-link";
 import { SettingsIcon } from "lucide-react";
 import Nav from "./nav";
+import { useContext } from "react";
+import { MenuContext } from "@/app/(private)/providers";
 
 export default function Sidebar() {
+  const { isMenuHidden } = useContext(MenuContext);
   return (
-    // <div className="fixed z-50 sm:sticky top-20 w-screen">
-    <aside className="sm:sticky top-20 bg-white h-[calc(100vh-80px)] px-4 flex flex-col justify-between pb-4 relative z-50 max-w-max">
-      <Nav />
-      <NavLink title="Ustawienia" href="/settings" icon={SettingsIcon} />
-    </aside>
-    //   <div className="z-40 absolute inset-0 w-full h-full bg-font/40 sm:hidden"></div>
-    // </div>
+    <div>
+      <aside
+        className={`fixed sm:sticky top-16 sm:top-20 w-full bg-white h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] px-4 flex flex-col justify-between sm:pt-0 pt-4 pb-4 z-50 sm:transition-none transition-transform ${
+          isMenuHidden.desktop
+            ? "max-w-[15rem] sm:max-w-[6rem]"
+            : "max-w-[15rem]"
+        } ${
+          isMenuHidden.mobile
+            ? "-translate-x-[15rem] sm:translate-x-0"
+            : "translate-x-0"
+        }`}
+      >
+        <Nav />
+        <NavLink title="Ustawienia" href="/settings" icon={SettingsIcon} />
+      </aside>
+      <div
+        className={`fixed bg-font/20 backdrop-blur-md z-40 inset-0 w-screen h-screen sm:hidden ${
+          isMenuHidden.mobile ? "opacity-0 pointer-events-none" : "opacity-100"
+        } transition-opacity`}
+      ></div>
+    </div>
   );
 }

@@ -23,21 +23,23 @@ export default function Header() {
   );
   return (
     <Fragment>
-      <header className="h-20 sticky top-0 bg-white flex items-center justify-between z-50 px-4">
+      <header className="h-20 sticky top-0 bg-white items-center justify-between z-50 px-4 sm:flex hidden">
         <Button
-          onPress={() => setIsMenuHidden((prev) => !prev)}
+          onPress={() =>
+            setIsMenuHidden((prev) => ({ ...prev, desktop: !prev.desktop }))
+          }
           className={`rounded-full h-10 w-10 min-w-0 px-0 ml-auto ${
-            isMenuHidden ? "mr-auto" : ""
+            isMenuHidden.desktop ? "mr-auto" : ""
           }`}
           variant="light"
         >
           <AlignJustifyIcon size={20} />
         </Button>
       </header>
-      <header className="flex items-center gap-4 justify-between px-10 h-20 sticky top-0 bg-white z-50">
+      <header className="flex items-center gap-4 justify-between px-6 sm:px-10 h-16 sm:h-20 fixed sm:sticky top-0 left-0 bg-white z-50 w-full sm:w-auto">
         <Breadcrumbs
           itemClasses={{
-            item: "px-2 flex items-center gap-2.5 text-[13px] data-[current=true]:font-medium",
+            item: "px-2 flex items-center gap-2.5 text-[12px] sm:text-[13px] data-[current=true]:font-medium",
           }}
         >
           {links.map((link) => (
@@ -50,13 +52,21 @@ export default function Header() {
             </BreadcrumbItem>
           ))}
         </Breadcrumbs>
-        {/* )} */}
-        <form action={signOut}>
+        <form action={signOut} className="hidden sm:block">
           <button className="py-3 px-6 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-light bg-white">
             <LogOutIcon size={16} />
             Wyloguj
           </button>
         </form>
+        <Button
+          onPress={() =>
+            setIsMenuHidden((prev) => ({ ...prev, mobile: !prev.mobile }))
+          }
+          className="rounded-full h-10 w-10 min-w-0 px-0 sm:hidden"
+          variant="light"
+        >
+          <AlignJustifyIcon size={20} />
+        </Button>
       </header>
     </Fragment>
   );
