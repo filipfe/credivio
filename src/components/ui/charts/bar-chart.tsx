@@ -8,10 +8,19 @@ import {
   YAxis,
   XAxis,
   Cell,
+  Tooltip,
 } from "recharts";
 
 type Props = {
-  data: Option<number>[];
+  data: ChartLabel[];
+};
+
+const renderCustomBarLabel = ({ payload, x, y, width, height, value }) => {
+  return (
+    <text x={x + width / 2} y={y} fill="#666" textAnchor="middle" dy={-6}>
+      {value} zł
+    </text>
+  );
 };
 
 export default function BarChart({ data }: Props) {
@@ -23,17 +32,22 @@ export default function BarChart({ data }: Props) {
   return (
     <ResponsiveContainer width="100%" height={360}>
       <BarChartWrapper
-        data={data.sort((a, b) => b.value - a.value).slice(0, 4)}
-        margin={{ top: 0, left: 5, right: 0, bottom: 0 }}
+        data={data.map((e) => e)}
+        margin={{ top: 5, left: 0, right: 0, bottom: 0 }}
       >
-        <CartesianGrid vertical={false} />
+        <CartesianGrid vertical={false} opacity={0.5} />
         <YAxis
           tick={{ fontSize: 12 }}
-          dataKey="value"
+          dataKey="total_amount"
           tickFormatter={(value) => numberFormat.format(value)}
         />
         <XAxis interval={0} dataKey="name" tick={{ fontSize: 14 }} />
-        <Bar maxBarSize={120} dataKey="value" radius={[24, 24, 0, 0]}>
+        <Bar
+          maxBarSize={120}
+          dataKey="total_amount"
+          radius={[24, 24, 0, 0]}
+          label={renderCustomBarLabel}
+        >
           {data.map((item, k) => (
             <Cell fill={k % 2 === 0 ? "#177981" : "#ffc000"} key={item.name} />
           ))}
