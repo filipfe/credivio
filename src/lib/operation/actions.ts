@@ -14,29 +14,11 @@ export async function addOperations(
   try {
     let results: Operation[] = JSON.parse(data);
     const supabase = createClient();
+
     if (label) {
-      const { data: existingLabel } = await supabase
-        .from("labels")
-        .select("id")
-        .eq("title", label)
-        .single();
-      if (existingLabel) {
-        results = results.map((item) => ({ ...item, label: existingLabel.id }));
-      } else {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        const { data: newLabel } = await supabase
-          .from("labels")
-          .insert({ title: label, user_id: user?.id })
-          .select("id")
-          .single();
-        results = results.map((item) => ({
-          ...item,
-          label: newLabel ? newLabel.id : null,
-        }));
-      }
+      results = results.map((item) => ({ ...item, label }));
     }
+
     const { error } = await supabase.from(`${type}s`).insert(results);
 
     if (error) {
