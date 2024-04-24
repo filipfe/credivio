@@ -49,6 +49,9 @@ const config: Config = {
             content4: {
               DEFAULT: "#e0e0e0",
             },
+            default: {
+              "100": "#FAFAFA",
+            },
           },
           layout: {
             hoverOpacity: 95,

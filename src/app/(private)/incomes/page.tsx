@@ -1,6 +1,5 @@
 import IncomeTable from "@/components/operation/table";
-import Add from "@/components/ui/cta/add";
-import OperationList from "@/components/operation/list";
+import Block from "@/components/ui/block";
 import { getOwnRows } from "@/lib/general/actions";
 
 export default async function Page({
@@ -13,7 +12,7 @@ export default async function Page({
     searchParams
   );
   return (
-    <div className="px-12 pt-8 pb-24 flex flex-col h-full gap-8">
+    <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-8 lg:grid grid-cols-2">
       {incomes.length > 0 && (
         <IncomeTable
           title="Przychody"
@@ -22,14 +21,9 @@ export default async function Page({
           type="income"
         />
       )}
-      {incomes.length > 0 ? (
-        <OperationList operations={incomes} type="income" />
-      ) : (
-        <div className="text-center flex-1 justify-center flex flex-col items-center gap-4">
-          <p>Nie masz jeszcze żadnych przychodów!</p>
-          <Add type="income" />
-        </div>
-      )}
+      <Block>
+        <div></div>
+      </Block>
     </div>
   );
 }

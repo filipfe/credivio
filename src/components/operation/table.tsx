@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -10,9 +10,12 @@ import {
   TableCell,
   Spinner,
   Pagination,
+  ScrollShadow,
 } from "@nextui-org/react";
 import useTableQuery from "@/hooks/useTableQuery";
-import TopContent from "../ui/table/top-content";
+import TopContent, { LabelSelect } from "../ui/table/top-content";
+import Block from "../ui/block";
+import Add from "../ui/cta/add";
 
 export default function OperationTable({
   rows,
@@ -39,27 +42,13 @@ export default function OperationTable({
     setIsLoading(false);
   }, [rows]);
 
-  const bottomContent = useMemo(
-    () => (
-      <Pagination
-        isCompact
-        showControls
-        color="primary"
-        className="text-background mt-2 ml-auto mr-2"
-        page={page}
-        isDisabled={isLoading}
-        total={pages}
-        onChange={handlePageChange}
-      />
-    ),
-    [rows, page, pages, isLoading]
-  );
-
   const columns = useCallback(
     (hasLabel: boolean) => [
       { key: "issued_at", label: "DATA" },
       { key: "title", label: "TYTUŁ" },
-      { key: "description", label: "OPIS" },
+      ...(items.some((item) => item.description)
+        ? [{ key: "description", label: "OPIS" }]
+        : []),
       { key: "amount", label: "KWOTA" },
       { key: "currency", label: "WALUTA" },
       ...(hasLabel ? [{ key: "label", label: "ETYKIETA" }] : []),
@@ -107,66 +96,98 @@ export default function OperationTable({
   }, []);
 
   return (
-    <div className="bg-white rounded-lg py-8 px-10 flex flex-col gap-4">
-      <Table
-        shadow="none"
-        color="primary"
-        sortDescriptor={{
-          column: sort?.includes("-") ? sort?.split("-")[1] : sort?.toString(),
-          direction: sort?.includes("-") ? "descending" : "ascending",
-        }}
-        onSortChange={handleSort}
-        topContent={
-          <TopContent
-            {...props}
-            rows={rows}
-            handleSearch={handleSearch}
-            search={search}
-            labels={labels}
-            handleLabelChange={handleLabelChange}
-            label={label}
-          />
-        }
-        topContentPlacement="outside"
-        bottomContent={count > 0 && bottomContent}
-        bottomContentPlacement="outside"
-        aria-label="operations-table"
-        className="max-w-full w-full flex-1"
-        checkboxesProps={{
-          classNames: {
-            wrapper: "text-background",
-          },
-        }}
-        classNames={{
-          wrapper: "p-0",
-        }}
-      >
-        <TableHeader>
-          {columns(rows.some((item) => item.label)).map((column) => (
-            <TableColumn
-              key={column.key}
-              allowsSorting={count > 0 && !viewOnly ? true : undefined}
-            >
-              {column.label}
-            </TableColumn>
-          ))}
-        </TableHeader>
-        <TableBody
-          items={viewOnly ? items : rows}
-          isLoading={isLoading}
-          emptyContent="Nie znaleziono operacji"
-          loadingContent={<Spinner />}
+    <Block
+      title={props.title}
+      className="w-screen sm:w-auto"
+      hideTitleMobile
+      cta={
+        <TopContent
+          {...props}
+          rows={rows}
+          handleSearch={handleSearch}
+          search={search}
+          labels={labels}
+          handleLabelChange={handleLabelChange}
+          label={label}
+        />
+      }
+    >
+      <ScrollShadow orientation="horizontal" hideScrollBar>
+        <Table
+          removeWrapper
+          shadow="none"
+          color="primary"
+          sortDescriptor={{
+            column: sort?.includes("-")
+              ? sort?.split("-")[1]
+              : sort?.toString(),
+            direction: sort?.includes("-") ? "descending" : "ascending",
+          }}
+          onSortChange={handleSort}
+          topContentPlacement="outside"
+          bottomContentPlacement="outside"
+          aria-label="operations-table"
+          className="max-w-full w-full flex-1"
+          checkboxesProps={{
+            classNames: {
+              wrapper: "text-background",
+            },
+          }}
         >
-          {(operation) => (
-            <TableRow key={operation.id} className="hover:bg-[#f7f7f8]">
-              {(columnKey) => (
-                <TableCell>{renderCell(operation, columnKey)}</TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+          <TableHeader>
+            {columns(rows.some((item) => item.label)).map((column) => (
+              <TableColumn
+                key={column.key}
+                allowsSorting={count > 0 && !viewOnly ? true : undefined}
+              >
+                {column.label}
+              </TableColumn>
+            ))}
+          </TableHeader>
+          <TableBody
+            items={viewOnly ? items : rows}
+            isLoading={isLoading}
+            emptyContent="Nie znaleziono operacji"
+            loadingContent={<Spinner />}
+          >
+            {(operation) => (
+              <TableRow key={operation.id} className="hover:bg-[#f7f7f8]">
+                {(columnKey) => (
+                  <TableCell>{renderCell(operation, columnKey)}</TableCell>
+                )}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </ScrollShadow>
+      {count > 0 && (
+        <div className="flex items-center justify-between gap-8 mt-2">
+          <div className="sm:hidden">
+            <LabelSelect
+              label={label}
+              labels={labels}
+              handleLabelChange={handleLabelChange}
+            />
+          </div>
+          <div className="hidden sm:block"></div>
+          <Pagination
+            size="sm"
+            isCompact
+            showControls
+            showShadow={false}
+            color="primary"
+            className="text-background"
+            classNames={{
+              wrapper: "!shadow-none",
+            }}
+            page={page}
+            isDisabled={isLoading}
+            total={pages}
+            onChange={handlePageChange}
+          />
+        </div>
+      )}
       {children}
-    </div>
+    </Block>
   );
 }
