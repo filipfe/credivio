@@ -1,6 +1,6 @@
 "use client";
 
-import { Input, Pagination, Spinner } from "@nextui-org/react";
+import { Pagination, Spinner } from "@nextui-org/react";
 import {
   SortDescriptor,
   Table,
@@ -12,9 +12,8 @@ import {
 } from "@nextui-org/table";
 import Add from "../ui/cta/add";
 import { TRANSACTION_TYPES } from "@/const";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import useTableQuery from "@/hooks/useTableQuery";
-import { SearchIcon } from "lucide-react";
 import TopContent from "../ui/table/top-content";
 
 const columns = ({
@@ -28,7 +27,7 @@ const columns = ({
     ? [{ key: "issued_at", label: "DATA ZAWARCIA" }]
     : []),
   { key: "symbol", label: "INSTRUMENT" },
-  { key: "transaction_type", label: "TYP TRANSAKCJI" },
+  { key: "transaction_type", label: "TRANSAKCJA" },
   { key: "quantity", label: "ILOŚĆ" },
   { key: "price", label: "CENA" },
   ...(!viewOnly && !simplified ? [{ key: "value", label: "WARTOŚĆ" }] : []),
@@ -78,23 +77,6 @@ export default function TransactionTable({
     }
   }, []);
 
-  const topContent = useMemo(() => {
-    return (
-      <div className="flex items-center gap-4 justify-between h-10">
-        <h2 className="text-lg">{title}</h2>
-        <Input
-          isClearable
-          className="sm:max-w-[22%]"
-          placeholder="Wyszukaj"
-          startContent={<SearchIcon />}
-          defaultValue={search}
-          onValueChange={handleSearch}
-        />
-        {!viewOnly && count > 0 && <Add type={"stocks/transaction"} />}
-      </div>
-    );
-  }, [page, pages, rows, isLoading]);
-
   const bottomContent = useMemo(() => {
     return (
       <Pagination
@@ -112,9 +94,10 @@ export default function TransactionTable({
       />
     );
   }, [page, pages, rows, isLoading]);
-  const [syf, setSyf] = useState(false);
+
   return (
     <Table
+      removeWrapper
       shadow="none"
       color="primary"
       aria-label="transactions-table"
@@ -135,7 +118,6 @@ export default function TransactionTable({
       topContent={
         !simplified && (
           <TopContent
-            title={title}
             type={"stocks/transaction"}
             rows={rows}
             handleSearch={handleSearch}
@@ -161,6 +143,7 @@ export default function TransactionTable({
           <TableColumn
             key={column.key}
             allowsSorting={count > 0 && !viewOnly ? true : undefined}
+            className="sm:h-10 h-8 text-tiny"
           >
             {column.label}
           </TableColumn>

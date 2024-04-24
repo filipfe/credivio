@@ -15,10 +15,15 @@ type Props = {
 };
 
 export default function AreaChart({ data }: Props) {
-  const numberFormat = new Intl.NumberFormat("pl-PL", {
+  const compact = new Intl.NumberFormat("pl-PL", {
     style: "currency",
     currency: "PLN",
     notation: "compact",
+  });
+  const standard = new Intl.NumberFormat("pl-PL", {
+    style: "currency",
+    currency: "PLN",
+    notation: "standard",
   });
 
   return (
@@ -36,7 +41,7 @@ export default function AreaChart({ data }: Props) {
         <YAxis
           tick={{ fontSize: 12 }}
           dataKey="total_amount"
-          tickFormatter={(value) => numberFormat.format(value)}
+          tickFormatter={(value) => compact.format(value)}
         />
         <XAxis
           dataKey="date"
@@ -46,7 +51,10 @@ export default function AreaChart({ data }: Props) {
         />
         <CartesianGrid opacity={0.5} strokeWidth={1} />
         <Tooltip
-          formatter={(value, name, props) => [value + " zł", "Budżet"]}
+          formatter={(value, name, props) => [
+            standard.format(parseFloat(value.toString())),
+            "Budżet",
+          ]}
         />
         <Line
           type="monotone"

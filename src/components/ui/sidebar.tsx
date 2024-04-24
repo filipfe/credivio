@@ -3,15 +3,27 @@
 import NavLink from "./nav-link";
 import { SettingsIcon } from "lucide-react";
 import Nav from "./nav";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { MenuContext } from "@/app/(private)/providers";
 
 export default function Sidebar() {
-  const { isMenuHidden } = useContext(MenuContext);
+  const { isMenuHidden, setIsMenuHidden } = useContext(MenuContext);
+
+  useEffect(() => {
+    const onResize = () => {
+      // We execute the same script as before
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+    };
+  }, []);
   return (
     <div>
       <aside
-        className={`fixed sm:sticky top-16 sm:top-20 w-full bg-white h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] px-4 flex flex-col justify-between sm:pt-0 pt-4 pb-4 z-50 sm:transition-none transition-transform ${
+        className={`fixed sm:sticky top-16 bottom-0 left-0 sm:top-20 w-full bg-white sm:h-[calc(100vh-80px)] px-4 flex flex-col justify-between sm:pt-0 pt-4 pb-4 z-50 sm:transition-none transition-transform ${
           isMenuHidden.desktop
             ? "max-w-[15rem] sm:max-w-[6rem]"
             : "max-w-[15rem]"
@@ -25,7 +37,8 @@ export default function Sidebar() {
         <NavLink title="Ustawienia" href="/settings" icon={SettingsIcon} />
       </aside>
       <div
-        className={`fixed bg-font/20 backdrop-blur-md z-40 inset-0 w-screen h-screen sm:hidden ${
+        onClick={() => setIsMenuHidden((prev) => ({ ...prev, mobile: false }))}
+        className={`fixed bg-font/20 backdrop-blur-sm z-40 inset-0 w-screen h-screen sm:hidden ${
           isMenuHidden.mobile ? "opacity-0 pointer-events-none" : "opacity-100"
         } transition-opacity`}
       ></div>
