@@ -1,8 +1,9 @@
 import { getSpecificStocks } from "@/lib/stocks/actions";
 import Block from "../ui/block";
 import Add from "../ui/cta/add";
-import StockTable from "./table";
 import getStockHoldings from "@/utils/stocks/get-stock-holdings";
+import { ScrollShadow } from "@nextui-org/react";
+import StockTable from "./table";
 
 export default async function OwnStocks({
   stocks,
@@ -29,9 +30,11 @@ export default async function OwnStocks({
     .slice(0, 6);
 
   return (
-    <Block title="Moje instrumenty" className="col-span-2">
+    <Block title="Moje instrumenty" className="col-span-2 w-screen sm:w-auto">
       {stocks.length > 0 ? (
-        <StockTable quantityVisible simplified stocks={ownStocks} />
+        <ScrollShadow className="w-full" hideScrollBar orientation="horizontal">
+          <StockTable quantityVisible simplified stocks={ownStocks} />
+        </ScrollShadow>
       ) : (
         <div className="text-center flex-1 justify-center flex flex-col items-center gap-2">
           <p className="text-sm text-font/80">
