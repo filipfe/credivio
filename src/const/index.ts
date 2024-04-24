@@ -152,7 +152,7 @@ export const SETTINGS_PAGES: Page[] = [
     href: "/settings/account",
     icon: UserCogIcon,
     description:
-      "Kliknij tutaj, aby zarządzać ustawieniami wyświetlania, powiadomień i innymi.",
+      "Zarządzaj swoimi danymi, ustawieniami prywatności, bezpieczeństwem i nie tylko.",
   },
 ];
 
@@ -169,7 +169,8 @@ export const ADD_METHODS: AddMethod[] = [
   },
 ];
 
-export const CURRENCIES = ["USD", "PLN", "GBP", "AUD"];
+export const CURRENCIES = ["PLN", "USD", "EUR", "GBP", "CHF"];
+export const LANGUAGES = ["Polski", "English"];
 
 export const TRANSACTION_TYPES: Option<string>[] = [
   {

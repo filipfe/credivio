@@ -1,6 +1,7 @@
 "use server";
 
 import { Account } from "@/types/auth";
+import { Preferences } from "@/types/settings";
 import { createClient } from "@/utils/supabase/server";
 import { PostgrestError } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
@@ -35,6 +36,48 @@ export async function getAccount(): Promise<SupabaseResponse<Account>> {
     error: "Not found",
     results: [],
   };
+}
+
+export async function getPreferences(): Promise<SupabaseResponse<Preferences>> {
+  const supabase = createClient();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError) {
+    return {
+      error: authError.message,
+      results: [],
+    };
+  }
+
+  const data = {
+    currency: user?.user_metadata.currency,
+    language: user?.user_metadata.language,
+  };
+
+  return {
+    results: [{ ...data }],
+  };
+}
+
+export async function updatePreferences(formData: FormData) {
+  const supabase = createClient();
+  const data = {
+    currency: formData.get("currency"),
+    language: formData.get("language"),
+  };
+
+  const { error } = await supabase.auth.updateUser({
+    data: data,
+  });
+
+  if (error) {
+    return {
+      error: error.message,
+    };
+  }
 }
 
 export async function activateService(
