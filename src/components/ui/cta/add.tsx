@@ -1,19 +1,21 @@
-import { Button } from "@nextui-org/react";
+import { Button, cn } from "@nextui-org/react";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 
 export default function Add({
   type,
   size,
+  className,
 }: {
   type: string;
   size?: "sm" | "md" | "lg";
+  className?: string;
 }) {
   return (
     <Link href={`${process.env.NEXT_PUBLIC_SITE_URL}/${type}s/add`}>
       <Button
         color="primary"
-        className="font-medium"
+        className={cn("font-medium", className)}
         size={size}
         variant="flat"
         as="div"

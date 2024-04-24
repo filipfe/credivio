@@ -6,6 +6,7 @@ type Props = {
   children: React.ReactNode;
   className?: string;
   mobileRadius?: boolean;
+  hideTitleMobile?: boolean;
 };
 
 export default function Block({
@@ -14,6 +15,7 @@ export default function Block({
   className,
   mobileRadius,
   title,
+  hideTitleMobile,
 }: Props) {
   return (
     <article
@@ -26,7 +28,13 @@ export default function Block({
       {title && (
         <div className="flex items-center gap-4 justify-between mb-1 sm:mb-2">
           {typeof title === "string" ? (
-            <h2 className="sm:text-lg text-base">{title}</h2>
+            <h2
+              className={`sm:text-lg text-base ${
+                hideTitleMobile ? "hidden sm:block" : "block"
+              }`}
+            >
+              {title}
+            </h2>
           ) : (
             title
           )}

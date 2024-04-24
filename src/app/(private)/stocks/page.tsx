@@ -17,7 +17,7 @@ const STOCK_INDEXES: StocksIndex[] = [
 
 export default function Page() {
   return (
-    <div className="sm:px-12 pt-4 sm:pt-8 pb-24 flex flex-col h-full">
+    <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full">
       <div className="flex flex-col xl:grid grid-cols-6 gap-4 sm:gap-8">
         <Suspense
           fallback={
