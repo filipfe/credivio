@@ -7,11 +7,11 @@ import { useContext } from "react";
 import { MenuContext } from "@/app/(private)/providers";
 
 export default function Sidebar() {
-  const { isMenuHidden } = useContext(MenuContext);
+  const { isMenuHidden, setIsMenuHidden } = useContext(MenuContext);
   return (
     <div>
       <aside
-        className={`fixed sm:sticky top-16 sm:top-20 w-full bg-white h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] px-4 flex flex-col justify-between sm:pt-0 pt-4 pb-4 z-50 sm:transition-none transition-transform ${
+        className={`fixed sm:sticky sm:top-20 w-full bg-white h-screen sm:h-[calc(100vh-80px)] px-4 flex flex-col justify-between sm:pt-0 pt-4 pb-4 z-50 sm:transition-none transition-transform ${
           isMenuHidden.desktop
             ? "max-w-[15rem] sm:max-w-[6rem]"
             : "max-w-[15rem]"
@@ -25,7 +25,8 @@ export default function Sidebar() {
         <NavLink title="Ustawienia" href="/settings" icon={SettingsIcon} />
       </aside>
       <div
-        className={`fixed bg-font/20 backdrop-blur-md z-40 inset-0 w-screen h-screen sm:hidden ${
+        onClick={() => setIsMenuHidden((prev) => ({ ...prev, mobile: false }))}
+        className={`fixed bg-font/20 backdrop-blur-sm z-40 inset-0 w-screen h-screen sm:hidden ${
           isMenuHidden.mobile ? "opacity-0 pointer-events-none" : "opacity-100"
         } transition-opacity`}
       ></div>

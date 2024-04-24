@@ -75,6 +75,7 @@ export default function StockTable({
   );
   return (
     <Table
+      removeWrapper
       shadow="none"
       color="primary"
       className="max-w-full w-full flex-1"
@@ -82,9 +83,6 @@ export default function StockTable({
         classNames: {
           wrapper: "text-background",
         },
-      }}
-      classNames={{
-        wrapper: "p-0",
       }}
     >
       <TableHeader>

@@ -91,9 +91,7 @@ export default function DividendsTable({
       aria-label="dividend-table"
       color="primary"
       className="max-w-full w-full flex-1 rounded-t-lg"
-      classNames={{
-        wrapper: "p-0",
-      }}
+      removeWrapper
     >
       <TableHeader>
         {columns({ profitVisible: !!holdings, simplified }).map((column) => (

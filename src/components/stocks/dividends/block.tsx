@@ -1,5 +1,5 @@
 import Block from "@/components/ui/block";
-import { Button } from "@nextui-org/react";
+import { Button, ScrollShadow } from "@nextui-org/react";
 import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import DividendsTable from "./dividends-table";
@@ -14,23 +14,21 @@ export default async function Dividends() {
   return (
     <Block
       title="Dywidendy"
-      className="col-span-2"
-      cta={
-        <Link href="/stocks/dividends">
-          <Button
-            as="div"
-            size="sm"
-            color="primary"
-            variant="light"
-            className="h-7"
-          >
-            <span className="mb-px">Więcej</span>
-            <ChevronRightIcon size={14} />
-          </Button>
-        </Link>
-      }
+      className="col-span-2 w-screen sm:w-auto"
+      cta={cta}
     >
-      <DividendsTable dividends={orderedDividends} simplified />
+      <ScrollShadow hideScrollBar orientation="horizontal">
+        <DividendsTable dividends={orderedDividends} simplified />
+      </ScrollShadow>
     </Block>
   );
 }
+
+const cta = (
+  <Link href="/stocks/dividends">
+    <Button as="div" size="sm" color="primary" variant="light" className="h-7">
+      <span className="mb-px">Więcej</span>
+      <ChevronRightIcon size={14} />
+    </Button>
+  </Link>
+);
