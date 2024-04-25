@@ -1,6 +1,5 @@
 "use client";
 
-import { Service } from "@/types/auth";
 import {
   Dispatch,
   ReactNode,

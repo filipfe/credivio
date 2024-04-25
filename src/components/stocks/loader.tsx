@@ -10,7 +10,7 @@ export default function Loader({ className, records = 4 }: Props) {
       title={<Skeleton className="h-7 rounded-full w-full max-w-28" />}
       cta={<Skeleton className="h-5 rounded-full w-full max-w-16" />}
     >
-      <Skeleton className="h-9 rounded-full w-full" />
+      <Skeleton className="h-9 rounded-full w-full mb-4" />
       {Array.from(Array(records)).map((_, k) => (
         <Skeleton
           className={`h-5 rounded-full w-full ${
