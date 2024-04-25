@@ -1,11 +1,9 @@
-import { User } from "@supabase/supabase-js";
-
-export type Account = User & {
+type Account = User & {
   first_name: string;
   last_name: string;
 };
 
-export type Service = {
+type Service = {
   id: string;
   name: string;
   href: string;

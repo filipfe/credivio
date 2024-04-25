@@ -1,5 +1,6 @@
 "use client";
 
+import { createClient } from "@/utils/supabase/client";
 import {
   Button,
   Dropdown,
@@ -14,13 +15,34 @@ import {
   PlusIcon,
   Wallet2Icon,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function MobileActions() {
+  const [areLoading, setAreLoading] = useState(true);
+  const [services, setServices] = useState<Service[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    (async () => {
+      const { data } = await supabase
+        .from("user_services")
+        .select("services(href)");
+      console.log(data);
+      const results = data ? data.flatMap((item) => item.services) : [];
+      setServices(results as Service[]);
+      setAreLoading(false);
+    })();
+  }, []);
+
   return (
     <div className="fixed z-30 bottom-4 right-6 sm:hidden">
-      <Dropdown isOpen={isOpen} onOpenChange={setIsOpen} closeOnSelect={false}>
+      <Dropdown
+        isOpen={isOpen}
+        onOpenChange={setIsOpen}
+        isDisabled={areLoading}
+        disableAnimation
+      >
         <DropdownTrigger>
           <Button
             variant="shadow"
@@ -28,6 +50,7 @@ export default function MobileActions() {
             color="primary"
             isIconOnly
             radius="full"
+            className="[&[aria-expanded=true]]:scale-100"
           >
             <PlusIcon
               size={24}
@@ -42,6 +65,7 @@ export default function MobileActions() {
             <DropdownItem
               description="Dodaj nowy wydatek"
               key="new-expense"
+              href="/expenses/add"
               startContent={<CoinsIcon size={16} />}
             >
               Nowy wydatek
@@ -50,6 +74,7 @@ export default function MobileActions() {
               key="new-income"
               startContent={<Wallet2Icon size={16} />}
               description="Dodaj nowy przychód"
+              href="/incomes/add"
             >
               Nowy przychód
             </DropdownItem>
@@ -58,6 +83,7 @@ export default function MobileActions() {
             <DropdownItem
               description="Dodaj nową transakcję"
               key="new-stock-transaction"
+              href="/stocks/transactions/add"
               startContent={<AlignHorizontalDistributeCenterIcon size={16} />}
             >
               Nowa akcja
