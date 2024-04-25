@@ -1,5 +1,4 @@
 import Block from "@/components/ui/block";
-import { Service } from "@/types/auth";
 import { ScrollShadow } from "@nextui-org/react";
 import ServiceRef from "./ref";
 
