@@ -40,8 +40,9 @@ export default function MobileActions() {
         isOpen={isOpen}
         onOpenChange={setIsOpen}
         isDisabled={areLoading}
+        className="fixed !right-6 !left-6 bottom-24 w-auto sm:hidden"
         disableAnimation
-        className="fixed right-6 left-6 bottom-24 w-auto sm:hidden"
+        backdrop="opaque"
       >
         <DropdownTrigger>
           <Button
