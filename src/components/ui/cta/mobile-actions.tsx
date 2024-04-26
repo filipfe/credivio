@@ -42,7 +42,6 @@ export default function MobileActions() {
         isDisabled={areLoading}
         className="fixed !right-6 !left-6 bottom-24 w-auto sm:hidden"
         disableAnimation
-        backdrop="opaque"
       >
         <DropdownTrigger>
           <Button

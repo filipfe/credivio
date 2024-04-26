@@ -15,7 +15,6 @@ import {
 import useTableQuery from "@/hooks/useTableQuery";
 import TopContent, { LabelSelect } from "../ui/table/top-content";
 import Block from "../ui/block";
-import Add from "../ui/cta/add";
 
 export default function OperationTable({
   rows,
@@ -98,7 +97,7 @@ export default function OperationTable({
   return (
     <Block
       title={props.title}
-      className="w-screen sm:w-auto"
+      className="w-screen sm:w-full"
       hideTitleMobile
       cta={
         <TopContent
@@ -161,30 +160,32 @@ export default function OperationTable({
         </Table>
       </ScrollShadow>
       {count > 0 && (
-        <div className="flex items-center justify-between gap-8 mt-2">
-          <div className="sm:hidden">
-            <LabelSelect
-              label={label}
-              labels={labels}
-              handleLabelChange={handleLabelChange}
+        <div className="mt-2 flex-1 flex items-end justify-end">
+          <div className="flex items-center justify-between gap-8">
+            <div className="sm:hidden">
+              <LabelSelect
+                label={label}
+                labels={labels}
+                handleLabelChange={handleLabelChange}
+              />
+            </div>
+            <div className="hidden sm:block"></div>
+            <Pagination
+              size="sm"
+              isCompact
+              showControls
+              showShadow={false}
+              color="primary"
+              className="text-background"
+              classNames={{
+                wrapper: "!shadow-none",
+              }}
+              page={page}
+              isDisabled={isLoading}
+              total={pages}
+              onChange={handlePageChange}
             />
           </div>
-          <div className="hidden sm:block"></div>
-          <Pagination
-            size="sm"
-            isCompact
-            showControls
-            showShadow={false}
-            color="primary"
-            className="text-background"
-            classNames={{
-              wrapper: "!shadow-none",
-            }}
-            page={page}
-            isDisabled={isLoading}
-            total={pages}
-            onChange={handlePageChange}
-          />
         </div>
       )}
       {children}
