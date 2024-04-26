@@ -39,7 +39,8 @@ export default function Header() {
       <header className="flex items-center gap-4 justify-between px-6 sm:px-10 h-16 sm:h-20 fixed sm:sticky top-0 left-0 bg-white z-50 w-full sm:w-auto">
         <Breadcrumbs
           itemClasses={{
-            item: "px-2 flex items-center gap-2.5 text-[12px] sm:text-[13px] data-[current=true]:font-medium",
+            item: "px-2 flex items-center gap-1.5 sm:gap-2.5 text-[12px] sm:text-[13px] data-[current=true]:font-medium",
+            separator: "px-0 sm:px-1",
           }}
         >
           {links.map((link) => (

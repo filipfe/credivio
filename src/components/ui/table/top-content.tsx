@@ -38,10 +38,8 @@ export default function TopContent({
         defaultValue={search}
         onValueChange={handleSearch}
       />
-      <div className="flex items-center gap-4">
-        <div className="hidden sm:block">
-          <LabelSelect {...props} />
-        </div>
+      <div className="items-center gap-4 hidden sm:flex">
+        <LabelSelect {...props} />
         {type && rows.length > 0 && (
           <Add size="sm" type={type} className="!h-9" />
         )}

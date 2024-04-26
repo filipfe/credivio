@@ -28,7 +28,6 @@ export default function MobileActions() {
       const { data } = await supabase
         .from("user_services")
         .select("services(href)");
-      console.log(data);
       const results = data ? data.flatMap((item) => item.services) : [];
       setServices(results as Service[]);
       setAreLoading(false);
@@ -36,12 +35,13 @@ export default function MobileActions() {
   }, []);
 
   return (
-    <div className="fixed z-30 bottom-4 right-6 sm:hidden">
+    <div className="fixed z-30 bottom-8 right-6 sm:hidden">
       <Dropdown
         isOpen={isOpen}
         onOpenChange={setIsOpen}
         isDisabled={areLoading}
         disableAnimation
+        className="fixed right-6 left-6 bottom-24 w-auto sm:hidden"
       >
         <DropdownTrigger>
           <Button
@@ -50,7 +50,7 @@ export default function MobileActions() {
             color="primary"
             isIconOnly
             radius="full"
-            className="[&[aria-expanded=true]]:scale-100"
+            className="[&[aria-expanded=true]]:scale-100 [&[aria-expanded=true]]:opacity-100 h-14 w-14"
           >
             <PlusIcon
               size={24}
