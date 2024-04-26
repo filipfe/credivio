@@ -1,6 +1,6 @@
 "use client";
 
-import { Pagination, Spinner } from "@nextui-org/react";
+import { Pagination, ScrollShadow, Spinner } from "@nextui-org/react";
 import {
   SortDescriptor,
   Table,
@@ -12,9 +12,10 @@ import {
 } from "@nextui-org/table";
 import Add from "../ui/cta/add";
 import { TRANSACTION_TYPES } from "@/const";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect } from "react";
 import useTableQuery from "@/hooks/useTableQuery";
 import TopContent from "../ui/table/top-content";
+import Block from "../ui/block";
 
 const columns = ({
   viewOnly,
@@ -41,6 +42,9 @@ export default function TransactionTable({
   simplified,
   viewOnly,
   title,
+  children,
+
+  topContent,
 }: TableProps<StockTransaction>) {
   const pages = Math.ceil(count / 10);
   const {
@@ -77,105 +81,104 @@ export default function TransactionTable({
     }
   }, []);
 
-  const bottomContent = useMemo(() => {
-    return (
-      <Pagination
-        isCompact
-        showControls
-        color="primary"
-        className="text-background mt-2 ml-auto mr-2"
-        page={page}
-        isDisabled={isLoading}
-        total={pages}
-        onChange={(page: number) => {
-          !viewOnly && setIsLoading(true);
-          setSearchQuery((prev) => ({ ...prev, page }));
-        }}
-      />
-    );
-  }, [page, pages, rows, isLoading]);
-
   return (
-    <Table
-      removeWrapper
-      shadow="none"
-      color="primary"
-      aria-label="transactions-table"
-      sortDescriptor={{
-        column: sort?.includes("-") ? sort?.split("-")[1] : sort?.toString(),
-        direction: sort?.includes("-") ? "descending" : "ascending",
-      }}
-      onSortChange={(descriptor: SortDescriptor) => {
-        !viewOnly && setIsLoading(true);
-        setSearchQuery((prev) => ({
-          ...prev,
-          page: 1,
-          sort:
-            (descriptor.direction === "descending" ? "-" : "") +
-            descriptor.column,
-        }));
-      }}
-      topContent={
-        !simplified && (
-          <TopContent
-            type={"stocks/transaction"}
-            rows={rows}
-            handleSearch={handleSearch}
-            search={search}
-          />
-        )
+    <Block
+      title={title}
+      className="w-screen sm:w-full"
+      hideTitleMobile
+      cta={
+        topContent
+          ? topContent
+          : !simplified && (
+              <TopContent
+                rows={rows}
+                handleSearch={handleSearch}
+                search={search}
+                type="stocks/transaction"
+              />
+            )
       }
-      topContentPlacement="outside"
-      bottomContent={count > 0 && !simplified && bottomContent}
-      bottomContentPlacement="outside"
-      className="max-w-full w-full flex-1"
-      checkboxesProps={{
-        classNames: {
-          wrapper: "text-background",
-        },
-      }}
-      classNames={{
-        wrapper: "p-0",
-      }}
     >
-      <TableHeader>
-        {columns({ viewOnly: !!viewOnly, simplified }).map((column) => (
-          <TableColumn
-            key={column.key}
-            allowsSorting={count > 0 && !viewOnly ? true : undefined}
-            className="sm:h-10 h-8 text-tiny"
+      <ScrollShadow orientation="horizontal" hideScrollBar>
+        <Table
+          removeWrapper
+          shadow="none"
+          color="primary"
+          aria-label="transactions-table"
+          sortDescriptor={{
+            column: sort?.includes("-")
+              ? sort?.split("-")[1]
+              : sort?.toString(),
+            direction: sort?.includes("-") ? "descending" : "ascending",
+          }}
+          onSortChange={(descriptor: SortDescriptor) => {
+            !viewOnly && setIsLoading(true);
+            setSearchQuery((prev) => ({
+              ...prev,
+              page: 1,
+              sort:
+                (descriptor.direction === "descending" ? "-" : "") +
+                descriptor.column,
+            }));
+          }}
+          className="max-w-full w-full flex-1"
+        >
+          <TableHeader>
+            {columns({ viewOnly: !!viewOnly, simplified }).map((column) => (
+              <TableColumn
+                key={column.key}
+                allowsSorting={count > 0 && !viewOnly ? true : undefined}
+                className="sm:h-10 h-8 text-tiny"
+              >
+                {column.label}
+              </TableColumn>
+            ))}
+          </TableHeader>
+          <TableBody
+            isLoading={isLoading}
+            loadingContent={<Spinner />}
+            items={viewOnly ? items : rows}
+            emptyContent={
+              <div className="text-center flex-1 justify-center flex flex-col items-center gap-3">
+                {viewOnly ? (
+                  <p>Dodaj akcje, aby zobaczyć je na podglądzie.</p>
+                ) : (
+                  <>
+                    <p className="text-font/80 text-sm">
+                      Nie masz jeszcze żadnych akcji!
+                    </p>
+                    <Add type="stocks/transaction" size="sm" />
+                  </>
+                )}
+              </div>
+            }
           >
-            {column.label}
-          </TableColumn>
-        ))}
-      </TableHeader>
-      <TableBody
-        isLoading={isLoading}
-        loadingContent={<Spinner />}
-        items={viewOnly ? items : rows}
-        emptyContent={
-          <div className="text-center flex-1 justify-center flex flex-col items-center gap-3">
-            {viewOnly ? (
-              <p>Dodaj akcje, aby zobaczyć je na podglądzie.</p>
-            ) : (
-              <>
-                <p className="text-font/80 text-sm">
-                  Nie masz jeszcze żadnych akcji!
-                </p>
-                <Add type="stocks/transaction" size="sm" />
-              </>
+            {(item) => (
+              <TableRow key={item.id} className="hover:bg-[#f7f7f8]">
+                {(columnKey) => (
+                  <TableCell>{renderCell(item, columnKey)}</TableCell>
+                )}
+              </TableRow>
             )}
-          </div>
-        }
-      >
-        {(item) => (
-          <TableRow key={item.id} className="hover:bg-[#f7f7f8]">
-            {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+          </TableBody>
+        </Table>
+      </ScrollShadow>
+      {count > 0 && !simplified && (
+        <Pagination
+          isCompact
+          showControls
+          color="primary"
+          className="text-background mt-2 ml-auto mr-2"
+          page={page}
+          isDisabled={isLoading}
+          total={pages}
+          onChange={(page: number) => {
+            !viewOnly && setIsLoading(true);
+            setSearchQuery((prev) => ({ ...prev, page }));
+          }}
+        />
+      )}
+      {children}
+    </Block>
   );
 }

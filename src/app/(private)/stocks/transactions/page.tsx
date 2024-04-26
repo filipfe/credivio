@@ -5,11 +5,11 @@ import { Suspense } from "react";
 
 export default function Page({ searchParams }: { searchParams: SearchParams }) {
   return (
-    <section className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col mt-8 mx-12 mb-12">
+    <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6">
       <Suspense fallback={<Loader />}>
         <Transactions searchParams={searchParams} />
       </Suspense>
-    </section>
+    </div>
   );
 }
 
