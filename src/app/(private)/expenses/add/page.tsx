@@ -1,4 +1,4 @@
-import AddForm from "@/components/operation/form";
+import AddForm from "@/components/operations/form";
 
 export default async function Page() {
   return (

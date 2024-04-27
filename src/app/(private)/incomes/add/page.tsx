@@ -1,4 +1,4 @@
-import AddForm from "@/components/operation/form";
+import AddForm from "@/components/operations/form";
 import { getSpecificRow } from "@/lib/general/actions";
 
 export default async function Page({

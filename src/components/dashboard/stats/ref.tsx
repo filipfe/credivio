@@ -1,3 +1,4 @@
+import { Skeleton, cn } from "@nextui-org/react";
 import { ArrowDownIcon, ArrowUpIcon, Minus } from "lucide-react";
 
 type Props = {
@@ -21,9 +22,9 @@ export default function Stat({
   });
 
   return (
-    <div className="xl:col-span-2 bg-white rounded-lg py-8 px-6 sm:px-10 space-y-4">
+    <div className="xl:col-span-2 bg-white rounded-lg py-6 sm:py-8 px-6 sm:px-10 space-y-4">
       <div className="flex items-center gap-4 justify-between">
-        <h3 className="text-lg">{title}</h3>
+        <h3 className="sm:text-lg">{title}</h3>
         {cta}
       </div>
       <div className="flex items-center gap-2">
@@ -47,6 +48,26 @@ export default function Stat({
         )}
       </div>
       {description && <p>{description}</p>}
+    </div>
+  );
+}
+
+export function StatLoader({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn(
+        "bg-white rounded-lg py-6 sm:py-8 px-6 sm:px-10 space-y-4",
+        className
+      )}
+    >
+      <div className="flex items-center gap-4 justify-between">
+        <Skeleton className="h-6 w-24 rounded-full" />
+        <Skeleton className="h-5 w-16 rounded-full" />
+      </div>
+      <div className="flex items-center gap-2">
+        <Skeleton className="h-9 w-48 rounded-full" />
+        <Skeleton className="h-5 w-12 rounded-full" />
+      </div>
     </div>
   );
 }
