@@ -22,3 +22,7 @@ html {
   overflow-x: hidden;
   overflow-y: auto;
 }
+
+.recharts-yAxis .recharts-cartesian-axis-tick:first-child {
+  display: none;
+}
