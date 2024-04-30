@@ -2,7 +2,6 @@
 
 import { ServiceContext } from "@/app/(private)/settings/subscription/providers";
 import { LINKS } from "@/const";
-import { Service } from "@/types/auth";
 import { Chip } from "@nextui-org/react";
 import { CheckIcon } from "lucide-react";
 import { useContext } from "react";

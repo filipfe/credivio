@@ -77,9 +77,8 @@ export async function updateSession(request: NextRequest) {
     if (service) {
       const { data } = await supabase
         .from("user_services")
-        .select("id")
-        .eq("user_id", user.id)
-        .eq("service_id", service.id)
+        .select("is_trial")
+        .match({ service_id: service.id, user_id: user.id })
         .single();
       return data
         ? response

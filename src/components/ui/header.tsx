@@ -38,13 +38,21 @@ export default function Header() {
       </header>
       <header className="flex items-center gap-4 justify-between px-6 sm:px-10 h-16 sm:h-20 fixed sm:sticky top-0 left-0 bg-white z-50 w-full sm:w-auto">
         <Breadcrumbs
+          maxItems={2}
+          itemsAfterCollapse={1}
+          itemsBeforeCollapse={1}
           itemClasses={{
-            item: "px-2 flex items-center gap-2.5 text-[12px] sm:text-[13px] data-[current=true]:font-medium",
+            item: "px-2 flex items-center gap-1.5 sm:gap-2.5 text-[12px] sm:text-[13px] data-[current=true]:font-medium",
+            separator: "px-0 sm:px-1",
           }}
         >
-          {links.map((link) => (
+          {links.map((link, k, arr) => (
             <BreadcrumbItem
-              startContent={<link.icon size={14} />}
+              startContent={
+                (arr.length < 3 || k === 0 || k === arr.length - 1) && (
+                  <link.icon size={14} />
+                )
+              }
               key={link.href}
               href={link.href}
             >

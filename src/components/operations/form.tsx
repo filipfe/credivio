@@ -89,126 +89,128 @@ export default function AddForm({
   }, [records]);
 
   return (
-    <div className="flex flex-col xl:grid grid-cols-2 gap-8 mt-8">
-      <form
-        onSubmit={addRecord}
-        className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col"
-      >
-        <h2 className="text-lg">Dane</h2>
-        <RadioGroup
-          label="Wybierz sposób"
-          value={method}
-          onChange={(e) => setMethod(e.target.value as AddMethodKey)}
-        >
-          {ADD_METHODS.map(({ title, type }) => (
-            <Radio value={type} key={type}>
-              {title}
-            </Radio>
-          ))}
-        </RadioGroup>
-
-        {method === "csv" ? (
-          <label
-            className="flex items-center gap-2 text-primary cursor-pointer opacity-80 hover:opacity-80 transition-opacity"
-            htmlFor="csv-file"
+    <div className="flex flex-col xl:grid grid-cols-2 gap-4 sm:gap-8">
+      <form onSubmit={addRecord}>
+        <div className="bg-white rounded-lg px-6 sm:px-10 py-6 sm:py-8 gap-4 flex flex-col">
+          <h2 className="text-lg">Dane</h2>
+          <RadioGroup
+            label="Wybierz sposób"
+            value={method}
+            onChange={(e) => setMethod(e.target.value as AddMethodKey)}
           >
-            <PaperclipIcon className="mt-0.5" size={16} />
-            <span>{fileName || "Dodaj plik"}</span>
-            <input
-              type="file"
-              id="csv-file"
-              required
-              className="opacity-0 -z-50 pointer-events-none absolute"
-              accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-              onChange={onFileChange}
-            />
-          </label>
-        ) : (
-          <div className="grid grid-cols-2 gap-4 my-4">
-            <Input
-              classNames={{ inputWrapper: "!bg-light" }}
-              name="title"
-              label="Tytuł"
-              placeholder="Wynagrodzenie"
-              isRequired
-              value={singleRecord.title}
-              onChange={(e) =>
-                setSingleRecord((prev) => ({ ...prev, title: e.target.value }))
-              }
-            />
-            <Input
-              classNames={{ inputWrapper: "!bg-light" }}
-              name="amount"
-              label="Kwota"
-              placeholder="0.00"
-              isRequired
-              value={singleRecord.amount}
-              onBlur={(e) => {
-                const value = parseFloat(singleRecord.amount);
+            {ADD_METHODS.map(({ title, type }) => (
+              <Radio value={type} key={type}>
+                {title}
+              </Radio>
+            ))}
+          </RadioGroup>
 
-                !isNaN(value) &&
+          {method === "csv" ? (
+            <label
+              className="flex items-center gap-2 text-primary cursor-pointer opacity-80 hover:opacity-80 transition-opacity"
+              htmlFor="csv-file"
+            >
+              <PaperclipIcon className="mt-0.5" size={16} />
+              <span>{fileName || "Dodaj plik"}</span>
+              <input
+                type="file"
+                id="csv-file"
+                required
+                className="opacity-0 -z-50 pointer-events-none absolute"
+                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                onChange={onFileChange}
+              />
+            </label>
+          ) : (
+            <div className="grid grid-cols-2 gap-4 my-4">
+              <Input
+                classNames={{ inputWrapper: "!bg-light" }}
+                name="title"
+                label="Tytuł"
+                placeholder="Wynagrodzenie"
+                isRequired
+                value={singleRecord.title}
+                onChange={(e) =>
                   setSingleRecord((prev) => ({
                     ...prev,
-                    amount: value == 0 ? "" : value.toString(),
-                  }));
-              }}
-              onChange={(e) =>
-                setSingleRecord((prev) => ({
-                  ...prev,
-                  amount: formatAmount(e.target.value),
-                }))
-              }
-            />
-            <CurrencySelect
-              value={singleRecord.currency}
-              selectedKey={singleRecord.currency}
-              onSelectionChange={(curr) =>
-                setSingleRecord((prev) => ({
-                  ...prev,
-                  currency: curr ? curr.toString() : defaultRecord.currency,
-                }))
-              }
-            />
-            <Input
-              classNames={{ inputWrapper: "!bg-light" }}
-              name="issued_at"
-              label="Data uiszczenia"
-              placeholder="24.01.2024"
-              type="date"
-              isRequired
-              value={singleRecord.issued_at}
-              onChange={(e) =>
-                setSingleRecord((prev) => ({
-                  ...prev,
-                  issued_at: e.target.value,
-                }))
-              }
-            />
-            <Textarea
-              className="col-span-2"
-              classNames={{ inputWrapper: "!bg-light" }}
-              name="description"
-              label="Opis"
-              placeholder="Wynagrodzenie za luty"
-              value={singleRecord.description}
-              onChange={(e) =>
-                setSingleRecord((prev) => ({
-                  ...prev,
-                  description: e.target.value,
-                }))
-              }
-            />
+                    title: e.target.value,
+                  }))
+                }
+              />
+              <Input
+                classNames={{ inputWrapper: "!bg-light" }}
+                name="amount"
+                label="Kwota"
+                placeholder="0.00"
+                isRequired
+                value={singleRecord.amount}
+                onBlur={(e) => {
+                  const value = parseFloat(singleRecord.amount);
+
+                  !isNaN(value) &&
+                    setSingleRecord((prev) => ({
+                      ...prev,
+                      amount: value == 0 ? "" : value.toString(),
+                    }));
+                }}
+                onChange={(e) =>
+                  setSingleRecord((prev) => ({
+                    ...prev,
+                    amount: formatAmount(e.target.value),
+                  }))
+                }
+              />
+              <CurrencySelect
+                value={singleRecord.currency}
+                selectedKey={singleRecord.currency}
+                onSelectionChange={(curr) =>
+                  setSingleRecord((prev) => ({
+                    ...prev,
+                    currency: curr ? curr.toString() : defaultRecord.currency,
+                  }))
+                }
+              />
+              <Input
+                classNames={{ inputWrapper: "!bg-light" }}
+                name="issued_at"
+                label="Data uiszczenia"
+                placeholder="24.01.2024"
+                type="date"
+                isRequired
+                value={singleRecord.issued_at}
+                onChange={(e) =>
+                  setSingleRecord((prev) => ({
+                    ...prev,
+                    issued_at: e.target.value,
+                  }))
+                }
+              />
+              <Textarea
+                className="col-span-2"
+                classNames={{ inputWrapper: "!bg-light" }}
+                name="description"
+                label="Opis"
+                placeholder="Wynagrodzenie za luty"
+                value={singleRecord.description}
+                onChange={(e) =>
+                  setSingleRecord((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
+              />
+            </div>
+          )}
+          <div className="flex-1 flex justify-end items-end gap-4">
+            <Button
+              color="secondary"
+              type="submit"
+              className="h-9 text-white"
+              isIconOnly
+            >
+              <PlusIcon className="mt-0.5" size={16} />
+            </Button>
           </div>
-        )}
-        <div className="flex-1 flex justify-end items-end gap-4">
-          <Button
-            color="secondary"
-            type="submit"
-            className="h-9 text-white"
-            isIconOnly
-          >
-            <PlusIcon className="mt-0.5" size={16} />
-          </Button>
         </div>
       </form>
       <OperationTable

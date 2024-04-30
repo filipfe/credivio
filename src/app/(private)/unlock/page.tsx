@@ -1,7 +1,7 @@
 import Block from "@/components/ui/block";
 import { LINKS } from "@/const";
 import { createClient } from "@/utils/supabase/server";
-import { Button, ButtonGroup, Link } from "@nextui-org/react";
+import { Button, Link } from "@nextui-org/react";
 import { redirect } from "next/navigation";
 
 export default async function Page({

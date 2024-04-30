@@ -9,4 +9,5 @@ type TableProps<T> = {
   };
   type?: string;
   labels?: Label[];
+  topContent?: React.ReactNode;
 };

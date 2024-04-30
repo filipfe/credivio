@@ -1,7 +1,5 @@
 "use server";
 
-import { Account } from "@/types/auth";
-import { Preferences } from "@/types/settings";
 import { createClient } from "@/utils/supabase/server";
 import { PostgrestError } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";

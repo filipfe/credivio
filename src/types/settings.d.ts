@@ -1,4 +1,4 @@
-export type Preferences = {
+type Preferences = {
   currency: string;
   language: string;
 };
