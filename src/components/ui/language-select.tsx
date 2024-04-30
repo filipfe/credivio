@@ -1,22 +1,22 @@
 "use client";
 
-import { CURRENCIES } from "@/const";
+import { LANGUAGES } from "@/const";
 import {
   Autocomplete,
   AutocompleteItem,
   AutocompleteProps,
 } from "@nextui-org/react";
 
-export default function CurrencySelect(
+export default function LanguageSelect(
   props: Omit<AutocompleteProps, "children">
 ) {
   return (
     <Autocomplete
-      name="currency"
-      label="Waluta"
-      placeholder="PLN"
+      name="language"
+      label="Wybierz język"
+      labelPlacement="outside-left"
+      placeholder="Polski"
       isClearable={false}
-      isRequired
       inputProps={{
         classNames: {
           inputWrapper: "!bg-light",
@@ -24,7 +24,7 @@ export default function CurrencySelect(
       }}
       {...props}
     >
-      {CURRENCIES.map((curr) => (
+      {LANGUAGES.map((curr) => (
         <AutocompleteItem
           value={curr}
           classNames={{

@@ -166,7 +166,7 @@ export default function AddForm({
                 onSelectionChange={(curr) =>
                   setSingleRecord((prev) => ({
                     ...prev,
-                    currency: curr.toString(),
+                    currency: curr ? curr.toString() : defaultRecord.currency,
                   }))
                 }
               />
