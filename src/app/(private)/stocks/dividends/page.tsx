@@ -14,11 +14,11 @@ export default async function Page() {
   const holdings = getStockHoldings(ownStocks);
   return (
     <div>
-      <section className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col mt-8 mx-12">
+      <section className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col mt-8 mx-10">
         <h2 className="text-lg mb-2">Bieżące</h2>
         <DividendsTable dividends={sortDividends(future)} holdings={holdings} />
       </section>
-      <section className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col mt-8 mx-12">
+      <section className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col mt-8 mx-10">
         <h2 className="text-lg mb-2">Przeszłe</h2>
         <DividendsTable dividends={past} />
       </section>
