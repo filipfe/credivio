@@ -16,7 +16,7 @@ type Props = Pick<TableProps<any>, "type" | "rows"> &
     labels?: Label[];
     handleLabelChange?: (selectedKey?: string) => void;
     label?: string;
-    handleCurrencyChange: (selectedKey: string) => void;
+    handleCurrencyChange?: (selectedKey: string) => void;
     defaultCurrency?: string;
   };
 
@@ -44,7 +44,7 @@ export default function TopContent({
         onValueChange={handleSearch}
       />
       <div className="items-center gap-4 hidden sm:flex">
-        {defaultCurrency && (
+        {defaultCurrency && handleCurrencyChange && (
           <CurrencySelect
             defaultSelectedKeys={[defaultCurrency]}
             onSelectionChange={(keys) => {
