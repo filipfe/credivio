@@ -9,10 +9,6 @@ import { insertRows } from "@/lib/general/actions";
 import toast from "react-hot-toast";
 import { v4 } from "uuid";
 
-type Props = {
-  defaultValue?: SupabaseGoal;
-};
-
 const defaultRecord: Omit<SupabaseGoal, "id"> = {
   title: "",
   price: "",
@@ -21,11 +17,12 @@ const defaultRecord: Omit<SupabaseGoal, "id"> = {
   description: "",
 };
 
-export default function GoalForm({ defaultValue }: Props) {
+export default function GoalForm() {
   const [isPending, startTransition] = useTransition();
-  const [singleRecord, setSingleRecord] = useState<SupabaseGoal>(
-    defaultValue || { ...defaultRecord, id: v4() }
-  );
+  const [singleRecord, setSingleRecord] = useState<SupabaseGoal>({
+    ...defaultRecord,
+    id: v4(),
+  });
 
   return (
     <div className="flex flex-col mx-auto max-w-4xl gap-8 w-full h-max my-auto">
@@ -75,7 +72,7 @@ export default function GoalForm({ defaultValue }: Props) {
           />
           <CurrencySelect
             value={singleRecord.currency}
-            selectedKey={singleRecord.currency}
+            defaultSelectedKeys={[singleRecord.currency]}
             onSelectionChange={(curr) =>
               setSingleRecord((prev) => ({
                 ...prev,

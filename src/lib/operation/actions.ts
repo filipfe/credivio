@@ -109,3 +109,15 @@ export async function getChartLabels(): Promise<SupabaseResponse<ChartLabel>> {
     results,
   };
 }
+
+export async function getDefaultCurrency(): Promise<string> {
+  const supabase = createClient();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError) return authError.message;
+
+  return user?.user_metadata.currency;
+}

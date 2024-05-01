@@ -37,29 +37,28 @@ const defaultRecord: Omit<Operation, "id"> = {
   title: "",
   issued_at: new Date().toISOString().substring(0, 10),
   amount: "",
-  currency: "PLN",
   description: "",
+  currency: "",
 };
 
 export default function AddForm({
   type,
-  defaultValue,
+  defaultCurrency,
 }: {
   type: OperationType;
-  defaultValue?: Operation | null;
+  defaultCurrency: string;
 }) {
   const [label, setLabel] = useState("");
   const [isPending, startTransition] = useTransition();
   const [method, setMethod] = useState<AddMethodKey>("manual");
   const [fileName, setFileName] = useState("");
-  const [records, setRecords] = useState<Operation[]>(
-    defaultValue ? [defaultValue] : []
-  );
-  const [singleRecord, setSingleRecord] = useState<Operation>(
-    defaultValue || { ...defaultRecord, id: v4() }
-  );
+  const [records, setRecords] = useState<Operation[]>([]);
+  const [singleRecord, setSingleRecord] = useState<Operation>({
+    ...defaultRecord,
+    id: v4(),
+    currency: defaultCurrency,
+  });
   const [labels, setLabels] = useState<Label[]>([]);
-
   const onFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.item(0);
     if (!file) return;
@@ -77,7 +76,11 @@ export default function AddForm({
   const addRecord = async (e: React.FormEvent) => {
     e.preventDefault();
     setRecords((prev) => [...prev, singleRecord]);
-    setSingleRecord({ ...defaultRecord, id: v4() });
+    setSingleRecord((prev) => ({
+      ...defaultRecord,
+      id: v4(),
+      currency: prev.currency,
+    }));
   };
 
   useEffect(() => {
@@ -162,11 +165,11 @@ export default function AddForm({
               />
               <CurrencySelect
                 value={singleRecord.currency}
-                selectedKey={singleRecord.currency}
-                onSelectionChange={(curr) =>
+                defaultSelectedKeys={[defaultCurrency]}
+                onSelectionChange={(keys) =>
                   setSingleRecord((prev) => ({
                     ...prev,
-                    currency: curr ? curr.toString() : defaultRecord.currency,
+                    currency: Array.from(keys)[0].toString(),
                   }))
                 }
               />

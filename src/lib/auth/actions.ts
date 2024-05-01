@@ -11,6 +11,10 @@ export async function signInWithEmail(formData: FormData) {
     options: {
       shouldCreateUser: true,
       emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/confirm`,
+      data: {
+        language: "Polski",
+        currency: "PLN",
+      },
     },
   });
 

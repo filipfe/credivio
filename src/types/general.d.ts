@@ -23,6 +23,7 @@ type SearchParams = {
   page?: string;
   search?: string;
   label?: string; //expense
+  currency?: string;
 };
 
 type Currency = {

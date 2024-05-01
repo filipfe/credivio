@@ -1,31 +1,20 @@
 "use client";
 
 import { LANGUAGES } from "@/const";
-import {
-  Autocomplete,
-  AutocompleteItem,
-  AutocompleteProps,
-} from "@nextui-org/react";
+import { Select, SelectItem, SelectProps } from "@nextui-org/react";
 
-export default function LanguageSelect(
-  props: Omit<AutocompleteProps, "children">
-) {
+export default function LanguageSelect(props: Omit<SelectProps, "children">) {
   return (
-    <Autocomplete
+    <Select
       name="language"
       label="Wybierz język"
       labelPlacement="outside-left"
       placeholder="Polski"
-      isClearable={false}
-      inputProps={{
-        classNames: {
-          inputWrapper: "!bg-light",
-        },
-      }}
+      disallowEmptySelection
       {...props}
     >
       {LANGUAGES.map((curr) => (
-        <AutocompleteItem
+        <SelectItem
           value={curr}
           classNames={{
             base: "!bg-white hover:!bg-light",
@@ -33,8 +22,8 @@ export default function LanguageSelect(
           key={curr}
         >
           {curr}
-        </AutocompleteItem>
+        </SelectItem>
       ))}
-    </Autocomplete>
+    </Select>
   );
 }
