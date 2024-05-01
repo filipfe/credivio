@@ -6,34 +6,46 @@ import { revalidatePath } from "next/cache";
 
 export async function getAccount(): Promise<SupabaseResponse<Account>> {
   const supabase = createClient();
-  const { data: account, error: accountError } = await supabase
-    .from("profiles")
-    .select("first_name, last_name")
-    .single();
   const {
     data: { user },
-    error: userError,
+    error: authError,
   } = await supabase.auth.getUser();
 
-  const error = accountError?.message || userError?.message;
-
-  if (error) {
+  if (authError) {
     return {
-      error,
+      error: authError.message,
       results: [],
     };
   }
 
-  if (user && account) {
-    return {
-      results: [{ ...user, ...account }],
-    };
-  }
+  const data = {
+    first_name: user?.user_metadata.first_name,
+    last_name: user?.user_metadata.last_name,
+    email: user?.email,
+  };
 
   return {
-    error: "Not found",
-    results: [],
+    results: [{ ...data }],
   };
+}
+
+export async function updateAccount(formData: FormData) {
+  const supabase = createClient();
+  const data = {
+    first_name: formData.get("first_name") || null,
+    last_name: formData.get("last_name") || null,
+  };
+
+  const { error } = await supabase.auth.updateUser({
+    data: data,
+    email: formData.get("email")?.toString(),
+  });
+
+  if (error) {
+    return {
+      error: error.message,
+    };
+  }
 }
 
 export async function getPreferences(): Promise<SupabaseResponse<Preferences>> {

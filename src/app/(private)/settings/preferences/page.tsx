@@ -6,6 +6,7 @@ import { CheckIcon } from "lucide-react";
 
 export default async function Page() {
   const { results } = await getPreferences();
+  const preferences = results[0];
 
   return (
     <div className="px-12 pt-8 pb-24 flex flex-col gap-8">
@@ -26,12 +27,12 @@ export default async function Page() {
                   inputWrapper: "!bg-light",
                 },
               }}
-              defaultSelectedKey={results[0].currency}
+              defaultSelectedKey={preferences.currency}
             />
           </div>
           <div>
             <h2 className="text-lg font-bold">Język</h2>
-            <LanguageSelect defaultSelectedKey={results[0].language} />
+            <LanguageSelect defaultSelectedKey={preferences.language} />
           </div>
           <Button
             type="submit"
