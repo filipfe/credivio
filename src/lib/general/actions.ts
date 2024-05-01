@@ -6,7 +6,8 @@ import { redirect } from "next/navigation";
 
 export async function getOwnRows<T>(
   type: OperationType,
-  searchParams?: SearchParams
+  searchParams?: SearchParams,
+  defaultCurrency?: string
 ): Promise<SupabaseResponse<T>> {
   try {
     const supabase = createClient();
@@ -14,6 +15,13 @@ export async function getOwnRows<T>(
       count: "exact",
       head: false,
     });
+
+    if (defaultCurrency) {
+      query = query.eq(
+        "currency",
+        searchParams?.currency ? searchParams.currency : defaultCurrency
+      );
+    }
 
     if (type === "expense" && searchParams?.label) {
       query = query.eq("label", searchParams.label);
@@ -80,7 +88,7 @@ export async function updateRow(
 ) {
   const supabase = createClient();
   const { error } = await supabase.from(`${type}s`).update(fields).eq("id", id);
-  console.log(error);
+
   if (error) {
     return {
       error,

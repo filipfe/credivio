@@ -74,6 +74,7 @@ export async function getPreferences(): Promise<SupabaseResponse<Preferences>> {
 
 export async function updatePreferences(formData: FormData) {
   const supabase = createClient();
+
   const data = {
     currency: formData.get("currency"),
     language: formData.get("language"),

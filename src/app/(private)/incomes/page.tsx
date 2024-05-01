@@ -4,6 +4,7 @@ import IncomeTable from "@/components/operations/table";
 import Loader from "@/components/stocks/loader";
 import LineChartLoader from "@/components/ui/charts/line-loader";
 import { getOwnRows } from "@/lib/general/actions";
+import { getDefaultCurrency } from "@/lib/operation/actions";
 import { Suspense } from "react";
 
 export default function Page({ searchParams }: { searchParams: SearchParams }) {
@@ -38,10 +39,14 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
 }
 
 async function Incomes({ searchParams }: { searchParams: SearchParams }) {
+  const defaultCurrency = await getDefaultCurrency();
+
   const { results: incomes, count } = await getOwnRows<Operation>(
     "income",
-    searchParams
+    searchParams,
+    defaultCurrency
   );
+
   return (
     <div className="row-span-2 col-span-2 flex items-stretch">
       <IncomeTable
@@ -49,6 +54,7 @@ async function Incomes({ searchParams }: { searchParams: SearchParams }) {
         rows={incomes}
         count={count || 0}
         type="income"
+        defaultCurrency={defaultCurrency}
       />
     </div>
   );

@@ -1,31 +1,19 @@
 "use client";
 
 import { CURRENCIES } from "@/const";
-import {
-  Autocomplete,
-  AutocompleteItem,
-  AutocompleteProps,
-} from "@nextui-org/react";
+import { Select, SelectItem, SelectProps } from "@nextui-org/react";
 
-export default function CurrencySelect(
-  props: Omit<AutocompleteProps, "children">
-) {
+export default function CurrencySelect(props: Omit<SelectProps, "children">) {
   return (
-    <Autocomplete
+    <Select
       name="currency"
       label="Waluta"
       placeholder="PLN"
-      isClearable={false}
-      isRequired
-      inputProps={{
-        classNames: {
-          inputWrapper: "!bg-light",
-        },
-      }}
+      disallowEmptySelection
       {...props}
     >
       {CURRENCIES.map((curr) => (
-        <AutocompleteItem
+        <SelectItem
           value={curr}
           classNames={{
             base: "!bg-white hover:!bg-light",
@@ -33,8 +21,8 @@ export default function CurrencySelect(
           key={curr}
         >
           {curr}
-        </AutocompleteItem>
+        </SelectItem>
       ))}
-    </Autocomplete>
+    </Select>
   );
 }

@@ -22,6 +22,7 @@ export default function OperationTable({
   viewOnly,
   children,
   labels,
+  defaultCurrency,
   ...props
 }: TableProps<Operation>) {
   const pages = Math.ceil(count / 10);
@@ -34,6 +35,7 @@ export default function OperationTable({
     handleSort,
     handlePageChange,
     handleLabelChange,
+    handleCurrencyChange,
   } = useTableQuery(rows, !!viewOnly);
   const { page, sort, search, label } = searchQuery;
 
@@ -108,6 +110,8 @@ export default function OperationTable({
           labels={labels}
           handleLabelChange={handleLabelChange}
           label={label}
+          handleCurrencyChange={handleCurrencyChange}
+          defaultCurrency={defaultCurrency}
         />
       }
     >

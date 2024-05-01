@@ -9,5 +9,6 @@ type TableProps<T> = {
   };
   type?: string;
   labels?: Label[];
+  defaultCurrency?: string;
   topContent?: React.ReactNode;
 };

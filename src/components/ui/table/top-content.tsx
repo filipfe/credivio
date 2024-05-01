@@ -8,6 +8,7 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from "@nextui-org/react";
+import CurrencySelect from "../currency-select";
 
 type Props = Pick<TableProps<any>, "type" | "rows"> &
   Pick<SearchParams, "search"> & {
@@ -15,6 +16,8 @@ type Props = Pick<TableProps<any>, "type" | "rows"> &
     labels?: Label[];
     handleLabelChange?: (selectedKey?: string) => void;
     label?: string;
+    handleCurrencyChange: (selectedKey: string) => void;
+    defaultCurrency?: string;
   };
 
 export default function TopContent({
@@ -22,6 +25,8 @@ export default function TopContent({
   rows,
   search,
   handleSearch,
+  handleCurrencyChange,
+  defaultCurrency,
   ...props
 }: Props) {
   return (
@@ -39,6 +44,15 @@ export default function TopContent({
         onValueChange={handleSearch}
       />
       <div className="items-center gap-4 hidden sm:flex">
+        {defaultCurrency && (
+          <CurrencySelect
+            defaultSelectedKeys={[defaultCurrency]}
+            onSelectionChange={(keys) => {
+              const selectedKey = Array.from(keys)[0].toString();
+              handleCurrencyChange(selectedKey);
+            }}
+          />
+        )}
         <LabelSelect {...props} />
         {type && rows.length > 0 && (
           <Add size="sm" type={type} className="!h-9" />

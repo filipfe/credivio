@@ -13,6 +13,7 @@ export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
     sort: "",
     search: "",
     label: "",
+    currency: "",
   });
 
   const handleLabelChange = useCallback(
@@ -51,6 +52,11 @@ export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
     setSearchQuery((prev) => ({ ...prev, page }));
   };
 
+  const handleCurrencyChange = (currency: string) => {
+    !viewOnly && setIsLoading(true);
+    setSearchQuery((prev) => ({ ...prev, page: 1, currency }));
+  };
+
   useEffect(() => {
     if (viewOnly) return;
     const params = new URLSearchParams();
@@ -78,5 +84,6 @@ export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
     handleSort,
     handlePageChange,
     handleLabelChange,
+    handleCurrencyChange,
   };
 }
