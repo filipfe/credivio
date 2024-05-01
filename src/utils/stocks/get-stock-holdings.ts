@@ -1,4 +1,6 @@
-export default function getStockHoldings(transactions: StockTransaction[]) {
+export default function getStockHoldings(transactions: StockTransaction[]): {
+  [key: string]: number;
+} {
   const holdings: Holdings = {};
 
   for (const transaction of transactions) {
