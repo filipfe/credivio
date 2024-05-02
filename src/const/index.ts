@@ -2,8 +2,8 @@ import {
   AlignHorizontalDistributeCenterIcon,
   ArrowRightLeftIcon,
   BarChart4Icon,
+  BrainIcon,
   Building2Icon,
-  CalendarDaysIcon,
   CheckCircleIcon,
   CoinsIcon,
   LayersIcon,
@@ -16,6 +16,7 @@ import {
   SlidersIcon,
   UserCogIcon,
   Wallet2Icon,
+  Wand2Icon,
 } from "lucide-react";
 
 export const PAGES: Page[] = [
@@ -125,6 +126,11 @@ export const PAGES: Page[] = [
   //     },
   //   ],
   // },
+  {
+    title: "Asystent AI",
+    href: "/ai-actions",
+    icon: BrainIcon,
+  },
   {
     title: "Aktualności",
     href: "/news",
