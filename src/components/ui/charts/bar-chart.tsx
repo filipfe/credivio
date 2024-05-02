@@ -40,15 +40,23 @@ export default function BarChart({ data }: Props) {
     <ResponsiveContainer width="100%" height={360}>
       <BarChartWrapper
         data={data.map((e) => e)}
-        margin={{ top: 5, left: 0, right: 0, bottom: 0 }}
+        margin={{ top: 5, left: 8, right: 36, bottom: 0 }}
       >
         <CartesianGrid vertical={false} opacity={0.5} />
         <YAxis
           tick={{ fontSize: 12 }}
           dataKey="total_amount"
           tickFormatter={(value) => numberFormat.format(value)}
+          axisLine={false}
+          tickLine={false}
         />
-        <XAxis interval={0} dataKey="name" tick={{ fontSize: 14 }} />
+        <XAxis
+          interval={0}
+          dataKey="name"
+          tick={{ fontSize: 14 }}
+          axisLine={false}
+          tickLine={false}
+        />
         <Bar
           maxBarSize={120}
           dataKey="total_amount"
