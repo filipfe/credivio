@@ -1,6 +1,5 @@
 import OperationTable from "@/components/operations/table";
 import { getOwnRows } from "@/lib/general/actions";
-import { getDefaultCurrency, getLabels } from "@/lib/operation/actions";
 import Stat from "@/components/dashboard/stats/ref";
 import BudgetByMonth from "@/components/dashboard/charts/budget-by-month";
 import { Suspense } from "react";
@@ -39,12 +38,9 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
 }
 
 async function Expenses({ searchParams }: { searchParams: SearchParams }) {
-  const defaultCurrency = await getDefaultCurrency();
-
   const { results: expenses, count } = await getOwnRows<Operation>(
     "expense",
-    searchParams,
-    defaultCurrency
+    searchParams
   );
 
   return (
@@ -54,7 +50,6 @@ async function Expenses({ searchParams }: { searchParams: SearchParams }) {
         type="expense"
         rows={expenses}
         count={count || 0}
-        defaultCurrency={defaultCurrency}
       />
     </div>
   );
