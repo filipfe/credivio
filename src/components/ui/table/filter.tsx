@@ -46,7 +46,7 @@ export default function Filter({
           {enabled.currency && state.currency && (
             <CurrencySelect {...state.currency} />
           )}
-          {numberOfParams === 0 && (
+          {numberOfParams > 0 && (
             <Button
               size="sm"
               onClick={() => {
