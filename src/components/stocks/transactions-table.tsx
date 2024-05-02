@@ -54,6 +54,7 @@ export default function TransactionTable({
     searchQuery,
     setSearchQuery,
     handleSearch,
+    handleCurrencyChange,
   } = useTableQuery<StockTransaction>(rows, !!viewOnly);
   const { page, sort, search } = searchQuery;
 
@@ -91,10 +92,15 @@ export default function TransactionTable({
           ? topContent
           : !simplified && (
               <TopContent
-                rows={rows}
                 handleSearch={handleSearch}
                 search={search}
                 type="stocks/transaction"
+                state={{
+                  currency: {
+                    value: searchQuery.currency,
+                    onChange: handleCurrencyChange,
+                  },
+                }}
               />
             )
       }

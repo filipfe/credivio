@@ -29,7 +29,7 @@ import parseCSV from "@/utils/operation/parse-csv";
 import { addOperations, getLabels } from "@/lib/operation/actions";
 import OperationTable from "./table";
 import formatAmount from "@/utils/operation/format-amount";
-import CurrencySelect from "../ui/currency-select";
+import CurrencySelect from "../ui/table/currency-select";
 import operationFormatter from "@/utils/formatters/operations";
 import { v4 } from "uuid";
 
@@ -165,11 +165,10 @@ export default function AddForm({
               />
               <CurrencySelect
                 value={singleRecord.currency}
-                defaultSelectedKeys={[defaultCurrency]}
-                onSelectionChange={(keys) =>
+                onChange={(currency) =>
                   setSingleRecord((prev) => ({
                     ...prev,
-                    currency: Array.from(keys)[0].toString(),
+                    currency,
                   }))
                 }
               />

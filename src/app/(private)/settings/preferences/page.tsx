@@ -1,5 +1,5 @@
 import Block from "@/components/ui/block";
-import CurrencySelect from "@/components/ui/currency-select";
+import CurrencySelect from "@/components/ui/table/currency-select";
 import LanguageSelect from "@/components/ui/language-select";
 import { getPreferences, updatePreferences } from "@/lib/settings/actions";
 import { Button } from "@nextui-org/react";
@@ -18,9 +18,8 @@ export default async function Page() {
             <div>
               <h2 className="text-lg font-bold">Waluta</h2>
               <CurrencySelect
-                label="Wybierz domyślną walutę"
-                labelPlacement="outside-left"
-                defaultSelectedKeys={[preferences.currency]}
+                value={preferences.currency}
+                onChange={(value) => {}}
               />
             </div>
             <div>

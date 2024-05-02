@@ -46,3 +46,19 @@ type Group = {
   color: string;
   children: React.ReactNode;
 };
+
+type State = {
+  value: string;
+  onChange: (value: string) => void;
+};
+
+interface FilterProps {
+  enabled?: {
+    label?: boolean;
+    currency?: boolean;
+  };
+  state: {
+    label?: State;
+    currency?: State;
+  };
+}

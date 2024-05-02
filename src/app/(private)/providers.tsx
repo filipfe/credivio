@@ -42,19 +42,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
     setIsMenuHidden((prev) => ({ ...prev, mobile: true }));
   }, [pathname]);
 
-  useEffect(() => {
-    if (isMenuHidden.mobile) return;
-    const onScroll = (e: Event) => {
-      e.preventDefault();
-    };
-    window.addEventListener("scroll", onScroll, false);
-    window.onscroll = document.onscroll = onScroll;
-    return () => {
-      window.removeEventListener("scroll", onScroll, false);
-      window.onscroll = document.onscroll = null;
-    };
-  }, [isMenuHidden.mobile]);
-
   return (
     <NextUIProvider navigate={push}>
       <MenuContext.Provider value={{ isMenuHidden, setIsMenuHidden }}>

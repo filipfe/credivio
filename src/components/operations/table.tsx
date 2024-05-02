@@ -13,7 +13,7 @@ import {
   ScrollShadow,
 } from "@nextui-org/react";
 import useTableQuery from "@/hooks/useTableQuery";
-import TopContent, { LabelSelect } from "../ui/table/top-content";
+import TopContent from "../ui/table/top-content";
 import Block from "../ui/block";
 
 export default function OperationTable({
@@ -21,8 +21,6 @@ export default function OperationTable({
   count,
   viewOnly,
   children,
-  labels,
-  defaultCurrency,
   ...props
 }: TableProps<Operation>) {
   const pages = Math.ceil(count / 10);
@@ -104,14 +102,18 @@ export default function OperationTable({
       cta={
         <TopContent
           {...props}
-          rows={rows}
           handleSearch={handleSearch}
           search={search}
-          labels={labels}
-          handleLabelChange={handleLabelChange}
-          label={label}
-          handleCurrencyChange={handleCurrencyChange}
-          defaultCurrency={defaultCurrency}
+          state={{
+            label: {
+              value: searchQuery.label,
+              onChange: handleLabelChange,
+            },
+            currency: {
+              value: searchQuery.currency,
+              onChange: handleCurrencyChange,
+            },
+          }}
         />
       }
     >
@@ -165,31 +167,21 @@ export default function OperationTable({
       </ScrollShadow>
       {count > 0 && (
         <div className="mt-2 flex-1 flex items-end justify-end">
-          <div className="flex items-center justify-between gap-8">
-            <div className="sm:hidden">
-              <LabelSelect
-                label={label}
-                labels={labels}
-                handleLabelChange={handleLabelChange}
-              />
-            </div>
-            <div className="hidden sm:block"></div>
-            <Pagination
-              size="sm"
-              isCompact
-              showControls
-              showShadow={false}
-              color="primary"
-              className="text-background"
-              classNames={{
-                wrapper: "!shadow-none",
-              }}
-              page={page}
-              isDisabled={isLoading}
-              total={pages}
-              onChange={handlePageChange}
-            />
-          </div>
+          <Pagination
+            size="sm"
+            isCompact
+            showControls
+            showShadow={false}
+            color="primary"
+            className="text-background"
+            classNames={{
+              wrapper: "!shadow-none",
+            }}
+            page={page}
+            isDisabled={isLoading}
+            total={pages}
+            onChange={handlePageChange}
+          />
         </div>
       )}
       {children}

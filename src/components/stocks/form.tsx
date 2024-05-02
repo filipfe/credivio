@@ -13,13 +13,7 @@ import {
   Spinner,
 } from "@nextui-org/react";
 import { CheckIcon, PaperclipIcon, PlusIcon } from "lucide-react";
-import {
-  ChangeEvent,
-  Fragment,
-  useEffect,
-  useState,
-  useTransition,
-} from "react";
+import { ChangeEvent, Fragment, useState, useTransition } from "react";
 import parseCSV from "@/utils/operation/parse-csv";
 import { addStocks } from "@/lib/stocks/actions";
 import TransactionTable from "./transactions-table";

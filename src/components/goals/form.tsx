@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Input, Spinner, Textarea } from "@nextui-org/react";
-import CurrencySelect from "../ui/currency-select";
+import CurrencySelect from "../ui/table/currency-select";
 import formatAmount from "@/utils/operation/format-amount";
 import { useState, useTransition } from "react";
 import { CheckIcon } from "lucide-react";
@@ -72,11 +72,10 @@ export default function GoalForm() {
           />
           <CurrencySelect
             value={singleRecord.currency}
-            defaultSelectedKeys={[singleRecord.currency]}
-            onSelectionChange={(curr) =>
+            onChange={(currency) =>
               setSingleRecord((prev) => ({
                 ...prev,
-                currency: curr.toString(),
+                currency,
               }))
             }
           />
