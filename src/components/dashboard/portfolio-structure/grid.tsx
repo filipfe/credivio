@@ -1,16 +1,19 @@
-import { Accordion, AccordionItem } from "@nextui-org/react";
-import StockTable from "../stocks/table";
-import PieChart from "../ui/charts/pie-chart";
+import StockTable from "../../stocks/table";
+import PieChart from "../../ui/charts/pie-chart";
 import React from "react";
 import { COLORS } from "@/const";
 import { getSpecificStocks } from "@/lib/stocks/actions";
 import { getOwnRows } from "@/lib/general/actions";
 import getStockHoldings from "@/utils/stocks/get-stock-holdings";
+import PortfolioAccordion from "./accordion";
 
 export default async function PortfolioStructure() {
-  const { results: expenses } = await getOwnRows<Operation>("expense");
-  const { results: incomes } = await getOwnRows<Operation>("income");
-  const { results: ownStocks } = await getOwnRows<StockTransaction>("stock");
+  const [{ results: expenses }, { results: incomes }, { results: ownStocks }] =
+    await Promise.all([
+      getOwnRows<Operation>("expense"),
+      getOwnRows<Operation>("income"),
+      getOwnRows<StockTransaction>("stock"),
+    ]);
   const ownStocksNames: string[] = ownStocks.reduce(
     (prev, curr) =>
       prev.includes(curr.symbol) ? prev : [...prev, curr.symbol],
@@ -65,27 +68,7 @@ export default async function PortfolioStructure() {
   return (
     <div className="bg-white sm:rounded-md py-8 px-10 space-y-4 col-span-6">
       <div className="flex flex-col xl:grid grid-cols-5 gap-8 items-start">
-        {/* <Accordion defaultExpandedKeys={[data[0].name]} className="col-span-3">
-          {data.map(({ children, name, value, color, label }, k) => (
-            <AccordionItem
-              title={
-                <div className="flex items-center gap-4">
-                  <div
-                    style={{ backgroundColor: color }}
-                    className="w-6 h-4 rounded"
-                  ></div>
-                  <span className="text-lg">{label}</span>
-                  <span className="text-sm">
-                    {((value / total) * 100).toFixed(2)}%
-                  </span>
-                </div>
-              }
-              key={name}
-            >
-              {children}
-            </AccordionItem>
-          ))}
-        </Accordion> */}
+        <PortfolioAccordion data={data} total={total} />
         <div className="col-span-2">
           <PieChart data={data} height={500} legend />
         </div>

@@ -1,4 +1,4 @@
-import PortfolioStructure from "@/components/dashboard/portfolio-structure";
+import PortfolioStructure from "@/components/dashboard/portfolio-structure/grid";
 import { Fragment, Suspense } from "react";
 import StatsList from "@/components/dashboard/stats/list";
 import Loader from "@/components/stocks/loader";
