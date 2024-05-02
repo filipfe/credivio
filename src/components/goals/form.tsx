@@ -72,11 +72,10 @@ export default function GoalForm() {
           />
           <CurrencySelect
             value={singleRecord.currency}
-            defaultSelectedKeys={[singleRecord.currency]}
-            onSelectionChange={(curr) =>
+            onChange={(currency) =>
               setSingleRecord((prev) => ({
                 ...prev,
-                currency: curr.toString(),
+                currency,
               }))
             }
           />
