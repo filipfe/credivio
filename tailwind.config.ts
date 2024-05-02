@@ -50,6 +50,7 @@ const config: Config = {
               DEFAULT: "#e0e0e0",
             },
             default: {
+              DEFAULT: "#FAFAFA",
               "100": "#FAFAFA",
             },
           },

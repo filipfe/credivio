@@ -1,5 +1,5 @@
 import Block from "@/components/ui/block";
-import CurrencySelect from "@/components/ui/currency-select";
+import CurrencySelect from "@/components/ui/table/currency-select";
 import LanguageSelect from "@/components/ui/language-select";
 import { getPreferences, updatePreferences } from "@/lib/settings/actions";
 import { Button } from "@nextui-org/react";

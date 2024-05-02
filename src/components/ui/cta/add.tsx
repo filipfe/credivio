@@ -19,6 +19,7 @@ export default function Add({
         size={size}
         variant="flat"
         as="div"
+        disableRipple
       >
         <PlusIcon size={16} /> Dodaj
       </Button>

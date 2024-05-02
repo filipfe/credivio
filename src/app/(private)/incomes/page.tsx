@@ -39,12 +39,9 @@ export default function Page({ searchParams }: { searchParams: SearchParams }) {
 }
 
 async function Incomes({ searchParams }: { searchParams: SearchParams }) {
-  const defaultCurrency = await getDefaultCurrency();
-
   const { results: incomes, count } = await getOwnRows<Operation>(
     "income",
-    searchParams,
-    defaultCurrency
+    searchParams
   );
 
   return (
@@ -54,7 +51,6 @@ async function Incomes({ searchParams }: { searchParams: SearchParams }) {
         rows={incomes}
         count={count || 0}
         type="income"
-        defaultCurrency={defaultCurrency}
       />
     </div>
   );

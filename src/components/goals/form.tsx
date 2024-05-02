@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Input, Spinner, Textarea } from "@nextui-org/react";
-import CurrencySelect from "../ui/currency-select";
+import CurrencySelect from "../ui/table/currency-select";
 import formatAmount from "@/utils/operation/format-amount";
 import { useState, useTransition } from "react";
 import { CheckIcon } from "lucide-react";

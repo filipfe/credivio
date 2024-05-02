@@ -47,8 +47,6 @@ async function Expenses({ searchParams }: { searchParams: SearchParams }) {
     defaultCurrency
   );
 
-  const { results: labels } = await getLabels();
-
   return (
     <div className="row-span-2 col-span-2 flex items-stretch">
       <OperationTable
@@ -56,7 +54,6 @@ async function Expenses({ searchParams }: { searchParams: SearchParams }) {
         type="expense"
         rows={expenses}
         count={count || 0}
-        labels={labels}
         defaultCurrency={defaultCurrency}
       />
     </div>

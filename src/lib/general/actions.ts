@@ -6,8 +6,7 @@ import { redirect } from "next/navigation";
 
 export async function getOwnRows<T>(
   type: OperationType,
-  searchParams?: SearchParams,
-  defaultCurrency?: string
+  searchParams?: SearchParams
 ): Promise<SupabaseResponse<T>> {
   try {
     const supabase = createClient();
@@ -16,11 +15,8 @@ export async function getOwnRows<T>(
       head: false,
     });
 
-    if (defaultCurrency) {
-      query = query.eq(
-        "currency",
-        searchParams?.currency ? searchParams.currency : defaultCurrency
-      );
+    if (searchParams?.currency) {
+      query = query.eq("currency", searchParams?.currency);
     }
 
     if (type === "expense" && searchParams?.label) {
