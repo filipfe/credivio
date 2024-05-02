@@ -7,6 +7,7 @@ import BudgetByMonth from "@/components/dashboard/charts/budget-by-month";
 import ChartLoader from "@/components/ui/charts/loader";
 import LineChartLoader from "@/components/ui/charts/line-loader";
 import { StatLoader } from "@/components/dashboard/stats/ref";
+import { Button } from "@nextui-org/react";
 
 export default function Dashboard() {
   return (
@@ -25,6 +26,9 @@ export default function Dashboard() {
       <Suspense fallback={<Loader className="col-span-6" />}>
         <PortfolioStructure />
       </Suspense>
+      <Button variant="shadow" color="primary">
+        geaefga
+      </Button>
     </div>
   );
 }

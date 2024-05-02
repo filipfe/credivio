@@ -9,6 +9,7 @@ import {
   Tooltip,
   LineChart,
 } from "recharts";
+import ChartTooltip from "./tooltip";
 
 type Props = {
   data: DailyAmount[];
@@ -19,11 +20,6 @@ export default function AreaChart({ data }: Props) {
     style: "currency",
     currency: "PLN",
     notation: "compact",
-  });
-  const standard = new Intl.NumberFormat("pl-PL", {
-    style: "currency",
-    currency: "PLN",
-    notation: "standard",
   });
 
   return (
@@ -60,10 +56,8 @@ export default function AreaChart({ data }: Props) {
           className="stroke-content4"
         />
         <Tooltip
-          formatter={(value) => [
-            standard.format(parseFloat(value.toString())),
-            "Budżet",
-          ]}
+          isAnimationActive={false}
+          content={(props) => <ChartTooltip {...props} />}
         />
         <Line
           dataKey="total_amount"
