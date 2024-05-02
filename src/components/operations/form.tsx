@@ -165,11 +165,10 @@ export default function AddForm({
               />
               <CurrencySelect
                 value={singleRecord.currency}
-                defaultSelectedKeys={[defaultCurrency]}
-                onSelectionChange={(keys) =>
+                onChange={(currency) =>
                   setSingleRecord((prev) => ({
                     ...prev,
-                    currency: Array.from(keys)[0].toString(),
+                    currency,
                   }))
                 }
               />
