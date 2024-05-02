@@ -68,7 +68,7 @@ export async function getPreferences(): Promise<SupabaseResponse<Preferences>> {
   };
 
   return {
-    results: [{ ...data }],
+    results: [data],
   };
 }
 

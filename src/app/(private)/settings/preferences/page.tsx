@@ -18,9 +18,8 @@ export default async function Page() {
             <div>
               <h2 className="text-lg font-bold">Waluta</h2>
               <CurrencySelect
-                label="Wybierz domyślną walutę"
-                labelPlacement="outside-left"
-                defaultSelectedKeys={[preferences.currency]}
+                value={preferences.currency}
+                onChange={(value) => {}}
               />
             </div>
             <div>
