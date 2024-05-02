@@ -92,7 +92,6 @@ export default function TransactionTable({
           ? topContent
           : !simplified && (
               <TopContent
-                rows={rows}
                 handleSearch={handleSearch}
                 search={search}
                 type="stocks/transaction"

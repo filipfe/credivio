@@ -102,7 +102,6 @@ export default function OperationTable({
       cta={
         <TopContent
           {...props}
-          rows={rows}
           handleSearch={handleSearch}
           search={search}
           state={{

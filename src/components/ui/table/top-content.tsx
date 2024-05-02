@@ -5,7 +5,7 @@ import Add from "../cta/add";
 import Filter from "./filter";
 import { DebouncedState } from "use-debounce";
 
-type Props = Pick<TableProps<any>, "type" | "rows"> &
+type Props = Pick<TableProps<any>, "type"> &
   FilterProps & {
     search?: string;
     handleSearch: DebouncedState<(search?: string) => void>;
@@ -13,7 +13,6 @@ type Props = Pick<TableProps<any>, "type" | "rows"> &
 
 export default function TopContent({
   type,
-  rows,
   search,
   state,
   handleSearch,

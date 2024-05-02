@@ -8,7 +8,6 @@ import {
   PopoverTrigger,
 } from "@nextui-org/react";
 import { ListFilterIcon, ListRestartIcon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import CurrencySelect from "./currency-select";
 import LabelSelect from "./label-select";
@@ -18,14 +17,9 @@ export default function Filter({
   state,
 }: FilterProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const searchParams = useSearchParams();
-  const numberOfParams = Array.from(searchParams.keys()).filter(
-    (item) => item !== "page"
-  ).length;
-
-  const isFiltered = Object.keys(state).some(
+  const numberOfParams = Object.keys(state).filter(
     (key) => state[key as keyof typeof state]?.value !== ""
-  );
+  ).length;
   return (
     <Popover placement="bottom" isOpen={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger>
@@ -52,7 +46,7 @@ export default function Filter({
           {enabled.currency && state.currency && (
             <CurrencySelect {...state.currency} />
           )}
-          {isFiltered && (
+          {numberOfParams === 0 && (
             <Button
               size="sm"
               onClick={() => {
