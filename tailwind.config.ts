@@ -16,7 +16,6 @@ const config: Config = {
         font: "#000000",
         light: "#FAFAFA",
         background: "#FFFFFF",
-        success: "#3CC92F",
         "success-light": "#EFFCEE",
         danger: "#C93C2F",
         "danger-light": "#FCEEEE",
@@ -53,6 +52,7 @@ const config: Config = {
               DEFAULT: "#FAFAFA",
               "100": "#FAFAFA",
             },
+            success: "#32a852",
           },
           layout: {
             hoverOpacity: 95,
