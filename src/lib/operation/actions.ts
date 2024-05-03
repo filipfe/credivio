@@ -104,7 +104,10 @@ export async function getDashboardStats(): Promise<
   }
 
   return {
-    results,
+    results: {
+      ...results,
+      currency,
+    },
   };
 }
 
