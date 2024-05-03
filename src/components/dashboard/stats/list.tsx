@@ -7,8 +7,9 @@ import Link from "next/link";
 
 export default async function StatsList() {
   const {
-    results: [{ incomes, expenses, budget }],
+    results: { incomes, expenses, budget },
   } = await getDashboardStats();
+
   return (
     <Fragment>
       {/* {expenses.length > 0 && (

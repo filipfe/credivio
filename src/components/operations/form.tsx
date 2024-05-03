@@ -1,6 +1,6 @@
 "use client";
 
-import { ADD_METHODS } from "@/const";
+import { ADD_METHODS, CURRENCIES } from "@/const";
 import {
   Autocomplete,
   AutocompleteItem,
@@ -32,6 +32,7 @@ import formatAmount from "@/utils/operation/format-amount";
 import CurrencySelect from "../ui/table/currency-select";
 import operationFormatter from "@/utils/formatters/operations";
 import { v4 } from "uuid";
+import UniversalSelect from "../ui/universal-select";
 
 const defaultRecord: Omit<Operation, "id"> = {
   title: "",
@@ -163,14 +164,17 @@ export default function AddForm({
                   }))
                 }
               />
-              <CurrencySelect
-                value={singleRecord.currency}
-                onChange={(currency) =>
+              <UniversalSelect
+                name="currency"
+                label="Waluta"
+                selectedKeys={[singleRecord.currency]}
+                elements={CURRENCIES}
+                onChange={(e) => {
                   setSingleRecord((prev) => ({
                     ...prev,
-                    currency,
-                  }))
-                }
+                    currency: e.target.value,
+                  }));
+                }}
               />
               <Input
                 classNames={{ inputWrapper: "!bg-light" }}

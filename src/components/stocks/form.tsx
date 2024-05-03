@@ -20,6 +20,7 @@ import TransactionTable from "./transactions-table";
 import { v4 } from "uuid";
 import stocksFormatter from "@/utils/formatters/stocks";
 import Block from "../ui/block";
+import UniversalSelect from "../ui/universal-select";
 
 const defaultRecord: Omit<StockTransaction, "id"> = {
   symbol: "",
@@ -131,26 +132,18 @@ export default function Form({
                   </AutocompleteItem>
                 )}
               </Autocomplete>
-              <Select
-                classNames={{ trigger: "!bg-light" }}
+              <UniversalSelect
                 name="transaction_type"
                 label="Typ transakcji"
-                isRequired
-                value={singleRecord.transaction_type}
                 selectedKeys={[singleRecord.transaction_type]}
-                onChange={(e) =>
+                elements={TRANSACTION_TYPES}
+                onChange={(e) => {
                   setSingleRecord((prev) => ({
                     ...prev,
                     transaction_type: e.target.value as "sell" | "buy",
-                  }))
-                }
-              >
-                {TRANSACTION_TYPES.map(({ value, name }) => (
-                  <SelectItem value={value} key={value}>
-                    {name}
-                  </SelectItem>
-                ))}
-              </Select>
+                  }));
+                }}
+              />
               <Input
                 classNames={{ inputWrapper: "!bg-light" }}
                 name="quantity"

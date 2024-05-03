@@ -95,16 +95,13 @@ export async function getDividendInfo(): Promise<SupabaseResponse<Dividend>> {
 export async function getSpecificStocks(
   list: string[]
 ): Promise<SupabaseResponse<Stock>> {
-  const results: Stock[] = [];
   try {
-    await Promise.all(
-      list.map(async (name) => {
-        const { data } = await axios.get(
-          `https://bossa.pl/fl_api/API/GPW/v2/Q/C/_cat_name/${name}`
-        );
-        results.push(data._d[0]._t[0]);
-      })
+    const { data } = await axios.get(
+      `https://bossa.pl/fl_api/API/GPW/v2/Q/C/_cat_name/${list}`
     );
+
+    const results = data._d[0]._t;
+
     return {
       results,
     };

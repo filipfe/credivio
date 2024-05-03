@@ -16,6 +16,11 @@ type SupabaseResponse<T> = {
   count?: number | null;
 };
 
+type SupabaseSingleRowResponse<T> = {
+  error?: string;
+  results: T;
+};
+
 type Option<T> = { name: string; value: T };
 
 type SearchParams = {

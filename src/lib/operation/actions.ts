@@ -60,15 +60,15 @@ export async function getDailyTotalAmount(): Promise<
 }
 
 export async function getDashboardStats(): Promise<
-  SupabaseResponse<DashboardStats>
+  SupabaseSingleRowResponse<DashboardStats>
 > {
   const supabase = createClient();
-  const { data: results, error } = await supabase
-    .rpc("get_dashboard_stats")
-    .returns<DashboardStats[]>();
+
+  const { data: results, error } = await supabase.rpc("get_dashboard_stats");
+
   if (error) {
     return {
-      results: [],
+      results: {} as DashboardStats,
       error: error.message,
     };
   }

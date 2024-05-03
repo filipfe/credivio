@@ -1,5 +1,4 @@
 import AddForm from "@/components/operations/form";
-import { getSpecificRow } from "@/lib/general/actions";
 import { getDefaultCurrency } from "@/lib/operation/actions";
 
 export default async function Page() {
