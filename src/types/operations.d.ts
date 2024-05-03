@@ -38,4 +38,5 @@ type DashboardStats = {
   incomes: DashboardStat;
   expenses: DashboardStat;
   budget: DashboardStat;
+  currency: string;
 };
