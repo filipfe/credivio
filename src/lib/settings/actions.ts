@@ -4,8 +4,11 @@ import { createClient } from "@/utils/supabase/server";
 import { PostgrestError } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 
-export async function getAccount(): Promise<SupabaseResponse<Account>> {
+export async function getAccount(): Promise<
+  SupabaseSingleRowResponse<Account>
+> {
   const supabase = createClient();
+
   const {
     data: { user },
     error: authError,
@@ -13,8 +16,8 @@ export async function getAccount(): Promise<SupabaseResponse<Account>> {
 
   if (authError) {
     return {
+      results: {} as Account,
       error: authError.message,
-      results: [],
     };
   }
 
@@ -25,7 +28,7 @@ export async function getAccount(): Promise<SupabaseResponse<Account>> {
   };
 
   return {
-    results: [{ ...data }],
+    results: data,
   };
 }
 
@@ -48,7 +51,9 @@ export async function updateAccount(formData: FormData) {
   }
 }
 
-export async function getPreferences(): Promise<SupabaseResponse<Preferences>> {
+export async function getPreferences(): Promise<
+  SupabaseSingleRowResponse<Preferences>
+> {
   const supabase = createClient();
   const {
     data: { user },
@@ -58,7 +63,7 @@ export async function getPreferences(): Promise<SupabaseResponse<Preferences>> {
   if (authError) {
     return {
       error: authError.message,
-      results: [],
+      results: {} as Preferences,
     };
   }
 
@@ -68,7 +73,7 @@ export async function getPreferences(): Promise<SupabaseResponse<Preferences>> {
   };
 
   return {
-    results: [data],
+    results: data,
   };
 }
 

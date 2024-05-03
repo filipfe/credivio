@@ -4,8 +4,7 @@ import { Button } from "@nextui-org/react";
 import { CheckIcon } from "lucide-react";
 
 export default async function Page() {
-  const { results } = await getAccount();
-  const user = results[0];
+  const { results: user } = await getAccount();
 
   return (
     <div className="px-12 pt-8 pb-24 flex flex-col gap-8">
@@ -38,6 +37,7 @@ export default async function Page() {
             type="email"
             isRequired
             defaultValue={user.email}
+            isDisabled
           />
           <Button
             type="submit"
