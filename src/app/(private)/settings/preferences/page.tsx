@@ -4,8 +4,7 @@ import Block from "@/components/ui/block";
 import { getPreferences } from "@/lib/settings/actions";
 
 export default async function Page() {
-  const { results } = await getPreferences();
-  const preferences = results[0];
+  const { results: preferences } = await getPreferences();
 
   return (
     <div className="px-12 pt-8 pb-24 flex flex-col gap-8">
