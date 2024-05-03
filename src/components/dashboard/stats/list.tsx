@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export default async function StatsList() {
   const {
-    results: { incomes, expenses, budget },
+    results: { incomes, expenses, budget, currency },
   } = await getDashboardStats();
 
   return (
@@ -25,7 +25,7 @@ export default async function StatsList() {
       )} */}
       <Stat
         title="Przychody"
-        currency="PLN"
+        currency={currency}
         description=""
         stat={incomes}
         cta={
@@ -44,7 +44,7 @@ export default async function StatsList() {
       />
       <Stat
         title="Wydatki"
-        currency="PLN"
+        currency={currency}
         description=""
         stat={expenses}
         cta={
@@ -61,7 +61,7 @@ export default async function StatsList() {
           </Link>
         }
       />
-      <Stat title="Budżet" currency="PLN" description="" stat={budget} />
+      <Stat title="Budżet" currency={currency} description="" stat={budget} />
     </Fragment>
   );
 }
