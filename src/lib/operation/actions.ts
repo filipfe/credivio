@@ -15,8 +15,22 @@ export async function addOperations(
     let results: Operation[] = JSON.parse(data);
     const supabase = createClient();
 
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (!user || authError) {
+      return {
+        results: [],
+        error: "Błąd autoryzacji, spróbuj zalogować się ponownie!",
+      };
+    }
+
     if (label) {
-      results = results.map((item) => ({ ...item, label }));
+      results = results.map((item) => ({ ...item, label, user_id: user.id }));
+    } else {
+      results = results.map((item) => ({ ...item, user_id: user.id }));
     }
 
     const { error } = await supabase.from(`${type}s`).insert(results);
@@ -64,7 +78,23 @@ export async function getDashboardStats(): Promise<
 > {
   const supabase = createClient();
 
-  const { data: results, error } = await supabase.rpc("get_dashboard_stats");
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (!user || authError) {
+    return {
+      results: {} as DashboardStats,
+      error: "Błąd autoryzacji, spróbuj zalogować się ponownie!",
+    };
+  }
+
+  const currency = user?.user_metadata.currency;
+
+  const { data: results, error } = await supabase.rpc("get_dashboard_stats", {
+    currency,
+  });
 
   if (error) {
     return {

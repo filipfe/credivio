@@ -167,7 +167,6 @@ export async function deleteRows<T>({
       results: [],
     };
   } catch (err) {
-    console.log(err);
     return {
       error: "Wystąpił błąd, spróbuj ponownie później!",
       results: [],
@@ -189,17 +188,21 @@ export async function insertRows<T>({
     } else {
       type = body!.type;
     }
+
     const supabase = createClient();
+
     const {
       data: { user },
       error: authError,
     } = await supabase.auth.getUser();
+
     if (!user || authError) {
       return {
         results: [],
         error: "Błąd autoryzacji, spróbuj zalogować się ponownie!",
       };
     }
+
     const data = formData
       ? JSON.parse(formData.get("data")!.toString())
       : body!.data;

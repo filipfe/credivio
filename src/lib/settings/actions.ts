@@ -55,15 +55,16 @@ export async function getPreferences(): Promise<
   SupabaseSingleRowResponse<Preferences>
 > {
   const supabase = createClient();
+
   const {
     data: { user },
     error: authError,
   } = await supabase.auth.getUser();
 
-  if (authError) {
+  if (!user || authError) {
     return {
-      error: authError.message,
       results: {} as Preferences,
+      error: "Błąd autoryzacji, spróbuj zalogować się ponownie!",
     };
   }
 
@@ -105,10 +106,10 @@ export async function activateService(
     error: authError,
   } = await supabase.auth.getUser();
 
-  if (authError) {
+  if (!user || authError) {
     return {
-      error: authError.message,
       results: [],
+      error: "Błąd autoryzacji, spróbuj zalogować się ponownie!",
     };
   }
 
@@ -118,7 +119,7 @@ export async function activateService(
     const { error: deleteError } = await supabase
       .from("user_services")
       .delete()
-      .eq("user_id", user?.id)
+      .eq("user_id", user.id)
       .eq("service_id", id);
     error = deleteError;
   } else {
