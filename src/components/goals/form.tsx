@@ -8,6 +8,8 @@ import { CheckIcon } from "lucide-react";
 import { insertRows } from "@/lib/general/actions";
 import toast from "react-hot-toast";
 import { v4 } from "uuid";
+import UniversalSelect from "../ui/universal-select";
+import { CURRENCIES } from "@/const";
 
 const defaultRecord: Omit<SupabaseGoal, "id"> = {
   title: "",
@@ -70,14 +72,17 @@ export default function GoalForm() {
               }))
             }
           />
-          <CurrencySelect
-            value={singleRecord.currency}
-            onChange={(currency) =>
+          <UniversalSelect
+            name="currency"
+            label="Waluta"
+            selectedKeys={[singleRecord.currency]}
+            elements={CURRENCIES}
+            onChange={(e) => {
               setSingleRecord((prev) => ({
                 ...prev,
-                currency,
-              }))
-            }
+                currency: e.target.value,
+              }));
+            }}
           />
           <Input
             classNames={{ inputWrapper: "!bg-light" }}

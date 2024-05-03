@@ -1,6 +1,6 @@
 import Block from "@/components/ui/block";
-import CurrencySelect from "@/components/ui/table/currency-select";
-import LanguageSelect from "@/components/ui/language-select";
+import UniversalSelect from "@/components/ui/universal-select";
+import { CURRENCIES, LANGUAGES } from "@/const";
 import { getPreferences, updatePreferences } from "@/lib/settings/actions";
 import { Button } from "@nextui-org/react";
 import { CheckIcon } from "lucide-react";
@@ -17,14 +17,31 @@ export default async function Page() {
           <Block>
             <div>
               <h2 className="text-lg font-bold">Waluta</h2>
-              <CurrencySelect
-                value={preferences.currency}
-                onChange={(value) => {}}
-              />
+              <div className="flex text-nowrap items-center justify-between">
+                Wybierz domyślną walutę
+                <UniversalSelect
+                  className="w-32"
+                  size="sm"
+                  name="currency"
+                  labelPlacement="outside-left"
+                  defaultSelectedKeys={[preferences.currency]}
+                  elements={CURRENCIES}
+                />
+              </div>
             </div>
             <div>
               <h2 className="text-lg font-bold">Język</h2>
-              <LanguageSelect defaultSelectedKeys={[preferences.language]} />
+              <div className="flex text-nowrap items-center justify-between">
+                Wybierz język
+                <UniversalSelect
+                  className="w-32"
+                  size="sm"
+                  name="language"
+                  labelPlacement="outside-left"
+                  defaultSelectedKeys={[preferences.language]}
+                  elements={LANGUAGES}
+                />
+              </div>
             </div>
             <Button
               type="submit"
