@@ -14,5 +14,12 @@ export default function getStockHoldings(transactions: StockTransaction[]): {
       transaction_type === "buy" ? parseInt(quantity) : -parseInt(quantity);
   }
 
-  return holdings;
+  const positiveHoldings: Holdings = {};
+  for (const symbol in holdings) {
+    if (holdings.hasOwnProperty(symbol) && holdings[symbol] > 0) {
+      positiveHoldings[symbol] = holdings[symbol];
+    }
+  }
+
+  return positiveHoldings;
 }

@@ -2,29 +2,15 @@
 
 import { Area, AreaChart, YAxis } from "recharts";
 
-type Props = { quotes: number[][]; isUp: boolean; isDown: boolean };
+type Props = { quotes: PriceRecord[]; isUp: boolean; isDown: boolean };
 
 export default function SmallChart({ quotes, isUp, isDown }: Props) {
-  const validQuotes = quotes.map((record) => {
-    const [time, _open, _high, _low, close, _volume] = record;
-    return {
-      dateTime: new Intl.DateTimeFormat("pl-PL", {
-        dateStyle: "short",
-        timeStyle: "short",
-      }).format(time * 1000),
-      price: close,
-    };
-  });
-
-  const prices = validQuotes.map((product) => product.price);
+  const prices = quotes.map(({ price }) => price);
   const maxPrice = Math.max(...prices);
   const minPrice = Math.min(...prices);
-
-  console.log({ isUp, isDown });
-
   return (
     <AreaChart
-      data={validQuotes}
+      data={quotes}
       width={200}
       height={40}
       margin={{ top: 0, right: 0, bottom: 0, left: 0 }}

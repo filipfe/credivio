@@ -1,5 +1,6 @@
-import { getPeriodQuotes } from "@/lib/stocks/actions";
+import { getPriceHistory } from "@/lib/stocks/actions";
 import SmallChart from "./small-chart";
+import Link from "next/link";
 
 export default async function CompanyBlock({
   _symbol,
@@ -7,7 +8,7 @@ export default async function CompanyBlock({
   _change,
   _quote,
 }: Stock) {
-  const { results } = await getPeriodQuotes(_symbol_short);
+  const { results } = await getPriceHistory(_symbol_short);
   const quote = parseFloat(_quote);
   const price = new Intl.NumberFormat("pl-PL", {
     currency: "PLN",
@@ -18,7 +19,10 @@ export default async function CompanyBlock({
     !_change?.toString().endsWith("0.00");
   const isDown = _change?.toString().startsWith("-");
   return (
-    <article className="flex-1 bg-white p-6 gap-8 flex items-center justify-between rounded-md">
+    <Link
+      href={`/stocks/${_symbol}`}
+      className="flex-1 bg-white p-6 gap-8 flex items-center justify-between rounded-md"
+    >
       <div>
         <h3 className="font-medium text-sm">{_symbol_short}</h3>
         <p className="text-tiny text-font/80">{_symbol}</p>
@@ -42,6 +46,6 @@ export default async function CompanyBlock({
           <span className="font-medium text-tiny">{_change}%</span>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }

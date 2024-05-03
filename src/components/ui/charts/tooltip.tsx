@@ -8,7 +8,8 @@ export default function ChartTooltip({
   active,
   payload,
   label,
-}: TooltipProps<ValueType, NameType>) {
+  isWhite,
+}: TooltipProps<ValueType, NameType> & { isWhite?: boolean }) {
   const formatter = new Intl.NumberFormat("pl-PL", {
     style: "currency",
     currency: "PLN",
@@ -20,7 +21,11 @@ export default function ChartTooltip({
     : "";
   return (
     <div className="bg-white rounded-md">
-      <div className="p-4  flex flex-col gap-1 rounded-md text-primary bg-primary/10 border border-primary/20">
+      <div
+        className={`p-4  flex flex-col gap-1 rounded-md ${
+          isWhite ? "bg-white text-font" : "text-primary bg-primary/10"
+        } border border-primary/20`}
+      >
         <p className="text-sm font-medium">{label}</p>
         <p className="text-sm">
           Budżet: <strong className="font-medium">{value}</strong>

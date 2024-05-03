@@ -78,3 +78,8 @@ type StocksIndex = {
   name: GPWIndex;
   title: string;
 };
+
+type PriceRecord = {
+  price: number;
+  time: number;
+};
