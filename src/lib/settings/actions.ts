@@ -72,16 +72,11 @@ export async function getPreferences(): Promise<SupabaseResponse<Preferences>> {
   };
 }
 
-export async function updatePreferences(formData: FormData) {
+export async function updatePreferences(name: string, value: string) {
   const supabase = createClient();
 
-  const data = {
-    currency: formData.get("currency"),
-    language: formData.get("language"),
-  };
-
   const { error } = await supabase.auth.updateUser({
-    data: data,
+    data: { [name]: value },
   });
 
   if (error) {
