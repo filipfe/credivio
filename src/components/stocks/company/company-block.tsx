@@ -1,11 +1,13 @@
-import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
+import { getPeriodQuotes } from "@/lib/stocks/actions";
+import SmallChart from "./small-chart";
 
-export default function CompanyBlock({
+export default async function CompanyBlock({
   _symbol,
   _symbol_short,
   _change,
   _quote,
 }: Stock) {
+  const { results } = await getPeriodQuotes(_symbol_short);
   const quote = parseFloat(_quote);
   const price = new Intl.NumberFormat("pl-PL", {
     currency: "PLN",
@@ -26,6 +28,7 @@ export default function CompanyBlock({
           isUp ? "text-success" : isDown ? "text-danger" : "text-font/70"
         }`}
       >
+        <SmallChart quotes={results} isDown={isDown} isUp={isUp} />
         <span className="text-sm font-medium">{price}</span>
         <div
           className={`flex items-center gap-2 rounded px-1.5 py-1 ${

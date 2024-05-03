@@ -139,3 +139,23 @@ export async function getAllStocks(): Promise<SupabaseResponse<Stock>> {
     };
   }
 }
+
+export async function getPeriodQuotes(
+  short_symbol: string,
+  period: string = "15T"
+) {
+  try {
+    const { data } = await axios.get(
+      `https://bossa.pl/fl_api/API/GPW/v2/Charts/${short_symbol}/${period}`
+    );
+
+    return {
+      results: data._r,
+    };
+  } catch (err) {
+    return {
+      results: [],
+      error: "Wystąpił błąd, spróbuj ponownie później!",
+    };
+  }
+}

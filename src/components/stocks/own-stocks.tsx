@@ -4,9 +4,9 @@ import Add from "../ui/cta/add";
 import getStockHoldings from "@/utils/stocks/get-stock-holdings";
 import { ScrollShadow } from "@nextui-org/react";
 import StockTable from "./table";
-import { Fragment } from "react";
+import { Fragment, Suspense } from "react";
 import HorizontalScroll from "../ui/horizontal-scroll";
-import CompanyBlock from "./company-block";
+import CompanyBlock from "./company/company-block";
 
 export default async function OwnStocks({
   stocks,
@@ -36,7 +36,9 @@ export default async function OwnStocks({
     <Fragment>
       <HorizontalScroll className="col-span-full">
         {ownStocks.map((item, k) => (
-          <CompanyBlock {...item} key={`company-block:${k}`} />
+          <Suspense fallback="Loading" key={`suspense:company-block:${k}`}>
+            <CompanyBlock {...item} key={`company-block:${k}`} />
+          </Suspense>
         ))}
       </HorizontalScroll>
       <Block title="Moje instrumenty" className="col-span-2 w-screen sm:w-auto">
