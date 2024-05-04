@@ -23,7 +23,7 @@ export default async function Dashboard() {
       <Suspense
         fallback={<LineChartLoader className="xl:col-span-3 min-h-96" />}
       >
-        <BudgetByMonth />
+        <BudgetByMonth defaultCurrency={defaultCurrency} />
       </Suspense>
       <Suspense fallback={<Loader className="col-span-6" />}>
         <PortfolioStructure />

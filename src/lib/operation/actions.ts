@@ -55,11 +55,14 @@ export async function addOperations(
   redirect(path);
 }
 
-export async function getDailyTotalAmount(): Promise<
-  SupabaseResponse<DailyAmount>
-> {
+export async function getDailyTotalAmount(
+  currency: string
+): Promise<SupabaseResponse<DailyAmount>> {
   const supabase = createClient();
-  const { data: results, error } = await supabase.rpc("get_daily_total_amount");
+  const { data: results, error } = await supabase.rpc(
+    "get_daily_total_amount",
+    { currency }
+  );
 
   if (error) {
     return {

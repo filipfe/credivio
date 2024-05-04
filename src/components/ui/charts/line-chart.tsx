@@ -13,12 +13,13 @@ import ChartTooltip from "./tooltip";
 
 type Props = {
   data: DailyAmount[];
+  defaultCurrency: string;
 };
 
-export default function LineChart({ data }: Props) {
+export default function LineChart({ data, defaultCurrency }: Props) {
   const compact = new Intl.NumberFormat("pl-PL", {
     style: "currency",
-    currency: "PLN",
+    currency: defaultCurrency,
     notation: "compact",
   });
 
@@ -67,7 +68,13 @@ export default function LineChart({ data }: Props) {
               year: "numeric",
             }).format(new Date(year, parseInt(month) - 1, day));
           }}
-          content={(props) => <ChartTooltip {...props} payloadName="Budżet" />}
+          content={(props) => (
+            <ChartTooltip
+              {...props}
+              payloadName="Budżet"
+              defaultCurrency={defaultCurrency}
+            />
+          )}
         />
         <Line
           dataKey="total_amount"

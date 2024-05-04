@@ -11,10 +11,14 @@ export default function ChartTooltip({
   contentStyle,
   payloadName,
   labelFormatter,
-}: TooltipProps<ValueType, NameType> & { payloadName?: string }) {
+  defaultCurrency,
+}: TooltipProps<ValueType, NameType> & {
+  payloadName?: string;
+  defaultCurrency: string;
+}) {
   const currencyFormatter = new Intl.NumberFormat("pl-PL", {
     style: "currency",
-    currency: "PLN",
+    currency: defaultCurrency,
     notation: "standard",
   });
   if (!active || !payload || payload.length === 0) return;
