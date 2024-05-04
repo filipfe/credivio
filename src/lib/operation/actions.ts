@@ -73,24 +73,10 @@ export async function getDailyTotalAmount(): Promise<
   };
 }
 
-export async function getDashboardStats(): Promise<
-  SupabaseSingleRowResponse<DashboardStats>
-> {
+export async function getDashboardStats(
+  currency: string
+): Promise<SupabaseSingleRowResponse<DashboardStats>> {
   const supabase = createClient();
-
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (!user || authError) {
-    return {
-      results: {} as DashboardStats,
-      error: "Błąd autoryzacji, spróbuj zalogować się ponownie!",
-    };
-  }
-
-  const currency = user?.user_metadata.currency;
 
   const { data: results, error } = await supabase.rpc("get_dashboard_stats", {
     currency,
@@ -127,9 +113,13 @@ export async function getLabels(): Promise<SupabaseResponse<Label>> {
   };
 }
 
-export async function getChartLabels(): Promise<SupabaseResponse<ChartLabel>> {
+export async function getChartLabels(
+  currency: string
+): Promise<SupabaseResponse<ChartLabel>> {
   const supabase = createClient();
-  const { data: results, error } = await supabase.rpc("get_chart_labels");
+  const { data: results, error } = await supabase.rpc("get_chart_labels", {
+    currency,
+  });
 
   if (error) {
     return {
@@ -150,7 +140,7 @@ export async function getDefaultCurrency(): Promise<string> {
     error: authError,
   } = await supabase.auth.getUser();
 
-  if (authError) return authError.message;
+  if (!user || authError) "Błąd autoryzacji, spróbuj zalogować się ponownie!";
 
   return user?.user_metadata.currency;
 }

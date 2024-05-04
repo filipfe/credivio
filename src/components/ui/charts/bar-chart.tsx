@@ -13,6 +13,7 @@ import {
 
 type Props = {
   data: ChartLabel[];
+  defaultCurrency: string;
 };
 
 const renderCustomBarLabel = ({
@@ -25,15 +26,15 @@ const renderCustomBarLabel = ({
 }: any) => {
   return (
     <text x={x + width / 2} y={y} fill="#666" textAnchor="middle" dy={-6}>
-      {value} zł
+      {value}
     </text>
   );
 };
 
-export default function BarChart({ data }: Props) {
+export default function BarChart({ data, defaultCurrency }: Props) {
   const numberFormat = new Intl.NumberFormat("pl-PL", {
     style: "currency",
-    currency: "PLN",
+    currency: defaultCurrency,
     notation: "compact",
   });
   return (
