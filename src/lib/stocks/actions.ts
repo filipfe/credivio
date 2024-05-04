@@ -183,13 +183,12 @@ export async function getPriceHistory(
 
 export async function getPricePeriod(
   short_symbol: string,
-  period: string = "15T"
-) {
+  period: string = "1D"
+): Promise<SupabaseResponse<number[]>> {
   try {
     const { data } = await axios.get(
       `https://bossa.pl/fl_api/API/GPW/v2/Charts/${short_symbol}/${period}`
     );
-    console.log(data);
     return {
       results: data._r,
     };
