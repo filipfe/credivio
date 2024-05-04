@@ -1,11 +1,14 @@
-import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
+import { getPriceHistory } from "@/lib/stocks/actions";
+import SmallChart from "./small-chart";
+import Link from "next/link";
 
-export default function CompanyBlock({
+export default async function CompanyBlock({
   _symbol,
   _symbol_short,
   _change,
   _quote,
 }: Stock) {
+  const { results } = await getPriceHistory(_symbol_short);
   const quote = parseFloat(_quote);
   const price = new Intl.NumberFormat("pl-PL", {
     currency: "PLN",
@@ -16,7 +19,10 @@ export default function CompanyBlock({
     !_change?.toString().endsWith("0.00");
   const isDown = _change?.toString().startsWith("-");
   return (
-    <article className="flex-1 bg-white p-6 gap-8 flex items-center justify-between rounded-md">
+    <Link
+      href={`/stocks/${_symbol}`}
+      className="flex-1 bg-white p-6 gap-4 sm:gap-8 flex items-center justify-between rounded-md"
+    >
       <div>
         <h3 className="font-medium text-sm">{_symbol_short}</h3>
         <p className="text-tiny text-font/80">{_symbol}</p>
@@ -26,6 +32,7 @@ export default function CompanyBlock({
           isUp ? "text-success" : isDown ? "text-danger" : "text-font/70"
         }`}
       >
+        <SmallChart quotes={results} isDown={isDown} isUp={isUp} />
         <span className="text-sm font-medium">{price}</span>
         <div
           className={`flex items-center gap-2 rounded px-1.5 py-1 ${
@@ -39,6 +46,6 @@ export default function CompanyBlock({
           <span className="font-medium text-tiny">{_change}%</span>
         </div>
       </div>
-    </article>
+    </Link>
   );
 }

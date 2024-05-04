@@ -8,23 +8,39 @@ export default function ChartTooltip({
   active,
   payload,
   label,
-}: TooltipProps<ValueType, NameType>) {
-  const formatter = new Intl.NumberFormat("pl-PL", {
+  contentStyle,
+  payloadName,
+  labelFormatter,
+}: TooltipProps<ValueType, NameType> & { payloadName?: string }) {
+  const currencyFormatter = new Intl.NumberFormat("pl-PL", {
     style: "currency",
     currency: "PLN",
     notation: "standard",
   });
   if (!active || !payload || payload.length === 0) return;
   const value = payload[0].value
-    ? formatter.format(parseFloat(payload[0].value.toString()))
+    ? currencyFormatter.format(parseFloat(payload[0].value.toString()))
     : "";
   return (
-    <div className="bg-white rounded-md">
-      <div className="p-4  flex flex-col gap-1 rounded-md text-primary bg-primary/10 border border-primary/20">
-        <p className="text-sm font-medium">{label}</p>
+    <div
+      className={`rounded-md bg-white text-font border-font/10 border min-w-44 shadow-lg shadow-font/5`}
+    >
+      <div className="py-2 px-4 border-b border-font/10">
         <p className="text-sm">
-          Budżet: <strong className="font-medium">{value}</strong>
+          {labelFormatter ? labelFormatter(label, payload) : label}
         </p>
+      </div>
+      <div className="py-2 px-4 flex items-center justify-between gap-6">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 bg-white rounded-full flex items-center justify-center shadow">
+            <div
+              style={{ backgroundColor: contentStyle?.backgroundColor }}
+              className="w-2 h-2 rounded-full"
+            />
+          </div>
+          <span className="text-sm">{payloadName}</span>
+        </div>
+        <strong className="font-medium text-sm">{value}</strong>
       </div>
     </div>
   );

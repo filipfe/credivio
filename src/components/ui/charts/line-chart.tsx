@@ -7,7 +7,7 @@ import {
   YAxis,
   XAxis,
   Tooltip,
-  LineChart,
+  LineChart as Chart,
 } from "recharts";
 import ChartTooltip from "./tooltip";
 
@@ -15,7 +15,7 @@ type Props = {
   data: DailyAmount[];
 };
 
-export default function AreaChart({ data }: Props) {
+export default function LineChart({ data }: Props) {
   const compact = new Intl.NumberFormat("pl-PL", {
     style: "currency",
     currency: "PLN",
@@ -24,16 +24,10 @@ export default function AreaChart({ data }: Props) {
 
   return (
     <ResponsiveContainer width="100%" height={360}>
-      <LineChart
+      <Chart
         data={data.map((e) => e)}
         margin={{ top: 5, left: 12, right: 36, bottom: 0 }}
       >
-        <defs>
-          <linearGradient id="area-chart-gradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#177981" stopOpacity={0.8} />
-            <stop offset="95%" stopColor="#177981" stopOpacity={0} />
-          </linearGradient>
-        </defs>
         <YAxis
           tick={{ fontSize: 12 }}
           dataKey="total_amount"
@@ -44,7 +38,13 @@ export default function AreaChart({ data }: Props) {
         <XAxis
           dataKey="date"
           tick={{ fontSize: 12 }}
-          tickFormatter={(value) => value.substring(0, 5).replace("-", ".")}
+          tickFormatter={(label) => {
+            const [day, month, year] = label.split("-");
+            return new Intl.DateTimeFormat("pl-PL", {
+              day: "2-digit",
+              month: "2-digit",
+            }).format(new Date(year, parseInt(month) - 1, day));
+          }}
           interval={2}
           axisLine={false}
           tickLine={false}
@@ -57,7 +57,17 @@ export default function AreaChart({ data }: Props) {
         />
         <Tooltip
           isAnimationActive={false}
-          content={(props) => <ChartTooltip {...props} />}
+          contentStyle={{ backgroundColor: "#177981" }}
+          labelFormatter={(label) => {
+            const [day, month, year] = label.split("-");
+            return new Intl.DateTimeFormat("pl-PL", {
+              weekday: "short",
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            }).format(new Date(year, parseInt(month) - 1, day));
+          }}
+          content={(props) => <ChartTooltip {...props} payloadName="Budżet" />}
         />
         <Line
           dataKey="total_amount"
@@ -66,7 +76,7 @@ export default function AreaChart({ data }: Props) {
           fillOpacity={1}
           dot={false}
         />
-      </LineChart>
+      </Chart>
     </ResponsiveContainer>
   );
 }

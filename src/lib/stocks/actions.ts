@@ -96,9 +96,8 @@ export async function getSpecificStocks(
   list: string[]
 ): Promise<SupabaseResponse<Stock>> {
   try {
-    const { data } = await axios.get(
-      `https://bossa.pl/fl_api/API/GPW/v2/Q/C/_cat_name/${list}`
-    );
+    const url = `https://bossa.pl/fl_api/API/GPW/v2/Q/C/_cat_name/${list}`;
+    const { data } = await axios.get(url);
 
     const results = data._d[0]._t;
 
@@ -128,6 +127,70 @@ export async function getAllStocks(): Promise<SupabaseResponse<Stock>> {
 
     return {
       results: data._d[0]._t,
+    };
+  } catch (err) {
+    return {
+      results: [],
+      error: "Wystąpił błąd, spróbuj ponownie później!",
+    };
+  }
+}
+
+export async function getPriceHistory(
+  short_symbol: string
+): Promise<SupabaseResponse<PriceRecord>> {
+  const now = new Date();
+  try {
+    let results: PriceRecord[] = [];
+    let message = "no_data";
+    let nineAM =
+      new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        9,
+        0,
+        0,
+        0
+      ).getTime() / 1000;
+    while (message !== "ok") {
+      const { data } = await axios.get(
+        `https://bossa.pl/fl_api/API/Charts/v1/history?symbol=${short_symbol}&resolution=1&from=${nineAM}&to=${Math.floor(
+          now.getTime() / 1000
+        )}`
+      );
+      message = data.s;
+      results =
+        data.s === "ok"
+          ? data.t.map((time: number, k: number) => ({
+              price: data.c[k],
+              time,
+            }))
+          : [];
+      nineAM -= 86400;
+    }
+
+    return {
+      results,
+    };
+  } catch (err) {
+    return {
+      results: [],
+      error: "Wystąpił błąd, spróbuj ponownie później!",
+    };
+  }
+}
+
+export async function getPricePeriod(
+  short_symbol: string,
+  period: string = "1D"
+): Promise<SupabaseResponse<number[]>> {
+  try {
+    const { data } = await axios.get(
+      `https://bossa.pl/fl_api/API/GPW/v2/Charts/${short_symbol}/${period}`
+    );
+    return {
+      results: data._r,
     };
   } catch (err) {
     return {

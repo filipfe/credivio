@@ -53,6 +53,7 @@ const config: Config = {
               "100": "#FAFAFA",
             },
             success: "#32a852",
+            danger: "#f31212",
           },
           layout: {
             hoverOpacity: 95,
