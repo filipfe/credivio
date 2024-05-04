@@ -7,15 +7,18 @@ import BudgetByMonth from "@/components/dashboard/charts/budget-by-month";
 import ChartLoader from "@/components/ui/charts/loader";
 import LineChartLoader from "@/components/ui/charts/line-loader";
 import { StatLoader } from "@/components/dashboard/stats/ref";
+import { getDefaultCurrency } from "@/lib/operation/actions";
 
-export default function Dashboard() {
+export default async function Dashboard() {
+  const defaultCurrency = await getDefaultCurrency();
+
   return (
     <div className="sm:px-10 py-4 sm:py-8 sm:pb-24 flex flex-col xl:grid grid-cols-6 gap-4 sm:gap-6">
       <Suspense fallback={statsFallback}>
-        <StatsList />
+        <StatsList defaultCurrency={defaultCurrency} />
       </Suspense>
       <Suspense fallback={<ChartLoader className="xl:col-span-3 min-h-96" />}>
-        <ExpensesByLabel />
+        <ExpensesByLabel defaultCurrency={defaultCurrency} />
       </Suspense>
       <Suspense
         fallback={<LineChartLoader className="xl:col-span-3 min-h-96" />}
