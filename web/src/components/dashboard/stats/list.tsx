@@ -5,10 +5,14 @@ import { Button } from "@nextui-org/react";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 
-export default async function StatsList() {
+export default async function StatsList({
+  defaultCurrency,
+}: {
+  defaultCurrency: string;
+}) {
   const {
-    results: { incomes, expenses, budget, currency },
-  } = await getDashboardStats();
+    results: { incomes, expenses, budget },
+  } = await getDashboardStats(defaultCurrency);
 
   return (
     <Fragment>
@@ -25,7 +29,7 @@ export default async function StatsList() {
       )} */}
       <Stat
         title="Przychody"
-        currency={currency}
+        currency={defaultCurrency}
         description=""
         stat={incomes}
         cta={
@@ -44,7 +48,7 @@ export default async function StatsList() {
       />
       <Stat
         title="Wydatki"
-        currency={currency}
+        currency={defaultCurrency}
         description=""
         stat={expenses}
         cta={
@@ -61,7 +65,12 @@ export default async function StatsList() {
           </Link>
         }
       />
-      <Stat title="Budżet" currency={currency} description="" stat={budget} />
+      <Stat
+        title="Budżet"
+        currency={defaultCurrency}
+        description=""
+        stat={budget}
+      />
     </Fragment>
   );
 }
