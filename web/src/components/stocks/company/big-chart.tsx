@@ -17,9 +17,15 @@ type Props = {
   quotes: PriceRecord[];
   isUp: boolean;
   isDown: boolean;
+  defaultCurrency: string;
 };
 
-export default function BigChart({ quotes, isUp, isDown }: Props) {
+export default function BigChart({
+  quotes,
+  isUp,
+  isDown,
+  defaultCurrency,
+}: Props) {
   const [activeTime, setActiveTime] = useState<number | null>(null);
   const prices = quotes.map(({ price }) => price);
   const maxPrice = Math.max(...prices);
@@ -93,7 +99,13 @@ export default function BigChart({ quotes, isUp, isDown }: Props) {
             }).format(label * 1000)
           }
           contentStyle={{ backgroundColor: color }}
-          content={(props) => <ChartTooltip {...props} payloadName="Cena" />}
+          content={(props) => (
+            <ChartTooltip
+              {...props}
+              payloadName="Cena"
+              defaultCurrency={defaultCurrency}
+            />
+          )}
         />
         <CartesianGrid strokeWidth={1} vertical={false} stroke="#e0e0e0" />
         {activeTime && <ReferenceLine x={activeTime} stroke={color} />}
