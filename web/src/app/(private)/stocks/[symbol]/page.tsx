@@ -1,5 +1,6 @@
 import BigChart from "@/components/stocks/company/big-chart";
 import Block from "@/components/ui/block";
+import { getDefaultCurrency } from "@/lib/operation/actions";
 import { getPricePeriod, getSpecificStocks } from "@/lib/stocks/actions";
 import { redirect } from "next/navigation";
 
@@ -10,6 +11,7 @@ const formatter = new Intl.NumberFormat("pl-PL", {
 
 export default async function Page({ params }: { params: { symbol: string } }) {
   const { results: stocks } = await getSpecificStocks([params.symbol]);
+  const defaultCurrency = await getDefaultCurrency();
 
   if (stocks.length === 0) redirect("/stocks");
   const {
@@ -60,7 +62,12 @@ export default async function Page({ params }: { params: { symbol: string } }) {
             <span>Ostatnie 24 godziny</span>
           </div>
         </div>
-        <BigChart quotes={quotes} isUp={isUp} isDown={isDown} />
+        <BigChart
+          quotes={quotes}
+          isUp={isUp}
+          isDown={isDown}
+          defaultCurrency={defaultCurrency}
+        />
       </Block>
       <Block title={_symbol}>
         <></>
