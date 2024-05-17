@@ -14,9 +14,10 @@ import ChartTooltip from "./tooltip";
 type Props = {
   data: DailyAmount[];
   defaultCurrency: string;
+  type: string;
 };
 
-export default function LineChart({ data, defaultCurrency }: Props) {
+export default function LineChart({ data, defaultCurrency, type }: Props) {
   const compact = new Intl.NumberFormat("pl-PL", {
     style: "currency",
     currency: defaultCurrency,
@@ -71,7 +72,13 @@ export default function LineChart({ data, defaultCurrency }: Props) {
           content={(props) => (
             <ChartTooltip
               {...props}
-              payloadName="Budżet"
+              payloadName={
+                type === "budget"
+                  ? "Budżet"
+                  : type === "income"
+                  ? "Przychody"
+                  : "Wydatki"
+              }
               defaultCurrency={defaultCurrency}
             />
           )}

@@ -1,4 +1,4 @@
-import BudgetByMonth from "@/components/dashboard/charts/budget-by-month";
+import OperationsByMonth from "@/components/dashboard/charts/operations-by-month";
 import Stat from "@/components/dashboard/stats/ref";
 import IncomeTable from "@/components/operations/table";
 import Loader from "@/components/stocks/loader";
@@ -34,7 +34,7 @@ export default async function Page({
       </div>
       <div className="col-[1/3] row-[2/3]">
         <Suspense fallback={<LineChartLoader />}>
-          <BudgetByMonth defaultCurrency={defaultCurrency} />
+          <OperationsByMonth defaultCurrency={defaultCurrency} type="income" />
         </Suspense>
       </div>
       <Suspense fallback={<Loader className="row-span-2 col-span-2" />}>

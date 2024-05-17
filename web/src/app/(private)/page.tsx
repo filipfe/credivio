@@ -3,11 +3,11 @@ import { Fragment, Suspense } from "react";
 import StatsList from "@/components/dashboard/stats/list";
 import Loader from "@/components/stocks/loader";
 import ExpensesByLabel from "@/components/dashboard/charts/expenses-by-label";
-import BudgetByMonth from "@/components/dashboard/charts/budget-by-month";
 import ChartLoader from "@/components/ui/charts/loader";
 import LineChartLoader from "@/components/ui/charts/line-loader";
 import { StatLoader } from "@/components/dashboard/stats/ref";
 import { getDefaultCurrency } from "@/lib/operation/actions";
+import OperationsByMonth from "@/components/dashboard/charts/operations-by-month";
 
 export default async function Dashboard() {
   const defaultCurrency = await getDefaultCurrency();
@@ -23,7 +23,7 @@ export default async function Dashboard() {
       <Suspense
         fallback={<LineChartLoader className="xl:col-span-3 min-h-96" />}
       >
-        <BudgetByMonth defaultCurrency={defaultCurrency} />
+        <OperationsByMonth defaultCurrency={defaultCurrency} type="budget" />
       </Suspense>
       <Suspense fallback={<Loader className="col-span-6" />}>
         <PortfolioStructure />

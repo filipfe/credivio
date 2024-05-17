@@ -56,12 +56,13 @@ export async function addOperations(
 }
 
 export async function getDailyTotalAmount(
-  currency: string
+  currency: string,
+  type: string
 ): Promise<SupabaseResponse<DailyAmount>> {
   const supabase = createClient();
   const { data: results, error } = await supabase.rpc(
     "get_daily_total_amount",
-    { currency }
+    { currency, type }
   );
 
   if (error) {

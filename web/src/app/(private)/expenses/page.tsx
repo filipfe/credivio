@@ -1,11 +1,11 @@
 import OperationTable from "@/components/operations/table";
 import { getOwnRows } from "@/lib/general/actions";
 import Stat from "@/components/dashboard/stats/ref";
-import BudgetByMonth from "@/components/dashboard/charts/budget-by-month";
 import { Suspense } from "react";
 import Loader from "@/components/stocks/loader";
 import LineChartLoader from "@/components/ui/charts/line-loader";
 import { getDefaultCurrency } from "@/lib/operation/actions";
+import OperationsByMonth from "@/components/dashboard/charts/operations-by-month";
 
 export default async function Page({
   searchParams,
@@ -34,7 +34,7 @@ export default async function Page({
       </div>
       <div className="col-[1/3] row-[2/3]">
         <Suspense fallback={<LineChartLoader />}>
-          <BudgetByMonth defaultCurrency={defaultCurrency} />
+          <OperationsByMonth defaultCurrency={defaultCurrency} type="expense" />
         </Suspense>
       </div>
       <Suspense fallback={<Loader className="row-span-2 col-span-2" />}>
