@@ -79,11 +79,6 @@ export default function StockTable({
       shadow="none"
       color="primary"
       className="max-w-full w-full flex-1"
-      checkboxesProps={{
-        classNames: {
-          wrapper: "text-background",
-        },
-      }}
     >
       <TableHeader>
         {columns({ quantityVisible, simplified }).map((column) => (
@@ -92,7 +87,7 @@ export default function StockTable({
       </TableHeader>
       <TableBody items={stocks} loadingContent={<Spinner label="Loading..." />}>
         {(item) => (
-          <TableRow key={item._symbol}>
+          <TableRow key={item._symbol} className="hover:bg-[#f7f7f8]">
             {(columnKey) => (
               <TableCell>
                 {renderCell(item, columnKey as keyof TableStock)}

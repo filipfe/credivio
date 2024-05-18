@@ -43,7 +43,6 @@ export default function TransactionTable({
   viewOnly,
   title,
   children,
-
   topContent,
 }: TableProps<StockTransaction>) {
   const pages = Math.ceil(count / 10);
@@ -133,7 +132,9 @@ export default function TransactionTable({
             {columns({ viewOnly: !!viewOnly, simplified }).map((column) => (
               <TableColumn
                 key={column.key}
-                allowsSorting={count > 0 && !viewOnly ? true : undefined}
+                allowsSorting={
+                  count > 0 && !viewOnly && !simplified ? true : undefined
+                }
                 className="sm:h-10 h-8 text-tiny"
               >
                 {column.label}
