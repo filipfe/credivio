@@ -25,6 +25,7 @@ export default function ChartTooltip({
   const value = payload[0].value
     ? currencyFormatter.format(parseFloat(payload[0].value.toString()))
     : "";
+
   return (
     <div
       className={`rounded-md bg-white text-font border-font/10 border min-w-44 shadow-lg shadow-font/5`}
@@ -44,7 +45,9 @@ export default function ChartTooltip({
           </div>
           <span className="text-sm">{payloadName}</span>
         </div>
-        <strong className="font-medium text-sm">{value}</strong>
+        <strong className="font-medium text-sm">
+          {value ? value : currencyFormatter.format(0)}
+        </strong>
       </div>
     </div>
   );
