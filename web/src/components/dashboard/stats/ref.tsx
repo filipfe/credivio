@@ -5,7 +5,7 @@ type Props = {
   title: string;
   description: string;
   currency: string;
-  stat: DashboardStat;
+  stat: Stat;
   cta?: React.ReactNode;
 };
 
