@@ -28,15 +28,19 @@ type DailyAmount = {
   total_amount: number;
 };
 
-type DashboardStat = {
+type Stat = {
   amount: number;
   difference: number | null;
   is_positive: boolean;
 };
 
 type DashboardStats = {
-  incomes: DashboardStat;
-  expenses: DashboardStat;
-  budget: DashboardStat;
-  currency: string;
+  incomes: Stat;
+  expenses: Stat;
+  budget: Stat;
+};
+
+type OperationsStats = {
+  last_30_days: Stat;
+  last_day: Stat;
 };

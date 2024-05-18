@@ -4,7 +4,10 @@ import Stat from "@/components/dashboard/stats/ref";
 import { Suspense } from "react";
 import Loader from "@/components/stocks/loader";
 import LineChartLoader from "@/components/ui/charts/line-loader";
-import { getDefaultCurrency } from "@/lib/operation/actions";
+import {
+  getDefaultCurrency,
+  getOperationsStats,
+} from "@/lib/operation/actions";
 import OperationsByMonth from "@/components/dashboard/charts/operations-by-month";
 
 export default async function Page({
@@ -13,6 +16,9 @@ export default async function Page({
   searchParams: SearchParams;
 }) {
   const defaultCurrency = await getDefaultCurrency();
+  const {
+    results: { last_30_days, last_day },
+  } = await getOperationsStats(defaultCurrency, "expense");
 
   return (
     <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 lg:grid grid-cols-4 lg:grid-rows-[max-content_1fr]">
@@ -20,16 +26,16 @@ export default async function Page({
         <Stat
           title="Dzisiaj"
           description=""
-          currency="PLN"
-          stat={{ amount: 124, difference: 42, is_positive: true }}
+          currency={defaultCurrency}
+          stat={last_day}
         />
       </div>
       <div className="col-[2/3]">
         <Stat
           title="30 dni"
           description=""
-          currency="PLN"
-          stat={{ amount: 124, difference: 42, is_positive: true }}
+          currency={defaultCurrency}
+          stat={last_30_days}
         />
       </div>
       <div className="col-[1/3] row-[2/3]">

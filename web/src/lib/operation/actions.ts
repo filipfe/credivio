@@ -77,6 +77,29 @@ export async function getDailyTotalAmount(
   };
 }
 
+export async function getOperationsStats(
+  currency: string,
+  type: string
+): Promise<SupabaseSingleRowResponse<OperationsStats>> {
+  const supabase = createClient();
+
+  const { data: results, error } = await supabase.rpc("get_operations_stats", {
+    currency,
+    type,
+  });
+
+  if (error) {
+    return {
+      results: {} as OperationsStats,
+      error: error.message,
+    };
+  }
+
+  return {
+    results,
+  };
+}
+
 export async function getDashboardStats(
   currency: string
 ): Promise<SupabaseSingleRowResponse<DashboardStats>> {
@@ -94,10 +117,7 @@ export async function getDashboardStats(
   }
 
   return {
-    results: {
-      ...results,
-      currency,
-    },
+    results,
   };
 }
 
