@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "supabase:dev": "supabase start && supabase functions serve --no-verify-jwt --env-file ./supabase/.env.local",
+    "supabase:deploy:dev": "supabase functions deploy --project-ref",
+    "supabase:deploy:prod": "supabase functions deploy --project-ref"
+  },
+  "devDependencies": {
+    "supabase": "^1.167.4"
+  }
+}

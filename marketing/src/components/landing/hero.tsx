@@ -1,8 +1,9 @@
 import GridBackground from "@/assets/svg/grid-bg";
+import ScrollCarousel from "./scroll-carousel";
 
 export default function Hero() {
   return (
-    <section className="min-h-[calc(100vh-88px)] bg-primary-dark px-6 lg:px-[16vw] flex flex-col items-center gap-8 overflow-hidden relative">
+    <section className="min-h-[calc(200vh-88px)] bg-primary-dark px-6 lg:px-[16vw] flex flex-col items-center gap-8 overflow-hidden relative">
       <div className="relative z-10 flex flex-col gap-4 items-center py-8 lg:py-16 w-full rounded-lg border border-white/10 bg-gradient-to-br from-[rgba(255,255,255,0.05)] to-[rgba(255,255,255,0)]">
         <h2 className="text-secondary text-center font-medium text-xl sm:text-2xl">
           Elevate your business
@@ -26,7 +27,7 @@ export default function Hero() {
           </div>
         </div>
         <div className="w-full overflow-hidden flex justify-center mt-8">
-          <div className="flex items-center min-w-max gap-2">
+          <ScrollCarousel>
             <article className="border shadow-[inset_0px_2px_9px_rgba(255,255,255,0.15)] border-white/10 bg-gradient-to-b from-white/5 to-white/[0.01] p-4 rounded-lg backdrop-blur-lg flex flex-col gap-2 min-w-64">
               <div className="flex items-center justify-between">
                 <span className="text-secondary text-sm">In progress</span>
@@ -88,7 +89,16 @@ export default function Hero() {
                 Working on Booking App
               </h3>
             </article>
-          </div>
+            <article className="border shadow-[inset_0px_2px_9px_rgba(255,255,255,0.15)] border-white/10 bg-gradient-to-b from-white/5 to-white/[0.01] p-4 rounded-lg backdrop-blur-lg flex flex-col gap-2 min-w-64">
+              <div className="flex items-center justify-between">
+                <span className="text-secondary text-sm">In progress</span>
+                <span className="text-white/60 text-[12px]">Today</span>
+              </div>
+              <h3 className="text-white font-medium text-lg">
+                Working on Booking App
+              </h3>
+            </article>
+          </ScrollCarousel>
         </div>
       </div>
       <div className="absolute inset-0 w-full h-full flex items-center justify-center ">
