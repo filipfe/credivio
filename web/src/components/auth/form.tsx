@@ -16,24 +16,45 @@ export default function Form() {
       }
       className="flex flex-col gap-6"
     >
-      <h1 className="text-3xl">Zaloguj się</h1>
+      <div className="flex flex-col items-center text-center gap-2">
+        <div className="bg-light rounded-md h-16 w-16 mb-4"></div>
+        <h1 className="text-2xl font-medium">Witaj w Tipplet!</h1>
+        <p className="text-sm">Zaloguj się, aby kontynuować</p>
+      </div>
       <Input
         classNames={{ inputWrapper: "!bg-light" }}
         name="email"
         label="Email"
         type="email"
         placeholder="example@mail.com"
+        labelPlacement="outside"
         isRequired
+        autoComplete="off"
+      />
+      <Input
+        classNames={{ inputWrapper: "!bg-light" }}
+        name="password"
+        label="Hasło"
+        type="password"
+        placeholder="**********"
+        labelPlacement="outside"
+        // isRequired
       />
       <Button
         color="primary"
         isDisabled={isPending}
         isLoading={isPending}
         type="submit"
-        className="text-white"
+        className="text-white font-medium"
       >
         Zaloguj się
       </Button>
+      <div className="h-px bg-font/10 flex items-center justify-center my-2">
+        <div className="px-2 bg-white mb-1">
+          <span className="text-tiny text-font/40">LUB</span>
+        </div>
+      </div>
+      <Button variant="faded">Zaloguj się z Google</Button>
     </form>
   );
 }
