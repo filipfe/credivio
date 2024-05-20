@@ -1,21 +1,23 @@
 "use server";
 
+import formatError from "@/utils/supabase/format-error";
 import { createClient } from "@/utils/supabase/server";
 import axios from "axios";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function getStocks(
-  index: GPWIndex
+  index: GPWIndex,
 ): Promise<SupabaseResponse<Stock>> {
   const { data } = await axios.get(
-    `https://bossa.pl/fl_api/API/GPW/v2/Q/C/_cat_${index}`
+    `https://bossa.pl/fl_api/API/GPW/v2/Q/C/_cat_${index}`,
   );
-  if (data.message !== "OK")
+  if (data.message !== "OK") {
     return {
       results: [],
       error: "Error",
     };
+  }
 
   return {
     results: data._d[0]._t,
@@ -23,7 +25,7 @@ export async function getStocks(
 }
 
 export async function addStocks(
-  formData: FormData
+  formData: FormData,
 ): Promise<SupabaseResponse<StockTransaction>> {
   const data = formData.get("data")!.toString();
 
@@ -55,13 +57,14 @@ export async function addStocks(
 export async function getDividendInfo(): Promise<SupabaseResponse<Dividend>> {
   try {
     const { data } = await axios.get(
-      "https://bossa.pl/analizy/dywidendy/active"
+      "https://bossa.pl/analizy/dywidendy/active",
     );
-    if (!data.success)
+    if (!data.success) {
       return {
         error: "Wystąpił błąd, spróbuj ponownie później!",
         results: [],
       };
+    }
     const results: Dividend[] = data.list.map((item: any) => {
       const {
         dividend_pln: amount,
@@ -93,7 +96,7 @@ export async function getDividendInfo(): Promise<SupabaseResponse<Dividend>> {
 }
 
 export async function getSpecificStocks(
-  list: string[]
+  list: string[],
 ): Promise<SupabaseResponse<Stock>> {
   try {
     const url = `https://bossa.pl/fl_api/API/GPW/v2/Q/C/_cat_name/${list}`;
@@ -115,7 +118,7 @@ export async function getSpecificStocks(
 export async function getAllStocks(): Promise<SupabaseResponse<Stock>> {
   try {
     const { data } = await axios.get(
-      "https://bossa.pl/fl_api/API/GPW/v2/Q/C/_cat_shares"
+      "https://bossa.pl/fl_api/API/GPW/v2/Q/C/_cat_shares",
     );
 
     if (data.message !== "OK") {
@@ -137,57 +140,35 @@ export async function getAllStocks(): Promise<SupabaseResponse<Stock>> {
 }
 
 export async function getPriceHistory(
-  short_symbol: string
+  short_symbol: string,
 ): Promise<SupabaseResponse<PriceRecord>> {
-  const now = new Date();
-  try {
-    let results: PriceRecord[] = [];
-    let message = "no_data";
-    let nineAM =
-      new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
-        9,
-        0,
-        0,
-        0
-      ).getTime() / 1000;
-    while (message !== "ok") {
-      const { data } = await axios.get(
-        `https://bossa.pl/fl_api/API/Charts/v1/history?symbol=${short_symbol}&resolution=1&from=${nineAM}&to=${Math.floor(
-          now.getTime() / 1000
-        )}`
-      );
-      message = data.s;
-      results =
-        data.s === "ok"
-          ? data.t.map((time: number, k: number) => ({
-              price: data.c[k],
-              time,
-            }))
-          : [];
-      nineAM -= 86400;
-    }
+  const supabase = createClient();
+  const { data, error } = await supabase.functions.invoke(
+    "get-stock-price-history",
+    { body: { short_symbol } },
+  );
 
+  const err = await formatError(error);
+
+  if (err) {
     return {
-      results,
-    };
-  } catch (err) {
-    return {
+      error: err,
       results: [],
-      error: "Wystąpił błąd, spróbuj ponownie później!",
     };
   }
+
+  return {
+    results: data.results,
+  };
 }
 
 export async function getPricePeriod(
   short_symbol: string,
-  period: string = "1D"
+  period: string = "1D",
 ): Promise<SupabaseResponse<number[]>> {
   try {
     const { data } = await axios.get(
-      `https://bossa.pl/fl_api/API/GPW/v2/Charts/${short_symbol}/${period}`
+      `https://bossa.pl/fl_api/API/GPW/v2/Charts/${short_symbol}/${period}`,
     );
     return {
       results: data._r,
