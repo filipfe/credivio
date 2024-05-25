@@ -144,7 +144,7 @@ export async function getChartLabels(
   const { data: results, error } = await supabase.rpc("get_chart_labels", {
     currency,
   });
-  console.log(results);
+
   if (error) {
     return {
       results: [],

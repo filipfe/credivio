@@ -66,7 +66,7 @@ export default async function Page({ params }: { params: { symbol: string } }) {
           quotes={quotes}
           isUp={isUp}
           isDown={isDown}
-          defaultCurrency={defaultCurrency}
+          currency={defaultCurrency}
         />
       </Block>
       <Block title={_symbol}>
