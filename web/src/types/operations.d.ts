@@ -44,3 +44,12 @@ type OperationsStats = {
   last_30_days: Stat;
   last_day: Stat;
 };
+
+type LatestOperation = {
+  id: string;
+  title: string;
+  amount: number;
+  currency: string;
+  type: string;
+  issued_at: string;
+};
