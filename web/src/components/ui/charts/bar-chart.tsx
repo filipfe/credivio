@@ -13,7 +13,7 @@ import {
 
 type Props = {
   data: ChartLabel[];
-  defaultCurrency: string;
+  currency: string;
 };
 
 const renderCustomBarLabel = ({
@@ -23,11 +23,11 @@ const renderCustomBarLabel = ({
   width,
   height: _height,
   value,
-  defaultCurrency,
+  currency,
 }: any) => {
   const numberFormat = new Intl.NumberFormat("pl-PL", {
     style: "currency",
-    currency: defaultCurrency,
+    currency,
   });
 
   return (
@@ -37,17 +37,17 @@ const renderCustomBarLabel = ({
   );
 };
 
-export default function BarChart({ data, defaultCurrency }: Props) {
+export default function BarChart({ data, currency }: Props) {
   const numberFormat = new Intl.NumberFormat("pl-PL", {
     style: "currency",
-    currency: defaultCurrency,
+    currency: currency,
     notation: "compact",
   });
   return (
     <ResponsiveContainer width="100%" height={360}>
       <BarChartWrapper
         data={data}
-        margin={{ top: 5, left: 8, right: 36, bottom: 0 }}
+        margin={{ top: 10, left: 8, right: 36, bottom: 0 }}
       >
         <CartesianGrid vertical={false} opacity={0.5} />
         <YAxis
@@ -68,7 +68,7 @@ export default function BarChart({ data, defaultCurrency }: Props) {
           maxBarSize={120}
           dataKey="total_amount"
           radius={[24, 24, 0, 0]}
-          label={(e) => renderCustomBarLabel({ ...e, defaultCurrency })}
+          label={(e) => renderCustomBarLabel({ ...e, currency })}
         >
           {data.map((item, k) => (
             <Cell fill={k % 2 === 0 ? "#177981" : "#ffc000"} key={item.name} />
