@@ -1,3 +1,4 @@
+import numberFormat from "@/utils/formatters/currency";
 import { TooltipProps } from "recharts";
 import {
   NameType,
@@ -16,15 +17,8 @@ export default function ChartTooltip({
   payloadName?: string;
   currency: string;
 }) {
-  const currencyFormatter = new Intl.NumberFormat("pl-PL", {
-    style: "currency",
-    currency: currency,
-    notation: "standard",
-  });
   if (!active || !payload || payload.length === 0) return;
-  const value = payload[0].value
-    ? currencyFormatter.format(parseFloat(payload[0].value.toString()))
-    : "";
+  const value = payload[0].value ? parseFloat(payload[0].value.toString()) : 0;
 
   return (
     <div
@@ -46,7 +40,7 @@ export default function ChartTooltip({
           <span className="text-sm">{payloadName}</span>
         </div>
         <strong className="font-medium text-sm">
-          {value ? value : currencyFormatter.format(0)}
+          {numberFormat(currency, value)}
         </strong>
       </div>
     </div>

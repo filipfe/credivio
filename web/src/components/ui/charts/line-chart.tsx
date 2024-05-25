@@ -10,6 +10,7 @@ import {
   LineChart as Chart,
 } from "recharts";
 import ChartTooltip from "./tooltip";
+import numberFormat from "@/utils/formatters/currency";
 
 type Props = {
   data: DailyAmount[];
@@ -18,12 +19,6 @@ type Props = {
 };
 
 export default function LineChart({ data, currency, type }: Props) {
-  const compact = new Intl.NumberFormat("pl-PL", {
-    style: "currency",
-    currency: currency,
-    notation: "compact",
-  });
-
   return (
     <ResponsiveContainer width="100%" height={360}>
       <Chart
@@ -33,7 +28,7 @@ export default function LineChart({ data, currency, type }: Props) {
         <YAxis
           tick={{ fontSize: 12 }}
           dataKey="total_amount"
-          tickFormatter={(value) => compact.format(value)}
+          tickFormatter={(value) => numberFormat(currency, value, "compact")}
           axisLine={false}
           tickLine={false}
         />

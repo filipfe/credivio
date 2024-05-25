@@ -1,8 +1,4 @@
-const numberFormat = (currency: string, amount: number) =>
-  new Intl.NumberFormat("pl-PL", {
-    style: "currency",
-    currency,
-  }).format(amount);
+import numberFormat from "@/utils/formatters/currency";
 
 export default function Operation(props: LatestOperation) {
   const operation = props;

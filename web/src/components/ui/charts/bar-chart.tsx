@@ -1,5 +1,6 @@
 "use client";
 
+import numberFormat from "@/utils/formatters/currency";
 import {
   ResponsiveContainer,
   BarChart as BarChartWrapper,
@@ -25,24 +26,14 @@ const renderCustomBarLabel = ({
   value,
   currency,
 }: any) => {
-  const numberFormat = new Intl.NumberFormat("pl-PL", {
-    style: "currency",
-    currency,
-  });
-
   return (
     <text x={x + width / 2} y={y} fill="#666" textAnchor="middle" dy={-6}>
-      {numberFormat.format(value)}
+      {numberFormat(currency, value)}
     </text>
   );
 };
 
 export default function BarChart({ data, currency }: Props) {
-  const numberFormat = new Intl.NumberFormat("pl-PL", {
-    style: "currency",
-    currency: currency,
-    notation: "compact",
-  });
   return (
     <ResponsiveContainer width="100%" height={360}>
       <BarChartWrapper
@@ -53,7 +44,7 @@ export default function BarChart({ data, currency }: Props) {
         <YAxis
           tick={{ fontSize: 12 }}
           dataKey="total_amount"
-          tickFormatter={(value) => numberFormat.format(value)}
+          tickFormatter={(value) => numberFormat(currency, value, "compact")}
           axisLine={false}
           tickLine={false}
         />
