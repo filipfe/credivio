@@ -5,8 +5,10 @@ import { getRecurringPayments } from "@/lib/recurring_payments/actions";
 import { Button, Divider } from "@nextui-org/react";
 import { Switch } from "@nextui-org/switch";
 import { Trash2Icon } from "lucide-react";
-
-const paymentsTest = {
+type PaymentsByMonth = {
+  [key: string]: RecurringPayment[];
+};
+const paymentsTest: PaymentsByMonth = {
   Maj: [
     {
       id: "febc139d-0e67-405d-8213-3f47088b13bf",
