@@ -1,7 +1,10 @@
+"use client";
+
 import AreaChart from "@/components/ui/charts/line-chart";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
 import { getDailyTotalAmount } from "@/lib/operation/actions";
+import { useEffect, useState } from "react";
 
 export default async function OperationsByMonth({
   type,
@@ -10,10 +13,16 @@ export default async function OperationsByMonth({
   type: string;
   defaultCurrency: string;
 }) {
-  const { results: dailyTotalAmount } = await getDailyTotalAmount(
-    defaultCurrency,
-    type
-  );
+  const [dailyTotalAmount, setDailyTotalAmount] = useState<DailyAmount[]>([]);
+  const [currency, setCurrency] = useState<string>(defaultCurrency);
+
+  useEffect(() => {
+    async function fetchData() {
+      const { results } = await getDailyTotalAmount(currency, type);
+      setDailyTotalAmount(results);
+    }
+    fetchData();
+  }, [currency]);
 
   return (
     <div className="xl:col-span-3 bg-white sm:rounded-md px-6 py-8 h-full">
@@ -25,8 +34,9 @@ export default async function OperationsByMonth({
             size="sm"
             name="currency"
             aria-label="Waluta"
-            defaultSelectedKeys={[defaultCurrency]}
+            defaultSelectedKeys={[currency]}
             elements={CURRENCIES}
+            onChange={(e) => setCurrency(e.target.value)}
           />
         </div>
       ) : (
@@ -34,11 +44,7 @@ export default async function OperationsByMonth({
           {type === "income" ? "Przychody" : "Wydatki"} wg 30 dni
         </h3>
       )}
-      <AreaChart
-        data={dailyTotalAmount}
-        defaultCurrency={defaultCurrency}
-        type={type}
-      />
+      <AreaChart data={dailyTotalAmount} currency={currency} type={type} />
     </div>
   );
 }
