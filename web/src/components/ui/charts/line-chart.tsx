@@ -13,14 +13,14 @@ import ChartTooltip from "./tooltip";
 
 type Props = {
   data: DailyAmount[];
-  defaultCurrency: string;
+  currency: string;
   type: string;
 };
 
-export default function LineChart({ data, defaultCurrency, type }: Props) {
+export default function LineChart({ data, currency, type }: Props) {
   const compact = new Intl.NumberFormat("pl-PL", {
     style: "currency",
-    currency: defaultCurrency,
+    currency: currency,
     notation: "compact",
   });
 
@@ -79,7 +79,7 @@ export default function LineChart({ data, defaultCurrency, type }: Props) {
                   ? "Przychody"
                   : "Wydatki"
               }
-              defaultCurrency={defaultCurrency}
+              currency={currency}
             />
           )}
         />
