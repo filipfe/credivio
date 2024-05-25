@@ -7,6 +7,7 @@ import formatAmount, { formatMax } from "@/utils/operation/format-amount";
 import { updateRow } from "@/lib/general/actions";
 import useOutsideObserver from "@/hooks/useOutsideObserver";
 import Menu from "./menu";
+import numberFormat from "@/utils/formatters/currency";
 
 export default function GoalRef(props: Goal) {
   const { id, currency, saved: defaultSaved, deadline, title, price } = props;
@@ -15,10 +16,7 @@ export default function GoalRef(props: Goal) {
   const [saved, setSaved] = useState(defaultSaved?.toString() || "0");
   const [isSavedEditable, setIsSavedEditable] = useState(false);
   const isCompleted = parseFloat(saved) >= price;
-  const formatter = new Intl.NumberFormat("pl-PL", {
-    style: "currency",
-    currency,
-  });
+
   function handleAdd() {
     if (isPending || saved === defaultSaved?.toString()) return;
     const valid = (prev: string) =>
@@ -102,10 +100,10 @@ export default function GoalRef(props: Goal) {
               </Button>
             </form>
           ) : (
-            <span>{formatter.format(parseFloat(saved))}</span>
+            <span>{numberFormat(currency, parseFloat(saved))}</span>
           )}
           <span>/</span>
-          <span>{formatter.format(price)}</span>
+          <span>{numberFormat(currency, price)}</span>
         </div>
       </div>
     </div>

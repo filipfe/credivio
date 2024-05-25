@@ -4,6 +4,7 @@ import { ServiceContext } from "@/app/(private)/settings/subscription/providers"
 import Block from "@/components/ui/block";
 import { LINKS } from "@/const";
 import { activateService } from "@/lib/settings/actions";
+import numberFormat from "@/utils/formatters/currency";
 import {
   Button,
   Modal,
@@ -30,10 +31,6 @@ export default function ActiveService({
   const { id, title, href, description, price } = activeService;
   const link = LINKS.find((item) => item.href === href);
   const Icon = link ? link.icon : <></>;
-  const currencyFormatter = new Intl.NumberFormat("pl-PL", {
-    style: "currency",
-    currency: "PLN",
-  });
 
   const isActive = ownedServices.includes(id);
 
@@ -49,7 +46,7 @@ export default function ActiveService({
           <div className="border p-6 rounded-md bg-light"></div>
         </div>
         <strong className="text-4xl">
-          {currencyFormatter.format(price)}{" "}
+          {numberFormat("PLN", price)}{" "}
           <sub className="text-sm font-medium">/ miesiąc</sub>
         </strong>
         <div className="flex items-center gap-2 mt-auto">
@@ -80,7 +77,7 @@ export default function ActiveService({
               <ModalBody className="text-center max-w-80 flex flex-col items-center w-full mx-auto my-4 text-sm">
                 Do twojej subskrypcji zostanie naliczona następująca kwota:{" "}
                 <strong className="font-semibold text-xl">
-                  {currencyFormatter.format(activeService.price)}
+                  {numberFormat("PLN", activeService.price)}
                 </strong>
               </ModalBody>
               <ModalFooter className="pb-6 px-8 grid grid-cols-2 gap-4 w-full mx-auto">

@@ -16,6 +16,7 @@ import { useCallback, useEffect } from "react";
 import useTableQuery from "@/hooks/useTableQuery";
 import TopContent from "../ui/table/top-content";
 import Block from "../ui/block";
+import numberFormat from "@/utils/formatters/currency";
 
 const columns = ({
   viewOnly,
@@ -62,10 +63,6 @@ export default function TransactionTable({
   }, [rows]);
 
   const renderCell = useCallback((stock: any, columnKey: any) => {
-    const formatter = new Intl.NumberFormat("pl-PL", {
-      currency: stock.currency,
-      style: "currency",
-    });
     const cellValue = stock[columnKey];
     switch (columnKey) {
       case "transaction_type":
@@ -73,9 +70,9 @@ export default function TransactionTable({
           (tt) => tt.value === stock.transaction_type
         )!.name;
       case "price":
-        return formatter.format(parseFloat(stock.price));
+        return numberFormat(stock.currency, parseFloat(stock.price));
       case "commission":
-        return formatter.format(parseFloat(stock.commission));
+        return numberFormat(stock.currency, parseFloat(stock.commission));
       default:
         return cellValue;
     }

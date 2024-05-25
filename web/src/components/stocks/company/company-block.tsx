@@ -1,6 +1,7 @@
 import { getPriceHistory } from "@/lib/stocks/actions";
 import SmallChart from "./small-chart";
 import Link from "next/link";
+import numberFormat from "@/utils/formatters/currency";
 
 export default async function CompanyBlock({
   _symbol,
@@ -10,10 +11,6 @@ export default async function CompanyBlock({
 }: Stock) {
   const { results } = await getPriceHistory(_symbol_short);
   const quote = parseFloat(_quote);
-  const price = new Intl.NumberFormat("pl-PL", {
-    currency: "PLN",
-    style: "currency",
-  }).format(quote);
   const isUp =
     _change?.toString().startsWith("+") &&
     !_change?.toString().endsWith("0.00");
@@ -33,7 +30,9 @@ export default async function CompanyBlock({
         }`}
       >
         <SmallChart quotes={results} isDown={isDown} isUp={isUp} />
-        <span className="text-sm font-medium">{price}</span>
+        <span className="text-sm font-medium">
+          {numberFormat("PLN", quote)}
+        </span>
         <div
           className={`flex items-center gap-2 rounded px-1.5 py-1 ${
             isUp

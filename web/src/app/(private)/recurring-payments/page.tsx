@@ -2,6 +2,7 @@ import RecurringPaymentRef from "@/components/recurring-payments/ref";
 import Timeline from "@/components/recurring-payments/timeline";
 import HorizontalScroll from "@/components/ui/horizontal-scroll";
 import { getRecurringPayments } from "@/lib/recurring_payments/actions";
+import numberFormat from "@/utils/formatters/currency";
 import { Button, Divider } from "@nextui-org/react";
 import { Switch } from "@nextui-org/switch";
 import { Trash2Icon } from "lucide-react";
@@ -136,12 +137,6 @@ function getRandomTime() {
   const randomIndex = Math.floor(Math.random() * timeSpans.length);
   return timeSpans[randomIndex];
 }
-
-const numberFormat = (currency: string, amount: number) =>
-  new Intl.NumberFormat("pl-PL", {
-    style: "currency",
-    currency,
-  }).format(amount);
 
 export default async function Page() {
   const { results: payments } = await getRecurringPayments();

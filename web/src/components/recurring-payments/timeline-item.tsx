@@ -1,12 +1,5 @@
-"use client";
-
+import numberFormat from "@/utils/formatters/currency";
 import { DotIcon } from "lucide-react";
-
-const numberFormat = (currency: string, amount: number) =>
-  new Intl.NumberFormat("pl-PL", {
-    style: "currency",
-    currency,
-  }).format(amount);
 
 export default function TimelineItem(props: RecurringPayment) {
   const payment = props;

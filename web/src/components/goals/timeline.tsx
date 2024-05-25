@@ -5,6 +5,7 @@ import Block from "../ui/block";
 import { Button, Chip, ScrollShadow } from "@nextui-org/react";
 import { CheckIcon, PlusIcon } from "lucide-react";
 import { TimelineContext } from "@/app/(private)/goals/providers";
+import numberFormat from "@/utils/formatters/currency";
 
 export default function Timeline({ goals }: { goals: Goal[] }) {
   const listRef = useRef<HTMLDivElement>(null);
@@ -67,12 +68,7 @@ const DayRef = ({
             variant={isCompleted ? "solid" : "flat"}
             startContent={isCompleted ? <CheckIcon size={12} /> : undefined}
           >
-            {isCompleted
-              ? "Zebrano"
-              : new Intl.NumberFormat("pl-PL", {
-                  style: "currency",
-                  currency: currency || "PLN",
-                }).format(left)}
+            {isCompleted ? "Zebrano" : numberFormat(currency, left)}
           </Chip>
         </div>
       </div>

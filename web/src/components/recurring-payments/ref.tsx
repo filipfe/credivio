@@ -1,8 +1,4 @@
-const numberFormat = (currency: string, amount: number) =>
-  new Intl.NumberFormat("pl-PL", {
-    style: "currency",
-    currency,
-  }).format(amount);
+import numberFormat from "@/utils/formatters/currency";
 
 export default function RecurringPaymentRef(props: RecurringPayment) {
   const payment = props;
