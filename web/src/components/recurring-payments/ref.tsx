@@ -1,8 +1,10 @@
 import numberFormat from "@/utils/formatters/currency";
 
-export default function RecurringPaymentRef(props: RecurringPayment) {
-  const payment = props;
-
+export default function RecurringPaymentRef({
+  payment,
+}: {
+  payment: RecurringPayment;
+}) {
   return (
     <div className="bg-white rounded-lg py-4 px-6 flex flex-col gap-3 min-w-60">
       <div className="flex items-center justify-between">
