@@ -145,8 +145,8 @@ export default async function Page() {
     <div className="px-10 pt-8 pb-24 flex flex-col h-full gap-8">
       {/* nadchodzace */}
       <HorizontalScroll>
-        {payments.map((item) => (
-          <RecurringPaymentRef {...item} key={item.id} />
+        {payments.map((payment) => (
+          <RecurringPaymentRef key={payment.id} payment={payment} />
         ))}
       </HorizontalScroll>
       <div className="grid grid-cols-2 gap-10">

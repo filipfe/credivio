@@ -1,9 +1,11 @@
 import numberFormat from "@/utils/formatters/currency";
 import { Skeleton, cn } from "@nextui-org/react";
 
-export default function Operation(props: LatestOperation) {
-  const operation = props;
-
+export default function Operation({
+  operation,
+}: {
+  operation: LatestOperation;
+}) {
   return (
     <div className="bg-white rounded-lg py-4 px-6 flex flex-col gap-3 min-w-60">
       <div className="flex items-center justify-between">
