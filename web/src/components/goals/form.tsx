@@ -13,14 +13,19 @@ import { CURRENCIES } from "@/const";
 const defaultRecord: GoalRecord = {
   title: "",
   price: "",
-  currency: "PLN",
+  currency: "",
   description: "",
 };
 
-export default function GoalForm() {
+export default function GoalForm({
+  defaultCurrency,
+}: {
+  defaultCurrency: string;
+}) {
   const [isPending, startTransition] = useTransition();
   const [singleRecord, setSingleRecord] = useState<GoalRecord>({
     ...defaultRecord,
+    currency: defaultCurrency,
   });
 
   return (
