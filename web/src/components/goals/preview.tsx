@@ -9,6 +9,7 @@ export default function Preview(priority: Goal) {
   const { activeRecord } = useContext(TimelineContext);
   const goal = activeRecord || priority;
   const { title, saved, price } = goal;
+
   return (
     <Block title={title}>
       {/* <div className="grid grid-cols-2 flex-1"> */}
