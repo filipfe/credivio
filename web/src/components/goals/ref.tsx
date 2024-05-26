@@ -9,8 +9,8 @@ import useOutsideObserver from "@/hooks/useOutsideObserver";
 import Menu from "./menu";
 import numberFormat from "@/utils/formatters/currency";
 
-export default function GoalRef(props: Goal) {
-  const { id, title, price, saved: defaultSaved, currency, deadline } = props;
+export default function GoalRef(goal: Goal) {
+  const { id, title, price, saved: defaultSaved, currency, deadline } = goal;
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
   const [saved, setSaved] = useState(defaultSaved.toString());
@@ -54,7 +54,7 @@ export default function GoalRef(props: Goal) {
             <CheckCircle2Icon />
           </div>
         ) : (
-          <Menu goal={props} onAdd={() => setIsSavedEditable(true)} />
+          <Menu goal={goal} onAdd={() => setIsSavedEditable(true)} />
         )}
       </div>
       <div>
