@@ -11,19 +11,17 @@ import { v4 } from "uuid";
 import UniversalSelect from "../ui/universal-select";
 import { CURRENCIES } from "@/const";
 
-const defaultRecord: Omit<SupabaseGoal, "id"> = {
+const defaultRecord: GoalRecord = {
   title: "",
   price: "",
-  saved: 0,
   currency: "PLN",
   description: "",
 };
 
 export default function GoalForm() {
   const [isPending, startTransition] = useTransition();
-  const [singleRecord, setSingleRecord] = useState<SupabaseGoal>({
+  const [singleRecord, setSingleRecord] = useState<GoalRecord>({
     ...defaultRecord,
-    id: v4(),
   });
 
   return (
@@ -62,15 +60,15 @@ export default function GoalForm() {
               !isNaN(value) &&
                 setSingleRecord((prev) => ({
                   ...prev,
-                  price: value == 0 ? "" : value.toString(),
+                  price: value === 0 ? "" : value.toString(),
                 }));
             }}
-            onChange={(e) =>
+            onChange={(e) => {
               setSingleRecord((prev) => ({
                 ...prev,
                 price: formatAmount(e.target.value),
-              }))
-            }
+              }));
+            }}
           />
           <UniversalSelect
             name="currency"

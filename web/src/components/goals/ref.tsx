@@ -10,20 +10,20 @@ import Menu from "./menu";
 import numberFormat from "@/utils/formatters/currency";
 
 export default function GoalRef(props: Goal) {
-  const { id, currency, saved: defaultSaved, deadline, title, price } = props;
+  const { id, title, price, saved: defaultSaved, currency, deadline } = props;
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
-  const [saved, setSaved] = useState(defaultSaved?.toString() || "0");
+  const [saved, setSaved] = useState(defaultSaved.toString());
   const [isSavedEditable, setIsSavedEditable] = useState(false);
   const isCompleted = parseFloat(saved) >= price;
 
   function handleAdd() {
-    if (isPending || saved === defaultSaved?.toString()) return;
+    if (isPending || saved === defaultSaved.toString()) return;
     const valid = (prev: string) =>
-      formatMax(parseFloat(prev || defaultSaved?.toString() || "0"), price);
+      formatMax(parseFloat(prev || defaultSaved.toString() || "0"), price);
     setSaved(valid);
     startTransition(async () => {
-      const { error } = await updateRow(id, "goal", { saved: valid(saved) });
+      await updateRow(id, "goal", { saved: valid(saved) });
       setIsSavedEditable(false);
     });
   }
