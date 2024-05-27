@@ -1,21 +1,31 @@
 "use client";
 
 import { Button, Input, Progress } from "@nextui-org/react";
-import { CheckCircle2Icon, PlusIcon } from "lucide-react";
-import { useRef, useState, useTransition } from "react";
+import { AlertOctagonIcon, CheckCircle2Icon, PlusIcon } from "lucide-react";
+import { useContext, useRef, useState, useTransition } from "react";
 import formatAmount, { formatMax } from "@/utils/operation/format-amount";
 import { updateRow } from "@/lib/general/actions";
 import useOutsideObserver from "@/hooks/useOutsideObserver";
 import Menu from "./menu";
 import numberFormat from "@/utils/formatters/currency";
+import { TimelineContext } from "@/app/(private)/goals/providers";
 
 export default function GoalRef(goal: Goal) {
-  const { id, title, price, saved: defaultSaved, currency, deadline } = goal;
+  const {
+    id,
+    title,
+    price,
+    saved: defaultSaved,
+    currency,
+    deadline,
+    is_priority,
+  } = goal;
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
   const [saved, setSaved] = useState(defaultSaved.toString());
   const [isSavedEditable, setIsSavedEditable] = useState(false);
   const isCompleted = parseFloat(saved) >= price;
+  const { activeRecord, setActiveRecord } = useContext(TimelineContext);
 
   function handleAdd() {
     if (isPending || saved === defaultSaved.toString()) return;
@@ -36,7 +46,8 @@ export default function GoalRef(goal: Goal) {
 
   return (
     <div
-      className={`bg-white rounded-lg py-8 px-10 flex flex-col justify-between relative ${
+      onClick={() => setActiveRecord(goal)}
+      className={`bg-white hover:cursor-pointer rounded-lg py-8 px-10 flex flex-col justify-between relative ${
         isCompleted ? "opacity-80" : "opacity-100"
       }`}
     >
@@ -47,14 +58,19 @@ export default function GoalRef(goal: Goal) {
               {new Date(deadline).toLocaleDateString()}
             </small>
           )}
-          <h3 className="text-lg line-clamp-1">{title}</h3>
+          {is_priority ? (
+            <div className="flex items-center gap-2">
+              <AlertOctagonIcon className="text-secondary" size={20} />
+              <h3 className="text-lg line-clamp-1">{title}</h3>
+            </div>
+          ) : (
+            <h3 className="text-lg line-clamp-1">{title}</h3>
+          )}
         </div>
-        {isCompleted ? (
+        {isCompleted && (
           <div className=" text-primary">
             <CheckCircle2Icon />
           </div>
-        ) : (
-          <Menu goal={goal} onAdd={() => setIsSavedEditable(true)} />
         )}
       </div>
       <div>
