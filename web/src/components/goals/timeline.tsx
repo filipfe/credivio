@@ -5,8 +5,9 @@ import Block from "../ui/block";
 import { Button, Chip, ScrollShadow } from "@nextui-org/react";
 import { CheckIcon, PlusIcon } from "lucide-react";
 import { TimelineContext } from "@/app/(private)/goals/providers";
+import numberFormat from "@/utils/formatters/currency";
 
-export default function Timeline({ goals }: { goals: Goal[] }) {
+export default function Timeline({ goals }: { goals: ActiveGoal[] }) {
   const listRef = useRef<HTMLDivElement>(null);
   const { activeRecord } = useContext(TimelineContext);
 
@@ -46,16 +47,13 @@ export default function Timeline({ goals }: { goals: Goal[] }) {
 }
 
 const DayRef = ({
-  goal: { id, title, deadline, price, saved, currency },
+  goal: { id, title, deadline, shortfall, currency, days_left },
   isActive,
 }: {
-  goal: Goal;
+  goal: ActiveGoal;
   isActive: boolean;
 }) => {
-  const isCompleted = saved! >= price;
-  const timeDiffForToday = new Date(deadline!).getTime() - new Date().getTime();
-  const daysLeftFromToday = Math.round(timeDiffForToday / (1000 * 3600 * 24));
-  const left = price - saved!;
+  const isCompleted = shortfall === 0;
 
   return (
     <Fragment>
@@ -67,12 +65,7 @@ const DayRef = ({
             variant={isCompleted ? "solid" : "flat"}
             startContent={isCompleted ? <CheckIcon size={12} /> : undefined}
           >
-            {isCompleted
-              ? "Zebrano"
-              : new Intl.NumberFormat("pl-PL", {
-                  style: "currency",
-                  currency: currency || "PLN",
-                }).format(left)}
+            {isCompleted ? "Zebrano" : numberFormat(currency, shortfall)}
           </Chip>
         </div>
       </div>
@@ -88,7 +81,7 @@ const DayRef = ({
           </div>
           <div className="absolute bottom-[calc(100%+8px)]">
             <Chip size="sm" color="primary" variant="light">
-              {daysLeftFromToday} {daysLeftFromToday === 1 ? "dzień" : "dni"}{" "}
+              {days_left} {days_left === 1 ? "dzień" : "dni"}{" "}
             </Chip>
           </div>
           {isCompleted ? (

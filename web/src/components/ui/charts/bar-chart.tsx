@@ -1,5 +1,6 @@
 "use client";
 
+import numberFormat from "@/utils/formatters/currency";
 import {
   ResponsiveContainer,
   BarChart as BarChartWrapper,
@@ -13,7 +14,7 @@ import {
 
 type Props = {
   data: ChartLabel[];
-  defaultCurrency: string;
+  currency: string;
 };
 
 const renderCustomBarLabel = ({
@@ -23,37 +24,27 @@ const renderCustomBarLabel = ({
   width,
   height: _height,
   value,
-  defaultCurrency,
+  currency,
 }: any) => {
-  const numberFormat = new Intl.NumberFormat("pl-PL", {
-    style: "currency",
-    currency: defaultCurrency,
-  });
-
   return (
     <text x={x + width / 2} y={y} fill="#666" textAnchor="middle" dy={-6}>
-      {numberFormat.format(value)}
+      {numberFormat(currency, value)}
     </text>
   );
 };
 
-export default function BarChart({ data, defaultCurrency }: Props) {
-  const numberFormat = new Intl.NumberFormat("pl-PL", {
-    style: "currency",
-    currency: defaultCurrency,
-    notation: "compact",
-  });
+export default function BarChart({ data, currency }: Props) {
   return (
     <ResponsiveContainer width="100%" height={360}>
       <BarChartWrapper
         data={data}
-        margin={{ top: 5, left: 8, right: 36, bottom: 0 }}
+        margin={{ top: 10, left: 8, right: 36, bottom: 0 }}
       >
         <CartesianGrid vertical={false} opacity={0.5} />
         <YAxis
           tick={{ fontSize: 12 }}
           dataKey="total_amount"
-          tickFormatter={(value) => numberFormat.format(value)}
+          tickFormatter={(value) => numberFormat(currency, value, "compact")}
           axisLine={false}
           tickLine={false}
         />
@@ -68,7 +59,7 @@ export default function BarChart({ data, defaultCurrency }: Props) {
           maxBarSize={120}
           dataKey="total_amount"
           radius={[24, 24, 0, 0]}
-          label={(e) => renderCustomBarLabel({ ...e, defaultCurrency })}
+          label={(e) => renderCustomBarLabel({ ...e, currency })}
         >
           {data.map((item, k) => (
             <Cell fill={k % 2 === 0 ? "#177981" : "#ffc000"} key={item.name} />

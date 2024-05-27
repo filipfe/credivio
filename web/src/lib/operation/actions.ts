@@ -51,8 +51,30 @@ export async function addOperations(
   const path = type === "expense" ? "/expenses" : "/incomes";
 
   revalidatePath(path);
-  revalidatePath("/");
+  revalidatePath("/dashboard");
   redirect(path);
+}
+
+export async function getLatestOperations(): Promise<
+  SupabaseResponse<LatestOperation>
+> {
+  const supabase = createClient();
+  const { data: results, error } = await supabase
+    .from("operations")
+    .select("id, title, amount, currency, type, issued_at")
+    .order("issued_at", { ascending: false })
+    .order("created_at", { ascending: false })
+    .limit(20);
+
+  if (error) {
+    return {
+      results: [],
+      error: error.message,
+    };
+  }
+  return {
+    results,
+  };
 }
 
 export async function getDailyTotalAmount(

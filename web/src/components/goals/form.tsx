@@ -1,7 +1,6 @@
 "use client";
 
 import { Button, Input, Spinner, Textarea } from "@nextui-org/react";
-import CurrencySelect from "../ui/table/currency-select";
 import formatAmount from "@/utils/operation/format-amount";
 import { useState, useTransition } from "react";
 import { CheckIcon } from "lucide-react";
@@ -11,19 +10,22 @@ import { v4 } from "uuid";
 import UniversalSelect from "../ui/universal-select";
 import { CURRENCIES } from "@/const";
 
-const defaultRecord: Omit<SupabaseGoal, "id"> = {
+const defaultRecord: GoalRecord = {
   title: "",
   price: "",
-  saved: 0,
-  currency: "PLN",
+  currency: "",
   description: "",
 };
 
-export default function GoalForm() {
+export default function GoalForm({
+  defaultCurrency,
+}: {
+  defaultCurrency: string;
+}) {
   const [isPending, startTransition] = useTransition();
-  const [singleRecord, setSingleRecord] = useState<SupabaseGoal>({
+  const [singleRecord, setSingleRecord] = useState<GoalRecord>({
     ...defaultRecord,
-    id: v4(),
+    currency: defaultCurrency,
   });
 
   return (
@@ -62,15 +64,15 @@ export default function GoalForm() {
               !isNaN(value) &&
                 setSingleRecord((prev) => ({
                   ...prev,
-                  price: value == 0 ? "" : value.toString(),
+                  price: value === 0 ? "" : value.toString(),
                 }));
             }}
-            onChange={(e) =>
+            onChange={(e) => {
               setSingleRecord((prev) => ({
                 ...prev,
                 price: formatAmount(e.target.value),
-              }))
-            }
+              }));
+            }}
           />
           <UniversalSelect
             name="currency"

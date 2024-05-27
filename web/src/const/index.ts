@@ -66,6 +66,18 @@ export const PAGES: Page[] = [
           },
         ],
       },
+      {
+        title: "Płatności cykliczne",
+        href: "/recurring-payments",
+        icon: RepeatIcon,
+        links: [
+          {
+            title: "Dodaj",
+            icon: PlusIcon,
+            href: "/recurring-payments/add",
+          },
+        ],
+      },
     ],
   },
   {

@@ -1,5 +1,6 @@
 "use client";
 
+import numberFormat from "@/utils/formatters/currency";
 import { Spinner } from "@nextui-org/react";
 import {
   Table,
@@ -68,15 +69,11 @@ export default function DividendsTable({
   const validItems = holdings
     ? dividends.map((item) => {
         if (!holdings) return item;
-        const numberFormatter = new Intl.NumberFormat("pl-PL", {
-          style: "currency",
-          currency: item.currency,
-        });
         const profitFloat =
           parseFloat(item.amount) * (holdings[item.company] || 0);
         const netProfitFloat = profitFloat * 0.81;
-        const profit = numberFormatter.format(profitFloat);
-        const net_profit = numberFormatter.format(netProfitFloat);
+        const profit = numberFormat(item.currency, profitFloat);
+        const net_profit = numberFormat(item.currency, netProfitFloat);
         return {
           ...item,
           net_profit,

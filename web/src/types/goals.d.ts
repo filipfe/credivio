@@ -2,15 +2,22 @@ type Goal = {
   id: string;
   title: string;
   description?: string;
-  created_at?: string;
-  currency: string;
-  saved?: number;
   price: number;
-  deadline?: string;
-  label?: string;
+  saved: number;
+  currency: string;
   is_priority?: boolean;
+  deadline?: string;
 };
 
-type SupabaseGoal = Omit<Goal, "price"> & {
+type ActiveGoal = {
+  id: string;
+  title: string;
+  deadline: string;
+  shortfall: number;
+  currency: string;
+  days_left: number;
+};
+
+type GoalRecord = Omit<Goal, "id" | "saved" | "price"> & {
   price: string;
 };

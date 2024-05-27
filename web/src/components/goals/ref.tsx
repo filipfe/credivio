@@ -1,31 +1,39 @@
 "use client";
 
 import { Button, Input, Progress } from "@nextui-org/react";
-import { CheckCircle2Icon, PlusIcon } from "lucide-react";
-import { useRef, useState, useTransition } from "react";
+import { AlertOctagonIcon, CheckCircle2Icon, PlusIcon } from "lucide-react";
+import { useContext, useRef, useState, useTransition } from "react";
 import formatAmount, { formatMax } from "@/utils/operation/format-amount";
 import { updateRow } from "@/lib/general/actions";
 import useOutsideObserver from "@/hooks/useOutsideObserver";
 import Menu from "./menu";
+import numberFormat from "@/utils/formatters/currency";
+import { TimelineContext } from "@/app/(private)/goals/providers";
 
-export default function GoalRef(props: Goal) {
-  const { id, currency, saved: defaultSaved, deadline, title, price } = props;
+export default function GoalRef(goal: Goal) {
+  const {
+    id,
+    title,
+    price,
+    saved: defaultSaved,
+    currency,
+    deadline,
+    is_priority,
+  } = goal;
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
-  const [saved, setSaved] = useState(defaultSaved?.toString() || "0");
+  const [saved, setSaved] = useState(defaultSaved.toString());
   const [isSavedEditable, setIsSavedEditable] = useState(false);
   const isCompleted = parseFloat(saved) >= price;
-  const formatter = new Intl.NumberFormat("pl-PL", {
-    style: "currency",
-    currency,
-  });
+  const { activeRecord, setActiveRecord } = useContext(TimelineContext);
+
   function handleAdd() {
-    if (isPending || saved === defaultSaved?.toString()) return;
+    if (isPending || saved === defaultSaved.toString()) return;
     const valid = (prev: string) =>
-      formatMax(parseFloat(prev || defaultSaved?.toString() || "0"), price);
+      formatMax(parseFloat(prev || defaultSaved.toString() || "0"), price);
     setSaved(valid);
     startTransition(async () => {
-      const { error } = await updateRow(id, "goal", { saved: valid(saved) });
+      await updateRow(id, "goal", { saved: valid(saved) });
       setIsSavedEditable(false);
     });
   }
@@ -38,7 +46,8 @@ export default function GoalRef(props: Goal) {
 
   return (
     <div
-      className={`bg-white rounded-lg py-8 px-10 flex flex-col justify-between relative ${
+      onClick={() => setActiveRecord(goal)}
+      className={`bg-white hover:cursor-pointer rounded-lg py-8 px-10 flex flex-col justify-between relative ${
         isCompleted ? "opacity-80" : "opacity-100"
       }`}
     >
@@ -49,14 +58,19 @@ export default function GoalRef(props: Goal) {
               {new Date(deadline).toLocaleDateString()}
             </small>
           )}
-          <h3 className="text-lg line-clamp-1">{title}</h3>
+          {is_priority ? (
+            <div className="flex items-center gap-2">
+              <AlertOctagonIcon className="text-secondary" size={20} />
+              <h3 className="text-lg line-clamp-1">{title}</h3>
+            </div>
+          ) : (
+            <h3 className="text-lg line-clamp-1">{title}</h3>
+          )}
         </div>
-        {isCompleted ? (
+        {isCompleted && (
           <div className=" text-primary">
             <CheckCircle2Icon />
           </div>
-        ) : (
-          <Menu goal={props} onAdd={() => setIsSavedEditable(true)} />
         )}
       </div>
       <div>
@@ -102,10 +116,10 @@ export default function GoalRef(props: Goal) {
               </Button>
             </form>
           ) : (
-            <span>{formatter.format(parseFloat(saved))}</span>
+            <span>{numberFormat(currency, parseFloat(saved))}</span>
           )}
           <span>/</span>
-          <span>{formatter.format(price)}</span>
+          <span>{numberFormat(currency, price)}</span>
         </div>
       </div>
     </div>

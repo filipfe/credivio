@@ -16,17 +16,6 @@ export default async function StatsList({
 
   return (
     <Fragment>
-      {/* {expenses.length > 0 && (
-        <ScrollShadow
-          orientation="horizontal"
-          hideScrollBar
-          className="grid grid-cols-10 gap-6"
-        >
-          {expenses.map((item, k) => (
-            <OperationRef {...item} type={"expense"} key={`op:${k}`} />
-          ))}
-        </ScrollShadow>
-      )} */}
       <Stat
         title="Przychody"
         currency={defaultCurrency}

@@ -11,7 +11,6 @@ export default function ScrollCarousel({
 
   useEffect(() => {
     const onScroll = () => {
-      console.log(window, window.scrollY);
       setOffset(window.scrollY);
     };
     window.addEventListener("scroll", onScroll);
@@ -22,7 +21,10 @@ export default function ScrollCarousel({
 
   return (
     <div
-      style={{ transform: `translateX(${offset / 4}px)` }}
+      style={{
+        willChange: "transform",
+        transform: `translateX(${offset / 4}px)`,
+      }}
       className="flex items-center min-w-max gap-2"
     >
       {children}

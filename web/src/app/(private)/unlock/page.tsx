@@ -1,5 +1,6 @@
 import Block from "@/components/ui/block";
 import { LINKS } from "@/const";
+import numberFormat from "@/utils/formatters/currency";
 import { createClient } from "@/utils/supabase/server";
 import { Button, Link } from "@nextui-org/react";
 import { redirect } from "next/navigation";
@@ -29,10 +30,7 @@ export default async function Page({
         </h1>
         <strong>
           <span className="text-5xl font-semibold">
-            {new Intl.NumberFormat("pl-PL", {
-              currency: "PLN",
-              style: "currency",
-            }).format(price)}
+            {numberFormat("PLN", price)}
           </span>
           <span className="font-normal">/ miesiąc</span>
         </strong>
