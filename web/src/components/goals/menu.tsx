@@ -39,10 +39,10 @@ export default function Menu({ goal, onAdd }: Props) {
           is_priority: true,
         });
         updateError && toast.error(updateError.message);
-      case "locate":
-        setActiveRecord(goal);
+        setActiveRecord((prev) =>
+          prev ? { ...prev, is_priority: true } : prev
+        );
         break;
-
       case "delete":
         const { error: deleteError } = await deleteRows({
           body: { type: "goal", data: goal.id },
@@ -82,16 +82,10 @@ export default function Menu({ goal, onAdd }: Props) {
           description="Ustaw ten cel jako priorytet"
           startContent={<AlertOctagonIcon size={16} />}
           closeOnSelect={false}
+          showDivider
+          isDisabled={goal.is_priority}
         >
           Ustaw priorytet
-        </DropdownItem>
-        <DropdownItem
-          key="locate"
-          description="Pokaż element na osi czasu"
-          startContent={<LocateIcon size={16} />}
-          showDivider
-        >
-          Zaznacz na osi
         </DropdownItem>
         <DropdownItem
           closeOnSelect={false}
