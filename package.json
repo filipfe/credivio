@@ -1,7 +1,8 @@
 {
   "scripts": {
-    "supabase:dev": "supabase start && supabase functions serve --no-verify-jwt --env-file ./supabase/.env.local",
-    "supabase:deploy:dev": "supabase functions deploy --project-ref",
+    "web": "cd web && npm run dev",
+    "supabase:dev": "supabase start && supabase functions serve --no-verify-jwt --env-file ./supabase/.env",
+    "supabase:deploy:dev": "supabase functions deploy --project-ref ssprqijuhymtwacivhup",
     "supabase:deploy:prod": "supabase functions deploy --project-ref"
   },
   "devDependencies": {
