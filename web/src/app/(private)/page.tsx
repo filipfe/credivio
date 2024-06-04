@@ -1,7 +1,6 @@
 import PortfolioStructure from "@/components/dashboard/portfolio-structure/grid";
 import { Fragment, Suspense } from "react";
 import StatsList from "@/components/dashboard/stats/list";
-import Loader from "@/components/stocks/loader";
 import ExpensesByLabel from "@/components/dashboard/charts/expenses-by-label";
 import ChartLoader from "@/components/ui/charts/loader";
 import LineChartLoader from "@/components/ui/charts/line-loader";

@@ -179,6 +179,22 @@ export async function getChartLabels(
   };
 }
 
+export async function getAllBudgets(): Promise<SupabaseResponse<Budget>> {
+  const supabase = createClient();
+  const { data: results, error } = await supabase.rpc("get_all_budgets");
+
+  if (error) {
+    return {
+      results: [],
+      error: error.message,
+    };
+  }
+
+  return {
+    results,
+  };
+}
+
 export async function getDefaultCurrency(): Promise<string> {
   const supabase = createClient();
   const {
