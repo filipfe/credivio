@@ -4,11 +4,9 @@ import Stat from "@/components/dashboard/stats/ref";
 import { Suspense } from "react";
 import Loader from "@/components/stocks/loader";
 import LineChartLoader from "@/components/ui/charts/line-loader";
-import {
-  getDefaultCurrency,
-  getOperationsStats,
-} from "@/lib/operation/actions";
+import { getOperationsStats } from "@/lib/operation/actions";
 import OperationsByMonth from "@/components/dashboard/charts/operations-by-month";
+import { getDefaultCurrency } from "@/lib/settings/actions";
 
 export default async function Page({
   searchParams,

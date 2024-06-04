@@ -5,10 +5,10 @@ import ExpensesByLabel from "@/components/dashboard/charts/expenses-by-label";
 import ChartLoader from "@/components/ui/charts/loader";
 import LineChartLoader from "@/components/ui/charts/line-loader";
 import { StatLoader } from "@/components/dashboard/stats/ref";
-import { getDefaultCurrency } from "@/lib/operation/actions";
 import OperationsByMonth from "@/components/dashboard/charts/operations-by-month";
 import LatestOperations from "@/components/dashboard/operations/latest-operations";
 import { OperationLoader } from "@/components/dashboard/operations/ref";
+import { getDefaultCurrency } from "@/lib/settings/actions";
 
 export default async function Dashboard() {
   const defaultCurrency = await getDefaultCurrency();

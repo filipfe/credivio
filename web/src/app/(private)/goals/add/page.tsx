@@ -1,5 +1,5 @@
 import GoalForm from "@/components/goals/form";
-import { getDefaultCurrency } from "@/lib/operation/actions";
+import { getDefaultCurrency } from "@/lib/settings/actions";
 
 export default async function Page() {
   const defaultCurrency = await getDefaultCurrency();
