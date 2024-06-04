@@ -181,7 +181,7 @@ export async function getChartLabels(
 
 export async function getPortfolioBudgets(): Promise<SupabaseResponse<Budget>> {
   const supabase = createClient();
-  const { data: results, error } = await supabase.rpc("get_all_budgets");
+  const { data: results, error } = await supabase.rpc("get_portfolio_budgets");
 
   if (error) {
     return {
