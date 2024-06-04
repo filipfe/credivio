@@ -3,6 +3,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { PostgrestError } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function getAccount(): Promise<
   SupabaseSingleRowResponse<Account>

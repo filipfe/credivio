@@ -2,9 +2,9 @@
 
 import { Accordion, AccordionItem } from "@nextui-org/react";
 
-type Props = { data: Group[]; total: number };
+type Props = { data: Group[] };
 
-export default function PortfolioAccordion({ data, total }: Props) {
+export default function PortfolioAccordion({ data }: Props) {
   return (
     <Accordion defaultExpandedKeys={[data[0].name]} className="col-span-3">
       {data.map(({ children, name, value, color, label }, k) => (
@@ -17,7 +17,8 @@ export default function PortfolioAccordion({ data, total }: Props) {
               ></div>
               <span className="text-lg">{label}</span>
               <span className="text-sm">
-                {((value / total) * 100).toFixed(2)}%
+                {/* {((value / total) * 100).toFixed(2)}% */}
+                100%
               </span>
             </div>
           }

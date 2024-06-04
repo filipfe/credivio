@@ -53,3 +53,10 @@ type LatestOperation = {
   type: string;
   issued_at: string;
 };
+
+type Budget = {
+  currency: "PLN" | "USD" | "EUR" | "GBP" | "CHF";
+  budget: number;
+  difference: number;
+  difference_indicator: "positive" | "negative" | "no_change";
+};
