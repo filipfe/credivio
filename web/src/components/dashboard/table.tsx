@@ -32,7 +32,6 @@ const columns = [
 ];
 
 export default function BudgetTable({ budgets }: Props) {
-  console.log(budgets);
   const renderCell = useCallback((budget: Budget, columnKey: keyof Budget) => {
     const cellValue = budget[columnKey];
 
