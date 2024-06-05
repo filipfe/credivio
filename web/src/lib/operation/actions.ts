@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function addOperations(
-  formData: FormData
+  formData: FormData,
 ): Promise<SupabaseResponse<Operation>> {
   const type = formData.get("type")?.toString() as OperationType;
   const label = formData.get("label")?.toString();
@@ -79,12 +79,12 @@ export async function getLatestOperations(): Promise<
 
 export async function getDailyTotalAmount(
   currency: string,
-  type: string
+  type: string,
 ): Promise<SupabaseResponse<DailyAmount>> {
   const supabase = createClient();
   const { data: results, error } = await supabase.rpc(
     "get_daily_total_amount",
-    { currency, type }
+    { currency, type },
   );
 
   if (error) {
@@ -101,7 +101,7 @@ export async function getDailyTotalAmount(
 
 export async function getOperationsStats(
   currency: string,
-  type: string
+  type: string,
 ): Promise<SupabaseSingleRowResponse<OperationsStats>> {
   const supabase = createClient();
 
@@ -123,7 +123,7 @@ export async function getOperationsStats(
 }
 
 export async function getDashboardStats(
-  currency: string
+  currency: string,
 ): Promise<SupabaseSingleRowResponse<DashboardStats>> {
   const supabase = createClient();
 
@@ -146,26 +146,6 @@ export async function getDashboardStats(
 export async function getLabels(): Promise<SupabaseResponse<Label>> {
   const supabase = createClient();
   const { data: results, error } = await supabase.rpc("get_own_labels");
-
-  if (error) {
-    return {
-      results: [],
-      error: error.message,
-    };
-  }
-
-  return {
-    results,
-  };
-}
-
-export async function getChartLabels(
-  currency: string
-): Promise<SupabaseResponse<ChartLabel>> {
-  const supabase = createClient();
-  const { data: results, error } = await supabase.rpc("get_chart_labels", {
-    currency,
-  });
 
   if (error) {
     return {

@@ -20,10 +20,10 @@ type Props = {
 
 export default function LineChart({ data, currency, type }: Props) {
   return (
-    <ResponsiveContainer width="100%" height={360}>
+    <ResponsiveContainer width="100%" height="100%">
       <Chart
         data={data.map((e) => e)}
-        margin={{ top: 5, left: 12, right: 36, bottom: 0 }}
+        margin={{ top: 5, left: -16, right: 36, bottom: 0 }}
       >
         <YAxis
           tick={{ fontSize: 12 }}

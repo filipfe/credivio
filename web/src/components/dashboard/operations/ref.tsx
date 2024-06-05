@@ -1,14 +1,14 @@
 import numberFormat from "@/utils/formatters/currency";
 import { Skeleton, cn } from "@nextui-org/react";
 
-export default function Operation({
+export default function OperationRef({
   operation,
 }: {
   operation: LatestOperation;
 }) {
   return (
-    <div className="bg-white rounded-lg py-4 px-6 flex flex-col gap-3 min-w-60">
-      <div className="flex items-center justify-between">
+    <div className="bg-white w-full rounded-lg py-4 px-6 flex flex-col gap-3 min-w-60">
+      <div className="flex items-center gap-4 justify-between">
         <h3 className="text-lg line-clamp-1">{operation.title}</h3>
         <small className="text-neutral-500">
           {new Date(operation.issued_at).toLocaleDateString()}
@@ -19,7 +19,7 @@ export default function Operation({
           operation.type === "income"
             ? "bg-success-light text-success"
             : "bg-danger-light text-danger"
-        } rounded-full px-1 py-0.5 text-2xl font-bold text-center`}
+        } rounded-full px-4 py-0.5 text-xl font-medium text-center`}
       >
         {(operation.type === "income" ? "+" : "-") +
           numberFormat(operation.currency, operation.amount)}

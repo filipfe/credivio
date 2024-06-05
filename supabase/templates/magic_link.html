@@ -1,9 +1,79 @@
-<h2>Credivio | Magic Link</h2>
-
-<p>Follow this link to login:</p>
-<p>
-  <a
-    href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=magiclink"
-    >Log In</a
+<div
+  style="
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+  "
+>
+  <div
+    style="
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: #ffffff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    "
   >
-</p>
+    <div style="text-align: center">
+      <img
+        src="./assets/sign-in.png"
+        alt="Financial Illustration"
+        style="max-width: 60%; height: auto; margin: 20px auto"
+      />
+    </div>
+    <h1
+      style="
+        margin: 0;
+        font-size: 24px;
+        text-align: center;
+        padding: 20px 0px;
+        color: black;
+      "
+    >
+      Welcome to Credivio!
+    </h1>
+    <div style="padding: 20px; padding-top: 0px; text-align: center">
+      <p style="font-size: 16px; color: #555555; padding-bottom: 20px">
+        Thank you for joining Credivio! We are excited to have you on board. To
+        get started, please click the button below to log in:
+      </p>
+      <div style="margin: 20px 0">
+        <a
+          href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=magiclink"
+          style="
+            background-color: #177981;
+            color: #ffffff;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 18px;
+            cursor: pointer;
+          "
+          >Log In</a
+        >
+      </div>
+    </div>
+    <div
+      style="
+        background-color: #f4f4f4;
+        color: #555555;
+        padding: 10px 20px;
+        text-align: center;
+        font-size: 14px;
+      "
+    >
+      <p>
+        For any assistance, feel free to contact us at
+        <a
+          href="mailto:support@credivio.com"
+          style="color: #0033cc; text-decoration: none"
+          >support@credivio.com</a
+        >
+      </p>
+      <p>&copy; 2024 Credivio, Inc. All rights reserved.</p>
+    </div>
+  </div>
+</div>

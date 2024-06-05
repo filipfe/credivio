@@ -1,9 +1,10 @@
 {
   "scripts": {
+    "marketing": "cd marketing && npm run dev",
     "web": "cd web && npm run dev",
     "supabase:dev": "supabase start && supabase functions serve --no-verify-jwt --env-file ./supabase/.env --import-map ./supabase/functions/import_map.json",
     "supabase:reset": "supabase db reset",
-    "supabase:pull:dev": "supabase db pull --project-ref ssprqijuhymtwacivhup",
+    "supabase:pull:dev": "supabase db pull",
     "supabase:push:dev": "supabase db push --project-ref ssprqijuhymtwacivhup",
     "supabase:push:prod": "supabase db push --project-ref",
     "supabase:deploy:dev": "supabase functions deploy --project-ref ssprqijuhymtwacivhup",

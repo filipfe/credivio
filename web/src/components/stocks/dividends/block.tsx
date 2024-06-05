@@ -26,9 +26,18 @@ export default async function Dividends() {
 
 const cta = (
   <Link href="/stocks/dividends">
-    <Button as="div" size="sm" color="primary" variant="light" className="h-7">
+    <Button
+      as="div"
+      size="sm"
+      color="primary"
+      variant="light"
+      className="h-7 data-[hover=true]:bg-white relative group"
+    >
       <span className="mb-px">Więcej</span>
-      <ChevronRightIcon size={14} />
+      <ChevronRightIcon
+        size={14}
+        className="transition-[margin-left] absolute group-hover:ml-2 ml-0"
+      />
     </Button>
   </Link>
 );

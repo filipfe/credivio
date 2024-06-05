@@ -1,34 +1,46 @@
 "use client";
 
+import Block from "@/components/ui/block";
 import AreaChart from "@/components/ui/charts/line-chart";
+import LineChartLoader from "@/components/ui/charts/line-loader";
+import ChartLoader from "@/components/ui/charts/loader";
+import Empty from "@/components/ui/empty";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
+import useClientQuery from "@/hooks/useClientQuery";
 import { getDailyTotalAmount } from "@/lib/operation/actions";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-export default async function OperationsByMonth({
+const getTitle = (type: "budget" | "income" | "expense") => {
+  switch (type) {
+    case "budget":
+      return "Budżet";
+    case "income":
+      return "Przychody";
+    case "expense":
+      return "Wydatki";
+  }
+};
+
+export default function OperationsByMonth({
   type,
   defaultCurrency,
 }: {
-  type: string;
+  type: "budget" | "income" | "expense";
   defaultCurrency: string;
 }) {
-  const [dailyTotalAmount, setDailyTotalAmount] = useState<DailyAmount[]>([]);
   const [currency, setCurrency] = useState<string>(defaultCurrency);
-
-  useEffect(() => {
-    async function fetchData() {
-      const { results } = await getDailyTotalAmount(currency, type);
-      setDailyTotalAmount(results);
-    }
-    fetchData();
-  }, [currency]);
+  const { results, isLoading } = useClientQuery<DailyAmount>({
+    deps: [currency, type],
+    query: getDailyTotalAmount(currency, type),
+  });
 
   return (
-    <div className="xl:col-span-3 bg-white sm:rounded-md px-6 py-8 h-full">
-      {type === "budget" ? (
-        <div className="flex justify-between items-center ml-[12px] mr-[36px] mb-4">
-          <h3>Budżet wg 30 dni</h3>
+    <Block
+      className="xl:col-span-3"
+      title={`${getTitle(type)} wg 30 dni`}
+      cta={
+        type === "budget" && (
           <UniversalSelect
             className="w-20"
             size="sm"
@@ -38,13 +50,21 @@ export default async function OperationsByMonth({
             elements={CURRENCIES}
             onChange={(e) => setCurrency(e.target.value)}
           />
-        </div>
-      ) : (
-        <h3 className="mb-4 text-center">
-          {type === "income" ? "Przychody" : "Wydatki"} wg 30 dni
-        </h3>
-      )}
-      <AreaChart data={dailyTotalAmount} currency={currency} type={type} />
-    </div>
+        )
+      }
+    >
+      <div className="h-96 flex flex-col">
+        {isLoading ? (
+          <LineChartLoader className="!p-0" hideTitle />
+        ) : results.length > 0 ? (
+          <AreaChart data={results} currency={currency} type={type} />
+        ) : (
+          <Empty
+            title="Brak danych do wyświetlenia!"
+            cta={{ title: "Dodaj przychód", href: "/incomes/add" }}
+          />
+        )}
+      </div>
+    </Block>
   );
 }

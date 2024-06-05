@@ -37,10 +37,13 @@ const cta = (
       size="sm"
       color="primary"
       variant="light"
-      className="h-7 data-[hover=true]:bg-white"
+      className="h-7 data-[hover=true]:bg-white relative group"
     >
       <span className="mb-px">Więcej</span>
-      <ChevronRightIcon size={14} />
+      <ChevronRightIcon
+        size={14}
+        className="transition-[margin-left] absolute group-hover:ml-2 ml-0"
+      />
     </Button>
   </Link>
 );
