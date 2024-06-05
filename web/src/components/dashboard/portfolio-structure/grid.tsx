@@ -6,12 +6,12 @@ import { getSpecificStocks } from "@/lib/stocks/actions";
 import { getOwnRows } from "@/lib/general/actions";
 import getStockHoldings from "@/utils/stocks/get-stock-holdings";
 import PortfolioAccordion from "./accordion";
-import { getAllBudgets } from "@/lib/operation/actions";
+import { getPortfolioBudgets } from "@/lib/operation/actions";
 import BudgetTable from "../table";
 
 export default async function PortfolioStructure() {
   const [{ results: budgets }, { results: ownStocks }] = await Promise.all([
-    getAllBudgets(),
+    getPortfolioBudgets(),
     getOwnRows<StockTransaction>("stock"),
   ]);
   const ownStocksNames: string[] = ownStocks.reduce(

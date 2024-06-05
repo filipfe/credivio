@@ -144,3 +144,15 @@ export async function activateService(
     results: [],
   };
 }
+
+export async function getDefaultCurrency(): Promise<string> {
+  const supabase = createClient();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (!user || authError) "Błąd autoryzacji, spróbuj zalogować się ponownie!";
+
+  return user?.user_metadata.currency;
+}
