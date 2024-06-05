@@ -4,10 +4,8 @@ import IncomeTable from "@/components/operations/table";
 import Loader from "@/components/stocks/loader";
 import LineChartLoader from "@/components/ui/charts/line-loader";
 import { getOwnRows } from "@/lib/general/actions";
-import {
-  getDefaultCurrency,
-  getOperationsStats,
-} from "@/lib/operation/actions";
+import { getOperationsStats } from "@/lib/operation/actions";
+import { getDefaultCurrency } from "@/lib/settings/actions";
 import { Suspense } from "react";
 
 export default async function Page({

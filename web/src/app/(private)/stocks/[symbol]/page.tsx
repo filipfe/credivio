@@ -1,6 +1,6 @@
 import BigChart from "@/components/stocks/company/big-chart";
 import Block from "@/components/ui/block";
-import { getDefaultCurrency } from "@/lib/operation/actions";
+import { getDefaultCurrency } from "@/lib/settings/actions";
 import { getPricePeriod, getSpecificStocks } from "@/lib/stocks/actions";
 import numberFormat from "@/utils/formatters/currency";
 import { redirect } from "next/navigation";

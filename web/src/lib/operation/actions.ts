@@ -179,9 +179,9 @@ export async function getChartLabels(
   };
 }
 
-export async function getAllBudgets(): Promise<SupabaseResponse<Budget>> {
+export async function getPortfolioBudgets(): Promise<SupabaseResponse<Budget>> {
   const supabase = createClient();
-  const { data: results, error } = await supabase.rpc("get_all_budgets");
+  const { data: results, error } = await supabase.rpc("get_portfolio_budgets");
 
   if (error) {
     return {
@@ -193,16 +193,4 @@ export async function getAllBudgets(): Promise<SupabaseResponse<Budget>> {
   return {
     results,
   };
-}
-
-export async function getDefaultCurrency(): Promise<string> {
-  const supabase = createClient();
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (!user || authError) "Błąd autoryzacji, spróbuj zalogować się ponownie!";
-
-  return user?.user_metadata.currency;
 }
