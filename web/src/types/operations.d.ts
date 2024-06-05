@@ -30,8 +30,8 @@ type DailyAmount = {
 
 type Stat = {
   amount: number;
-  difference: number | null;
-  is_positive: boolean;
+  difference: number;
+  difference_indicator: "positive" | "negative" | "no_change";
 };
 
 type DashboardStats = {
