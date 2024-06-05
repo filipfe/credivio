@@ -6,14 +6,14 @@ import { getSpecificStocks } from "@/lib/stocks/actions";
 import { getOwnRows } from "@/lib/general/actions";
 import getStockHoldings from "@/utils/stocks/get-stock-holdings";
 import PortfolioAccordion from "./accordion";
+import { getAllBudgets } from "@/lib/operation/actions";
+import BudgetTable from "../table";
 
 export default async function PortfolioStructure() {
-  const [{ results: expenses }, { results: incomes }, { results: ownStocks }] =
-    await Promise.all([
-      getOwnRows<Operation>("expense"),
-      getOwnRows<Operation>("income"),
-      getOwnRows<StockTransaction>("stock"),
-    ]);
+  const [{ results: budgets }, { results: ownStocks }] = await Promise.all([
+    getAllBudgets(),
+    getOwnRows<StockTransaction>("stock"),
+  ]);
   const ownStocksNames: string[] = ownStocks.reduce(
     (prev, curr) =>
       prev.includes(curr.symbol) ? prev : [...prev, curr.symbol],
@@ -28,24 +28,12 @@ export default async function PortfolioStructure() {
     0
   );
 
-  const totalIncome = incomes.reduce(
-    (prev, curr) => prev + parseFloat(curr.amount),
-    0
-  );
-  const totalExpenses = expenses.reduce(
-    (prev, curr) => prev + parseFloat(curr.amount),
-    0
-  );
-  const cash = totalIncome - totalExpenses;
-
-  const total = (cash < 0 ? 0 : cash) + stocksTotal;
-
   const data: Group[] = [
     {
       label: "Gotówka",
-      value: cash < 0 ? 0 : cash,
+      value: 0,
       name: "cash",
-      children: <></>,
+      children: <BudgetTable budgets={budgets} />,
     },
     {
       label: "Akcje",
@@ -68,7 +56,7 @@ export default async function PortfolioStructure() {
   return (
     <div className="bg-white sm:rounded-md py-8 px-10 space-y-4 col-span-6">
       <div className="flex flex-col xl:grid grid-cols-5 gap-8 items-start">
-        <PortfolioAccordion data={data} total={total} />
+        <PortfolioAccordion data={data} />
         <div className="col-span-2">
           <PieChart data={data} height={500} legend />
         </div>
