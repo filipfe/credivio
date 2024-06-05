@@ -17,7 +17,7 @@ export default async function StocksAndTransactions() {
       <Suspense fallback={<Loader className="col-span-2" />}>
         <OwnStocks transactions={transactions} />
       </Suspense>
-      <div className="col-span-2">
+      <div className="col-span-2 flex items-stretch">
         <TransactionTable
           title="Ostatnie transakcje"
           count={count || 0}
