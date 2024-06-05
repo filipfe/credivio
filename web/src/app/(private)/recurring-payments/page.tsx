@@ -1,7 +1,9 @@
+import ActiveRecurringPayment from "@/components/recurring-payments/active-ref";
 import RecurringPaymentRef from "@/components/recurring-payments/ref";
 import Timeline from "@/components/recurring-payments/timeline";
+import Block from "@/components/ui/block";
 import HorizontalScroll from "@/components/ui/horizontal-scroll";
-import { getRecurringPayments } from "@/lib/recurring_payments/actions";
+import { getRecurringPayments } from "@/lib/recurring-payments/actions";
 import numberFormat from "@/utils/formatters/currency";
 import { Button, Divider } from "@nextui-org/react";
 import { Switch } from "@nextui-org/switch";
@@ -92,7 +94,7 @@ const paymentsTest: PaymentsByMonth = {
   ],
 };
 
-const paymentsTest2 = [
+const paymentsTest2: RecurringPayment[] = [
   {
     id: "febc139d-0e67-405d-8213-3f47088b13bf",
     next_payment_date: "2024-03-22",
@@ -132,27 +134,22 @@ const paymentsTest2 = [
   },
 ];
 
-function getRandomTime() {
-  const timeSpans = ["week", "month", "4 days", "2 weeks", "quarter", "year"];
-  const randomIndex = Math.floor(Math.random() * timeSpans.length);
-  return timeSpans[randomIndex];
-}
-
 export default async function Page() {
   const { results: payments } = await getRecurringPayments();
 
   return (
-    <div className="px-10 pt-8 pb-24 flex flex-col h-full gap-8">
+    <div className="px-10 pt-8 pb-24 flex flex-col h-full gap-6">
       {/* nadchodzace */}
-      <HorizontalScroll>
-        {payments.map((payment) => (
-          <RecurringPaymentRef key={payment.id} payment={payment} />
-        ))}
-      </HorizontalScroll>
-      <div className="grid grid-cols-2 gap-10">
-        <div className="bg-white sm:rounded-md py-8 px-10">
+      {payments.length > 0 && (
+        <HorizontalScroll>
+          {payments.map((payment) => (
+            <RecurringPaymentRef key={payment.id} payment={payment} />
+          ))}
+        </HorizontalScroll>
+      )}
+      <div className="grid grid-cols-2 gap-6">
+        <Block title="Oś czasu">
           {/* przeszle */}
-          <h2 className="sm:text-lg">Oś czasu</h2>
           <div className="flex flex-col">
             {Object.keys(paymentsTest).map((month) => (
               <Timeline
@@ -162,52 +159,14 @@ export default async function Page() {
               />
             ))}
           </div>
-        </div>
-        <div className="bg-white sm:rounded-md py-8 px-10">
-          <div className="flex flex-col gap-6 w-full">
-            <h2 className="sm:text-lg">Aktywne</h2>
-            <div className="flex flex-col gap-2 justify-center">
-              {paymentsTest2.map((payment) => (
-                <div>
-                  <div
-                    key={payment.id}
-                    className="flex items-center justify-between"
-                  >
-                    <div className="flex flex-col">
-                      <h3 className="text-lg line-clamp-1">{payment.title}</h3>
-                      <small className="text-neutral-500">
-                        Last payment:{" "}
-                        {new Date(
-                          payment.next_payment_date
-                        ).toLocaleDateString()}
-                        {" | Next payment: "}
-                        {new Date(
-                          payment.next_payment_date
-                        ).toLocaleDateString()}
-                      </small>
-                    </div>
-                    <div className="flex gap-2">
-                      <div
-                        className={`${
-                          payment.type === "income"
-                            ? "bg-success-light text-success"
-                            : "bg-danger-light text-danger"
-                        } rounded-full px-1 py-0.5 font-bold text-center`}
-                      >
-                        {(payment.type === "income" ? "+" : "-") +
-                          numberFormat(payment.currency, payment.amount)}
-                      </div>
-                      <span className="text-lg">/ {getRandomTime()}</span>
-                    </div>
-                    <Button isIconOnly>
-                      <Trash2Icon />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
+        </Block>
+        <Block title="Aktywne">
+          <div className="flex flex-col gap-4 justify-center">
+            {paymentsTest2.map((payment) => (
+              <ActiveRecurringPayment {...payment} key={payment.id} />
+            ))}
           </div>
-        </div>
+        </Block>
       </div>
     </div>
   );

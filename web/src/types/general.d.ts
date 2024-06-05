@@ -18,7 +18,7 @@ type SupabaseResponse<T> = {
 
 type SupabaseSingleRowResponse<T> = {
   error?: string;
-  results: T;
+  result: T | null;
 };
 
 type Option<T> = { name: string; value: T };

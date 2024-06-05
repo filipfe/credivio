@@ -7,7 +7,7 @@ export async function getGoals(): Promise<SupabaseResponse<Goal>> {
   const { data: results, error } = await supabase
     .from("goals")
     .select(
-      "id, title, description, price, saved, currency, deadline, is_priority"
+      "id, title, description, price, saved, currency, deadline, is_priority",
     )
     .order("deadline")
     .order("created_at");
@@ -44,22 +44,22 @@ export async function getPriorityGoal(): Promise<
   SupabaseSingleRowResponse<Goal>
 > {
   const supabase = createClient();
-  const { data: results, error } = await supabase
+  const { data: result, error } = await supabase
     .from("goals")
     .select(
-      "id, title, description, price, saved, currency, deadline, is_priority"
+      "id, title, description, price, saved, currency, deadline, is_priority",
     )
     .eq("is_priority", true)
     .single();
 
   if (error) {
     return {
-      results: {} as Goal,
+      result: null,
       error: error.message,
     };
   }
 
   return {
-    results,
+    result,
   };
 }
