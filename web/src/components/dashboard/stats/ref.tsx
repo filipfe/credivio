@@ -25,21 +25,19 @@ export default function Stat({
       </div>
       <div className="flex items-center gap-2">
         <h4 className="text-3xl">{numberFormat(currency, stat.amount)}</h4>
-        {stat.difference ? (
-          stat.is_positive ? (
-            <div className="bg-success-light text-success flex items-center gap-1 rounded-full px-1 py-0.5 font-medium text-sm">
-              <ArrowUpIcon size={16} />
-              {stat.difference}%
-            </div>
-          ) : (
-            <div className="bg-danger-light text-danger flex items-center gap-1 rounded-full px-1 py-0.5 font-medium text-sm">
-              <ArrowDownIcon size={16} />
-              {stat.difference}%
-            </div>
-          )
-        ) : (
-          <div className="bg-default-light text-default flex items-center gap-1 rounded-full px-1 py-0.5 font-medium text-sm">
+        {stat.difference_indicator === "no_change" ? (
+          <div className="bg-default text-default-dark flex items-center gap-1 rounded-full px-1 py-0.5 font-medium text-sm">
             <Minus size={16} />
+          </div>
+        ) : stat.difference_indicator === "positive" ? (
+          <div className="bg-success-light text-success flex items-center gap-1 rounded-full px-1 py-0.5 font-medium text-sm">
+            <ArrowUpIcon size={16} />
+            {stat.difference}%
+          </div>
+        ) : (
+          <div className="bg-danger-light text-danger flex items-center gap-1 rounded-full px-1 py-0.5 font-medium text-sm">
+            <ArrowDownIcon size={16} />
+            {stat.difference}%
           </div>
         )}
       </div>
