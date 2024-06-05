@@ -35,7 +35,7 @@ const renderCustomBarLabel = ({
 
 export default function BarChart({ data, currency }: Props) {
   return (
-    <ResponsiveContainer width="100%" height={360}>
+    <ResponsiveContainer width="100%" height="100%">
       <BarChartWrapper
         data={data}
         margin={{ top: 10, left: 8, right: 36, bottom: 0 }}

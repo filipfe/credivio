@@ -29,7 +29,7 @@ export default function NavLink({
     : pathname.startsWith(href);
   return isGroup && !isMenuHidden.desktop ? (
     <div>
-      <div className={`px-5 rounded-lg font-medium w-full text-font/70`}>
+      <div className={`px-4 rounded-lg font-medium w-full text-font/70`}>
         <span style={{ fontSize: 13 }}>{title}</span>
       </div>
       <div className="space-y-1.5 px-4 mt-1.5">
@@ -40,7 +40,7 @@ export default function NavLink({
     </div>
   ) : (
     <Link
-      className={`px-5 rounded-lg text-sm font-medium flex justify-center items-center gap-4 ${
+      className={`px-4 rounded-lg text-sm font-medium flex justify-center items-center gap-4 ${
         isActive ? "bg-light" : "hover:bg-light bg-white text-font/70"
       }`}
       href={href}

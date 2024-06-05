@@ -21,14 +21,8 @@ export default async function Dashboard() {
       <Suspense fallback={statsFallback}>
         <StatsList defaultCurrency={defaultCurrency} />
       </Suspense>
-      <Suspense fallback={<ChartLoader className="xl:col-span-3 min-h-96" />}>
-        <ExpensesByLabel defaultCurrency={defaultCurrency} />
-      </Suspense>
-      <Suspense
-        fallback={<LineChartLoader className="xl:col-span-3 min-h-96" />}
-      >
-        <OperationsByMonth defaultCurrency={defaultCurrency} type="budget" />
-      </Suspense>
+      <ExpensesByLabel defaultCurrency={defaultCurrency} />
+      <OperationsByMonth defaultCurrency={defaultCurrency} type="budget" />
       <Suspense fallback={latestOperationsFallback}>
         <PortfolioStructure />
       </Suspense>

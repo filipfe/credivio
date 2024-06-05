@@ -10,7 +10,6 @@ export default async function CompanyBlock({
   _quote,
 }: Stock) {
   const { results } = await getPriceHistory(_symbol_short);
-  console.log({ results });
   const quote = parseFloat(_quote);
   const isUp =
     _change?.toString().startsWith("+") &&

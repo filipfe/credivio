@@ -15,8 +15,8 @@ import {
   ScrollTextIcon,
   SlidersIcon,
   UserCogIcon,
+  VariableIcon,
   Wallet2Icon,
-  Wand2Icon,
 } from "lucide-react";
 
 export const PAGES: Page[] = [
@@ -53,6 +53,11 @@ export const PAGES: Page[] = [
             href: "/expenses/add",
           },
         ],
+      },
+      {
+        title: "Algorytmy",
+        href: "/algorithms",
+        icon: VariableIcon,
       },
       {
         title: "Cele",

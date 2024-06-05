@@ -1,31 +1,31 @@
 "use client";
 
+import Block from "@/components/ui/block";
 import BarChart from "@/components/ui/charts/bar-chart";
+import ChartLoader from "@/components/ui/charts/loader";
+import Empty from "@/components/ui/empty";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
-import { getChartLabels } from "@/lib/operation/actions";
-import { useEffect, useState } from "react";
+import useClientQuery from "@/hooks/useClientQuery";
+import { getChartLabels } from "@/lib/operation/client";
+import { useState } from "react";
 
-export default async function ExpensesByLabel({
+export default function ExpensesByLabel({
   defaultCurrency,
 }: {
   defaultCurrency: string;
 }) {
-  const [chartLabels, setChartLabels] = useState<ChartLabel[]>([]);
   const [currency, setCurrency] = useState<string>(defaultCurrency);
-
-  useEffect(() => {
-    async function fetchData() {
-      const { results } = await getChartLabels(currency);
-      setChartLabels(results);
-    }
-    fetchData();
-  }, [currency]);
+  const { isLoading, results } = useClientQuery<ChartLabel>({
+    deps: [currency],
+    query: getChartLabels(currency),
+  });
 
   return (
-    <div className="xl:col-span-3 bg-white sm:rounded-md px-6 py-8">
-      <div className="flex justify-between items-center ml-[8px] mr-[36px] mb-4">
-        <h3>Wydatki wg Etykieta</h3>
+    <Block
+      className="xl:col-span-3"
+      title="Wydatki wg Etykiety"
+      cta={
         <UniversalSelect
           className="w-20"
           size="sm"
@@ -35,8 +35,20 @@ export default async function ExpensesByLabel({
           elements={CURRENCIES}
           onChange={(e) => setCurrency(e.target.value)}
         />
+      }
+    >
+      <div className="h-96 flex flex-col">
+        {isLoading ? (
+          <ChartLoader className="!p-0" hideTitle />
+        ) : results.length > 0 ? (
+          <BarChart data={results} currency={currency} />
+        ) : (
+          <Empty
+            title="Brak wydatków do wyświetlenia!"
+            cta={{ title: "Dodaj wydatek", href: "/expenses/add" }}
+          />
+        )}
       </div>
-      <BarChart data={chartLabels} currency={currency} />
-    </div>
+    </Block>
   );
 }
