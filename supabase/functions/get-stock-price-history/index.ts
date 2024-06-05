@@ -5,7 +5,7 @@
 // Setup type definitions for built-in Supabase Runtime APIs
 /// <reference types="https://esm.sh/v135/@supabase/functions-js@2.4.1/src/edge-runtime.d.ts" />
 
-import { corsHeaders } from "../../_shared/cors.ts";
+import { corsHeaders } from "../_shared/cors.ts";
 
 type Body = {
   short_symbol: string;
@@ -15,9 +15,9 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
-  const { short_symbol } = (await req.json()) as Body;
-  const now = new Date();
   try {
+    const { short_symbol } = (await req.json()) as Body;
+    const now = new Date();
     let results = [];
     let message = "no_data";
     let nineAM = new Date(

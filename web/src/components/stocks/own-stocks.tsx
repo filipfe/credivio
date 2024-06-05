@@ -22,13 +22,15 @@ export default async function OwnStocks({
 
   return (
     <Fragment>
-      <HorizontalScroll className="col-span-full">
-        {stocks.map((item, k) => (
-          <Suspense fallback="Loading" key={`suspense:company-block:${k}`}>
-            <CompanyBlock {...item} key={`company-block:${k}`} />
-          </Suspense>
-        ))}
-      </HorizontalScroll>
+      {stocks.length > 0 && (
+        <HorizontalScroll className="col-span-full">
+          {stocks.map((item, k) => (
+            <Suspense fallback="Loading" key={`suspense:company-block:${k}`}>
+              <CompanyBlock {...item} key={`company-block:${k}`} />
+            </Suspense>
+          ))}
+        </HorizontalScroll>
+      )}
       <Block title="Moje instrumenty" className="col-span-2 w-screen sm:w-auto">
         {transactions.length > 0 ? (
           <ScrollShadow

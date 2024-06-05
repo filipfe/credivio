@@ -147,7 +147,6 @@ export async function getPriceHistory(
     "get-stock-price-history",
     { body: { short_symbol } },
   );
-
   const err = await formatError(error);
 
   if (err) {
