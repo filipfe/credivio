@@ -1,16 +1,14 @@
-import ActiveRecurringPayment from "@/components/recurring-payments/active-ref";
-import RecurringPaymentRef from "@/components/recurring-payments/ref";
+import ActiveRecurringPaymentsList from "@/components/recurring-payments/active/list";
 import Timeline from "@/components/recurring-payments/timeline";
+import Loader from "@/components/stocks/loader";
 import Block from "@/components/ui/block";
-import HorizontalScroll from "@/components/ui/horizontal-scroll";
-import { getRecurringPayments } from "@/lib/recurring-payments/actions";
-import numberFormat from "@/utils/formatters/currency";
-import { Button, Divider } from "@nextui-org/react";
-import { Switch } from "@nextui-org/switch";
-import { Trash2Icon } from "lucide-react";
+import { ScrollShadow } from "@nextui-org/react";
+import { Suspense } from "react";
+
 type PaymentsByMonth = {
   [key: string]: RecurringPayment[];
 };
+
 const paymentsTest: PaymentsByMonth = {
   Maj: [
     {
@@ -134,39 +132,38 @@ const paymentsTest2: RecurringPayment[] = [
   },
 ];
 
-export default async function Page() {
-  const { results: payments } = await getRecurringPayments();
-
+export default function Page() {
   return (
-    <div className="px-10 pt-8 pb-24 flex flex-col h-full gap-6">
+    <div className="px-10 py-4 sm:py-8 flex flex-col h-full max-h-[calc(100*var(--vh)-80px)] gap-6">
       {/* nadchodzace */}
-      {payments.length > 0 && (
+      {/* {payments.length > 0 && (
         <HorizontalScroll>
           {payments.map((payment) => (
             <RecurringPaymentRef key={payment.id} payment={payment} />
           ))}
         </HorizontalScroll>
-      )}
+      )} */}
       <div className="grid grid-cols-2 gap-6">
         <Block title="Oś czasu">
           {/* przeszle */}
-          <div className="flex flex-col">
-            {Object.keys(paymentsTest).map((month) => (
-              <Timeline
-                key={month}
-                month={month}
-                payments={paymentsTest[month]}
-              />
-            ))}
-          </div>
+          <ScrollShadow
+            className="max-h-[calc(100*var(--vh)-260px)]"
+            hideScrollBar
+          >
+            <div className="flex flex-col">
+              {Object.keys(paymentsTest).map((month) => (
+                <Timeline
+                  key={month}
+                  month={month}
+                  payments={paymentsTest[month]}
+                />
+              ))}
+            </div>
+          </ScrollShadow>
         </Block>
-        <Block title="Aktywne">
-          <div className="flex flex-col gap-4 justify-center">
-            {paymentsTest2.map((payment) => (
-              <ActiveRecurringPayment {...payment} key={payment.id} />
-            ))}
-          </div>
-        </Block>
+        <Suspense fallback={<Loader />}>
+          <ActiveRecurringPaymentsList />
+        </Suspense>
       </div>
     </div>
   );

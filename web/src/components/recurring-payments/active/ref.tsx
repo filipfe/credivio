@@ -4,7 +4,7 @@ import numberFormat from "@/utils/formatters/currency";
 import { useTransition } from "react";
 import { deleteRecurringPayment } from "@/lib/recurring-payments/actions";
 import toast from "react-hot-toast";
-import Toast from "../ui/toast";
+import Toast from "../../ui/toast";
 import {
   Button,
   Modal,

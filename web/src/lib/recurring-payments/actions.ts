@@ -34,6 +34,7 @@ export async function deleteRecurringPayment(formData: FormData) {
     };
   }
   const supabase = createClient();
+
   const { error } = await supabase.from("recurring_payments").delete().eq(
     "id",
     id,
