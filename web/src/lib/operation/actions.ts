@@ -64,6 +64,7 @@ export async function getLatestOperations(): Promise<
     .select("id, title, amount, currency, type, issued_at")
     .order("issued_at", { ascending: false })
     .order("created_at", { ascending: false })
+    .order("title")
     .limit(20);
 
   if (error) {
