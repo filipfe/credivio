@@ -4,7 +4,7 @@ import UniversalSelect from "@/components/ui/universal-select";
 import { LANGUAGES } from "@/const";
 import { updatePreferences } from "@/lib/settings/actions";
 
-export default function LanguageSettings({ language }: { language: string }) {
+export default function LanguageSettings({ language }: { language?: string }) {
   return (
     <div>
       <h2 className="text-lg font-bold">Język</h2>
@@ -15,7 +15,7 @@ export default function LanguageSettings({ language }: { language: string }) {
           size="sm"
           name="language"
           aria-label="Język"
-          defaultSelectedKeys={[language]}
+          defaultSelectedKeys={language ? [language] : undefined}
           elements={LANGUAGES}
           onChange={(e) => updatePreferences("language", e.target.value)}
         />

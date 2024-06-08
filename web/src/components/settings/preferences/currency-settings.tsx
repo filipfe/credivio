@@ -4,7 +4,7 @@ import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
 import { updatePreferences } from "@/lib/settings/actions";
 
-export default function CurrencySettings({ currency }: { currency: string }) {
+export default function CurrencySettings({ currency }: { currency?: string }) {
   return (
     <div>
       <h2 className="text-lg font-bold">Waluta</h2>
@@ -15,7 +15,7 @@ export default function CurrencySettings({ currency }: { currency: string }) {
           size="sm"
           name="currency"
           aria-label="Waluta"
-          defaultSelectedKeys={[currency]}
+          defaultSelectedKeys={currency ? [currency] : undefined}
           elements={CURRENCIES}
           onChange={(e) => updatePreferences("currency", e.target.value)}
         />

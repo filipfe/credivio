@@ -16,7 +16,6 @@ export default function PaymentRef({
           </small>
           <h3 className="text-xl font-medium">{title}</h3>
         </div>
-        <div className="rounded-md bg-secondary/20 h-10 flex-1 max-w-24"></div>
       </div>
       <div className="h-[126px] py-2 w-0.5 bg-primary flex flex-col items-center justify-center relative">
         <div className="bg-primary rounded-full w-2 min-w-2 h-2" />
