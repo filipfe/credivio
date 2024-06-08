@@ -9,7 +9,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from "@nextui-org/table";
+} from "@nextui-org/react";
 import Add from "../ui/cta/add";
 import { TRANSACTION_TYPES } from "@/const";
 import { useCallback, useEffect } from "react";

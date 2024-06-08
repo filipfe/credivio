@@ -1,18 +1,25 @@
 import { Fragment } from "react";
 import Stat from "./ref";
-import { getDashboardStats } from "@/lib/operation/actions";
 import { Button } from "@nextui-org/react";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
+import { createClient } from "@/utils/supabase/server";
 
 export default async function StatsList({
   defaultCurrency,
 }: {
   defaultCurrency: string;
 }) {
-  const {
-    results: { incomes, expenses, budget },
-  } = await getDashboardStats(defaultCurrency);
+  const supabase = createClient();
+  const { data: result } = await supabase.rpc("get_dashboard_stats", {
+    currency: defaultCurrency,
+  });
+
+  if (!result) {
+    throw new Error("Failed to retrieve the data!");
+  }
+
+  const { incomes, expenses, budget } = result;
 
   return (
     <Fragment>

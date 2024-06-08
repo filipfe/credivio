@@ -1,8 +1,7 @@
 "use client";
 
 import { signInWithEmail } from "@/lib/auth/actions";
-import { Input } from "@nextui-org/input";
-import { Button } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { useTransition } from "react";
 
 export default function Form() {

@@ -12,5 +12,9 @@
   },
   "devDependencies": {
     "supabase": "^1.167.4"
+  },
+  "dependencies": {
+    "date-fns": "^3.6.0",
+    "javascript-time-ago": "^2.5.10"
   }
 }

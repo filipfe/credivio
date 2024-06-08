@@ -14,7 +14,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { Trash2Icon } from "lucide-react";
+import { PauseIcon, Trash2Icon } from "lucide-react";
 
 export default function ActiveRecurringPayment({
   id,
@@ -32,26 +32,37 @@ export default function ActiveRecurringPayment({
       <div className="flex flex-col">
         <h3 className="text-lg line-clamp-1">{title}</h3>
         <small className="text-neutral-500">
-          Last payment: {new Date(next_payment_date).toLocaleDateString()}
-          {" | Next payment: "}
+          Ostatnia płatność: {new Date(next_payment_date).toLocaleDateString()}{" "}
+          | Następna płatność:{" "}
           {new Date(next_payment_date).toLocaleDateString()}
         </small>
       </div>
-      <div className="flex gap-2">
+      <div className="flex items-end gap-2">
         <div
           className={`${
             type === "income"
-              ? "bg-success-light text-success"
+              ? "bg-primary/10 text-primary"
               : "bg-danger-light text-danger"
-          } rounded-full px-1 py-0.5 font-bold text-center`}
+          } rounded-md px-2 py-1 font-bold text-center`}
         >
           {(type === "income" ? "+" : "-") + numberFormat(currency, amount)}
         </div>
-        <span className="text-lg">/ miesiąc</span>
+        <sub className="text-base mb-0.5">/ miesiąc</sub>
       </div>
-      <Button onPress={onOpen} isIconOnly disableRipple size="sm">
-        <Trash2Icon size={16} />
-      </Button>
+      <div className="flex items-center gap-2">
+        <Button onPress={onOpen} isIconOnly disableRipple size="sm">
+          <PauseIcon size={16} />
+        </Button>
+        <Button
+          className="bg-danger/5"
+          onPress={onOpen}
+          isIconOnly
+          disableRipple
+          size="sm"
+        >
+          <Trash2Icon size={16} className="text-danger" />
+        </Button>
+      </div>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (

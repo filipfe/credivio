@@ -3,7 +3,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { PostgrestError } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 export async function getAccount(): Promise<
   SupabaseSingleRowResponse<Account>
@@ -17,7 +16,7 @@ export async function getAccount(): Promise<
 
   if (authError) {
     return {
-      results: {} as Account,
+      result: null,
       error: authError.message,
     };
   }
@@ -29,7 +28,7 @@ export async function getAccount(): Promise<
   };
 
   return {
-    results: data,
+    result: data,
   };
 }
 
@@ -64,7 +63,7 @@ export async function getPreferences(): Promise<
 
   if (!user || authError) {
     return {
-      results: {} as Preferences,
+      result: null,
       error: "Błąd autoryzacji, spróbuj zalogować się ponownie!",
     };
   }
@@ -75,7 +74,7 @@ export async function getPreferences(): Promise<
   };
 
   return {
-    results: data,
+    result: data,
   };
 }
 
@@ -94,7 +93,7 @@ export async function updatePreferences(name: string, value: string) {
 }
 
 export async function activateService(
-  formData: FormData
+  formData: FormData,
 ): Promise<SupabaseResponse<any>> {
   const service = formData.get("service")!.toString();
   const isActive = formData.get("is-active")!.toString();
