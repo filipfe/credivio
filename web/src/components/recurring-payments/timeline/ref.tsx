@@ -14,7 +14,7 @@ export default function PaymentRef({
           <small className="text-font/75 font-medium">
             {new Date(next_payment_date).toLocaleDateString()}
           </small>
-          <h3 className="text-xl font-medium">{title}</h3>
+          <h3 className="text-lg font-medium">{title}</h3>
         </div>
       </div>
       <div className="h-[126px] py-2 w-0.5 bg-primary flex flex-col items-center justify-center relative">

@@ -17,7 +17,7 @@ export default function Month({ month, payments }: Props) {
 
   return (
     <div className="relative">
-      <div className="bg-primary/90 flex items-center justify-between py-2 px-4 rounded-md">
+      <div className="bg-primary flex items-center justify-between py-2 px-4 rounded-md sticky top-0 z-10">
         <div className="flex gap-2 items-end">
           <h2 className="font-medium text-white">{month}</h2>
           <small className="text-white/80">2024</small>

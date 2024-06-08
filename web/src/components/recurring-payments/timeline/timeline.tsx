@@ -1,6 +1,7 @@
 import Block from "@/components/ui/block";
 import { ScrollShadow } from "@nextui-org/react";
 import Month from "./month";
+import Empty from "@/components/ui/empty";
 
 const paymentsTest: Record<string, RecurringPayment[]> = {
   Maj: [
@@ -126,13 +127,24 @@ const paymentsTest2: RecurringPayment[] = [
 ];
 
 export default function Timeline() {
+  const months = Object.keys(paymentsTest);
   return (
-    <Block title="Oś czasu">
-      <ScrollShadow className="max-h-[calc(100vh-262px)]" hideScrollBar>
-        <div className="flex flex-col">
-          {Object.keys(paymentsTest).map((month) => (
-            <Month key={month} month={month} payments={paymentsTest[month]} />
-          ))}
+    <Block>
+      <ScrollShadow className="h-[calc(100vh-210px)]" hideScrollBar size={0}>
+        <div className="flex flex-col h-full">
+          {months.length > 0 ? (
+            months.map((month) => (
+              <Month key={month} month={month} payments={paymentsTest[month]} />
+            ))
+          ) : (
+            <Empty
+              title="Nie znaleziono historii płatności!"
+              cta={{
+                title: "Dodaj płatność cykliczną",
+                href: "/recurring-payments/add",
+              }}
+            />
+          )}
         </div>
       </ScrollShadow>
     </Block>
