@@ -1,5 +1,4 @@
 import numberFormat from "@/utils/formatters/currency";
-import { DotIcon } from "lucide-react";
 
 export default function PaymentRef({
   title,
