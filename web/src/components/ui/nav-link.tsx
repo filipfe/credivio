@@ -40,7 +40,7 @@ export default function NavLink({
     </div>
   ) : (
     <Link
-      className={`px-4 rounded-lg text-sm font-medium flex justify-center items-center gap-4 ${
+      className={`px-4 rounded-lg text-sm font-medium flex justify-center items-center gap-3.5 ${
         isActive ? "bg-light" : "hover:bg-light bg-white text-font/70"
       }`}
       href={href}

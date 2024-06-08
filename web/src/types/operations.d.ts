@@ -45,14 +45,12 @@ type OperationsStats = {
   last_day: Stat;
 };
 
-type LatestOperation = {
-  id: string;
-  title: string;
-  amount: number;
-  currency: string;
-  type: string;
-  issued_at: string;
-};
+type LatestOperation =
+  & Pick<Operation, "id" | "issued_at" | "title" | "currency">
+  & {
+    amount: number;
+    type: OperationType;
+  };
 
 type Budget = {
   currency: "PLN" | "USD" | "EUR" | "GBP" | "CHF";

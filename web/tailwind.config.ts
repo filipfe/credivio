@@ -17,7 +17,7 @@ const config: Config = {
         light: "#FAFAFA",
         background: "#FFFFFF",
         "success-light": "#EFFCEE",
-        danger: "#C93C2F",
+        danger: "#B33939",
         "danger-light": "#FCEEEE",
       },
     },

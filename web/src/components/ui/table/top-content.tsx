@@ -1,4 +1,4 @@
-import { Input } from "@nextui-org/input";
+import { Input } from "@nextui-org/react";
 import { SearchIcon } from "lucide-react";
 import Add from "../cta/add";
 
@@ -36,7 +36,7 @@ export default function TopContent({
           enabled={{ label: type === "expense", currency: true }}
           state={state}
         />
-        {type && <Add size="sm" type={type} className="!h-9" />}
+        {type && <Add size="sm" type={type} className="!h-10" />}
       </div>
     </div>
   );

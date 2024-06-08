@@ -14,10 +14,8 @@ export default function Add({
   return (
     <Link href={`${process.env.NEXT_PUBLIC_SITE_URL}/${type}s/add`}>
       <Button
-        color="primary"
         className={cn("font-medium", className)}
         size={size}
-        variant="flat"
         as="div"
         disableRipple
       >

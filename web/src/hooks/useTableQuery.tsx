@@ -1,4 +1,4 @@
-import { SortDescriptor } from "@nextui-org/table";
+import { SortDescriptor } from "@nextui-org/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";

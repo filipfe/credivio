@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function addOperations(
-  formData: FormData
+  formData: FormData,
 ): Promise<SupabaseResponse<Operation>> {
   const type = formData.get("type")?.toString() as OperationType;
   const label = formData.get("label")?.toString();
@@ -78,69 +78,26 @@ export async function getLatestOperations(): Promise<
   };
 }
 
-export async function getDailyTotalAmount(
-  currency: string,
-  type: string
-): Promise<SupabaseResponse<DailyAmount>> {
-  const supabase = createClient();
-  const { data: results, error } = await supabase.rpc(
-    "get_daily_total_amount",
-    { currency, type }
-  );
-
-  if (error) {
-    return {
-      results: [],
-      error: error.message,
-    };
-  }
-
-  return {
-    results,
-  };
-}
-
 export async function getOperationsStats(
   currency: string,
-  type: string
+  type: string,
 ): Promise<SupabaseSingleRowResponse<OperationsStats>> {
   const supabase = createClient();
 
-  const { data: results, error } = await supabase.rpc("get_operations_stats", {
+  const { data: result, error } = await supabase.rpc("get_operations_stats", {
     currency,
     type,
   });
 
   if (error) {
     return {
-      results: {} as OperationsStats,
+      result: null,
       error: error.message,
     };
   }
 
   return {
-    results,
-  };
-}
-
-export async function getDashboardStats(
-  currency: string
-): Promise<SupabaseSingleRowResponse<DashboardStats>> {
-  const supabase = createClient();
-
-  const { data: results, error } = await supabase.rpc("get_dashboard_stats", {
-    currency,
-  });
-
-  if (error) {
-    return {
-      results: {} as DashboardStats,
-      error: error.message,
-    };
-  }
-
-  return {
-    results,
+    result,
   };
 }
 

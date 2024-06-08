@@ -1,28 +1,33 @@
 import numberFormat from "@/utils/formatters/currency";
 import { Skeleton, cn } from "@nextui-org/react";
+import { formatDistance } from "date-fns";
+import { pl } from "date-fns/locale";
 
 export default function OperationRef({
-  operation,
-}: {
-  operation: LatestOperation;
-}) {
+  title,
+  issued_at,
+  type,
+  currency,
+  amount,
+}: LatestOperation) {
   return (
-    <div className="bg-white w-full rounded-lg py-4 px-6 flex flex-col gap-3 min-w-60">
-      <div className="flex items-center gap-4 justify-between">
-        <h3 className="text-lg line-clamp-1">{operation.title}</h3>
-        <small className="text-neutral-500">
-          {new Date(operation.issued_at).toLocaleDateString()}
-        </small>
-      </div>
-      <div
-        className={`${
-          operation.type === "income"
-            ? "bg-success-light text-success"
-            : "bg-danger-light text-danger"
-        } rounded-full px-4 py-0.5 text-xl font-medium text-center`}
-      >
-        {(operation.type === "income" ? "+" : "-") +
-          numberFormat(operation.currency, operation.amount)}
+    <div className="bg-primary rounded-lg">
+      <div className="border shadow-[inset_0px_2px_9px_rgba(255,255,255,0.4)] border-white/10 bg-gradient-to-b from-white/5 to-white/[0.01] p-4 rounded-lg backdrop-blur-lg flex flex-col gap-2 min-w-64">
+        <div className="flex items-center justify-between">
+          <span className="text-white text-sm font-medium">{title}</span>
+          <small className="text-white/80">
+            {formatDistance(issued_at, new Date(), {
+              addSuffix: true,
+              locale: pl,
+            })}
+          </small>
+        </div>
+        <div className="h-10">
+          <strong className="text-3xl font-bold text-white">
+            {type === "income" ? "+" : type === "expense" ? "-" : ""}
+            {numberFormat(currency, amount)}
+          </strong>
+        </div>
       </div>
     </div>
   );

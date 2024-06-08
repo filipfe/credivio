@@ -7,7 +7,7 @@ import Empty from "@/components/ui/empty";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
 import useClientQuery from "@/hooks/useClientQuery";
-import { getChartLabels } from "@/lib/operation/client";
+import { getChartLabels } from "@/lib/operation/queries";
 import { useState } from "react";
 
 export default function ExpensesByLabel({
@@ -44,7 +44,7 @@ export default function ExpensesByLabel({
           <BarChart data={results} currency={currency} />
         ) : (
           <Empty
-            title="Brak wydatków do wyświetlenia!"
+            title="Brak wydatków z etykietą!"
             cta={{ title: "Dodaj wydatek", href: "/expenses/add" }}
           />
         )}

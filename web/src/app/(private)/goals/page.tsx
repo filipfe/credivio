@@ -12,9 +12,11 @@ export default async function Page() {
     getPriorityGoal(),
   ]);
 
+  console.log(priorityGoalData);
+
   const goals = goalsData.results;
   const activeGoals = activeGoalsData.results;
-  const priorityGoal = priorityGoalData.results;
+  const priorityGoal = priorityGoalData.result;
 
   return (
     <div className="px-10 pt-8 pb-24 flex flex-col h-full gap-8">

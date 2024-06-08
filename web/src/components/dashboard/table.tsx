@@ -8,7 +8,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from "@nextui-org/table";
+} from "@nextui-org/react";
 import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 import { useCallback } from "react";
 

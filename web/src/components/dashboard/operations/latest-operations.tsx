@@ -7,7 +7,7 @@ export default async function LatestOperations() {
   return (
     <HorizontalScroll className="xl:col-span-6">
       {operations.map((operation) => (
-        <OperationRef key={operation.id} operation={operation} />
+        <OperationRef {...operation} key={operation.id} />
       ))}
     </HorizontalScroll>
   );

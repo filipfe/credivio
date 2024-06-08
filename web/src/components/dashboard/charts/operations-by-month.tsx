@@ -3,12 +3,11 @@
 import Block from "@/components/ui/block";
 import AreaChart from "@/components/ui/charts/line-chart";
 import LineChartLoader from "@/components/ui/charts/line-loader";
-import ChartLoader from "@/components/ui/charts/loader";
 import Empty from "@/components/ui/empty";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
 import useClientQuery from "@/hooks/useClientQuery";
-import { getDailyTotalAmount } from "@/lib/operation/actions";
+import { getDailyTotalAmount } from "@/lib/operation/queries";
 import { useState } from "react";
 
 const getTitle = (type: "budget" | "income" | "expense") => {

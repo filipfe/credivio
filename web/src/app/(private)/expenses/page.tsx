@@ -14,9 +14,13 @@ export default async function Page({
   searchParams: SearchParams;
 }) {
   const defaultCurrency = await getDefaultCurrency();
-  const {
-    results: { last_30_days, last_day },
-  } = await getOperationsStats(defaultCurrency, "expense");
+  const { result } = await getOperationsStats(defaultCurrency, "expense");
+
+  if (!result) {
+    throw new Error("Failed to fetch the resource!");
+  }
+
+  const { last_30_days, last_day } = result;
 
   return (
     <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 lg:grid grid-cols-4 lg:grid-rows-[max-content_1fr]">

@@ -1,10 +1,9 @@
 import { getAccount, updateAccount } from "@/lib/settings/actions";
-import { Input } from "@nextui-org/input";
-import { Button } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { CheckIcon } from "lucide-react";
 
 export default async function Page() {
-  const { results: user } = await getAccount();
+  const { result: user } = await getAccount();
 
   return (
     <div className="px-12 pt-8 pb-24 flex flex-col gap-8">
@@ -20,14 +19,14 @@ export default async function Page() {
             name="first_name"
             label={"Imię"}
             placeholder="First Name"
-            defaultValue={user.first_name}
+            defaultValue={user?.first_name}
           />
           <Input
             classNames={{ inputWrapper: "!bg-light" }}
             label={"Nazwisko"}
             name="last_name"
             placeholder="Last Name"
-            defaultValue={user.last_name}
+            defaultValue={user?.last_name}
           />
           <Input
             classNames={{ inputWrapper: "!bg-light" }}
@@ -36,7 +35,7 @@ export default async function Page() {
             placeholder="example@mail.com"
             type="email"
             isRequired
-            defaultValue={user.email}
+            defaultValue={user?.email}
             isDisabled
           />
           <Button

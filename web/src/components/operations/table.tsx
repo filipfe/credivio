@@ -15,6 +15,7 @@ import {
 import useTableQuery from "@/hooks/useTableQuery";
 import TopContent from "../ui/table/top-content";
 import Block from "../ui/block";
+import Empty from "../ui/empty";
 
 export default function OperationTable({
   rows,
@@ -35,7 +36,7 @@ export default function OperationTable({
     handleLabelChange,
     handleCurrencyChange,
   } = useTableQuery(rows, !!viewOnly);
-  const { page, sort, search, label } = searchQuery;
+  const { page, sort, search } = searchQuery;
 
   useEffect(() => {
     setIsLoading(false);
@@ -152,7 +153,21 @@ export default function OperationTable({
           <TableBody
             items={viewOnly ? items : rows}
             isLoading={isLoading}
-            emptyContent="Nie znaleziono operacji"
+            emptyContent={
+              <Empty
+                title="Nie znaleziono operacji"
+                cta={
+                  !viewOnly
+                    ? {
+                        title: `Dodaj ${
+                          props.type === "income" ? "przychód" : "wydatek"
+                        }`,
+                        href: `/${props.type}s/add`,
+                      }
+                    : undefined
+                }
+              />
+            }
             loadingContent={<Spinner />}
           >
             {(operation) => (

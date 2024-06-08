@@ -18,7 +18,7 @@ export default function Stat({
   stat,
 }: Props) {
   return (
-    <div className="xl:col-span-2 bg-white rounded-lg py-6 sm:py-8 px-6 sm:px-10 space-y-4">
+    <div className="xl:col-span-2 bg-white border border-primary/10 rounded-lg py-6 sm:py-8 px-6 sm:px-10 space-y-4">
       <div className="flex items-center gap-4 justify-between">
         <h3 className="sm:text-lg">{title}</h3>
         {cta}
