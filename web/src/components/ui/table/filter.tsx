@@ -8,7 +8,7 @@ import {
   PopoverTrigger,
 } from "@nextui-org/react";
 import { ListFilterIcon, ListRestartIcon } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import CurrencySelect from "./currency-select";
 import LabelSelect from "./label-select";
 
@@ -16,12 +16,19 @@ export default function Filter({
   enabled = { label: false, currency: true },
   state,
 }: FilterProps) {
+  const ref = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const numberOfParams = Object.keys(state).filter(
     (key) => state[key as keyof typeof state]?.value !== ""
   ).length;
   return (
-    <Popover placement="bottom" isOpen={isOpen} onOpenChange={setIsOpen}>
+    <Popover
+      ref={ref}
+      placement="bottom"
+      isOpen={isOpen}
+      onOpenChange={setIsOpen}
+      shouldCloseOnInteractOutside={(element) => !element.contains(ref.current)}
+    >
       <PopoverTrigger>
         <div>
           <Badge
