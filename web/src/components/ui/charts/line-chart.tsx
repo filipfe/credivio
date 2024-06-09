@@ -11,6 +11,8 @@ import {
 } from "recharts";
 import ChartTooltip from "./tooltip";
 import numberFormat from "@/utils/formatters/currency";
+import { useRef } from "react";
+import useYAxisWidth from "@/hooks/useYAxisWidth";
 
 type Props = {
   data: DailyAmount[];
@@ -19,13 +21,13 @@ type Props = {
 };
 
 export default function LineChart({ data, currency, type }: Props) {
+  const ref = useRef<any>();
+  const width = useYAxisWidth(ref);
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <Chart
-        data={data.map((e) => e)}
-        margin={{ top: 5, left: -16, right: 36, bottom: 0 }}
-      >
+      <Chart data={data.map((e) => e)} margin={{ top: 16, right: 20 }}>
         <YAxis
+          width={width}
           tick={{ fontSize: 12 }}
           dataKey="total_amount"
           tickFormatter={(value) => numberFormat(currency, value, "compact")}
@@ -39,10 +41,10 @@ export default function LineChart({ data, currency, type }: Props) {
             const [day, month, year] = label.split("-");
             return new Intl.DateTimeFormat("pl-PL", {
               day: "2-digit",
-              month: "2-digit",
+              month: "short",
             }).format(new Date(year, parseInt(month) - 1, day));
           }}
-          interval={2}
+          minTickGap={12}
           axisLine={false}
           tickLine={false}
         />
@@ -58,9 +60,9 @@ export default function LineChart({ data, currency, type }: Props) {
           labelFormatter={(label) => {
             const [day, month, year] = label.split("-");
             return new Intl.DateTimeFormat("pl-PL", {
-              weekday: "short",
+              weekday: "long",
               day: "2-digit",
-              month: "2-digit",
+              month: "long",
               year: "numeric",
             }).format(new Date(year, parseInt(month) - 1, day));
           }}

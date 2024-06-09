@@ -1,6 +1,6 @@
 import HorizontalScroll from "@/components/ui/horizontal-scroll";
 import { getLatestOperations } from "@/lib/operation/actions";
-import OperationRef from "./ref";
+import OperationRef from "../operations/ref";
 import Block from "@/components/ui/block";
 
 export default async function LatestOperations() {

@@ -1,7 +1,7 @@
 "use client";
 
 import Block from "@/components/ui/block";
-import AreaChart from "@/components/ui/charts/line-chart";
+import LineChart from "@/components/ui/charts/line-chart";
 import LineChartLoader from "@/components/ui/charts/line-loader";
 import Empty from "@/components/ui/empty";
 import UniversalSelect from "@/components/ui/universal-select";
@@ -56,7 +56,7 @@ export default function OperationsByMonth({
         {isLoading ? (
           <LineChartLoader className="!p-0" hideTitle />
         ) : results.length > 0 ? (
-          <AreaChart data={results} currency={currency} type={type} />
+          <LineChart data={results} currency={currency} type={type} />
         ) : (
           <Empty
             title="Brak danych do wyświetlenia!"

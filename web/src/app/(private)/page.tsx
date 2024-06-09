@@ -4,9 +4,9 @@ import StatsList from "@/components/dashboard/stats/list";
 import ExpensesByLabel from "@/components/dashboard/charts/expenses-by-label";
 import { StatLoader } from "@/components/dashboard/stats/ref";
 import OperationsByMonth from "@/components/dashboard/charts/operations-by-month";
-import LatestOperations from "@/components/dashboard/operations/latest-operations";
-import { OperationLoader } from "@/components/dashboard/operations/ref";
+import LatestOperations from "@/components/dashboard/latest-operations";
 import { getDefaultCurrency } from "@/lib/settings/actions";
+import { OperationLoader } from "@/components/operations/ref";
 
 export default async function Dashboard() {
   const defaultCurrency = await getDefaultCurrency();

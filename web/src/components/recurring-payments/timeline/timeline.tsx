@@ -86,51 +86,11 @@ const paymentsTest: Record<string, RecurringPayment[]> = {
   ],
 };
 
-const paymentsTest2: RecurringPayment[] = [
-  {
-    id: "febc139d-0e67-405d-8213-3f47088b13bf",
-    next_payment_date: "2024-03-22",
-    interval_days: 7,
-    title: "test",
-    amount: 10,
-    currency: "PLN",
-    type: "income",
-  },
-  {
-    id: "febc139d-0e67-405d-8213-3f47088b13bf",
-    next_payment_date: "2024-03-22",
-    interval_days: 7,
-    title: "test",
-    amount: 10,
-    currency: "PLN",
-    type: "expense",
-  },
-  {
-    id: "febc139d-0e67-405d-8213-3f47088b13bf",
-    next_payment_date: "2024-03-22",
-    interval_days: 7,
-    title: "test",
-    amount: 10,
-    currency: "USD",
-    type: "expense",
-  },
-
-  {
-    id: "febc139d-0e67-405d-8213-3f47088b13bf",
-    next_payment_date: "2024-03-22",
-    interval_days: 7,
-    title: "test",
-    amount: 10,
-    currency: "EUR",
-    type: "expense",
-  },
-];
-
 export default function Timeline() {
   const months = Object.keys(paymentsTest);
   return (
-    <Block>
-      <ScrollShadow className="h-[calc(100vh-210px)]" hideScrollBar size={0}>
+    <Block title="Przeszłe płatności">
+      <ScrollShadow className="h-[calc(100vh-490px)]" hideScrollBar size={0}>
         <div className="flex flex-col h-full">
           {months.length > 0 ? (
             months.map((month) => (
