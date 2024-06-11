@@ -1,12 +1,13 @@
 import PortfolioStructure from "@/components/dashboard/portfolio-structure/grid";
 import { Fragment, Suspense } from "react";
 import StatsList from "@/components/dashboard/stats/list";
-import ExpensesByLabel from "@/components/dashboard/charts/expenses-by-label";
+import ExpensesByLabel from "@/components/dashboard/expenses-by-label";
 import { StatLoader } from "@/components/dashboard/stats/ref";
-import OperationsByMonth from "@/components/dashboard/charts/operations-by-month";
+import OperationsByMonth from "@/components/dashboard/operations-by-month";
 import LatestOperations from "@/components/dashboard/latest-operations";
 import { getDefaultCurrency } from "@/lib/settings/actions";
 import { OperationLoader } from "@/components/operations/ref";
+import Block from "@/components/ui/block";
 
 export default async function Dashboard() {
   const defaultCurrency = await getDefaultCurrency();
@@ -29,14 +30,16 @@ export default async function Dashboard() {
 }
 
 const latestOperationsFallback = (
-  <Fragment>
-    <OperationLoader className="xl:col-span-1" />
-    <OperationLoader className="xl:col-span-1" />
-    <OperationLoader className="xl:col-span-1" />
-    <OperationLoader className="xl:col-span-1" />
-    <OperationLoader className="xl:col-span-1" />
-    <OperationLoader className="xl:col-span-1" />
-  </Fragment>
+  <Block title="Ostatnie operacje" className="xl:col-span-6">
+    <div className="grid grid-cols-6 gap-6">
+      <OperationLoader />
+      <OperationLoader />
+      <OperationLoader />
+      <OperationLoader />
+      <OperationLoader />
+      <OperationLoader />
+    </div>
+  </Block>
 );
 
 const statsFallback = (

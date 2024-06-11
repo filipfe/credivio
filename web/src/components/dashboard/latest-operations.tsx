@@ -5,6 +5,7 @@ import Block from "@/components/ui/block";
 
 export default async function LatestOperations() {
   const { results: operations } = await getLatestOperations();
+  if (operations.length === 0) return;
   return (
     <Block title="Ostatnie operacje" className="xl:col-span-6">
       <HorizontalScroll>

@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import ChartTooltip from "./tooltip";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
+import numberFormat from "@/utils/formatters/currency";
 
 type Props = {
   data: DailyAmount[];
@@ -19,8 +20,7 @@ type Props = {
 };
 
 export default function LineChart({ data, currency, type }: Props) {
-  const { tickFormatter, width } = useYAxisWidth(currency);
-
+  const { width, tickFormatter } = useYAxisWidth(currency);
   return (
     <ResponsiveContainer width="100%" height="100%">
       <Chart data={data.map((e) => e)} margin={{ top: 16, right: 20 }}>
@@ -28,9 +28,9 @@ export default function LineChart({ data, currency, type }: Props) {
           width={width}
           tick={{ fontSize: 12 }}
           dataKey="total_amount"
-          tickFormatter={tickFormatter}
           axisLine={false}
           tickLine={false}
+          tickFormatter={tickFormatter}
         />
         <XAxis
           dataKey="date"
@@ -42,7 +42,7 @@ export default function LineChart({ data, currency, type }: Props) {
               month: "short",
             }).format(new Date(year, parseInt(month) - 1, day));
           }}
-          minTickGap={12}
+          minTickGap={20}
           axisLine={false}
           tickLine={false}
         />

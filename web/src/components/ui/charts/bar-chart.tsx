@@ -13,7 +13,6 @@ import {
 } from "recharts";
 import ChartTooltip from "./tooltip";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
-import { useState } from "react";
 
 type Props = {
   data: ChartLabel[];
@@ -21,7 +20,8 @@ type Props = {
 };
 
 export default function BarChart({ data, currency }: Props) {
-  const { tickFormatter, width } = useYAxisWidth(currency);
+  const { width, tickFormatter } = useYAxisWidth(currency);
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChartWrapper
@@ -33,9 +33,9 @@ export default function BarChart({ data, currency }: Props) {
           width={width}
           tick={{ fontSize: 12 }}
           dataKey="total_amount"
-          tickFormatter={tickFormatter}
           axisLine={false}
           tickLine={false}
+          tickFormatter={tickFormatter}
         />
         <XAxis
           interval={0}

@@ -20,13 +20,15 @@ export default function ChartTooltip({
   if (!active || !payload || payload.length === 0) return;
   const value = payload[0].value ? parseFloat(payload[0].value.toString()) : 0;
 
+  const name = label || payload[0].name;
+
   return (
     <div
       className={`rounded-md bg-white text-font border-font/10 border min-w-44 shadow-lg shadow-font/5`}
     >
       <div className="py-2 px-4 border-b border-font/10">
         <p className="text-sm">
-          {labelFormatter ? labelFormatter(label, payload) : label}
+          {labelFormatter ? labelFormatter(name, payload) : name}
         </p>
       </div>
       <div className="py-2 px-4 flex items-center justify-between gap-6">

@@ -10,7 +10,7 @@ export default function OperationRef({
   type,
   currency,
   amount,
-}: LatestOperation) {
+}: Payment) {
   const isIncome = type === "income";
   return (
     <div className="rounded-lg bg-primary">
@@ -39,7 +39,7 @@ export function OperationLoader({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "bg-white rounded-lg py-4 px-6 flex flex-col gap-3",
+        "bg-light rounded-lg py-4 px-6 flex flex-col gap-3",
         className
       )}
     >

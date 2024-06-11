@@ -8,6 +8,7 @@ import getStockHoldings from "@/utils/stocks/get-stock-holdings";
 import PortfolioAccordion from "./accordion";
 import { getPortfolioBudgets } from "@/lib/operation/actions";
 import BudgetTable from "../table";
+import Block from "@/components/ui/block";
 
 export default async function PortfolioStructure() {
   const [{ results: budgets }, { results: ownStocks }] = await Promise.all([
@@ -54,13 +55,13 @@ export default async function PortfolioStructure() {
     .map((item, k) => ({ ...item, color: COLORS[k % COLORS.length] }));
 
   return (
-    <div className="bg-white sm:rounded-md py-8 px-10 space-y-4 col-span-6">
+    <Block className="col-span-6">
       <div className="flex flex-col xl:grid grid-cols-5 gap-8 items-start">
         <PortfolioAccordion data={data} />
         <div className="col-span-2">
           <PieChart data={data} height={500} legend />
         </div>
       </div>
-    </div>
+    </Block>
   );
 }
