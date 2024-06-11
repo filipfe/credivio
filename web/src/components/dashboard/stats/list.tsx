@@ -11,11 +11,12 @@ export default async function StatsList({
   defaultCurrency: string;
 }) {
   const supabase = createClient();
-  const { data: result } = await supabase.rpc("get_dashboard_stats", {
+  const { data: result, error } = await supabase.rpc("get_dashboard_stats", {
     currency: defaultCurrency,
   });
 
   if (!result) {
+    console.error(error?.message);
     throw new Error("Failed to retrieve the data!");
   }
 

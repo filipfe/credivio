@@ -1,4 +1,4 @@
-import OperationsByMonth from "@/components/dashboard/charts/operations-by-month";
+import OperationsByMonth from "@/components/dashboard/operations-by-month";
 import Stat from "@/components/dashboard/stats/ref";
 import IncomeTable from "@/components/operations/table";
 import Loader from "@/components/stocks/loader";

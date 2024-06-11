@@ -56,7 +56,7 @@ export async function addOperations(
 }
 
 export async function getLatestOperations(): Promise<
-  SupabaseResponse<LatestOperation>
+  SupabaseResponse<Payment>
 > {
   const supabase = createClient();
   const { data: results, error } = await supabase

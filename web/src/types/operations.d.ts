@@ -45,7 +45,7 @@ type OperationsStats = {
   last_day: Stat;
 };
 
-type LatestOperation =
+type Payment =
   & Pick<Operation, "id" | "issued_at" | "title" | "currency">
   & {
     amount: number;

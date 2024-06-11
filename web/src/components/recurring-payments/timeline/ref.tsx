@@ -2,19 +2,19 @@ import numberFormat from "@/utils/formatters/currency";
 
 export default function PaymentRef({
   title,
-  next_payment_date,
+  issued_at,
   currency,
   amount,
   type,
-}: RecurringPayment) {
+}: Payment) {
   return (
     <div className="flex justify-end items-stretch gap-8 hover:bg-primary/5 rounded-md relative h-max group">
       <div className="flex-1 ml-6 my-3 flex items-center justify-between gap-6">
         <div>
           <small className="text-font/75 font-medium">
-            {new Date(next_payment_date).toLocaleDateString()}
+            {new Date(issued_at).toLocaleDateString()}
           </small>
-          <h3 className="text-xl font-medium">{title}</h3>
+          <h3 className="text-lg font-medium">{title}</h3>
         </div>
       </div>
       <div className="h-[126px] py-2 w-0.5 bg-primary flex flex-col items-center justify-center relative">

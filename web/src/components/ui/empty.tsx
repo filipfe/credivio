@@ -19,6 +19,7 @@ export default function Empty({ cta, title }: Props) {
           <Button
             as="div"
             variant="light"
+            disableRipple
             startContent={<PlusIcon size={14} />}
           >
             {cta.title}

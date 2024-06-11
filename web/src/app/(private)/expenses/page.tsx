@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import Loader from "@/components/stocks/loader";
 import LineChartLoader from "@/components/ui/charts/line-loader";
 import { getOperationsStats } from "@/lib/operation/actions";
-import OperationsByMonth from "@/components/dashboard/charts/operations-by-month";
+import OperationsByMonth from "@/components/dashboard/operations-by-month";
 import { getDefaultCurrency } from "@/lib/settings/actions";
 
 export default async function Page({
@@ -23,7 +23,7 @@ export default async function Page({
   const { last_30_days, last_day } = result;
 
   return (
-    <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 lg:grid grid-cols-4 lg:grid-rows-[max-content_1fr]">
+    <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 xl:grid grid-cols-4 xl:grid-rows-[max-content_1fr]">
       <div className="col-[1/2]">
         <Stat
           title="Dzisiaj"

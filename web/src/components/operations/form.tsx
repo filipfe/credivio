@@ -1,13 +1,11 @@
 "use client";
 
-import { ADD_METHODS, CURRENCIES } from "@/const";
+import { CURRENCIES } from "@/const";
 import {
   Autocomplete,
   AutocompleteItem,
   Button,
   Input,
-  Radio,
-  RadioGroup,
   Spinner,
   Tab,
   Tabs,

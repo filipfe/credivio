@@ -18,7 +18,7 @@ export default async function CompanyBlock({
   return (
     <Link
       href={`/stocks/${_symbol}`}
-      className="flex-1 bg-white p-6 gap-4 sm:gap-8 flex items-center justify-between rounded-md"
+      className="flex-1 bg-white border border-primary/10 p-6 gap-4 sm:gap-8 flex items-center justify-between rounded-md"
     >
       <div>
         <h3 className="font-medium text-sm">{_symbol_short}</h3>

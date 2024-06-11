@@ -11,60 +11,69 @@ import {
   Cell,
   Tooltip,
 } from "recharts";
+import ChartTooltip from "./tooltip";
+import useYAxisWidth from "@/hooks/useYAxisWidth";
 
 type Props = {
   data: ChartLabel[];
   currency: string;
 };
 
-const renderCustomBarLabel = ({
-  payload: _payload,
-  x,
-  y,
-  width,
-  height: _height,
-  value,
-  currency,
-}: any) => {
-  return (
-    <text x={x + width / 2} y={y} fill="#666" textAnchor="middle" dy={-6}>
-      {numberFormat(currency, value)}
-    </text>
-  );
-};
-
 export default function BarChart({ data, currency }: Props) {
+  const { width, tickFormatter } = useYAxisWidth(currency);
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChartWrapper
         data={data}
-        margin={{ top: 10, left: 8, right: 36, bottom: 0 }}
+        margin={{ top: 16, left: 8, right: 36, bottom: 0 }}
       >
         <CartesianGrid vertical={false} opacity={0.5} />
         <YAxis
+          width={width}
           tick={{ fontSize: 12 }}
           dataKey="total_amount"
-          tickFormatter={(value) => numberFormat(currency, value, "compact")}
           axisLine={false}
           tickLine={false}
+          tickFormatter={tickFormatter}
         />
         <XAxis
           interval={0}
           dataKey="name"
-          tick={{ fontSize: 14 }}
+          tick={{
+            fontSize: 14,
+            fontWeight: 500,
+            opacity: 0.8,
+          }}
+          tickSize={12}
           axisLine={false}
           tickLine={false}
         />
-        <Bar
-          maxBarSize={120}
-          dataKey="total_amount"
-          radius={[24, 24, 0, 0]}
-          label={(e) => renderCustomBarLabel({ ...e, currency })}
-        >
+        <Bar maxBarSize={120} dataKey="total_amount" radius={[24, 24, 0, 0]}>
           {data.map((item, k) => (
-            <Cell fill={k % 2 === 0 ? "#177981" : "#ffc000"} key={item.name} />
+            <Cell
+              className={`transition-colors ${
+                k % 2 === 0
+                  ? "fill-primary hover:fill-primary/90"
+                  : "fill-secondary hover:fill-secondary/90"
+              }`}
+              key={item.name}
+            />
           ))}
         </Bar>
+        <Tooltip
+          isAnimationActive={false}
+          shared={false}
+          contentStyle={{ backgroundColor: "#177981" }}
+          labelFormatter={(label) => label}
+          content={(props) => (
+            <ChartTooltip
+              {...props}
+              payloadName="Wydatki"
+              currency={currency}
+            />
+          )}
+        />
       </BarChartWrapper>
     </ResponsiveContainer>
   );

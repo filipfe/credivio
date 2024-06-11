@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en" className="light">
       <body className={satoshi.className}>
         {children}
-        <NextTopLoader color="#177981" />
+        <NextTopLoader color="#177981" showSpinner={false} />
         <Toaster />
       </body>
     </html>

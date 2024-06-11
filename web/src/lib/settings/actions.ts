@@ -152,6 +152,5 @@ export async function getDefaultCurrency(): Promise<string> {
   } = await supabase.auth.getUser();
 
   if (!user || authError) "Błąd autoryzacji, spróbuj zalogować się ponownie!";
-
   return user?.user_metadata.currency;
 }

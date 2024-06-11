@@ -12,8 +12,6 @@ export default async function Page() {
     getPriorityGoal(),
   ]);
 
-  console.log(priorityGoalData);
-
   const goals = goalsData.results;
   const activeGoals = activeGoalsData.results;
   const priorityGoal = priorityGoalData.result;
