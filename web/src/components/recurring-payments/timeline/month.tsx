@@ -3,7 +3,7 @@ import numberFormat from "@/utils/formatters/currency";
 
 type Props = {
   month: string;
-  payments: RecurringPayment[];
+  payments: Payment[];
 };
 
 export default function Month({ month, payments }: Props) {

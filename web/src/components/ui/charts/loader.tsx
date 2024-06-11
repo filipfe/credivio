@@ -6,7 +6,10 @@ type Props = { className?: string; hideTitle?: boolean };
 export default function ChartLoader({ className, hideTitle }: Props) {
   return (
     <Block
-      className={cn("min-h-48 flex flex-col items-center h-full", className)}
+      className={cn(
+        "min-h-48 flex flex-col items-center h-full border-none",
+        className
+      )}
     >
       {!hideTitle && <Skeleton className="h-5 rounded-full w-1/6 opacity-60" />}
       <div className="relative flex flex-col justify-between h-full border-b border-content2 border-l p-6 flex-1 w-full">

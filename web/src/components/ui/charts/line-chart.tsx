@@ -10,8 +10,6 @@ import {
   LineChart as Chart,
 } from "recharts";
 import ChartTooltip from "./tooltip";
-import numberFormat from "@/utils/formatters/currency";
-import { useRef } from "react";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
 
 type Props = {
@@ -21,8 +19,8 @@ type Props = {
 };
 
 export default function LineChart({ data, currency, type }: Props) {
-  const ref = useRef<any>();
-  const width = useYAxisWidth(ref);
+  const { tickFormatter, width } = useYAxisWidth(currency);
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <Chart data={data.map((e) => e)} margin={{ top: 16, right: 20 }}>
@@ -30,7 +28,7 @@ export default function LineChart({ data, currency, type }: Props) {
           width={width}
           tick={{ fontSize: 12 }}
           dataKey="total_amount"
-          tickFormatter={(value) => numberFormat(currency, value, "compact")}
+          tickFormatter={tickFormatter}
           axisLine={false}
           tickLine={false}
         />

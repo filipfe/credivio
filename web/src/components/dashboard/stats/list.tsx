@@ -14,7 +14,7 @@ export default async function StatsList({
   const { data: result, error } = await supabase.rpc("get_dashboard_stats", {
     currency: defaultCurrency,
   });
-  console.log({ error });
+
   if (!result) {
     console.error(error?.message);
     throw new Error("Failed to retrieve the data!");

@@ -42,18 +42,13 @@ const paymentsTest2: RecurringPayment[] = [
   },
 ];
 
-export default function ComingUp() {
-  const payments = paymentsTest2;
-  if (payments.length === 0) return <></>;
+export default function ComingUp({ payments }: { payments: Payment[] }) {
+  if (payments.length === 0) return;
   return (
     <Block title="Nadchodzące">
       <HorizontalScroll>
         {payments.map((payment) => (
-          <OperationRef
-            {...payment}
-            issued_at={payment.next_payment_date}
-            key={payment.id}
-          />
+          <OperationRef {...payment} key={payment.id} />
         ))}
       </HorizontalScroll>
     </Block>
