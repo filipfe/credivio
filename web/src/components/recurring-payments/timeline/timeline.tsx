@@ -19,23 +19,23 @@ export default function Timeline({ payments }: { payments: Payment[] }) {
       title="Przeszłe płatności"
       className="row-start-1 row-end-3 col-start-2 col-end-3"
     >
-      <ScrollShadow className="h-[calc(100vh-490px)]" hideScrollBar size={0}>
-        <div className="flex flex-col h-full">
-          {months.length > 0 ? (
-            months.map((month) => (
+      {months.length > 0 ? (
+        <ScrollShadow className="h-[calc(100vh-490px)]" hideScrollBar size={0}>
+          <div className="flex flex-col h-full">
+            {months.map((month) => (
               <Month key={month} month={month} payments={grouped[month]} />
-            ))
-          ) : (
-            <Empty
-              title="Nie znaleziono historii płatności!"
-              cta={{
-                title: "Dodaj płatność cykliczną",
-                href: "/recurring-payments/add",
-              }}
-            />
-          )}
-        </div>
-      </ScrollShadow>
+            ))}
+          </div>
+        </ScrollShadow>
+      ) : (
+        <Empty
+          title="Nie znaleziono historii płatności!"
+          cta={{
+            title: "Dodaj płatność cykliczną",
+            href: "/recurring-payments/add",
+          }}
+        />
+      )}
     </Block>
   );
 }

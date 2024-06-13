@@ -2,6 +2,7 @@ import ActiveRecurringPaymentsList from "@/components/recurring-payments/active/
 import ComingUp from "@/components/recurring-payments/coming-up/list";
 import Timeline from "@/components/recurring-payments/timeline/timeline";
 import Loader from "@/components/stocks/loader";
+import groupFuturePast from "@/utils/formatters/group-future-past";
 import { createClient } from "@/utils/supabase/server";
 import { Fragment, Suspense } from "react";
 
@@ -20,11 +21,46 @@ export default function Page() {
   );
 }
 
+const sampleFuture: Payment[] = [
+  {
+    id: "1",
+    title: "Przychód",
+    amount: 240,
+    currency: "PLN",
+    issued_at: "2024-06-11",
+    type: "income",
+  },
+  {
+    id: "2",
+    title: "Przychód",
+    amount: 240,
+    currency: "PLN",
+    issued_at: "2024-06-11",
+    type: "income",
+  },
+  {
+    id: "3",
+    title: "Przychód",
+    amount: 240,
+    currency: "PLN",
+    issued_at: "2024-06-11",
+    type: "income",
+  },
+  {
+    id: "4",
+    title: "Przychód",
+    amount: 240,
+    currency: "PLN",
+    issued_at: "2024-06-11",
+    type: "income",
+  },
+];
+
 async function Operations() {
   const supabase = createClient();
-  const { data, error } = await supabase
+  const { data: results, error } = await supabase
     .from("operations")
-    .select("id, title, issued_at")
+    .select("id, title, issued_at, currency, amount")
     .eq("recurring", true)
     .returns<Payment[]>();
 
@@ -32,19 +68,14 @@ async function Operations() {
     throw new Error(error.message);
   }
 
-  const now = new Date().getTime();
-
-  const { future, past } = data.reduce(
-    (prev, curr) =>
-      now < new Date(curr.issued_at).getTime()
-        ? { ...prev, future: [...prev.future, curr] }
-        : { ...prev, past: [...prev.past, curr] },
-    { future: [] as Payment[], past: [] as Payment[] }
+  const { future, past } = groupFuturePast(
+    results,
+    (payment) => new Date(payment.issued_at)
   );
 
   return (
     <Fragment>
-      <ComingUp payments={future} />
+      <ComingUp payments={sampleFuture} />
       <Timeline payments={past} />
     </Fragment>
   );

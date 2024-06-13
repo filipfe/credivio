@@ -1,56 +1,39 @@
 import OperationRef from "@/components/operations/ref";
 import Block from "@/components/ui/block";
+import Empty from "@/components/ui/empty";
 import HorizontalScroll from "@/components/ui/horizontal-scroll";
+import { PauseIcon } from "lucide-react";
 
-const paymentsTest2: RecurringPayment[] = [
+const actions: ActionButtonProps[] = [
   {
-    id: "febc139d-0e67-405d-8213-3f47088b13bf",
-    next_payment_date: "2024-03-22",
-    interval_days: 7,
-    title: "test",
-    amount: 10,
-    currency: "PLN",
-    type: "income",
-  },
-  {
-    id: "febc139d-0e67-405d-8213-3f47088b13bf",
-    next_payment_date: "2024-03-22",
-    interval_days: 7,
-    title: "test",
-    amount: 10,
-    currency: "PLN",
-    type: "expense",
-  },
-  {
-    id: "febc139d-0e67-405d-8213-3f47088b13bf",
-    next_payment_date: "2024-03-22",
-    interval_days: 7,
-    title: "test",
-    amount: 10,
-    currency: "USD",
-    type: "expense",
-  },
-
-  {
-    id: "febc139d-0e67-405d-8213-3f47088b13bf",
-    next_payment_date: "2024-03-22",
-    interval_days: 7,
-    title: "test",
-    amount: 10,
-    currency: "EUR",
-    type: "expense",
+    text: "Anuluj",
+    icon: PauseIcon,
+    onSubmit: async () => {},
   },
 ];
 
 export default function ComingUp({ payments }: { payments: Payment[] }) {
-  if (payments.length === 0) return;
   return (
     <Block title="Nadchodzące">
-      <HorizontalScroll>
-        {payments.map((payment) => (
-          <OperationRef {...payment} key={payment.id} />
-        ))}
-      </HorizontalScroll>
+      {payments.length > 0 ? (
+        <HorizontalScroll>
+          {payments.map((payment) => (
+            <OperationRef
+              payment={payment}
+              actions={actions}
+              key={payment.id}
+            />
+          ))}
+        </HorizontalScroll>
+      ) : (
+        <Empty
+          title="Brak nadchodzących płatności!"
+          cta={{
+            title: "Dodaj płatność cykliczną",
+            href: "/recurring-payments/add",
+          }}
+        />
+      )}
     </Block>
   );
 }

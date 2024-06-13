@@ -2,15 +2,16 @@ import numberFormat from "@/utils/formatters/currency";
 import { Skeleton, cn } from "@nextui-org/react";
 import { formatDistance } from "date-fns";
 import { pl } from "date-fns/locale";
-import { useRef } from "react";
+
+type Props = {
+  payment: Payment;
+  actions?: ActionButtonProps[];
+};
 
 export default function OperationRef({
-  title,
-  issued_at,
-  type,
-  currency,
-  amount,
-}: Payment) {
+  payment: { title, issued_at, type, currency, amount },
+  actions = [],
+}: Props) {
   const isIncome = type === "income";
   return (
     <div className="rounded-lg bg-primary">
