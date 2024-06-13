@@ -5,7 +5,7 @@ export default async function Page() {
   const defaultCurrency = await getDefaultCurrency();
 
   return (
-    <div className="px-12 pt-8 pb-24 flex flex-col h-full">
+    <div className="sm:px-10 py-4 sm:py-8 h-full flex items-center justify-center">
       <GoalForm defaultCurrency={defaultCurrency} />
     </div>
   );

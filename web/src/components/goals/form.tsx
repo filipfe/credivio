@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { v4 } from "uuid";
 import UniversalSelect from "../ui/universal-select";
 import { CURRENCIES } from "@/const";
+import Block from "../ui/block";
 
 const defaultRecord: GoalRecord = {
   title: "",
@@ -29,110 +30,107 @@ export default function GoalForm({
   });
 
   return (
-    <div className="flex flex-col mx-auto max-w-4xl gap-8 w-full h-max my-auto">
-      <div className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col">
-        <h2 className="text-lg">Nowy cel</h2>
-        <form
-          action={(formData) =>
-            startTransition(async () => {
-              const { error } = await insertRows({ formData });
-              error && toast.error(error);
-            })
+    <Block title="Nowy cel" className="w-full max-w-4xl">
+      <form
+        action={(formData) =>
+          startTransition(async () => {
+            const { error } = await insertRows({ formData });
+            error && toast.error(error);
+          })
+        }
+        className="grid grid-cols-2 gap-4"
+      >
+        <Input
+          classNames={{ inputWrapper: "!bg-light" }}
+          name="title"
+          label="Tytuł"
+          placeholder="Mieszkanie"
+          isRequired
+          value={singleRecord.title}
+          onChange={(e) =>
+            setSingleRecord((prev) => ({ ...prev, title: e.target.value }))
           }
-          className="grid grid-cols-2 gap-4"
-        >
-          <Input
-            classNames={{ inputWrapper: "!bg-light" }}
-            name="title"
-            label="Tytuł"
-            placeholder="Mieszkanie"
-            isRequired
-            value={singleRecord.title}
-            onChange={(e) =>
-              setSingleRecord((prev) => ({ ...prev, title: e.target.value }))
-            }
-          />
-          <Input
-            classNames={{ inputWrapper: "!bg-light" }}
-            name="amount"
-            label="Kwota"
-            placeholder="0.00"
-            isRequired
-            value={singleRecord.price}
-            onBlur={(_) => {
-              const value = parseFloat(singleRecord.price);
-              !isNaN(value) &&
-                setSingleRecord((prev) => ({
-                  ...prev,
-                  price: value === 0 ? "" : value.toString(),
-                }));
-            }}
-            onChange={(e) => {
+        />
+        <Input
+          classNames={{ inputWrapper: "!bg-light" }}
+          name="amount"
+          label="Kwota"
+          placeholder="0.00"
+          isRequired
+          value={singleRecord.price}
+          onBlur={(_) => {
+            const value = parseFloat(singleRecord.price);
+            !isNaN(value) &&
               setSingleRecord((prev) => ({
                 ...prev,
-                price: formatAmount(e.target.value),
+                price: value === 0 ? "" : value.toString(),
               }));
-            }}
-          />
-          <UniversalSelect
-            name="currency"
-            label="Waluta"
-            selectedKeys={[singleRecord.currency]}
-            elements={CURRENCIES}
-            onChange={(e) => {
-              setSingleRecord((prev) => ({
-                ...prev,
-                currency: e.target.value,
-              }));
-            }}
-          />
-          <Input
-            classNames={{ inputWrapper: "!bg-light" }}
-            name="deadline"
-            label="Termin ostateczny"
-            placeholder="24.01.2024"
-            type="date"
-            value={singleRecord.deadline}
-            onChange={(e) =>
-              setSingleRecord((prev) => ({
-                ...prev,
-                deadline: e.target.value,
-              }))
-            }
-          />
-          <Textarea
-            className="col-span-2"
-            classNames={{ inputWrapper: "!bg-light" }}
-            name="description"
-            label="Opis"
-            placeholder="Miejsce zamieszkania"
-            value={singleRecord.description}
-            onChange={(e) =>
-              setSingleRecord((prev) => ({
-                ...prev,
-                description: e.target.value,
-              }))
-            }
-          />
-          <div className="col-span-2 flex justify-end mt-4">
-            <Button color="primary" type="submit" isDisabled={isPending}>
-              {isPending ? (
-                <Spinner color="white" size="sm" />
-              ) : (
-                <CheckIcon size={16} />
-              )}
-              Zapisz
-            </Button>
-          </div>
-          <input
-            type="hidden"
-            value={JSON.stringify(singleRecord)}
-            name="data"
-          />
-          <input type="hidden" value="goal" name="type" />
-        </form>
-      </div>
-      {/* <div className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col">
+          }}
+          onChange={(e) => {
+            setSingleRecord((prev) => ({
+              ...prev,
+              price: formatAmount(e.target.value),
+            }));
+          }}
+        />
+        <UniversalSelect
+          name="currency"
+          label="Waluta"
+          selectedKeys={[singleRecord.currency]}
+          elements={CURRENCIES}
+          onChange={(e) => {
+            setSingleRecord((prev) => ({
+              ...prev,
+              currency: e.target.value,
+            }));
+          }}
+        />
+        <Input
+          classNames={{ inputWrapper: "!bg-light" }}
+          name="deadline"
+          label="Termin ostateczny"
+          placeholder="24.01.2024"
+          type="date"
+          value={singleRecord.deadline}
+          onChange={(e) =>
+            setSingleRecord((prev) => ({
+              ...prev,
+              deadline: e.target.value,
+            }))
+          }
+        />
+        <Textarea
+          className="col-span-2"
+          classNames={{ inputWrapper: "!bg-light" }}
+          name="description"
+          label="Opis"
+          placeholder="Miejsce zamieszkania"
+          value={singleRecord.description}
+          onChange={(e) =>
+            setSingleRecord((prev) => ({
+              ...prev,
+              description: e.target.value,
+            }))
+          }
+        />
+        <div className="col-span-2 flex justify-end mt-4">
+          <Button color="primary" type="submit" isDisabled={isPending}>
+            {isPending ? (
+              <Spinner color="white" size="sm" />
+            ) : (
+              <CheckIcon size={16} />
+            )}
+            Zapisz
+          </Button>
+        </div>
+        <input type="hidden" value={JSON.stringify(singleRecord)} name="data" />
+        <input type="hidden" value="goal" name="type" />
+      </form>
+    </Block>
+  );
+}
+{
+  /* <div className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col">
           <h2 className="text-lg">Grupuj</h2>
           <Input
             classNames={{ inputWrapper: "!bg-light" }}
@@ -175,8 +173,8 @@ export default function GoalForm({
               return "Neutralne";
             }}
           />
-        </div> */}
-      {/* <OperationTable
+        </div>
+      <OperationTable
         title="Podgląd"
         operations={records}
         count={records.length}
@@ -253,7 +251,5 @@ export default function GoalForm({
           <input type="hidden" name="type" value={type} />
           <input type="hidden" name="data" value={JSON.stringify(records)} />
         </form>
-      </OperationTable> */}
-    </div>
-  );
+      </OperationTable> */
 }

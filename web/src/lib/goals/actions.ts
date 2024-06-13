@@ -39,27 +39,3 @@ export async function getActiveGoals(): Promise<SupabaseResponse<ActiveGoal>> {
     results,
   };
 }
-
-export async function getPriorityGoal(): Promise<
-  SupabaseSingleRowResponse<Goal>
-> {
-  const supabase = createClient();
-  const { data: result, error } = await supabase
-    .from("goals")
-    .select(
-      "id, title, description, price, saved, currency, deadline, is_priority",
-    )
-    .eq("is_priority", true)
-    .single();
-
-  if (error) {
-    return {
-      result: null,
-      error: error.message,
-    };
-  }
-
-  return {
-    result,
-  };
-}
