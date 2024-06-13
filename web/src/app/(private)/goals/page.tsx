@@ -3,27 +3,49 @@ import Timeline from "@/components/goals/timeline";
 import TimelineProvider from "@/app/(private)/goals/providers";
 import GoalRef from "@/components/goals/ref";
 import HorizontalScroll from "@/components/ui/horizontal-scroll";
-import { getActiveGoals, getGoals, getPriorityGoal } from "@/lib/goals/actions";
+import { getGoals } from "@/lib/goals/actions";
+import Block from "@/components/ui/block";
+import Link from "next/link";
+import { Button } from "@nextui-org/react";
+import { PlusIcon } from "lucide-react";
+import { redirect } from "next/navigation";
 
 export default async function Page() {
-  const [goalsData, activeGoalsData, priorityGoalData] = await Promise.all([
-    getGoals(),
-    getActiveGoals(),
-    getPriorityGoal(),
-  ]);
+  const { results: goals, error } = await getGoals();
 
-  const goals = goalsData.results;
-  const activeGoals = activeGoalsData.results;
-  const priorityGoal = priorityGoalData.result;
+  if (goals.length === 0 && !error) redirect("/goals/add");
+
+  const priorityGoal = goals.find((goal) => goal.is_priority);
+
+  const activeGoals = goals.filter(
+    (goal) =>
+      goal.deadline && new Date(goal.deadline).getTime() >= new Date().getTime()
+  );
 
   return (
     <div className="px-10 pt-8 pb-24 flex flex-col h-full gap-8">
       <TimelineProvider>
-        <HorizontalScroll>
-          {goals.map((item) => (
-            <GoalRef {...item} key={item.id} />
-          ))}
-        </HorizontalScroll>
+        <Block
+          title="Bieżące"
+          cta={
+            <Link href="/goals/add">
+              <Button
+                as="div"
+                variant="light"
+                disableRipple
+                startContent={<PlusIcon size={14} />}
+              >
+                Dodaj
+              </Button>
+            </Link>
+          }
+        >
+          <HorizontalScroll>
+            {goals.map((item) => (
+              <GoalRef {...item} key={item.id} />
+            ))}
+          </HorizontalScroll>
+        </Block>
         <div className="grid gap-6 2xl:grid-cols-2 grid-cols-1">
           <Timeline goals={activeGoals} />
           {priorityGoal && <Preview {...priorityGoal} />}

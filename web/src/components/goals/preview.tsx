@@ -42,20 +42,18 @@ export default function Preview(priorityGoal: Goal) {
   return (
     <Block
       title={
-        <div className="flex justify-between items-center">
-          {is_priority ? (
-            <div className="flex items-center gap-2">
-              <Tooltip closeDelay={0} content="Priorytet">
-                <AlertOctagonIcon className="text-secondary" size={20} />
-              </Tooltip>
-              <h3 className="text-lg line-clamp-1">{title}</h3>
-            </div>
-          ) : (
+        is_priority ? (
+          <div className="flex items-center gap-2">
+            <Tooltip closeDelay={0} content="Priorytet">
+              <AlertOctagonIcon className="text-secondary" size={20} />
+            </Tooltip>
             <h3 className="text-lg line-clamp-1">{title}</h3>
-          )}
-          <Menu goal={goal} onAdd={() => setIsSavedEditable(true)} />
-        </div>
+          </div>
+        ) : (
+          <h3 className="text-lg line-clamp-1">{title}</h3>
+        )
       }
+      cta={<Menu goal={goal} onAdd={() => setIsSavedEditable(true)} />}
     >
       <div className="flex flex-col items-center h-full w-full">
         <RadialChart data={[{ value: ((defaultSaved || 0) / price) * 100 }]} />
