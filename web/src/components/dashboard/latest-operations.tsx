@@ -1,5 +1,5 @@
 import HorizontalScroll from "@/components/ui/horizontal-scroll";
-import { getLatestOperations } from "@/lib/operation/actions";
+import { getLatestOperations } from "@/lib/operations/actions";
 import OperationRef from "../operations/ref";
 import Block from "@/components/ui/block";
 

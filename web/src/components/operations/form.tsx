@@ -18,23 +18,18 @@ import {
   HelpCircleIcon,
   PaperclipIcon,
   PlusIcon,
+  ScanTextIcon,
   WrenchIcon,
 } from "lucide-react";
-import {
-  ChangeEvent,
-  Fragment,
-  useEffect,
-  useState,
-  useTransition,
-} from "react";
-import parseCSV from "@/utils/operation/parse-csv";
-import { addOperations, getLabels } from "@/lib/operation/actions";
+import { Fragment, useEffect, useState, useTransition } from "react";
+import { addOperations, getLabels } from "@/lib/operations/actions";
 import OperationTable from "./table";
 import formatAmount from "@/utils/operation/format-amount";
-import operationFormatter from "@/utils/formatters/operations";
 import { v4 } from "uuid";
 import UniversalSelect from "../ui/universal-select";
 import Block from "../ui/block";
+import Scan from "./inputs/scan";
+import CSVInput from "./inputs/csv";
 
 const defaultRecord: Omit<Operation, "id"> = {
   title: "",
@@ -53,8 +48,6 @@ export default function AddForm({
 }) {
   const [label, setLabel] = useState("");
   const [isPending, startTransition] = useTransition();
-  // const [method, setMethod] = useState<AddMethodKey>("manual");
-  const [fileName, setFileName] = useState("");
   const [records, setRecords] = useState<Operation[]>([]);
   const [singleRecord, setSingleRecord] = useState<Operation>({
     ...defaultRecord,
@@ -62,19 +55,6 @@ export default function AddForm({
     currency: defaultCurrency,
   });
   const [labels, setLabels] = useState<Label[]>([]);
-  const onFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.item(0);
-    if (!file) return;
-    setFileName(file.name);
-    await parseCSV(
-      file,
-      (results) =>
-        setRecords((prev) => [...prev, ...operationFormatter(results)]),
-      {
-        type,
-      }
-    );
-  };
 
   const addRecord = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -188,6 +168,16 @@ export default function AddForm({
                   }
                 />
               </div>
+              <div className="flex justify-end mt-8">
+                <Button
+                  color="secondary"
+                  type="submit"
+                  className="h-9 text-white"
+                >
+                  <PlusIcon className="mt-0.5" size={16} />
+                  Dodaj
+                </Button>
+              </div>
             </Tab>
             <Tab
               key="csv"
@@ -198,37 +188,20 @@ export default function AddForm({
                 </div>
               }
             >
-              <Button
-                as="label"
-                variant="light"
-                className="bg-light"
-                disableRipple
-                fullWidth
-                htmlFor="csv-file"
-              >
-                <PaperclipIcon className="mt-0.5" size={16} />
-                {fileName || "Dodaj plik"}
-                <input
-                  type="file"
-                  id="csv-file"
-                  required
-                  className="sr-only"
-                  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                  onChange={onFileChange}
-                />
-              </Button>
+              <CSVInput type={type} setRecords={setRecords} />
+            </Tab>
+            <Tab
+              key="scan"
+              title={
+                <div className="flex items-center gap-2">
+                  <ScanTextIcon size={16} opacity={0.8} />
+                  <span>Skan dokumentu</span>
+                </div>
+              }
+            >
+              <Scan setRecords={setRecords} />
             </Tab>
           </Tabs>
-          <div className="flex-1 flex justify-end items-end gap-4">
-            <Button
-              color="secondary"
-              type="submit"
-              className="h-9 text-white"
-              isIconOnly
-            >
-              <PlusIcon className="mt-0.5" size={16} />
-            </Button>
-          </div>
         </Block>
       </form>
       <OperationTable
@@ -244,6 +217,7 @@ export default function AddForm({
           action={(e) =>
             startTransition(async () => {
               const { error } = await addOperations(e);
+              console.log({ error });
             })
           }
         >

@@ -4,7 +4,7 @@ import IncomeTable from "@/components/operations/table";
 import Loader from "@/components/stocks/loader";
 import LineChartLoader from "@/components/ui/charts/line-loader";
 import { getOwnRows } from "@/lib/general/actions";
-import { getOperationsStats } from "@/lib/operation/actions";
+import { getOperationsStats } from "@/lib/operations/actions";
 import { getDefaultCurrency } from "@/lib/settings/actions";
 import { Suspense } from "react";
 
