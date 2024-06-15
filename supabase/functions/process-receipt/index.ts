@@ -18,30 +18,20 @@ type UploadedFile = {
   error?: string;
 };
 
-const URL = Deno.env.get("SUPABASE_URL");
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY");
-
-const textPrompt =
-  `Extract finance information from the receipts and invoices. Analyze context and classify operation either as 'income' or 'expense'. You should return an array of operations for each processed image in JSON format. Refer to these types:
-
-type OperationType = "expense" | "income";
-
-type Operation = {
-  issued_at: string;
-  title: string;
-  amount: string;
-  currency: string;
-  type: OperationType;
-};`;
+const NGROK_URL = Deno.env.get("NGROK_URL");
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  if (!URL || !ANON_KEY) {
+  if (!SUPABASE_URL || !ANON_KEY) {
     return new Response(
-      `Environment variables missing: ${URL ? "ANON_KEY" : "URL"}`,
+      `Environment variables missing: ${
+        SUPABASE_URL ? "ANON_KEY" : "SUPABASE_URL"
+      }`,
       { status: 400 },
     );
   }
@@ -57,7 +47,7 @@ Deno.serve(async (req) => {
 
     const files = form.files as Record<string, FormFile>;
 
-    const supabase = createClient(URL, ANON_KEY, {
+    const supabase = createClient(SUPABASE_URL, ANON_KEY, {
       "global": {
         "headers": {
           "Authorization": req.headers.get("Authorization") || "",
@@ -96,9 +86,16 @@ Deno.serve(async (req) => {
             upload.path,
             3600,
           );
+        const url = data ? new URL(data.signedUrl) : null;
+        const pathname = url ? url.pathname : null;
+        const signedUrl = data
+          ? (NGROK_URL
+            ? `${NGROK_URL}${pathname}${url?.search || ""}`
+            : data.signedUrl)
+          : undefined;
         uploadedFiles.push({
           path: upload.path,
-          signedUrl: data?.signedUrl,
+          signedUrl,
           error: shareError?.message,
         });
       } else {
@@ -115,29 +112,47 @@ Deno.serve(async (req) => {
       },
     }));
 
-    // console.log("Generating completion...", { uploadedFiles });
+    console.log("Generating completion...", { uploadedFiles });
 
-    // const completion = await openai.chat.completions.create({
-    //   model: "gpt-4o",
-    //   "response_format": { type: "json_object" },
-    //   messages: [{
-    //     role: "user",
-    //     "content": [
-    //       { type: "text", text: textPrompt },
-    //       ...content,
-    //     ],
-    //   }],
-    // });
-    // const response = completion.choices[0].message.content;
+    const textPrompt =
+      `Extract finance information from the receipts and invoices. Analyze context and classify operation either as 'income' or 'expense'. Generate a list of operations:
 
-    // console.log({ completion });
+type Operation = {
+  id: string;
+  issued_at: string;
+  title: string;
+  amount: number;
+  currency: string;
+  type: "income" | "expense";
+};
 
-    // console.log("Generated the following response: ", response);
+Rules:
+- return { operations: Operation[] } in json
+- for each image 'id' is available here: ${
+        Object.keys(files)
+      }, on the image index
+- 'title' should be in the same language as the document
+- 'currency' is always 3-digit code`;
 
-    const response = {};
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o",
+      "response_format": { type: "json_object" },
+      messages: [{
+        role: "user",
+        "content": [
+          { type: "text", text: textPrompt },
+          ...content,
+        ],
+      }],
+    });
+    const response = completion.choices[0].message.content;
+
+    console.log({ completion });
+
+    console.log("Generated the following response: ", response);
 
     return new Response(
-      JSON.stringify(response),
+      response,
       { headers: { "Content-Type": "application/json", ...corsHeaders } },
     );
   } catch (err) {
