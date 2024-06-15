@@ -20,6 +20,19 @@ const config: Config = {
         danger: "#B33939",
         "danger-light": "#FCEEEE",
       },
+      keyframes: {
+        "animate-enter": {
+          "0%": {
+            transform: "translateX(50%)",
+          },
+          "100%": {
+            transform: "translateX(0%)",
+          },
+        },
+      },
+      animation: {
+        "animate-enter": "animate-enter 150ms ease-out",
+      },
     },
   },
   darkMode: "class",
@@ -53,7 +66,10 @@ const config: Config = {
               "100": "#FAFAFA",
             },
             success: "#32a852",
-            danger: "#f31212",
+            danger: {
+              DEFAULT: "#f31212",
+              foreground: "#FFF",
+            },
           },
           layout: {
             hoverOpacity: 95,
