@@ -7,7 +7,7 @@ import Empty from "@/components/ui/empty";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
 import useClientQuery from "@/hooks/useClientQuery";
-import { getChartLabels } from "@/lib/operation/queries";
+import { getChartLabels } from "@/lib/operations/queries";
 import { useState } from "react";
 
 export default function ExpensesByLabel({

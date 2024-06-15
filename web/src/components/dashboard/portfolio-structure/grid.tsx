@@ -6,7 +6,7 @@ import { getSpecificStocks } from "@/lib/stocks/actions";
 import { getOwnRows } from "@/lib/general/actions";
 import getStockHoldings from "@/utils/stocks/get-stock-holdings";
 import PortfolioAccordion from "./accordion";
-import { getPortfolioBudgets } from "@/lib/operation/actions";
+import { getPortfolioBudgets } from "@/lib/operations/actions";
 import BudgetTable from "../table";
 import Block from "@/components/ui/block";
 

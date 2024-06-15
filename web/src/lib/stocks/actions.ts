@@ -149,9 +149,9 @@ export async function getPriceHistory(
   );
   const err = await formatError(error);
 
-  if (err) {
+  if (err || !data) {
     return {
-      error: err,
+      error: err || "Internal server error",
       results: [],
     };
   }

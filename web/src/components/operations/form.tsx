@@ -18,6 +18,7 @@ import {
   HelpCircleIcon,
   PaperclipIcon,
   PlusIcon,
+  ScanTextIcon,
   WrenchIcon,
 } from "lucide-react";
 import {
@@ -28,13 +29,14 @@ import {
   useTransition,
 } from "react";
 import parseCSV from "@/utils/operation/parse-csv";
-import { addOperations, getLabels } from "@/lib/operation/actions";
+import { addOperations, getLabels } from "@/lib/operations/actions";
 import OperationTable from "./table";
 import formatAmount from "@/utils/operation/format-amount";
 import operationFormatter from "@/utils/formatters/operations";
 import { v4 } from "uuid";
 import UniversalSelect from "../ui/universal-select";
 import Block from "../ui/block";
+import Scan from "./inputs/scan";
 
 const defaultRecord: Omit<Operation, "id"> = {
   title: "",
@@ -53,7 +55,6 @@ export default function AddForm({
 }) {
   const [label, setLabel] = useState("");
   const [isPending, startTransition] = useTransition();
-  // const [method, setMethod] = useState<AddMethodKey>("manual");
   const [fileName, setFileName] = useState("");
   const [records, setRecords] = useState<Operation[]>([]);
   const [singleRecord, setSingleRecord] = useState<Operation>({
@@ -218,15 +219,22 @@ export default function AddForm({
                 />
               </Button>
             </Tab>
+            <Tab
+              key="scan"
+              title={
+                <div className="flex items-center gap-2">
+                  <ScanTextIcon size={16} opacity={0.8} />
+                  <span>Skan dokumentu</span>
+                </div>
+              }
+            >
+              <Scan setRecords={setRecords} />
+            </Tab>
           </Tabs>
           <div className="flex-1 flex justify-end items-end gap-4">
-            <Button
-              color="secondary"
-              type="submit"
-              className="h-9 text-white"
-              isIconOnly
-            >
+            <Button color="secondary" type="submit" className="h-9 text-white">
               <PlusIcon className="mt-0.5" size={16} />
+              Dodaj
             </Button>
           </div>
         </Block>
