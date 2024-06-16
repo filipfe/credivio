@@ -3,7 +3,6 @@
 import { deleteRows, updateRow } from "@/lib/general/actions";
 import { TimelineContext } from "@/app/(private)/goals/providers";
 import {
-  Button,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -11,7 +10,6 @@ import {
 } from "@nextui-org/react";
 import {
   AlertOctagonIcon,
-  LocateIcon,
   MoreVerticalIcon,
   PlusIcon,
   Trash2Icon,
@@ -53,16 +51,18 @@ export default function Menu({ goal, onAdd }: Props) {
     setLoadingKey(null);
   }
 
-  const disabledKeys = loadingKey ? [loadingKey] : [];
-  (!goal.deadline || activeRecord?.id === goal.id) &&
-    disabledKeys.push("locate");
+  const disabledKeys: string[] = [
+    ...(loadingKey ? [loadingKey] : []),
+    ...(!goal.deadline || activeRecord?.id === goal.id ? ["locate"] : []),
+    ...(goal.is_priority ? ["priority"] : []),
+  ];
 
   return (
     <Dropdown shadow="sm">
       <DropdownTrigger>
-        <Button variant="light" isIconOnly className="rounded-full" size="sm">
-          <MoreVerticalIcon size={20} />
-        </Button>
+        <button className="h-6 w-6 rounded-full grid place-content-center">
+          <MoreVerticalIcon size={20} className="text-white" />
+        </button>
       </DropdownTrigger>
       <DropdownMenu
         disabledKeys={disabledKeys}
@@ -83,7 +83,6 @@ export default function Menu({ goal, onAdd }: Props) {
           startContent={<AlertOctagonIcon size={16} />}
           closeOnSelect={false}
           showDivider
-          isDisabled={goal.is_priority}
         >
           Ustaw priorytet
         </DropdownItem>

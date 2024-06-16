@@ -2,7 +2,6 @@ import numberFormat from "@/utils/formatters/currency";
 import { Skeleton, cn } from "@nextui-org/react";
 import { formatDistance } from "date-fns";
 import { pl } from "date-fns/locale";
-import { useRef } from "react";
 
 export default function OperationRef({
   title,
@@ -13,8 +12,8 @@ export default function OperationRef({
 }: Payment) {
   const isIncome = type === "income";
   return (
-    <div className="rounded-lg bg-primary">
-      <div className="border shadow-[inset_0px_2px_9px_rgba(255,255,255,0.4)] border-white/10 bg-gradient-to-b from-white/5 to-white/[0.01] p-4 rounded-lg backdrop-blur-lg flex flex-col gap-2 min-w-64">
+    <div className="rounded-md bg-primary">
+      <div className="border shadow-[inset_0px_2px_9px_rgba(255,255,255,0.4)] border-white/10 bg-gradient-to-b from-white/5 to-white/[0.01] p-4 rounded-md backdrop-blur-lg flex flex-col gap-2 min-w-64">
         <div className="flex items-center justify-between">
           <span className="text-white text-sm font-medium">{title}</span>
           <small className="text-white/80">

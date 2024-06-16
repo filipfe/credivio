@@ -6,8 +6,10 @@ import { Button, Chip, ScrollShadow } from "@nextui-org/react";
 import { CheckIcon, PlusIcon } from "lucide-react";
 import { TimelineContext } from "@/app/(private)/goals/providers";
 import numberFormat from "@/utils/formatters/currency";
+import { formatDistance } from "date-fns";
+import { pl } from "date-fns/locale";
 
-export default function Timeline({ goals }: { goals: ActiveGoal[] }) {
+export default function Timeline({ goals }: { goals: Goal[] }) {
   const listRef = useRef<HTMLDivElement>(null);
   const { activeRecord } = useContext(TimelineContext);
 
@@ -47,13 +49,16 @@ export default function Timeline({ goals }: { goals: ActiveGoal[] }) {
 }
 
 const DayRef = ({
-  goal: { id, title, deadline, shortfall, currency, days_left },
+  goal: { id, title, deadline, saved, price, currency },
   isActive,
 }: {
-  goal: ActiveGoal;
+  goal: Goal;
   isActive: boolean;
 }) => {
-  const isCompleted = shortfall === 0;
+  const shortfall = price - saved;
+  const isCompleted = shortfall <= 0;
+
+  const daysLeft = formatDistance(deadline!, new Date(), { locale: pl });
 
   return (
     <Fragment>
@@ -81,7 +86,7 @@ const DayRef = ({
           </div>
           <div className="absolute bottom-[calc(100%+8px)]">
             <Chip size="sm" color="primary" variant="light">
-              {days_left} {days_left === 1 ? "dzień" : "dni"}{" "}
+              {daysLeft}
             </Chip>
           </div>
           {isCompleted ? (
