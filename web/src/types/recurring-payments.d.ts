@@ -1,4 +1,6 @@
 interface RecurringPayment extends Payment {
   next_payment_date: string;
-  interval_days: number;
+  last_payment_date: string;
+  interval_amount: number;
+  interval_unit: string;
 }

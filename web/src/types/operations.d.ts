@@ -10,6 +10,7 @@ interface Payment {
 }
 
 interface Operation extends Payment {
+  amount: string;
   description: string;
   currency_date?: string;
   budget_after?: string;

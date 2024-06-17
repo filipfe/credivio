@@ -5,9 +5,6 @@ import Empty from "@/components/ui/empty";
 
 export default async function ActiveRecurringPaymentsList() {
   const { results: payments } = await getRecurringPayments();
-
-  console.log({ active: payments });
-
   return (
     <Block title="Aktywne">
       {payments.length > 0 ? (

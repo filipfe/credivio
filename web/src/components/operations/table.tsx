@@ -15,6 +15,7 @@ import {
 import useTableQuery from "@/hooks/useTableQuery";
 import TopContent from "../ui/table/top-content";
 import Block from "../ui/block";
+import Empty from "../ui/empty";
 
 export default function OperationTable({
   rows,
@@ -74,7 +75,12 @@ export default function OperationTable({
           );
         case "issued_at":
           return (
-            <span className="line-clamp-1 break-all w-[10ch]">{cellValue}</span>
+            <span className="line-clamp-1 break-all w-[10ch]">
+              {new Intl.DateTimeFormat("pl-PL", {
+                timeStyle: "short",
+                dateStyle: "short",
+              }).format(cellValue)}
+            </span>
           );
         default:
           return <span className="line-clamp-1 break-all">{cellValue}</span>;
@@ -83,7 +89,12 @@ export default function OperationTable({
       switch (columnKey) {
         case "issued_at":
           return (
-            <span className="line-clamp-1 break-all w-[10ch]">{cellValue}</span>
+            <span className="line-clamp-1 break-all w-[10ch]">
+              {new Intl.DateTimeFormat("pl-PL", {
+                timeStyle: "short",
+                dateStyle: "short",
+              }).format(cellValue)}
+            </span>
           );
         case "label":
         case "description":
@@ -152,7 +163,21 @@ export default function OperationTable({
           <TableBody
             items={viewOnly ? items : rows}
             isLoading={isLoading}
-            emptyContent="Nie znaleziono operacji"
+            emptyContent={
+              <Empty
+                title="Nie znaleziono operacji"
+                cta={
+                  viewOnly
+                    ? undefined
+                    : {
+                        title: `Dodaj ${
+                          props.type === "expense" ? "wydatek" : "przychód"
+                        }`,
+                        href: `/${props.type}s/add`,
+                      }
+                }
+              />
+            }
             loadingContent={<Spinner />}
           >
             {(operation) => (

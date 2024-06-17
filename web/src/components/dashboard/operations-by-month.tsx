@@ -7,7 +7,7 @@ import Empty from "@/components/ui/empty";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
 import useClientQuery from "@/hooks/useClientQuery";
-import { getDailyTotalAmount } from "@/lib/operation/queries";
+import { getDailyTotalAmount } from "@/lib/operations/queries";
 import { useState } from "react";
 
 const getTitle = (type: "budget" | "income" | "expense") => {

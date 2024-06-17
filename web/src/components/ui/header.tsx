@@ -38,7 +38,7 @@ export default function Header() {
       </header>
       <header className="flex items-center gap-4 justify-between px-6 sm:px-10 h-16 sm:h-20 fixed sm:sticky top-0 left-0 bg-white z-50 w-full sm:w-auto">
         <Breadcrumbs
-          maxItems={2}
+          maxItems={3}
           itemsAfterCollapse={1}
           itemsBeforeCollapse={1}
           itemClasses={{
