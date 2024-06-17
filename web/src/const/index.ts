@@ -54,11 +54,11 @@ export const PAGES: Page[] = [
           },
         ],
       },
-      {
-        title: "Algorytmy",
-        href: "/algorithms",
-        icon: VariableIcon,
-      },
+      // {
+      //   title: "Algorytmy",
+      //   href: "/algorithms",
+      //   icon: VariableIcon,
+      // },
       {
         title: "Cele",
         href: "/goals",

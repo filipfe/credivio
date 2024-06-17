@@ -7,12 +7,9 @@ export async function getRecurringPayments(): Promise<
   SupabaseResponse<RecurringPayment>
 > {
   const supabase = createClient();
-  const { data: results, error } = await supabase
-    .from("recurring_payments")
-    .select(
-      "id, next_payment_date, interval_days, title, amount, currency, type",
-    )
-    .order("next_payment_date");
+  const { data: results, error } = await supabase.rpc(
+    "get_recurring_payments_active_payments",
+  );
 
   if (error) {
     return {

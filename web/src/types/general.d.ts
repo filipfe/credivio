@@ -67,3 +67,9 @@ interface FilterProps {
     currency?: State;
   };
 }
+
+type ActionButtonProps = {
+  text: string;
+  icon: LucideIcon;
+  onSubmit: () => Promise<void>;
+};

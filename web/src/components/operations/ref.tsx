@@ -3,19 +3,23 @@ import { Skeleton, cn } from "@nextui-org/react";
 import { formatDistance } from "date-fns";
 import { pl } from "date-fns/locale";
 
+type Props = {
+  payment: Payment;
+  actions?: ActionButtonProps[];
+};
+
 export default function OperationRef({
-  title,
-  issued_at,
-  type,
-  currency,
-  amount,
-}: Payment) {
+  payment: { title, issued_at, type, currency, amount },
+  actions = [],
+}: Props) {
   const isIncome = type === "income";
   return (
     <div className="rounded-md bg-primary">
       <div className="border shadow-[inset_0px_2px_9px_rgba(255,255,255,0.4)] border-white/10 bg-gradient-to-b from-white/5 to-white/[0.01] p-4 rounded-md backdrop-blur-lg flex flex-col gap-2 min-w-64">
-        <div className="flex items-center justify-between">
-          <span className="text-white text-sm font-medium">{title}</span>
+        <div className="flex items-center justify-between gap-4">
+          <span className="text-white text-sm font-medium max-w-16 line-clamp-1">
+            {title}
+          </span>
           <small className="text-white/80">
             {formatDistance(issued_at, new Date(), {
               addSuffix: true,

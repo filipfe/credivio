@@ -4,8 +4,8 @@ import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import DividendsTable from "./dividends-table";
 import { getDividendInfo } from "@/lib/stocks/actions";
-import groupDividends from "@/utils/stocks/group-dividends";
 import sortDividends from "@/utils/stocks/sort-dividends";
+import groupDividends from "@/utils/stocks/group-dividends";
 
 export default async function Dividends() {
   const { results: dividends } = await getDividendInfo();
@@ -31,13 +31,10 @@ const cta = (
       size="sm"
       color="primary"
       variant="light"
-      className="h-7 data-[hover=true]:bg-white relative group"
+      className="h-7 bg-white data-[hover=true]:bg-primary/10 transition-colors"
     >
       <span className="mb-px">Więcej</span>
-      <ChevronRightIcon
-        size={14}
-        className="transition-[margin-left] absolute group-hover:ml-2 ml-0"
-      />
+      <ChevronRightIcon size={14} />
     </Button>
   </Link>
 );

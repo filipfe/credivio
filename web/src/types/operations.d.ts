@@ -1,17 +1,22 @@
 type OperationType = "expense" | "income" | "goal" | "stock";
 
-type Operation = {
+interface Payment {
   id: string;
   issued_at: string;
   title: string;
+  currency: string;
+  amount: number;
+  type: OperationType;
+}
+
+interface Operation extends Payment {
   amount: string;
   description: string;
-  currency: string;
   currency_date?: string;
   budget_after?: string;
   type?: OperationType;
   label?: string;
-};
+}
 
 type Label = {
   name: string;
@@ -44,13 +49,6 @@ type OperationsStats = {
   last_30_days: Stat;
   last_day: Stat;
 };
-
-type Payment =
-  & Pick<Operation, "id" | "issued_at" | "title" | "currency">
-  & {
-    amount: number;
-    type: OperationType;
-  };
 
 type Budget = {
   currency: "PLN" | "USD" | "EUR" | "GBP" | "CHF";

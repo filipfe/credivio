@@ -7,6 +7,7 @@ import StockTable from "./table";
 import { Fragment, Suspense } from "react";
 import HorizontalScroll from "../ui/horizontal-scroll";
 import CompanyBlock from "./company/company-block";
+import Empty from "../ui/empty";
 
 export default async function OwnStocks({
   transactions,
@@ -48,12 +49,13 @@ export default async function OwnStocks({
             />
           </ScrollShadow>
         ) : (
-          <div className="text-center flex-1 justify-center flex flex-col items-center gap-2">
-            <p className="text-sm text-font/80">
-              Nie masz jeszcze żadnych akcji!
-            </p>
-            <Add size="sm" type="stocks/transaction" />
-          </div>
+          <Empty
+            title="Nie masz jeszcze żadnych akcji!"
+            cta={{
+              title: "Dodaj transkację",
+              href: "/stocks/transactions/add",
+            }}
+          />
         )}
       </Block>
     </Fragment>

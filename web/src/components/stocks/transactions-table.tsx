@@ -17,6 +17,7 @@ import useTableQuery from "@/hooks/useTableQuery";
 import TopContent from "../ui/table/top-content";
 import Block from "../ui/block";
 import numberFormat from "@/utils/formatters/currency";
+import Empty from "../ui/empty";
 
 const columns = ({
   viewOnly,
@@ -147,12 +148,13 @@ export default function TransactionTable({
                 {viewOnly ? (
                   <p>Dodaj akcje, aby zobaczyć je na podglądzie.</p>
                 ) : (
-                  <>
-                    <p className="text-font/80 text-sm">
-                      Nie masz jeszcze żadnych akcji!
-                    </p>
-                    <Add type="stocks/transaction" size="sm" />
-                  </>
+                  <Empty
+                    title="Nie masz jeszcze żadnych akcji!"
+                    cta={{
+                      title: "Dodaj transkację",
+                      href: "/stocks/transactions/add",
+                    }}
+                  />
                 )}
               </div>
             }
