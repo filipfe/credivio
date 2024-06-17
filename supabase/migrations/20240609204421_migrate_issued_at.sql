@@ -4,7 +4,7 @@ alter table "public"."expenses" alter column "issued_at" set data type timestamp
 
 alter table "public"."incomes" alter column "issued_at" set data type timestamp with time zone using "issued_at"::timestamp with time zone;
 
-create or replace view "public"."operations" as  SELECT incomes.id,
+create or replace view "public"."operations" with (security_invoker=on) as  SELECT incomes.id,
     incomes.user_id,
     incomes.title,
     incomes.description,
