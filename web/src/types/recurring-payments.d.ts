@@ -4,3 +4,19 @@ interface RecurringPayment extends Payment {
   interval_amount: number;
   interval_unit: string;
 }
+
+type Year = {
+  year: number;
+  months: Month[];
+};
+
+type TotalAmount = {
+  currency: string;
+  total_amount: number;
+};
+
+type Month = {
+  month: number;
+  payments: Payment[];
+  total_amounts: TotalAmount[];
+};

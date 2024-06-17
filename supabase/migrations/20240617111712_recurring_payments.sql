@@ -58,6 +58,7 @@ begin
       title,
       amount,
       currency,
+      issued_at,
       type,
       sum(amount) over (partition by
        extract(year from issued_at),
@@ -78,6 +79,7 @@ begin
         'title', o.title,
         'amount', o.amount,
         'currency', o.currency,
+        'issued_at', o.issued_at,
         'type', o.type
       )) as payments,
       jsonb_agg(distinct jsonb_build_object(

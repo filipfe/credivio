@@ -1,27 +1,7 @@
-"use client";
-
 import numberFormat from "@/utils/formatters/currency";
-import { useTransition } from "react";
-import { deleteRecurringPayment } from "@/lib/recurring-payments/actions";
-import toast from "react-hot-toast";
-import Toast from "../../ui/toast";
-import {
-  Button,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  useDisclosure,
-} from "@nextui-org/react";
-import { PauseIcon, Trash2Icon } from "lucide-react";
-import { type Locale, pl } from "date-fns/locale";
-import { format, formatDistanceStrict } from "date-fns";
-import { toString } from "duration-fns";
 import Menu from "./menu";
 
 export default function ActiveRecurringPayment({
-  id,
   title,
   next_payment_date,
   last_payment_date,
@@ -31,9 +11,6 @@ export default function ActiveRecurringPayment({
   interval_amount,
   interval_unit,
 }: RecurringPayment) {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [isPending, startTransition] = useTransition();
-
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-col">
@@ -55,11 +32,11 @@ export default function ActiveRecurringPayment({
           {(type === "income" ? "+" : "-") + numberFormat(currency, amount)}
         </div>
         <sub className="text-base mb-0.5">
-          / {toString({ [interval_unit]: interval_amount })}
+          / {interval_amount} {interval_unit}
         </sub>
       </div>
       <Menu />
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      {/* <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -104,7 +81,7 @@ export default function ActiveRecurringPayment({
             </>
           )}
         </ModalContent>
-      </Modal>
+      </Modal> */}
     </div>
   );
 }

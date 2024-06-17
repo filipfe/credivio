@@ -2,6 +2,7 @@ import OperationRef from "@/components/operations/ref";
 import Block from "@/components/ui/block";
 import Empty from "@/components/ui/empty";
 import HorizontalScroll from "@/components/ui/horizontal-scroll";
+import { createClient } from "@/utils/supabase/server";
 import { PauseIcon } from "lucide-react";
 
 const actions: ActionButtonProps[] = [
@@ -12,14 +13,18 @@ const actions: ActionButtonProps[] = [
   },
 ];
 
-export default function ComingUp({ payments }: { payments: Payment[] }) {
+export default async function Upcoming() {
+  const supabase = createClient();
+  const { data: payments } = await supabase
+    .rpc("get_recurring_payments_upcoming_payments")
+    .returns<RecurringPayment[]>();
   return (
     <Block title="Nadchodzące">
-      {payments.length > 0 ? (
+      {payments && payments.length > 0 ? (
         <HorizontalScroll>
           {payments.map((payment) => (
             <OperationRef
-              payment={payment}
+              payment={{ ...payment, issued_at: payment.next_payment_date }}
               actions={actions}
               key={payment.id}
             />
