@@ -1,0 +1,1 @@
+alter table profiles add column telegram_id bigint;
