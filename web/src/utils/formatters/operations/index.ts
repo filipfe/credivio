@@ -1,6 +1,6 @@
 import { v4 } from "uuid";
 
-export default function operationFormatter(data: string[][]) {
+export default function operationFormatter(data: string[][]): Operation[] {
   return data.map((record) => {
     let [
       issued_at,

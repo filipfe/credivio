@@ -1,15 +1,15 @@
-import operationFormatter from "@/utils/formatters/operations";
 import parseCSV from "@/utils/operation/parse-csv";
 import { Button } from "@nextui-org/react";
 import { PaperclipIcon } from "lucide-react";
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 
-type Props = {
+type Props<T> = {
   type: OperationType;
-  setRecords: Dispatch<SetStateAction<Operation[]>>;
+  formatter: (data: string[][]) => T[];
+  setRecords: Dispatch<SetStateAction<T[]>>;
 };
 
-export default function CSVInput({ type, setRecords }: Props) {
+export default function CSVInput<T>({ type, formatter, setRecords }: Props<T>) {
   const [fileName, setFileName] = useState("");
 
   const onFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -18,13 +18,13 @@ export default function CSVInput({ type, setRecords }: Props) {
     setFileName(file.name);
     await parseCSV(
       file,
-      (results) =>
-        setRecords((prev) => [...prev, ...operationFormatter(results)]),
+      (results) => setRecords((prev) => [...prev, ...formatter(results)]),
       {
         type,
       }
     );
   };
+
   return (
     <Button
       as="label"
