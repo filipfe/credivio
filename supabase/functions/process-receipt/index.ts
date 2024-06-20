@@ -55,13 +55,18 @@ Deno.serve(async (req) => {
       },
     });
 
-    const { data: { user }, error } = await supabase.auth.getUser();
+    let user = form.fields.user_id ? { id: form.fields.user_id } : null;
 
-    if (error || !user) {
-      return new Response(
-        `Auth error: ${error?.message || "User not found"}`,
-        { status: 422 },
-      );
+    if (!user) {
+      const { data: { user: supabaseUser }, error } = await supabase.auth
+        .getUser();
+      if (error || !supabaseUser) {
+        return new Response(
+          `Auth error: ${error?.message || "User not found"}`,
+          { status: 422 },
+        );
+      }
+      user = supabaseUser;
     }
 
     const uploadedFiles: UploadedFile[] = [];
@@ -103,9 +108,17 @@ Deno.serve(async (req) => {
       }
     }
 
-    const content: ChatCompletionContentPart[] = uploadedFiles.filter((file) =>
-      file.signedUrl
-    ).map((file) => ({
+    console.log({ uploadedFiles });
+
+    const withSignedUrl = uploadedFiles.filter((file) => file.signedUrl);
+
+    if (withSignedUrl.length === 0) {
+      return new Response("Request error: Couldn't retrieve signed URLs", {
+        status: 400,
+      });
+    }
+
+    const content: ChatCompletionContentPart[] = withSignedUrl.map((file) => ({
       type: "image_url",
       image_url: {
         url: file.signedUrl!,

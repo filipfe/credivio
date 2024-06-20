@@ -7,6 +7,7 @@ interface Payment {
   currency: string;
   amount: number;
   type: OperationType;
+  from_telegram?: boolean;
 }
 
 interface Operation extends Payment {
