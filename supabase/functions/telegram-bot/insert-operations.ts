@@ -3,8 +3,8 @@ import supabase from "./supabase.ts";
 const constructReply = (operations: Payment[]) =>
   `Dodałem następujące operacje:
   ${
-    operations.map(({ title, amount, currency }) =>
-      `• ${title} - ${
+    operations.map(({ title, amount, type, currency }) =>
+      `• ${type === "expense" ? "Wydatek" : "Przychód"}: ${title} - ${
         new Intl.NumberFormat("pl-PL", {
           currency,
           style: "currency",
@@ -26,6 +26,7 @@ export default async function insertOperations(
           ...rest,
           user_id: user.id,
           from_telegram: true,
+          issued_at: new Date().toISOString(),
         }],
       };
     },
