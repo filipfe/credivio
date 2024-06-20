@@ -8,6 +8,7 @@ import { TimelineContext } from "@/app/(private)/goals/providers";
 import numberFormat from "@/utils/formatters/currency";
 import { formatDistance } from "date-fns";
 import { pl } from "date-fns/locale";
+import Empty from "../ui/empty";
 
 export default function Timeline({ goals }: { goals: Goal[] }) {
   const listRef = useRef<HTMLDivElement>(null);
@@ -19,31 +20,36 @@ export default function Timeline({ goals }: { goals: Goal[] }) {
     element?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, [listRef.current, activeRecord]);
 
-  if (goals.length === 0) return;
-
   return (
     <Block title="Oś czasu">
-      <ScrollShadow orientation="horizontal" ref={listRef} hideScrollBar>
-        <div className="bg-primary rounded-full h-0.5 flex items-center justify-between gap-32 mx-8 mt-10 mb-24 min-w-max">
-          <div className="bg-white grid place-content-center h-5 w-5">
-            <div className="bg-primary rounded-full h-2.5 w-2.5 flex flex-col items-center relative">
-              <div className="absolute top-[calc(100%+8px)] flex flex-col items-center text-center">
-                <span className="text-primary text-[12px] font-medium">
-                  {new Date().toLocaleDateString()}
-                </span>
-                <h3 className="text-sm">Dzisiaj</h3>
+      {goals.length > 0 ? (
+        <ScrollShadow orientation="horizontal" ref={listRef} hideScrollBar>
+          <div className="bg-primary rounded-full h-0.5 flex items-center justify-between gap-32 mx-8 mt-10 mb-24 min-w-max">
+            <div className="bg-white grid place-content-center h-5 w-5">
+              <div className="bg-primary rounded-full h-2.5 w-2.5 flex flex-col items-center relative">
+                <div className="absolute top-[calc(100%+8px)] flex flex-col items-center text-center">
+                  <span className="text-primary text-[12px] font-medium">
+                    {new Date().toLocaleDateString()}
+                  </span>
+                  <h3 className="text-sm">Dzisiaj</h3>
+                </div>
               </div>
             </div>
+            {goals.map((goal) => (
+              <DayRef
+                goal={goal}
+                isActive={goal.id === activeRecord?.id}
+                key={goal.id}
+              />
+            ))}
           </div>
-          {goals.map((goal) => (
-            <DayRef
-              goal={goal}
-              isActive={goal.id === activeRecord?.id}
-              key={goal.id}
-            />
-          ))}
-        </div>
-      </ScrollShadow>
+        </ScrollShadow>
+      ) : (
+        <Empty
+          title="Żaden z twoich celów nie ma terminu"
+          cta={{ title: "Dodaj cel z terminem", href: "/goals/add" }}
+        />
+      )}
     </Block>
   );
 }
