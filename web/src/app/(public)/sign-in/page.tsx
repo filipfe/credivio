@@ -13,23 +13,25 @@ export default function Page() {
               <p className="text-sm">Zaloguj się, aby kontynuować</p>
             </div>
             <Input
-              classNames={{ inputWrapper: "!bg-light" }}
+              classNames={{
+                inputWrapper: "!bg-light border border-primary/10 shadow-none",
+              }}
               name="email"
               label="Email"
               type="email"
               placeholder="example@mail.com"
-              labelPlacement="outside"
               isRequired
               required
               autoComplete="off"
             />
             <Input
-              classNames={{ inputWrapper: "!bg-light" }}
+              classNames={{
+                inputWrapper: "!bg-light border border-primary/10 shadow-none",
+              }}
               name="password"
               label="Hasło"
               type="password"
               placeholder="**********"
-              labelPlacement="outside"
               isRequired
               required
             />

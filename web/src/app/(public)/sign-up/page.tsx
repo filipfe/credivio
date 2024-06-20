@@ -16,7 +16,7 @@ export default function Page() {
               <Input
                 classNames={{
                   inputWrapper:
-                    "!bg-light [&>input]:!bg-light shadow-none border border-primary/10",
+                    "!bg-light shadow-none border border-primary/10",
                 }}
                 name="first-name"
                 label="Imię"
@@ -29,7 +29,7 @@ export default function Page() {
               <Input
                 classNames={{
                   inputWrapper:
-                    "!bg-light [&>input]:!bg-light shadow-none border border-primary/10",
+                    "!bg-light shadow-none border border-primary/10",
                 }}
                 name="last-name"
                 label="Nazwisko"
@@ -40,8 +40,7 @@ export default function Page() {
             </div>
             <Input
               classNames={{
-                inputWrapper:
-                  "!bg-light [&>input]:!bg-light shadow-none border border-primary/10",
+                inputWrapper: "!bg-light shadow-none border border-primary/10",
               }}
               name="email"
               label="Email"
@@ -53,8 +52,7 @@ export default function Page() {
             />
             <Input
               classNames={{
-                inputWrapper:
-                  "!bg-light [&>input]:!bg-light shadow-none border border-primary/10",
+                inputWrapper: "!bg-light shadow-none border border-primary/10",
               }}
               name="password"
               label="Hasło"
