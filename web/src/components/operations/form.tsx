@@ -30,6 +30,7 @@ import UniversalSelect from "../ui/universal-select";
 import Block from "../ui/block";
 import Scan from "./inputs/scan";
 import CSVInput from "./inputs/csv";
+import operationFormatter from "@/utils/formatters/operations";
 
 const defaultRecord: Omit<Operation, "id"> = {
   title: "",
@@ -78,7 +79,7 @@ export default function AddForm({
     <div className="flex flex-col xl:grid grid-cols-2 gap-4 sm:gap-8">
       <form onSubmit={addRecord}>
         <Block title="Dane">
-          <Tabs radius="lg">
+          <Tabs radius="lg" classNames={{ panel: "p-0" }}>
             <Tab
               key="manual"
               title={
@@ -188,7 +189,11 @@ export default function AddForm({
                 </div>
               }
             >
-              <CSVInput type={type} setRecords={setRecords} />
+              <CSVInput
+                type={type}
+                setRecords={setRecords}
+                formatter={operationFormatter}
+              />
             </Tab>
             <Tab
               key="scan"
