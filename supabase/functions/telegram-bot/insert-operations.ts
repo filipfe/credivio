@@ -10,7 +10,7 @@ const constructReply = (operations: Payment[]) =>
           style: "currency",
         }).format(amount)
       }`
-    )
+    ).join("\n")
   }`;
 
 export default async function insertOperations(
