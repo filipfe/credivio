@@ -2,7 +2,7 @@ import supabase from "./supabase.ts";
 
 const constructReply = (operations: Payment[]) =>
   `Dodałem następujące operacje:
-  ${
+${
     operations.map(({ title, amount, type, currency }) =>
       `• ${type === "expense" ? "Wydatek" : "Przychód"}: ${title} - ${
         new Intl.NumberFormat("pl-PL", {
