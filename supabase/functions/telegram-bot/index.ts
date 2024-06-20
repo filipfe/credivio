@@ -34,8 +34,7 @@ bot.command("start", async (ctx) => {
     );
   } else {
     await ctx.reply(
-      "Podaj swój unikalny klucz Telegram. Znajdziesz go [tutaj](https://tipplet.vercel.app/automations)",
-      { parse_mode: "MarkdownV2" },
+      "Podaj swój unikalny klucz Telegram. Znajdziesz go tutaj: https://tipplet.vercel.app/automations",
     );
   }
 });
@@ -52,7 +51,6 @@ bot.on("message:text", async (ctx) => {
 Classify operation(s) either as 'income' or 'expense'. Generate a list of operations:
 
 type Operation = {
-  issued_at: string;
   title: string;
   amount: number;
   currency: string;

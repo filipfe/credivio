@@ -79,7 +79,7 @@ export default function OperationTable({
               {new Intl.DateTimeFormat("pl-PL", {
                 timeStyle: "short",
                 dateStyle: "short",
-              }).format(cellValue)}
+              }).format(new Date(cellValue))}
             </span>
           );
         default:
@@ -93,7 +93,7 @@ export default function OperationTable({
               {new Intl.DateTimeFormat("pl-PL", {
                 timeStyle: "short",
                 dateStyle: "short",
-              }).format(cellValue)}
+              }).format(new Date(cellValue))}
             </span>
           );
         case "label":
