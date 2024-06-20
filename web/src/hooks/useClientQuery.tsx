@@ -1,6 +1,12 @@
 "use client";
 
-import { DependencyList, useEffect, useState } from "react";
+import {
+  DependencyList,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 
 type Props<T> = {
   query: Promise<SupabaseResponse<T>>;
@@ -10,6 +16,7 @@ type Props<T> = {
 type ReturnType<T> = {
   isLoading: boolean;
   results: T[];
+  setResults: Dispatch<SetStateAction<T[]>>;
 };
 
 export default function useClientQuery<T>({
@@ -31,5 +38,6 @@ export default function useClientQuery<T>({
   return {
     isLoading,
     results,
+    setResults,
   };
 }

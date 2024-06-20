@@ -1,8 +1,8 @@
 import LatestOperations from "@/components/automation/latest-operations";
 import TokenInput from "@/components/automation/token-input";
 import Block from "@/components/ui/block";
-import Empty from "@/components/ui/empty";
 import { createClient } from "@/utils/supabase/server";
+import Image from "next/image";
 
 export default async function Page() {
   const supabase = createClient();
@@ -14,19 +14,32 @@ export default async function Page() {
   const isRegistered = !!data?.telegram_id;
 
   return (
-    <div className="sm:px-10 pt-4 pb-16 sm:py-8 h-full grid grid-cols-2 gap-6">
+    <div className="sm:px-10 pt-4 pb-16 sm:py-8 h-full flex flex-col 2xl:grid grid-cols-2 gap-6">
       <Block
         title={
-          isRegistered ? (
-            <div className="flex items-center gap-4">
-              <div className="bg-success/20 h-5 w-5 rounded-full grid place-content-center">
-                <div className="bg-success h-3 w-3 rounded-full" />
-              </div>
-              <h3 className="sm:text-lg text-base">Telegram Bot</h3>
-            </div>
-          ) : (
-            "Telegram Bot"
-          )
+          <div className="flex items-center gap-4">
+            <Image
+              className="max-w-8"
+              width={240}
+              height={240}
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png"
+              alt="Telegram Logo"
+            />
+            <h3 className="sm:text-lg text-base">Telegram Bot</h3>
+          </div>
+        }
+        cta={
+          <div
+            className={`${
+              isRegistered ? "bg-success/20" : "bg-danger/20"
+            } h-5 w-5 rounded-full grid place-content-center`}
+          >
+            <div
+              className={`${
+                isRegistered ? "bg-success" : "bg-danger"
+              } h-3 w-3 rounded-full`}
+            />
+          </div>
         }
       >
         <div className="flex-1 flex flex-col gap-16">

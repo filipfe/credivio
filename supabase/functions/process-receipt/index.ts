@@ -108,9 +108,17 @@ Deno.serve(async (req) => {
       }
     }
 
-    const content: ChatCompletionContentPart[] = uploadedFiles.filter((file) =>
-      file.signedUrl
-    ).map((file) => ({
+    console.log({ uploadedFiles });
+
+    const withSignedUrl = uploadedFiles.filter((file) => file.signedUrl);
+
+    if (withSignedUrl.length === 0) {
+      return new Response("Request error: Couldn't retrieve signed URLs", {
+        status: 400,
+      });
+    }
+
+    const content: ChatCompletionContentPart[] = withSignedUrl.map((file) => ({
       type: "image_url",
       image_url: {
         url: file.signedUrl!,
