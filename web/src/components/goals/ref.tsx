@@ -143,8 +143,7 @@ export default function GoalRef(goal: Goal) {
           <strong className="text-3xl font-bold text-white">
             {numberFormat(currency, parseFloat(saved))}
           </strong>
-          <sub className="text-sm mb-2 ml-1 text-white">
-            {" "}
+          <sub className="text-sm mb-2 ml-1.5 text-white">
             / {numberFormat(currency, price)}
           </sub>
         </div>
