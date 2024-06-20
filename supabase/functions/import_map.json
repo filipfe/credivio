@@ -1,6 +1,8 @@
 {
   "imports": {
     "openai": "https://deno.land/x/openai@v4.51.0/mod.ts",
-    "supabase": "https://esm.sh/@supabase/supabase-js@2.43.4"
+    "supabase": "https://esm.sh/@supabase/supabase-js@2.43.4",
+    "grammy": "https://deno.land/x/grammy@v1.25.0/mod.ts",
+    "grammy:conversations": "https://deno.land/x/grammy_conversations@v1.2.0/mod.ts"
   }
 }

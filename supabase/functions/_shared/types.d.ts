@@ -4,5 +4,5 @@ interface Payment {
   title: string;
   currency: string;
   amount: number;
-  type: OperationType;
+  type: "income" | "expense";
 }

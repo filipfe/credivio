@@ -28,13 +28,13 @@ export default function Block({
       {title && (
         <div className="flex items-center gap-4 justify-between mb-1 sm:mb-2">
           {typeof title === "string" ? (
-            <h2
+            <h3
               className={`sm:text-lg text-base ${
                 hideTitleMobile ? "hidden sm:block" : "block"
               }`}
             >
               {title}
-            </h2>
+            </h3>
           ) : (
             title
           )}

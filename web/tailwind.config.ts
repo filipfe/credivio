@@ -64,6 +64,7 @@ const config: Config = {
             default: {
               DEFAULT: "#FAFAFA",
               "100": "#FAFAFA",
+              "200": "#F8F8F8",
             },
             success: "#32a852",
             danger: {

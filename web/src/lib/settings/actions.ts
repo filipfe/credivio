@@ -10,9 +10,10 @@ export async function getAccount(): Promise<
   const supabase = createClient();
 
   const {
-    data: { user },
+    data,
     error: authError,
-  } = await supabase.auth.getUser();
+  } = await supabase.from("profiles").select("first_name, last_name, email")
+    .single();
 
   if (authError) {
     return {
@@ -20,12 +21,6 @@ export async function getAccount(): Promise<
       error: authError.message,
     };
   }
-
-  const data = {
-    first_name: user?.user_metadata.first_name,
-    last_name: user?.user_metadata.last_name,
-    email: user?.email,
-  };
 
   return {
     result: data,
@@ -39,10 +34,12 @@ export async function updateAccount(formData: FormData) {
     last_name: formData.get("last_name") || null,
   };
 
-  const { error } = await supabase.auth.updateUser({
-    data: data,
-    email: formData.get("email")?.toString(),
-  });
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const { error } = await supabase.from("profiles").update(data).eq(
+    "id",
+    user?.id,
+  );
 
   if (error) {
     return {

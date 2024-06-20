@@ -55,13 +55,18 @@ Deno.serve(async (req) => {
       },
     });
 
-    const { data: { user }, error } = await supabase.auth.getUser();
+    let user = form.fields.user_id ? { id: form.fields.user_id } : null;
 
-    if (error || !user) {
-      return new Response(
-        `Auth error: ${error?.message || "User not found"}`,
-        { status: 422 },
-      );
+    if (!user) {
+      const { data: { user: supabaseUser }, error } = await supabase.auth
+        .getUser();
+      if (error || !supabaseUser) {
+        return new Response(
+          `Auth error: ${error?.message || "User not found"}`,
+          { status: 422 },
+        );
+      }
+      user = supabaseUser;
     }
 
     const uploadedFiles: UploadedFile[] = [];

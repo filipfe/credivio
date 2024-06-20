@@ -18,14 +18,14 @@ export default async function Page() {
             classNames={{ inputWrapper: "!bg-light" }}
             name="first_name"
             label={"Imię"}
-            placeholder="First Name"
+            placeholder="Imię"
             defaultValue={user?.first_name}
           />
           <Input
             classNames={{ inputWrapper: "!bg-light" }}
             label={"Nazwisko"}
             name="last_name"
-            placeholder="Last Name"
+            placeholder="Nazwisko"
             defaultValue={user?.last_name}
           />
           <Input
