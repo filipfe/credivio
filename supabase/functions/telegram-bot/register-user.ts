@@ -24,8 +24,12 @@ export default async function registerUser(
   }
   await ctx.reply(
     `Cześć ${data?.first_name},
-Twoja rejestracja przebiegła pomyślnie!
+Twoja rejestracja przebiegła pomyślnie!`,
+  );
+
+  await ctx.reply(
+    `Możesz teraz pisać mi o swoich przychodach i wydatkach, a ja będę je zapisywać na twoim koncie!
     
-Będę tu na wypadek gdyby pojawiły się nowe operacje, które chcesz zapisać!`,
+Możesz również wysyłać mi zdjęcia paragonów i faktur, które przetworzę i zapiszę jako odpowiednie operacje`,
   );
 }

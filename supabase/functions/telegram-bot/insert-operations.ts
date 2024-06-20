@@ -2,7 +2,7 @@ import supabase from "./supabase.ts";
 
 const constructReply = (operations: Payment[]) =>
   `Dodałem następujące operacje:
-  ${
+${
     operations.map(({ title, amount, type, currency }) =>
       `• ${type === "expense" ? "Wydatek" : "Przychód"}: ${title} - ${
         new Intl.NumberFormat("pl-PL", {
@@ -10,7 +10,7 @@ const constructReply = (operations: Payment[]) =>
           style: "currency",
         }).format(amount)
       }`
-    )
+    ).join("\n")
   }`;
 
 export default async function insertOperations(
@@ -39,9 +39,13 @@ export default async function insertOperations(
         values,
       ).select("*").returns<Payment[]>();
       insertError && console.error({ insertError });
-      return data;
+      return data
+        ? data.map((item) => ({ ...item, type: key.slice(0, -1) }))
+        : [];
     }),
   )).filter((arr) => arr !== null).flatMap((arr) => arr) as Payment[];
+
+  console.log({ inserted });
 
   const reply = inserted.length > 0
     ? constructReply(inserted)
