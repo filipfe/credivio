@@ -1,4 +1,5 @@
-import supabase from "./supabase.ts";
+import supabase from "../supabase.ts";
+import groupPayments from "../utils/group-payments.ts";
 
 const constructReply = (operations: Payment[]) =>
   `Dodałem następujące operacje:
@@ -16,21 +17,15 @@ ${
 export default async function insertOperations(
   operations: Payment[],
   user: { id: string; first_name: string },
+  type?: "income" | "expense",
 ) {
-  const grouped = operations.reduce(
-    (prev, curr) => {
-      const { type, ...rest } = curr;
-      return {
-        ...prev,
-        [`${type}s`]: [...prev[`${type}s`], {
-          ...rest,
-          user_id: user.id,
-          from_telegram: true,
-          issued_at: new Date().toISOString(),
-        }],
-      };
+  const grouped = groupPayments(
+    type ? operations.map((op) => ({ ...op, type })) : operations,
+    {
+      user_id: user.id,
+      from_telegram: true,
+      issued_at: new Date().toISOString(),
     },
-    { incomes: [] as Payment[], expenses: [] as Payment[] },
   );
 
   const inserted = (await Promise.all(
@@ -39,6 +34,8 @@ export default async function insertOperations(
         values,
       ).select("*").returns<Payment[]>();
       insertError && console.error({ insertError });
+      //   TODO: Change function to use ctx and update ctx.session with lastPayments
+      if (!insertError) {}
       return data
         ? data.map((item) => ({ ...item, type: key.slice(0, -1) }))
         : [];

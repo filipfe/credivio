@@ -1,9 +1,14 @@
-import { Bot, webhookCallback } from "grammy";
-import registerUser from "./register-user.ts";
-import insertOperations from "./insert-operations.ts";
-import getUser from "./get-user.ts";
+import { Bot, session, webhookCallback } from "grammy";
+import registerUser from "./commands/start.ts";
+import undo from "./commands/undo.ts";
+import insertOperations from "./commands/add.ts";
+import getUser from "./utils/get-user.ts";
 import supabase from "./supabase.ts";
 import OpenAI from "openai";
+import { Menu } from "grammy:menu";
+import { ADD, UNDO } from "./commands.ts";
+import { freeStorage } from "grammy:storage";
+import { BotContext, SessionData } from "./types.ts";
 
 // Setup type definitions for built-in Supabase Runtime APIs
 /// <reference types="https://esm.sh/@supabase/functions-js/src/edge-runtime.d.ts" />
@@ -18,7 +23,34 @@ if (!TELEGRAM_BOT_TOKEN) {
 
 const openai = new OpenAI({ apiKey: Deno.env.get("OPENAI_API_TOKEN") });
 
-const bot = new Bot(TELEGRAM_BOT_TOKEN);
+const bot = new Bot<BotContext>(TELEGRAM_BOT_TOKEN);
+
+bot.use(
+  session({
+    initial: () => ({ lastPayments: [] } as SessionData),
+    getSessionKey: (ctx) => ctx.from?.id.toString(),
+    storage: freeStorage<SessionData>(bot.token),
+  }),
+);
+
+const menu = new Menu<BotContext>("operations-menu")
+  .text("Przychód", async (ctx) => {
+    ctx.session.type = "income";
+    await ctx.reply(
+      `Jasne! 
+      Podaj tytuł i cenę`,
+    );
+  })
+  .text("Wydatek", async (ctx) => {
+    ctx.session.type = "expense";
+    console.log({ type: ctx.session.type });
+    await ctx.reply(
+      `Jasne! 
+Podaj tytuł i cenę`,
+    );
+  });
+
+bot.use(menu);
 
 bot.command("start", async (ctx) => {
   if (!ctx.from) {
@@ -39,7 +71,30 @@ bot.command("start", async (ctx) => {
   }
 });
 
+ADD.forEach((command) => {
+  bot.command(command, async (ctx) => {
+    if (!ctx.from) {
+      await ctx.reply(
+        "Nie posiadam uprawnień do zidentyfikowania kim jesteś. Spróbuj zmienić ustawienia profilu Telegram.",
+      );
+      return;
+    }
+    const user = await getUser(ctx.from.id);
+    if (user) {
+      await ctx.reply("Wybierz typ operacji:", { reply_markup: menu });
+    } else {
+      await ctx.reply("Zarejestruj się, aby kontynuować! Wpisz komendę /start");
+    }
+  });
+});
+
+UNDO.forEach((command) => {
+  bot.command(command, undo);
+});
+
 bot.on("message:text", async (ctx) => {
+  const type = ctx.session.type;
+  console.log({ type: ctx.session.type });
   const user = await getUser(ctx.from.id);
   if (!user) {
     await registerUser(ctx);
@@ -48,20 +103,21 @@ bot.on("message:text", async (ctx) => {
   console.log("Generating completion...", { message: ctx.msg.text });
   const textPrompt = `Analyze client's message: 
 "${ctx.msg.text}"
-Classify operation(s) either as 'income' or 'expense'. Generate a list of operations:
+Classify each operation either as 'income' or 'expense'. Generate a list of operations:
 
 type Operation = {
   title: string;
   amount: number;
   currency: string;
-  type: "income" | "expense";
+  ${ctx.session.type ? 'type: "income" | "expense";' : ""}
 };
 
 Rules:
 - return { operations: Operation[] } in json
 - create a relevant 'title' in the same language as the client's message
 - 'currency' is always 3-digit code
-- if client's message is irrelevant, return empty array`;
+- if client's message is irrelevant, return empty array
+- here's a default currency: ${user.currency}; you should use it case client didn't mention any other`;
 
   const completion = await openai.chat.completions.create({
     model: "gpt-4o",
@@ -88,7 +144,11 @@ Rules:
 
   try {
     const data = JSON.parse(response);
-    const reply = await insertOperations(data.operations, user);
+    const reply = await insertOperations(
+      data.operations,
+      user,
+      type,
+    );
     await ctx.reply(reply);
   } catch (err) {
     console.log("Parse error: Couldn't parse the completion response", {
