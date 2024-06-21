@@ -25,7 +25,6 @@ export default function useYAxisWidth(currency: string) {
   const tickFormatter = (val: number): string => {
     const formattedTick = numberFormat(currency, val, "compact");
     const width = checkWidth(formattedTick);
-    console.log({ width });
     if (width > longestTick) {
       setLongestTick(width);
     }

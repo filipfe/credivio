@@ -26,6 +26,8 @@ export default function OperationTable({
 }: TableProps<Operation>) {
   const pages = Math.ceil(count / 10);
   const {
+    selectedKeys,
+    setSelectedKeys,
     items,
     isLoading,
     setIsLoading,
@@ -36,7 +38,7 @@ export default function OperationTable({
     handleLabelChange,
     handleCurrencyChange,
   } = useTableQuery(rows, !!viewOnly);
-  const { page, sort, search, label } = searchQuery;
+  const { page, sort, search, label: _label } = searchQuery;
 
   useEffect(() => {
     setIsLoading(false);
@@ -77,7 +79,6 @@ export default function OperationTable({
           return (
             <span className="line-clamp-1 break-all w-[10ch]">
               {new Intl.DateTimeFormat("pl-PL", {
-                timeStyle: "short",
                 dateStyle: "short",
               }).format(new Date(cellValue))}
             </span>
@@ -91,7 +92,6 @@ export default function OperationTable({
           return (
             <span className="line-clamp-1 break-all w-[10ch]">
               {new Intl.DateTimeFormat("pl-PL", {
-                timeStyle: "short",
                 dateStyle: "short",
               }).format(new Date(cellValue))}
             </span>
@@ -144,11 +144,24 @@ export default function OperationTable({
           bottomContentPlacement="outside"
           aria-label="operations-table"
           className="max-w-full w-full flex-1"
+          selectionMode={selectedKeys.length === 0 ? "none" : "multiple"}
           checkboxesProps={{
             classNames: {
               wrapper: "text-background",
             },
           }}
+          selectedKeys={selectedKeys === "all" ? "all" : new Set(selectedKeys)}
+          onSelectionChange={(keys) =>
+            setSelectedKeys(
+              keys === "all"
+                ? "all"
+                : Array.from(keys).map((key) => key.toString())
+            )
+          }
+          onRowAction={(key) =>
+            selectedKeys.length === 0 &&
+            setSelectedKeys((prev) => [...(prev as string[]), key as string])
+          }
         >
           <TableHeader>
             {columns(rows.some((item) => item.label)).map((column) => (

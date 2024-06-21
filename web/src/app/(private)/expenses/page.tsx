@@ -40,7 +40,7 @@ export default async function Page({
           stat={last_30_days}
         />
       </div>
-      <div className="col-[1/3] row-[2/3]">
+      <div className="col-[1/3] row-[2/3] flex flex-col">
         <Suspense fallback={<LineChartLoader />}>
           <OperationsByMonth defaultCurrency={defaultCurrency} type="expense" />
         </Suspense>
@@ -57,6 +57,8 @@ async function Expenses({ searchParams }: { searchParams: SearchParams }) {
     "expense",
     searchParams
   );
+
+  console.log("new", expenses);
 
   return (
     <div className="row-span-2 col-span-2 flex items-stretch">
