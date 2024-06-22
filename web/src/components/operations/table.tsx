@@ -16,6 +16,7 @@ import useTableQuery from "@/hooks/useTableQuery";
 import TopContent from "../ui/table/top-content";
 import Block from "../ui/block";
 import Empty from "../ui/empty";
+import useSelection from "@/hooks/useSelection";
 
 export default function OperationTable({
   rows,
@@ -26,8 +27,6 @@ export default function OperationTable({
 }: TableProps<Operation>) {
   const pages = Math.ceil(count / 10);
   const {
-    selectedKeys,
-    setSelectedKeys,
     items,
     isLoading,
     setIsLoading,
@@ -38,6 +37,8 @@ export default function OperationTable({
     handleLabelChange,
     handleCurrencyChange,
   } = useTableQuery(rows, !!viewOnly);
+  const { selectionMode, selectedKeys, onSelectionChange, onRowAction } =
+    useSelection((viewOnly ? items : rows).map((item) => item.id));
   const { page, sort, search, label: _label } = searchQuery;
 
   useEffect(() => {
@@ -144,24 +145,18 @@ export default function OperationTable({
           bottomContentPlacement="outside"
           aria-label="operations-table"
           className="max-w-full w-full flex-1"
-          selectionMode={selectedKeys.length === 0 ? "none" : "multiple"}
+          selectionMode={selectionMode}
           checkboxesProps={{
             classNames: {
               wrapper: "text-background",
             },
           }}
-          selectedKeys={selectedKeys === "all" ? "all" : new Set(selectedKeys)}
-          onSelectionChange={(keys) =>
-            setSelectedKeys(
-              keys === "all"
-                ? "all"
-                : Array.from(keys).map((key) => key.toString())
-            )
-          }
-          onRowAction={(key) =>
-            selectedKeys.length === 0 &&
-            setSelectedKeys((prev) => [...(prev as string[]), key as string])
-          }
+          selectedKeys={selectedKeys}
+          onSelectionChange={onSelectionChange}
+          onRowAction={(key) => onRowAction(key.toString())}
+          classNames={{
+            tr: "cursor-pointer",
+          }}
         >
           <TableHeader>
             {columns(rows.some((item) => item.label)).map((column) => (

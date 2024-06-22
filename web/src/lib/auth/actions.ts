@@ -47,6 +47,8 @@ export async function signIn(formData: FormData) {
     password,
   });
 
+  console.log({ error: error?.message });
+
   if (error) {
     return {
       error: error.message,

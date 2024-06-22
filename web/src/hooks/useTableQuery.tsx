@@ -6,7 +6,6 @@ import { useDebouncedCallback } from "use-debounce";
 export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
   const router = useRouter();
   const pathname = usePathname();
-  const [selectedKeys, setSelectedKeys] = useState<string[] | "all">([]);
   const [items, setItems] = useState<T[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState({
@@ -86,7 +85,5 @@ export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
     handlePageChange,
     handleLabelChange,
     handleCurrencyChange,
-    selectedKeys,
-    setSelectedKeys,
   };
 }
