@@ -8,17 +8,22 @@ import Add from "../cta/add";
 
 import Filter from "./filter";
 import { DebouncedState } from "use-debounce";
+import Delete from "../cta/delete";
 
-type Props = Pick<TableProps<any>, "type"> &
-  FilterProps & {
-    search?: string;
-    handleSearch: DebouncedState<(search?: string) => void>;
-  };
+type Props = FilterProps & {
+  search?: string;
+  handleSearch: DebouncedState<(search?: string) => void>;
+  type?: OperationType;
+  deletionCallback?: () => void;
+  selected: string[];
+};
 
 export default function TopContent({
   type,
   search,
   state,
+  selected,
+  deletionCallback,
   handleSearch,
 }: Props) {
   return (
@@ -36,6 +41,9 @@ export default function TopContent({
         onValueChange={handleSearch}
       />
       <div className="items-center gap-3 hidden sm:flex">
+        {selected.length > 0 && (
+          <Delete callback={deletionCallback} items={selected} type={type} />
+        )}
         <Filter
           enabled={{ label: type === "expense", currency: true }}
           state={state}

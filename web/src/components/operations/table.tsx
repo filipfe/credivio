@@ -37,8 +37,13 @@ export default function OperationTable({
     handleLabelChange,
     handleCurrencyChange,
   } = useTableQuery(rows, !!viewOnly);
-  const { selectionMode, selectedKeys, onSelectionChange, onRowAction } =
-    useSelection((viewOnly ? items : rows).map((item) => item.id));
+  const {
+    selectionMode,
+    selectedKeys,
+    onSelectionChange,
+    onRowAction,
+    setSelectedKeys,
+  } = useSelection((viewOnly ? items : rows).map((item) => item.id));
   const { page, sort, search, label: _label } = searchQuery;
 
   useEffect(() => {
@@ -114,7 +119,9 @@ export default function OperationTable({
       cta={
         <TopContent
           {...props}
+          selected={selectedKeys}
           handleSearch={handleSearch}
+          deletionCallback={() => setSelectedKeys([])}
           search={search}
           state={{
             label: {
@@ -151,7 +158,13 @@ export default function OperationTable({
               wrapper: "text-background",
             },
           }}
-          selectedKeys={selectedKeys}
+          selectedKeys={
+            (viewOnly ? items : rows).every((item) =>
+              selectedKeys.includes(item.id)
+            )
+              ? "all"
+              : new Set(selectedKeys)
+          }
           onSelectionChange={onSelectionChange}
           onRowAction={(key) => onRowAction(key.toString())}
           classNames={{

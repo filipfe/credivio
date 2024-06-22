@@ -1,5 +1,6 @@
 import { deleteRows } from "@/lib/general/actions";
 import {
+  Badge,
   Button,
   Modal,
   ModalBody,
@@ -12,32 +13,30 @@ import { Trash2Icon } from "lucide-react";
 import { Fragment, useTransition } from "react";
 
 type Props = {
-  items: Set<any> | "all";
-  count: number;
+  items: string[];
   type?: OperationType;
   viewOnly?: boolean;
   callback?: () => void;
 };
 
-export default function Delete({
-  items,
-  type,
-  count,
-  viewOnly,
-  callback,
-}: Props) {
+export default function Delete({ items, type, viewOnly, callback }: Props) {
   const [isPending, startTransition] = useTransition();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   return (
     <div>
-      <Button
-        onPress={!viewOnly ? onOpen : callback}
-        color="danger"
-        variant="light"
-      >
-        <Trash2Icon size={14} />
-        Usuń {`(${items === "all" ? count : Array.from(items).length})`}
-      </Button>
+      <div>
+        <Badge content={items.length} color="danger" size="lg">
+          <Button
+            isIconOnly
+            disableRipple
+            onClick={onOpen}
+            color="danger"
+            variant="flat"
+          >
+            <Trash2Icon size={16} />
+          </Button>
+        </Badge>
+      </div>
       {!viewOnly && (
         <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
           <ModalContent>
@@ -67,11 +66,7 @@ export default function Delete({
                     <input
                       type="hidden"
                       name="data"
-                      value={
-                        items === "all"
-                          ? "all"
-                          : JSON.stringify(Array.from(items))
-                      }
+                      value={JSON.stringify(items)}
                     />
                     <input type="hidden" name="type" value={type} />
                     <Button

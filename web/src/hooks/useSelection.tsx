@@ -24,10 +24,9 @@ export default function useSelection(items: string[]) {
     selectionMode: (selectedKeys.length === 0
       ? "none"
       : "multiple") as SelectionMode,
-    selectedKeys: items.every((id) => selectedKeys.includes(id))
-      ? "all"
-      : new Set(selectedKeys),
+    selectedKeys,
     onSelectionChange,
+    setSelectedKeys,
     onRowAction,
   };
 }
