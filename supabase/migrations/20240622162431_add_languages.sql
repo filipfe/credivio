@@ -6,10 +6,16 @@ create table "public"."languages" (
     "name" text not null
 );
 
+insert into languages 
+(name, code) values
+('Polski', 'pl-PL'),
+('English', 'en-US');
 
 alter table "public"."languages" enable row level security;
 
-alter table "public"."profiles" add column "language_code" text not null;
+alter table "public"."profiles" add column "language_code" text not null default 'pl-PL';
+
+alter table "public"."profiles" alter column "language_code" drop default;
 
 CREATE UNIQUE INDEX languages_pkey ON public.languages USING btree (code);
 

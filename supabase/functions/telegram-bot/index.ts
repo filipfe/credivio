@@ -1,5 +1,4 @@
 import { Bot, session, webhookCallback } from "grammy";
-import registerUser from "./commands/start.ts";
 import undo from "./commands/undo.ts";
 import add, { insertOperations } from "./commands/add.ts";
 import help from "./commands/help.ts";
@@ -8,8 +7,8 @@ import supabase from "./supabase.ts";
 import OpenAI from "openai";
 import { ADD, HELP, UNDO } from "./commands.ts";
 import { freeStorage } from "grammy:storage";
-import { BotContext, SessionData } from "./types.ts";
-import menu from "./menu.ts";
+import { type BotContext, type SessionData } from "./types.ts";
+import registerUser from "./commands/start.ts";
 
 // Setup type definitions for built-in Supabase Runtime APIs
 /// <reference types="https://esm.sh/@supabase/functions-js/src/edge-runtime.d.ts" />
@@ -34,7 +33,24 @@ bot.use(
   }),
 );
 
-bot.use(menu);
+// const menu = new Menu<BotContext>("operations-menu")
+//   .text("Przychód", async (ctx) => {
+//     ctx.session.type = "income";
+//     await ctx.reply(
+//       `Jasne!
+//       Podaj tytuł i cenę`,
+//     );
+//   })
+//   .text("Wydatek", async (ctx) => {
+//     ctx.session.type = "expense";
+//     console.log({ type: ctx.session.type });
+//     await ctx.reply(
+//       `Jasne!
+// Podaj tytuł i cenę`,
+//     );
+//   });
+
+// bot.use(menu);
 
 bot.command("start", async (ctx) => {
   if (!ctx.from) {
@@ -68,14 +84,16 @@ Object.values(HELP).forEach((command) => {
 });
 
 bot.on("message:text", async (ctx) => {
+  await ctx.replyWithChatAction("typing");
   const type = ctx.session.type;
   const user = await getUser(ctx.from.id);
   if (!user) {
     await registerUser(ctx);
     return;
   }
+  console.log({ user });
   console.log("Generating completion...", { message: ctx.msg.text });
-  const textPrompt = `Analyze client's message: 
+  const textPrompt = `Analyze client's message:
 "${ctx.msg.text}"
 Classify each operation either as 'income' or 'expense'. Generate a list of operations:
 
