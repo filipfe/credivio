@@ -156,6 +156,7 @@ export default function OperationTable({
           onRowAction={(key) => onRowAction(key.toString())}
           classNames={{
             tr: "cursor-pointer",
+            td: "[&_span:last-child]:before:!border-neutral-200",
           }}
         >
           <TableHeader>

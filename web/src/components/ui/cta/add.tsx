@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Add({
   type,
-  size,
+  size = "sm",
   className,
 }: {
   type: string;
@@ -17,6 +17,7 @@ export default function Add({
         className={cn("font-medium", className)}
         size={size}
         as="div"
+        radius="md"
         disableRipple
       >
         <PlusIcon size={16} /> Dodaj
