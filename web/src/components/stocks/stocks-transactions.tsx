@@ -19,6 +19,7 @@ export default async function StocksAndTransactions() {
       </Suspense>
       <div className="col-span-2 flex items-stretch">
         <TransactionTable
+          type="stock"
           title="Ostatnie transakcje"
           count={count || 0}
           rows={transactions.slice(0, 6)}

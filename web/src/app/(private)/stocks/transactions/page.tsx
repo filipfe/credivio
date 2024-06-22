@@ -24,6 +24,7 @@ async function Transactions({ searchParams }: { searchParams: SearchParams }) {
       title={"Moje transakcje"}
       rows={ownStocks}
       count={count || 0}
+      type="stock"
     />
   );
 }

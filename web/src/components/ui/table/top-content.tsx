@@ -13,9 +13,10 @@ import Delete from "../cta/delete";
 type Props = FilterProps & {
   search?: string;
   handleSearch: DebouncedState<(search?: string) => void>;
-  type?: OperationType;
+  type: OperationType;
   deletionCallback?: () => void;
   selected: string[];
+  addHref?: string;
 };
 
 export default function TopContent({
@@ -23,6 +24,7 @@ export default function TopContent({
   search,
   state,
   selected,
+  addHref,
   deletionCallback,
   handleSearch,
 }: Props) {
@@ -42,13 +44,17 @@ export default function TopContent({
       />
       <div className="items-center gap-3 hidden sm:flex">
         {selected.length > 0 && (
-          <Delete callback={deletionCallback} items={selected} type={type} />
+          <Delete
+            callback={deletionCallback}
+            items={selected}
+            type={type as OperationType}
+          />
         )}
         <Filter
           enabled={{ label: type === "expense", currency: true }}
           state={state}
         />
-        {type && <Add size="sm" type={type} className="!h-10" />}
+        {addHref && <Add size="sm" href={addHref} className="!h-10" />}
       </div>
     </div>
   );

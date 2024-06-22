@@ -7,6 +7,6 @@ type TableProps<T> = {
   viewOnly?: {
     setRows: React.Dispatch<React.SetStateAction<T[]>>;
   };
-  type?: OperationType;
+  type: OperationType;
   topContent?: React.ReactNode;
 };
