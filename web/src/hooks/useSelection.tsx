@@ -5,8 +5,7 @@ export default function useSelection(items: string[]) {
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
 
   const onSelectionChange = (keys: Selection) => {
-    const isAll = keys === "all";
-    if (isAll) {
+    if (keys === "all") {
       setSelectedKeys((prev) => [...prev, ...items]);
     } else {
       setSelectedKeys((prev) => [
