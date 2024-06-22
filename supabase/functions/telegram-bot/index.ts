@@ -1,14 +1,15 @@
 import { Bot, session, webhookCallback } from "grammy";
 import registerUser from "./commands/start.ts";
 import undo from "./commands/undo.ts";
-import insertOperations from "./commands/add.ts";
+import add, { insertOperations } from "./commands/add.ts";
+import help from "./commands/help.ts";
 import getUser from "./utils/get-user.ts";
 import supabase from "./supabase.ts";
 import OpenAI from "openai";
-import { Menu } from "grammy:menu";
-import { ADD, UNDO } from "./commands.ts";
+import { ADD, HELP, UNDO } from "./commands.ts";
 import { freeStorage } from "grammy:storage";
 import { BotContext, SessionData } from "./types.ts";
+import menu from "./menu.ts";
 
 // Setup type definitions for built-in Supabase Runtime APIs
 /// <reference types="https://esm.sh/@supabase/functions-js/src/edge-runtime.d.ts" />
@@ -33,23 +34,6 @@ bot.use(
   }),
 );
 
-const menu = new Menu<BotContext>("operations-menu")
-  .text("Przychód", async (ctx) => {
-    ctx.session.type = "income";
-    await ctx.reply(
-      `Jasne! 
-      Podaj tytuł i cenę`,
-    );
-  })
-  .text("Wydatek", async (ctx) => {
-    ctx.session.type = "expense";
-    console.log({ type: ctx.session.type });
-    await ctx.reply(
-      `Jasne! 
-Podaj tytuł i cenę`,
-    );
-  });
-
 bot.use(menu);
 
 bot.command("start", async (ctx) => {
@@ -71,30 +55,20 @@ bot.command("start", async (ctx) => {
   }
 });
 
-ADD.forEach((command) => {
-  bot.command(command, async (ctx) => {
-    if (!ctx.from) {
-      await ctx.reply(
-        "Nie posiadam uprawnień do zidentyfikowania kim jesteś. Spróbuj zmienić ustawienia profilu Telegram.",
-      );
-      return;
-    }
-    const user = await getUser(ctx.from.id);
-    if (user) {
-      await ctx.reply("Wybierz typ operacji:", { reply_markup: menu });
-    } else {
-      await ctx.reply("Zarejestruj się, aby kontynuować! Wpisz komendę /start");
-    }
-  });
+Object.values(ADD).forEach((command) => {
+  bot.command(command, add);
 });
 
-UNDO.forEach((command) => {
+Object.values(UNDO).forEach((command) => {
   bot.command(command, undo);
+});
+
+Object.values(HELP).forEach((command) => {
+  bot.command(command, help);
 });
 
 bot.on("message:text", async (ctx) => {
   const type = ctx.session.type;
-  console.log({ type: ctx.session.type });
   const user = await getUser(ctx.from.id);
   if (!user) {
     await registerUser(ctx);
@@ -145,6 +119,7 @@ Rules:
   try {
     const data = JSON.parse(response);
     const reply = await insertOperations(
+      ctx,
       data.operations,
       user,
       type,
@@ -214,7 +189,7 @@ bot.on("message:photo", async (ctx) => {
 
   const operations = data.operations as Payment[];
 
-  const reply = await insertOperations(operations, user);
+  const reply = await insertOperations(ctx, operations, user);
 
   await ctx.reply(reply);
 });

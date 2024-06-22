@@ -6,26 +6,7 @@ alter table "public"."profiles" add column "last_name" text;
 
 alter table "public"."profiles" add column "email" text;
 
-alter table "public"."profiles" add column "currency" text;
-
 alter table "public"."profiles" add column "telegram_token" uuid not null default gen_random_uuid();
-
-CREATE OR REPLACE FUNCTION "public"."handle_new_user"() RETURNS "trigger"
-    LANGUAGE "plpgsql" SECURITY DEFINER
-    SET "search_path" TO 'public'
-    AS $$
-begin
-  insert into public.profiles (id, first_name, last_name, currency, email)
-  values (
-    new.id,
-    new.raw_user_meta_data ->> 'first_name',
-    new.raw_user_meta_data ->> 'last_name',
-    new.raw_user_meta_data ->> 'currency',
-    new.email
-  );
-  return new;
-end;
-$$;
 
 alter policy "Enable update for users based on email"
 on "public"."profiles"

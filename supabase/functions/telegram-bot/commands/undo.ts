@@ -7,6 +7,7 @@ export default async function undo(
   ctx: CommandContext<BotContext>,
 ) {
   const payments = ctx.session.lastPayments;
+  console.log("payments", payments);
   if (payments.length === 0) {
     await ctx.reply(
       "Nie znaleziono ostatnich operacji, spróbuj usunąć je poprzez aplikację",
@@ -26,7 +27,7 @@ export default async function undo(
             type === "expenses" ? "wydatków" : "przychodów"
           }, spróbuj ponownie!`,
         );
-      } else {
+      } else if (operations.length > 0) {
         ctx.session.lastPayments = ctx.session.lastPayments.filter((payment) =>
           payment.type !== type.slice(0, -1)
         );

@@ -6,3 +6,12 @@ export type SessionData = {
 };
 
 export type BotContext = Context & SessionFlavor<SessionData>;
+
+export type Profile = {
+  id: string;
+  first_name: string;
+  language_code: string;
+  currency: string;
+};
+
+export type Command = Record<string, string>;
