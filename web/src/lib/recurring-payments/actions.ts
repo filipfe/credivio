@@ -8,7 +8,7 @@ export async function getRecurringPayments(): Promise<
 > {
   const supabase = createClient();
   const { data: results, error } = await supabase.rpc(
-    "get_recurring_payments_active_payments",
+    "get_recurring_payments_active_payments"
   );
 
   if (error) {
@@ -32,10 +32,10 @@ export async function deleteRecurringPayment(formData: FormData) {
   }
   const supabase = createClient();
 
-  const { error } = await supabase.from("recurring_payments").delete().eq(
-    "id",
-    id,
-  );
+  const { error } = await supabase
+    .from("recurring_payments")
+    .delete()
+    .eq("id", id);
 
   if (error) {
     return {
