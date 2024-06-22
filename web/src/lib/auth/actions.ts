@@ -18,7 +18,7 @@ export async function signUp(formData: FormData) {
     options: {
       emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/confirm`,
       data: {
-        language: "Polski",
+        language_code: "pl-PL",
         currency: "PLN",
         first_name,
         last_name,
@@ -27,6 +27,7 @@ export async function signUp(formData: FormData) {
   });
 
   if (error) {
+    console.error({ error });
     return {
       error: error.message,
     };

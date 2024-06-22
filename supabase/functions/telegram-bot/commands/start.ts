@@ -1,5 +1,5 @@
 import { Context } from "grammy";
-import supabase from "./supabase.ts";
+import supabase from "../supabase.ts";
 
 export default async function registerUser(
   ctx: Context,
@@ -30,6 +30,10 @@ Twoja rejestracja przebiegła pomyślnie!`,
   await ctx.reply(
     `Możesz teraz pisać mi o swoich przychodach i wydatkach, a ja będę je zapisywać na twoim koncie!
     
-Możesz również wysyłać mi zdjęcia paragonów i faktur, które przetworzę i zapiszę jako odpowiednie operacje`,
+Możesz również wysyłać mi zdjęcia paragonów i faktur, które przetworzę i zapiszę jako odpowiednie operacje
+
+Aby zobaczyć dostępne komendy wpisz /pomoc
+
+Wypróbuj dodawanie operacji wpisując komendę /dodaj`,
   );
 }
