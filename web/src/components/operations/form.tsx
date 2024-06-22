@@ -211,6 +211,7 @@ export default function AddForm({
       </form>
       <OperationTable
         title="Podgląd"
+        type={type}
         rows={records}
         count={records.length}
         viewOnly={{

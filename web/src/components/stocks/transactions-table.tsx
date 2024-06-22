@@ -10,7 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/react";
-import Add from "../ui/cta/add";
 import { TRANSACTION_TYPES } from "@/const";
 import { useCallback, useEffect } from "react";
 import useTableQuery from "@/hooks/useTableQuery";
@@ -89,9 +88,11 @@ export default function TransactionTable({
           ? topContent
           : !simplified && (
               <TopContent
+                selected={[]}
                 handleSearch={handleSearch}
                 search={search}
-                type="stocks/transaction"
+                type="stock"
+                addHref="/stocks/transaction"
                 state={{
                   currency: {
                     value: searchQuery.currency,

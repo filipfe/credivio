@@ -1,20 +1,31 @@
-import { Input } from "@nextui-org/react";
-import { SearchIcon } from "lucide-react";
+import { Button, Input } from "@nextui-org/react";
+import {
+  ListTodoIcon,
+  MousePointerSquareDashedIcon,
+  SearchIcon,
+} from "lucide-react";
 import Add from "../cta/add";
 
 import Filter from "./filter";
 import { DebouncedState } from "use-debounce";
+import Delete from "../cta/delete";
 
-type Props = Pick<TableProps<any>, "type"> &
-  FilterProps & {
-    search?: string;
-    handleSearch: DebouncedState<(search?: string) => void>;
-  };
+type Props = FilterProps & {
+  search?: string;
+  handleSearch: DebouncedState<(search?: string) => void>;
+  type: OperationType;
+  deletionCallback?: () => void;
+  selected: string[];
+  addHref?: string;
+};
 
 export default function TopContent({
   type,
   search,
   state,
+  selected,
+  addHref,
+  deletionCallback,
   handleSearch,
 }: Props) {
   return (
@@ -32,11 +43,18 @@ export default function TopContent({
         onValueChange={handleSearch}
       />
       <div className="items-center gap-3 hidden sm:flex">
+        {selected.length > 0 && (
+          <Delete
+            callback={deletionCallback}
+            items={selected}
+            type={type as OperationType}
+          />
+        )}
         <Filter
           enabled={{ label: type === "expense", currency: true }}
           state={state}
         />
-        {type && <Add size="sm" type={type} className="!h-10" />}
+        {addHref && <Add size="sm" href={addHref} className="!h-10" />}
       </div>
     </div>
   );

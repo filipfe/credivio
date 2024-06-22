@@ -3,20 +3,21 @@ import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 
 export default function Add({
-  type,
-  size,
+  href,
+  size = "sm",
   className,
 }: {
-  type: string;
+  href: string;
   size?: "sm" | "md" | "lg";
   className?: string;
 }) {
   return (
-    <Link href={`${process.env.NEXT_PUBLIC_SITE_URL}/${type}s/add`}>
+    <Link href={`${process.env.NEXT_PUBLIC_SITE_URL}${href}`}>
       <Button
         className={cn("font-medium", className)}
         size={size}
         as="div"
+        radius="md"
         disableRipple
       >
         <PlusIcon size={16} /> Dodaj

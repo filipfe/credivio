@@ -281,6 +281,7 @@ export default function Form({
       <TransactionTable
         title="Podgląd"
         rows={records}
+        type="stock"
         count={records.length}
         viewOnly={{
           setRows: setRecords,
