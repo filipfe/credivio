@@ -3,7 +3,6 @@ import supabase from "../supabase.ts";
 import { BotContext, Profile } from "../types.ts";
 import groupPayments from "../utils/group-payments.ts";
 import getUser from "../utils/get-user.ts";
-import menu from "../menu.ts";
 
 const constructReply = (operations: Payment[]) =>
   `Dodałem następujące operacje:
@@ -73,7 +72,7 @@ export default async function add(ctx: CommandContext<BotContext>) {
   }
   const user = await getUser(ctx.from.id);
   if (user) {
-    await ctx.reply("Wybierz typ operacji:", { reply_markup: menu });
+    // await ctx.reply("Wybierz typ operacji:", { reply_markup: menu });
   } else {
     await ctx.reply("Zarejestruj się, aby kontynuować! Wpisz komendę /start");
   }
