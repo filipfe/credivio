@@ -48,7 +48,7 @@ export default function Scan({ setRecords }: Props) {
       }}
     >
       {({ getRootProps, getInputProps }) => (
-        <label
+        <div
           {...getRootProps({
             className:
               "border border-dashed border-primary/60 py-8 rounded-md flex flex-col gap-4 items-center justify-center",
@@ -63,7 +63,7 @@ export default function Scan({ setRecords }: Props) {
               <p className="text-sm">Dodaj lub upuść pliki</p>
             </>
           )}
-        </label>
+        </div>
       )}
     </Dropzone>
   );
