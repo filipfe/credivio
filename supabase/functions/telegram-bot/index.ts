@@ -85,31 +85,31 @@ Object.values(HELP).forEach((command) => {
 
 bot.on("message:text", async (ctx) => {
   await ctx.replyWithChatAction("typing");
-  const type = ctx.session.type;
   const user = await getUser(ctx.from.id);
   if (!user) {
     await registerUser(ctx);
     return;
   }
   console.log({ user });
-  console.log("Generating completion...", { message: ctx.msg.text });
   const textPrompt = `Analyze client's message:
-"${ctx.msg.text}"
-Classify each operation either as 'income' or 'expense'. Generate a list of operations:
-
-type Operation = {
-  title: string;
+  "${ctx.msg.text}"
+  Classify each operation either as 'income' or 'expense'. Generate a list of operations:
+  
+  type Operation = {
+    title: string;
   amount: number;
   currency: string;
-  ${ctx.session.type ? 'type: "income" | "expense";' : ""}
-};
+  type: "income" | "expense";
+  };
+  
+  Rules:
+  - return { operations: Operation[] } in json
+  - create a relevant 'title' in the same language as the client's message
+  - 'currency' is always 3-digit code
+  - if client's message is irrelevant, return empty array
+  - here's a default currency: ${user.currency}; you should use it case client didn't mention any other`;
 
-Rules:
-- return { operations: Operation[] } in json
-- create a relevant 'title' in the same language as the client's message
-- 'currency' is always 3-digit code
-- if client's message is irrelevant, return empty array
-- here's a default currency: ${user.currency}; you should use it case client didn't mention any other`;
+  console.log("Generating completion...", textPrompt);
 
   const completion = await openai.chat.completions.create({
     model: "gpt-4o",
@@ -136,13 +136,11 @@ Rules:
 
   try {
     const data = JSON.parse(response);
-    const reply = await insertOperations(
+    await insertOperations(
       ctx,
       data.operations,
       user,
-      type,
     );
-    await ctx.reply(reply);
   } catch (err) {
     console.log("Parse error: Couldn't parse the completion response", {
       response,
@@ -207,9 +205,7 @@ bot.on("message:photo", async (ctx) => {
 
   const operations = data.operations as Payment[];
 
-  const reply = await insertOperations(ctx, operations, user);
-
-  await ctx.reply(reply);
+  await insertOperations(ctx, operations, user);
 });
 
 const handleUpdate = webhookCallback(bot, "std/http");

@@ -3,7 +3,7 @@ import { Input } from "@nextui-org/react";
 
 export default function Page() {
   return (
-    <div className="sm:min-h-screen flex items-center justify-center bg-light">
+    <div className="h-screen sm:h-auto min-h-screen flex items-center justify-center bg-light">
       <div className="bg-white rounded-md px-6 sm:px-10 py-8 w-full max-w-[28rem] border border-primary/10">
         <Form>
           <div className="flex flex-col gap-6">
