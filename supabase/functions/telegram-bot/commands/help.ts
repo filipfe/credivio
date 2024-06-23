@@ -12,7 +12,7 @@ export default async function help(ctx: BotContext) {
   const user = await getUser(ctx.from.id);
   if (user) {
     await ctx.reply(
-      `Oto lista wszystkich dostępnych komend:
+      `🔎 Oto lista wszystkich dostępnych komend:
 /${ADD[user.language_code as keyof typeof ADD]} - Dodaj nową operację
 /${UNDO[user.language_code as keyof typeof UNDO]} - Cofnij ostatnią operację`,
     );

@@ -36,7 +36,7 @@ begin
         (obj->>'amount')::numeric,
         coalesce((obj->>'issued_at')::timestamptz, now()),
         coalesce((obj->>'from_telegram')::boolean, false)
-      );
+      ) returning id into new_id;
       elsif operation_type = 'expense' then
         insert into expenses (
           user_id, 
@@ -53,7 +53,7 @@ begin
           (obj->>'amount')::numeric,
           coalesce((obj->>'issued_at')::timestamptz, now()),
           coalesce((obj->>'from_telegram')::boolean, false)
-        );
+        ) returning id into new_id;
       end if;
 
       new_ids := array_append(new_ids, new_id);
