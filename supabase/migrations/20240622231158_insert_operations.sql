@@ -62,3 +62,29 @@ begin
   return new_ids;
 end;
 $$ language plpgsql;
+
+create or replace function delete_operations(p_ids uuid[])
+returns jsonb as $$
+declare
+    result jsonb;
+begin
+  with deleted_expenses as (
+    delete from expenses
+    where id = any($1)
+    returning title, currency, amount, 'expense' as type
+  ),
+  deleted_incomes as (
+    delete from incomes
+    where id = any($1)
+    returning title, currency, amount, 'income' as type
+  )
+  select jsonb_agg(jsonb_build_object('title', title, 'currency', currency, 'amount', amount, 'type', type)) into result
+  from (
+    select title, currency, amount, type from deleted_expenses
+    union all
+    select title, currency, amount, type from deleted_incomes
+  ) as combined_operations;
+
+  return result;
+end;
+$$ language plpgsql;
