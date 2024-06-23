@@ -1,6 +1,6 @@
 import { CommandContext } from "grammy";
 import supabase from "../supabase.ts";
-import { BotContext, Profile } from "../types.ts";
+import { BotContext, ProcessReturn, Profile } from "../types.ts";
 import getUser from "../utils/get-user.ts";
 
 const constructReply = (operations: Payment[]) =>
@@ -16,68 +16,25 @@ ${
     ).join("\n")
   }`;
 
-// export async function insertOperations(
-//   ctx: BotContext,
-//   operations: Payment[],
-//   user: Profile,
-//   type?: "income" | "expense",
-// ) {
-//   ctx.session.lastPayments = [];
-//   const grouped = groupPayments(
-//     type ? operations.map((op) => ({ ...op, type })) : operations,
-//     {
-//       user_id: user.id,
-//       from_telegram: true,
-//       issued_at: new Date().toISOString(),
-//     },
-//   );
-
-//   const inserted = (await Promise.all(
-//     Object.entries(grouped).flatMap(async ([key, values]) => {
-//       const { data, error: insertError } = await supabase.from(key).insert(
-//         values,
-//       ).select("*").returns<Payment[]>();
-//       if (!insertError && data) {
-//         ctx.session.lastPayments = [
-//           ...ctx.session.lastPayments,
-//           ...data.map((operation) => ({
-//             ...operation,
-//             type: key.slice(0, -1) as "income" | "expense",
-//           })),
-//         ];
-//       } else {
-//         console.error({ insertError });
-//       }
-//       return data
-//         ? data.map((item) => ({ ...item, type: key.slice(0, -1) }))
-//         : [];
-//     }),
-//   )).filter((arr) => arr !== null).flatMap((arr) => arr) as Payment[];
-
-//   console.log({ inserted });
-
-//   const reply = inserted.length > 0
-//     ? constructReply(inserted)
-//     : "Nie dodano operacji, spróbuj ponownie!";
-//   return reply;
-// }
-
 export async function insertOperations(
-  ctx: BotContext,
   operations: Payment[],
   user: Profile,
-) {
+): Promise<ProcessReturn> {
   const { data, error } = await supabase.rpc("insert_operations", {
     p_operations: operations,
     p_user_id: user.id,
   });
   if (!error) {
     console.log("Inserted operations: ", data);
-    ctx.session.lastPayments = data;
-    await ctx.reply(constructReply(operations));
+    return {
+      reply: constructReply(operations),
+      operations: data,
+    };
   } else {
-    console.error(error);
-    await ctx.reply("Wystąpił błąd, spróbuj ponownie!");
+    return {
+      operations: [],
+      reply: "Wystąpił błąd, spróbuj ponownie!",
+    };
   }
 }
 

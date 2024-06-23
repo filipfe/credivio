@@ -14,3 +14,8 @@ export type Profile = {
 };
 
 export type Command = Record<string, string>;
+
+export type ProcessReturn = {
+  reply: string;
+  operations: string[];
+};
