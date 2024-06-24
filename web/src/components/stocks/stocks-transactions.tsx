@@ -19,6 +19,7 @@ export default async function StocksAndTransactions() {
       </Suspense>
       <div className="col-span-2 flex items-stretch">
         <TransactionTable
+          type="stock"
           title="Ostatnie transakcje"
           count={count || 0}
           rows={transactions.slice(0, 6)}
@@ -37,13 +38,10 @@ const cta = (
       size="sm"
       color="primary"
       variant="light"
-      className="h-7 data-[hover=true]:bg-white relative group"
+      className="h-7 bg-white data-[hover=true]:bg-primary/10 transition-colors"
     >
       <span className="mb-px">Więcej</span>
-      <ChevronRightIcon
-        size={14}
-        className="transition-[margin-left] absolute group-hover:ml-2 ml-0"
-      />
+      <ChevronRightIcon size={14} />
     </Button>
   </Link>
 );

@@ -20,6 +20,19 @@ const config: Config = {
         danger: "#B33939",
         "danger-light": "#FCEEEE",
       },
+      keyframes: {
+        "animate-enter": {
+          "0%": {
+            transform: "translateX(50%)",
+          },
+          "100%": {
+            transform: "translateX(0%)",
+          },
+        },
+      },
+      animation: {
+        "animate-enter": "animate-enter 150ms ease-out",
+      },
     },
   },
   darkMode: "class",
@@ -49,11 +62,15 @@ const config: Config = {
               DEFAULT: "#e0e0e0",
             },
             default: {
-              DEFAULT: "#FAFAFA",
+              DEFAULT: "#F8F8F8",
               "100": "#FAFAFA",
+              "200": "#F8F8F8",
             },
             success: "#32a852",
-            danger: "#f31212",
+            danger: {
+              DEFAULT: "#f31212",
+              foreground: "#FFF",
+            },
           },
           layout: {
             hoverOpacity: 95,

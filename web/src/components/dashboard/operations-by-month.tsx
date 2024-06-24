@@ -7,7 +7,7 @@ import Empty from "@/components/ui/empty";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
 import useClientQuery from "@/hooks/useClientQuery";
-import { getDailyTotalAmount } from "@/lib/operation/queries";
+import { getDailyTotalAmount } from "@/lib/operations/queries";
 import { useState } from "react";
 
 const getTitle = (type: "budget" | "income" | "expense") => {
@@ -36,7 +36,7 @@ export default function OperationsByMonth({
 
   return (
     <Block
-      className="xl:col-span-3"
+      className="xl:col-span-3 flex-1"
       title={`${getTitle(type)} wg 30 dni`}
       cta={
         type === "budget" && (
@@ -52,7 +52,7 @@ export default function OperationsByMonth({
         )
       }
     >
-      <div className="h-96 flex flex-col">
+      <div className="flex flex-col flex-1 min-h-80 sm:min-h-96">
         {isLoading ? (
           <LineChartLoader className="!p-0" hideTitle />
         ) : results.length > 0 ? (

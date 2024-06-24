@@ -15,6 +15,8 @@ import {
 import useTableQuery from "@/hooks/useTableQuery";
 import TopContent from "../ui/table/top-content";
 import Block from "../ui/block";
+import Empty from "../ui/empty";
+import useSelection from "@/hooks/useSelection";
 
 export default function OperationTable({
   rows,
@@ -35,7 +37,14 @@ export default function OperationTable({
     handleLabelChange,
     handleCurrencyChange,
   } = useTableQuery(rows, !!viewOnly);
-  const { page, sort, search, label } = searchQuery;
+  const {
+    selectionMode,
+    selectedKeys,
+    onSelectionChange,
+    onRowAction,
+    setSelectedKeys,
+  } = useSelection((viewOnly ? items : rows).map((item) => item.id));
+  const { page, sort, search, label: _label } = searchQuery;
 
   useEffect(() => {
     setIsLoading(false);
@@ -74,7 +83,11 @@ export default function OperationTable({
           );
         case "issued_at":
           return (
-            <span className="line-clamp-1 break-all w-[10ch]">{cellValue}</span>
+            <span className="line-clamp-1 break-all w-[10ch]">
+              {new Intl.DateTimeFormat("pl-PL", {
+                dateStyle: "short",
+              }).format(new Date(cellValue))}
+            </span>
           );
         default:
           return <span className="line-clamp-1 break-all">{cellValue}</span>;
@@ -83,7 +96,11 @@ export default function OperationTable({
       switch (columnKey) {
         case "issued_at":
           return (
-            <span className="line-clamp-1 break-all w-[10ch]">{cellValue}</span>
+            <span className="line-clamp-1 break-all w-[10ch]">
+              {new Intl.DateTimeFormat("pl-PL", {
+                dateStyle: "short",
+              }).format(new Date(cellValue))}
+            </span>
           );
         case "label":
         case "description":
@@ -102,8 +119,11 @@ export default function OperationTable({
       cta={
         <TopContent
           {...props}
+          selected={selectedKeys}
           handleSearch={handleSearch}
+          deletionCallback={() => setSelectedKeys([])}
           search={search}
+          addHref={`/${props.type}s/add`}
           state={{
             label: {
               value: searchQuery.label,
@@ -133,10 +153,24 @@ export default function OperationTable({
           bottomContentPlacement="outside"
           aria-label="operations-table"
           className="max-w-full w-full flex-1"
+          selectionMode={selectionMode}
           checkboxesProps={{
             classNames: {
               wrapper: "text-background",
             },
+          }}
+          selectedKeys={
+            (viewOnly ? items : rows).every((item) =>
+              selectedKeys.includes(item.id)
+            )
+              ? "all"
+              : new Set(selectedKeys)
+          }
+          onSelectionChange={onSelectionChange}
+          onRowAction={(key) => onRowAction(key.toString())}
+          classNames={{
+            tr: "cursor-pointer",
+            td: "[&_span:last-child]:before:!border-neutral-200",
           }}
         >
           <TableHeader>
@@ -152,7 +186,21 @@ export default function OperationTable({
           <TableBody
             items={viewOnly ? items : rows}
             isLoading={isLoading}
-            emptyContent="Nie znaleziono operacji"
+            emptyContent={
+              <Empty
+                title="Nie znaleziono operacji"
+                cta={
+                  viewOnly
+                    ? undefined
+                    : {
+                        title: `Dodaj ${
+                          props.type === "expense" ? "wydatek" : "przychód"
+                        }`,
+                        href: `/${props.type}s/add`,
+                      }
+                }
+              />
+            }
             loadingContent={<Spinner />}
           >
             {(operation) => (

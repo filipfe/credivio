@@ -1,5 +1,5 @@
 import HorizontalScroll from "@/components/ui/horizontal-scroll";
-import { getLatestOperations } from "@/lib/operation/actions";
+import { getLatestOperations } from "@/lib/operations/actions";
 import OperationRef from "../operations/ref";
 import Block from "@/components/ui/block";
 
@@ -10,7 +10,7 @@ export default async function LatestOperations() {
     <Block title="Ostatnie operacje" className="xl:col-span-6">
       <HorizontalScroll>
         {operations.map((operation) => (
-          <OperationRef {...operation} key={operation.id} />
+          <OperationRef payment={operation} key={operation.id} />
         ))}
       </HorizontalScroll>
     </Block>

@@ -28,7 +28,7 @@ export default function NavLink({
     ? pathname === "/"
     : pathname.startsWith(href);
   return isGroup && !isMenuHidden.desktop ? (
-    <div>
+    <div className="my-0.5">
       <div className={`px-4 rounded-lg font-medium w-full text-font/70`}>
         <span style={{ fontSize: 13 }}>{title}</span>
       </div>

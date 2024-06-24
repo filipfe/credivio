@@ -4,7 +4,7 @@ import IncomeTable from "@/components/operations/table";
 import Loader from "@/components/stocks/loader";
 import LineChartLoader from "@/components/ui/charts/line-loader";
 import { getOwnRows } from "@/lib/general/actions";
-import { getOperationsStats } from "@/lib/operation/actions";
+import { getOperationsStats } from "@/lib/operations/actions";
 import { getDefaultCurrency } from "@/lib/settings/actions";
 import { Suspense } from "react";
 
@@ -40,7 +40,7 @@ export default async function Page({
           stat={last_30_days}
         />
       </div>
-      <div className="col-[1/3] row-[2/3]">
+      <div className="col-[1/3] row-[2/3] flex flex-col">
         <Suspense fallback={<LineChartLoader />}>
           <OperationsByMonth defaultCurrency={defaultCurrency} type="income" />
         </Suspense>

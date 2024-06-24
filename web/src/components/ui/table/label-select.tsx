@@ -1,4 +1,4 @@
-import { getLabels } from "@/lib/operation/actions";
+import { getLabels } from "@/lib/operations/actions";
 import { useEffect, useState } from "react";
 import { Select, SelectItem } from "@nextui-org/react";
 

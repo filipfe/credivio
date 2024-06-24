@@ -1,7 +1,7 @@
-import { createServerClient, type CookieOptions } from "@supabase/ssr";
-import { NextResponse, type NextRequest } from "next/server";
+import { type CookieOptions, createServerClient } from "@supabase/ssr";
+import { type NextRequest, NextResponse } from "next/server";
 
-const PUBLIC_ROUTES = ["/sign-in", "/auth/confirm"];
+const PUBLIC_ROUTES = ["/sign-in", "/sign-up", "/auth/confirm"];
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({
@@ -53,7 +53,7 @@ export async function updateSession(request: NextRequest) {
           });
         },
       },
-    }
+    },
   );
 
   const { pathname, origin } = request.nextUrl;

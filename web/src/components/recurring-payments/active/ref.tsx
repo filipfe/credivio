@@ -1,38 +1,22 @@
-"use client";
-
 import numberFormat from "@/utils/formatters/currency";
-import { useTransition } from "react";
-import { deleteRecurringPayment } from "@/lib/recurring-payments/actions";
-import toast from "react-hot-toast";
-import Toast from "../../ui/toast";
-import {
-  Button,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  useDisclosure,
-} from "@nextui-org/react";
-import { PauseIcon, Trash2Icon } from "lucide-react";
+import Menu from "./menu";
 
 export default function ActiveRecurringPayment({
-  id,
   title,
   next_payment_date,
+  last_payment_date,
   currency,
   type,
   amount,
+  interval_amount,
+  interval_unit,
 }: RecurringPayment) {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [isPending, startTransition] = useTransition();
-
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-col">
         <h3 className="text-lg line-clamp-1">{title}</h3>
         <small className="text-neutral-500">
-          Ostatnia płatność: {new Date(next_payment_date).toLocaleDateString()}{" "}
+          Ostatnia płatność: {new Date(last_payment_date).toLocaleDateString()}{" "}
           | Następna płatność:{" "}
           {new Date(next_payment_date).toLocaleDateString()}
         </small>
@@ -41,29 +25,18 @@ export default function ActiveRecurringPayment({
         <div
           className={`${
             type === "income"
-              ? "bg-primary/10 text-primary"
+              ? "bg-success/10 text-success"
               : "bg-danger-light text-danger"
           } rounded-md px-2 py-1 font-bold text-center`}
         >
           {(type === "income" ? "+" : "-") + numberFormat(currency, amount)}
         </div>
-        <sub className="text-base mb-0.5">/ miesiąc</sub>
+        <sub className="text-base mb-0.5">
+          / {interval_amount} {interval_unit}
+        </sub>
       </div>
-      <div className="flex items-center gap-2">
-        <Button onPress={onOpen} isIconOnly disableRipple size="sm">
-          <PauseIcon size={16} />
-        </Button>
-        <Button
-          className="bg-danger/5"
-          onPress={onOpen}
-          isIconOnly
-          disableRipple
-          size="sm"
-        >
-          <Trash2Icon size={16} className="text-danger" />
-        </Button>
-      </div>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Menu />
+      {/* <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -108,7 +81,7 @@ export default function ActiveRecurringPayment({
             </>
           )}
         </ModalContent>
-      </Modal>
+      </Modal> */}
     </div>
   );
 }

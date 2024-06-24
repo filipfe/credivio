@@ -2,40 +2,42 @@ import Block from "@/components/ui/block";
 import { ScrollShadow } from "@nextui-org/react";
 import Month from "./month";
 import Empty from "@/components/ui/empty";
+import { createClient } from "@/utils/supabase/server";
 
-export default function Timeline({ payments }: { payments: Payment[] }) {
-  const grouped: Record<string, Payment[]> = payments.reduce((prev, curr) => {
-    const month = new Intl.DateTimeFormat("pl-PL", { month: "long" }).format(
-      new Date(curr.issued_at)
-    );
-    return {
-      ...prev,
-      [month]: prev[month] ? [...prev[month], curr] : [curr],
-    };
-  }, {} as Record<string, Payment[]>);
-  const months = Object.keys(grouped);
+export default async function Timeline() {
+  const supabase = createClient();
+  const { data: years } = await supabase
+    .rpc("get_recurring_payments_timeline_data", {
+      p_offset: 0,
+    })
+    .returns<Year[]>();
+
   return (
     <Block
       title="Przeszłe płatności"
       className="row-start-1 row-end-3 col-start-2 col-end-3"
     >
-      <ScrollShadow className="h-[calc(100vh-490px)]" hideScrollBar size={0}>
-        <div className="flex flex-col h-full">
-          {months.length > 0 ? (
-            months.map((month) => (
-              <Month key={month} month={month} payments={grouped[month]} />
-            ))
-          ) : (
-            <Empty
-              title="Nie znaleziono historii płatności!"
-              cta={{
-                title: "Dodaj płatność cykliczną",
-                href: "/recurring-payments/add",
-              }}
-            />
-          )}
-        </div>
-      </ScrollShadow>
+      {years && years.length > 0 ? (
+        <ScrollShadow className="h-[calc(100vh-490px)]" hideScrollBar size={0}>
+          <div className="flex flex-col h-full">
+            {years
+              ? years.map(({ year, months }) =>
+                  months.map((month) => (
+                    <Month {...month} year={year} key={month.month} />
+                  ))
+                )
+              : []}
+          </div>
+        </ScrollShadow>
+      ) : (
+        <Empty
+          title="Nie znaleziono historii płatności!"
+          cta={{
+            title: "Dodaj płatność cykliczną",
+            href: "/recurring-payments/add",
+          }}
+        />
+      )}
     </Block>
   );
 }

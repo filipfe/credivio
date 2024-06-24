@@ -2,6 +2,7 @@ import {
   AlignHorizontalDistributeCenterIcon,
   ArrowRightLeftIcon,
   BarChart4Icon,
+  BotIcon,
   BrainIcon,
   Building2Icon,
   CheckCircleIcon,
@@ -24,6 +25,11 @@ export const PAGES: Page[] = [
     title: "Panel",
     href: "/",
     icon: LayoutDashboardIcon,
+  },
+  {
+    title: "Automatyzacja",
+    href: "/automation",
+    icon: BotIcon,
   },
   {
     title: "Operacje",
@@ -54,11 +60,11 @@ export const PAGES: Page[] = [
           },
         ],
       },
-      {
-        title: "Algorytmy",
-        href: "/algorithms",
-        icon: VariableIcon,
-      },
+      // {
+      //   title: "Algorytmy",
+      //   href: "/algorithms",
+      //   icon: VariableIcon,
+      // },
       {
         title: "Cele",
         href: "/goals",
