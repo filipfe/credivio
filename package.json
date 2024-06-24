@@ -8,7 +8,7 @@
     "supabase:push:dev": "supabase db push",
     "supabase:push:prod": "supabase db push --project-ref",
     "supabase:deploy:dev": "supabase functions deploy --project-ref ssprqijuhymtwacivhup",
-    "supabase:deploy:prod": "supabase functions deploy --project-ref"
+    "supabase:deploy:prod": "supabase functions deploy --project-ref zjvcoczxcyffbcudeodc"
   },
   "devDependencies": {
     "supabase": "^1.167.4"

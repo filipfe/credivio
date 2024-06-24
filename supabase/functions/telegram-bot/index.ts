@@ -65,7 +65,7 @@ bot.command("start", async (ctx) => {
     );
   } else {
     await ctx.reply(
-      "Podaj swój unikalny klucz Telegram. Znajdziesz go tutaj: https://tipplet.vercel.app/automations",
+      "Podaj swój unikalny klucz Telegram. Znajdziesz go tutaj: https://credivio.vercel.app/automations",
     );
   }
 });
