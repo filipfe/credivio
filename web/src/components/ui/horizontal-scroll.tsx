@@ -17,13 +17,14 @@ export default function HorizontalScroll({
       hideScrollBar
       orientation="horizontal"
       className={cn(
+        "w-full",
         isMenuHidden.desktop
-          ? "max-w-[100vw] md:max-w-[calc(100vw-176px)]"
-          : "max-w-[100vw] md:max-w-[calc(100vw-320px)]",
+          ? "max-w-[calc(100vw-48px)] sm:max-w-[calc(100vw-176px)]"
+          : "max-w-[calc(100vw-48px)] sm:max-w-[calc(100vw-416px)]",
         className
       )}
     >
-      <div className="flex items-stretch gap-6 w-max">{children}</div>
+      <div className="flex items-stretch gap-6 min-w-max">{children}</div>
     </ScrollShadow>
   );
 }

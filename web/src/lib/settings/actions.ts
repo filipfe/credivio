@@ -54,39 +54,22 @@ export async function getPreferences(): Promise<
   const supabase = createClient();
 
   const {
-    data: { user },
+    data,
     error: authError,
-  } = await supabase.auth.getUser();
+  } = await supabase.from("profiles").select(
+    "currency, language:languages(code, name)",
+  ).single();
 
-  if (!user || authError) {
+  if (!data || authError) {
     return {
       result: null,
       error: "Błąd autoryzacji, spróbuj zalogować się ponownie!",
     };
   }
 
-  const data = {
-    currency: user?.user_metadata.currency,
-    language: user?.user_metadata.language,
-  };
-
   return {
-    result: data,
+    result: data as unknown as Preferences,
   };
-}
-
-export async function updatePreferences(name: string, value: string) {
-  const supabase = createClient();
-
-  const { error } = await supabase.auth.updateUser({
-    data: { [name]: value },
-  });
-
-  if (error) {
-    return {
-      error: error.message,
-    };
-  }
 }
 
 export async function activateService(
@@ -141,13 +124,50 @@ export async function activateService(
   };
 }
 
-export async function getDefaultCurrency(): Promise<string> {
+export async function getDefaultCurrency(): Promise<
+  SupabaseSingleRowResponse<string>
+> {
   const supabase = createClient();
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
 
-  if (!user || authError) "Błąd autoryzacji, spróbuj zalogować się ponownie!";
-  return user?.user_metadata.currency;
+  const {
+    data,
+    error: authError,
+  } = await supabase.from("profiles").select(
+    "currency",
+  ).single();
+
+  if (!data || authError) {
+    return {
+      result: null,
+      error: authError.message ||
+        "Błąd autoryzacji, spróbuj zalogować się ponownie!",
+    };
+  }
+
+  return {
+    result: data.currency,
+  };
+}
+
+export async function updatePreferences(formData: FormData) {
+  const name = formData.get("name")?.toString() ?? "";
+  const value = formData.get("value")?.toString() ?? "";
+
+  const supabase = createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+
+  console.log("Updating...", { name, value });
+
+  const { error } = await supabase.from("profiles").update({
+    [name]: value,
+  }).eq("id", user?.id);
+
+  if (error) {
+    return {
+      error: error.message,
+    };
+  }
+
+  revalidatePath("/", "layout");
 }
