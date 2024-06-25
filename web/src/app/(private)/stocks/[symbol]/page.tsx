@@ -7,7 +7,12 @@ import { redirect } from "next/navigation";
 
 export default async function Page({ params }: { params: { symbol: string } }) {
   const { results: stocks } = await getSpecificStocks([params.symbol]);
-  const defaultCurrency = await getDefaultCurrency();
+  const { result: defaultCurrency, error } = await getDefaultCurrency();
+
+  if (!defaultCurrency) {
+    console.error("Couldn't retrieve default currency: ", error);
+    throw new Error(error);
+  }
 
   if (stocks.length === 0) redirect("/stocks");
   const {

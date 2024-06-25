@@ -29,10 +29,12 @@ export default function NavLink({
     : pathname.startsWith(href);
   return isGroup && !isMenuHidden.desktop ? (
     <div className="my-0.5">
-      <div className={`px-4 rounded-lg font-medium w-full text-font/70`}>
+      <div
+        className={`px-3 sm:px-4 rounded-lg font-medium w-full text-font/70`}
+      >
         <span style={{ fontSize: 13 }}>{title}</span>
       </div>
-      <div className="space-y-1.5 px-4 mt-1.5">
+      <div className="space-y-1.5 px-3 sm:px-4 mt-1.5">
         {links?.map((link) => (
           <NavLink {...link} key={link.href} />
         ))}
@@ -40,7 +42,7 @@ export default function NavLink({
     </div>
   ) : (
     <Link
-      className={`px-4 rounded-lg text-sm font-medium flex justify-center items-center gap-3.5 ${
+      className={`px-3 sm:px-4 rounded-lg text-sm font-medium flex justify-center items-center gap-3 sm:gap-3.5 ${
         isActive ? "bg-light" : "hover:bg-light bg-white text-font/70"
       }`}
       href={href}
@@ -48,7 +50,7 @@ export default function NavLink({
     >
       <Icon size={15} />
       <span
-        className={`flex-1 ${
+        className={`flex-1 mt-px ${
           isMenuHidden.desktop ? "sm:opacity-0 sm:absolute" : "opacity-100"
         }`}
       >

@@ -29,7 +29,7 @@ export default function TopContent({
   handleSearch,
 }: Props) {
   return (
-    <div className="flex-1 flex items-center sm:justify-between gap-4 sm:gap-8">
+    <div className="flex-1 flex items-center justify-between gap-4 sm:gap-8">
       <Input
         isClearable
         size="sm"
@@ -42,7 +42,7 @@ export default function TopContent({
         defaultValue={search}
         onValueChange={handleSearch}
       />
-      <div className="items-center gap-3 hidden sm:flex">
+      <div className="items-center gap-3 flex">
         {selected.length > 0 && (
           <Delete
             callback={deletionCallback}
@@ -54,7 +54,11 @@ export default function TopContent({
           enabled={{ label: type === "expense", currency: true }}
           state={state}
         />
-        {addHref && <Add size="sm" href={addHref} className="!h-10" />}
+        {addHref && (
+          <div className="hidden sm:block">
+            <Add size="sm" href={addHref} className="!h-10" />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -22,7 +22,7 @@ export default function LineChart({ data, currency, type }: Props) {
   const { width, tickFormatter } = useYAxisWidth(currency);
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ResponsiveContainer width="100%" height="100%" minHeight={320}>
       <Chart data={data} margin={{ top: 16, right: 20 }}>
         <YAxis
           width={width}
