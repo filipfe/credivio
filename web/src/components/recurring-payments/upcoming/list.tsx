@@ -17,14 +17,15 @@ export default async function Upcoming() {
   const supabase = createClient();
   const { data: payments } = await supabase
     .rpc("get_recurring_payments_upcoming_payments")
-    .returns<RecurringPayment[]>();
+    .returns<UpcomingRecurringPayment[]>();
+
   return (
     <Block title="Nadchodzące">
       {payments && payments.length > 0 ? (
         <HorizontalScroll>
           {payments.map((payment) => (
             <OperationRef
-              payment={{ ...payment, issued_at: payment.next_payment_date }}
+              payment={{ ...payment, issued_at: payment.payment_date }}
               actions={actions}
               key={payment.id}
             />

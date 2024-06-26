@@ -58,8 +58,6 @@ async function Expenses({ searchParams }: { searchParams: SearchParams }) {
     searchParams
   );
 
-  console.log("new", expenses);
-
   return (
     <div className="row-span-2 col-span-2 flex items-stretch">
       <OperationTable

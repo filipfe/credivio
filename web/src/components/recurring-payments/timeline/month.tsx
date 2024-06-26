@@ -24,9 +24,9 @@ export default function Month({
         <small className="text-white">
           Łącznie:{" "}
           <span className="font-medium">
-            {total_amounts
-              .map(({ currency, total_amount }) =>
-                numberFormat(currency, total_amount)
+            {Object.entries(total_amounts)
+              .map(([currency, totalAmount]) =>
+                numberFormat(currency, totalAmount)
               )
               .join(", ")}
           </span>

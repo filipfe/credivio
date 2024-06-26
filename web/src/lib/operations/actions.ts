@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function addOperations(
-  formData: FormData,
+  formData: FormData
 ): Promise<SupabaseResponse<Operation>> {
   const type = formData.get("type")?.toString() as OperationType;
   const label = formData.get("label")?.toString();
@@ -80,7 +80,7 @@ export async function getLatestOperations(): Promise<
 
 export async function getOperationsStats(
   currency: string,
-  type: string,
+  type: string
 ): Promise<SupabaseSingleRowResponse<OperationsStats>> {
   const supabase = createClient();
 
@@ -103,7 +103,7 @@ export async function getOperationsStats(
 
 export async function getLabels(): Promise<SupabaseResponse<Label>> {
   const supabase = createClient();
-  const { data: results, error } = await supabase.rpc("get_own_labels");
+  const { data: results, error } = await supabase.rpc("get_general_own_labels");
 
   if (error) {
     return {
@@ -119,7 +119,9 @@ export async function getLabels(): Promise<SupabaseResponse<Label>> {
 
 export async function getPortfolioBudgets(): Promise<SupabaseResponse<Budget>> {
   const supabase = createClient();
-  const { data: results, error } = await supabase.rpc("get_portfolio_budgets");
+  const { data: results, error } = await supabase.rpc(
+    "get_dashboard_portfolio_budgets"
+  );
 
   if (error) {
     return {
