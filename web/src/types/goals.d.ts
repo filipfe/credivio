@@ -9,14 +9,14 @@ type Goal = {
   deadline?: string;
 };
 
-type ActiveGoal = {
-  id: string;
-  title: string;
-  deadline: string;
-  shortfall: number;
-  currency: string;
-  days_left: number;
-};
+// type ActiveGoal = {
+//   id: string;
+//   title: string;
+//   deadline: string;
+//   shortfall: number;
+//   currency: string;
+//   days_left: number;
+// };
 
 type GoalRecord = Omit<Goal, "id" | "saved" | "price"> & {
   price: string;
