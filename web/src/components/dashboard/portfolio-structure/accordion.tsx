@@ -5,9 +5,10 @@ import { Accordion, AccordionItem } from "@nextui-org/react";
 type Props = { data: Group[] };
 
 export default function PortfolioAccordion({ data }: Props) {
+  console.log(data);
   return (
     <Accordion defaultExpandedKeys={[data[0].name]} className="col-span-3">
-      {data.map(({ children, name, value, color, label }, k) => (
+      {data.map(({ children, name, color, label }, k) => (
         <AccordionItem
           title={
             <div className="flex items-center gap-4">

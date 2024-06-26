@@ -4,11 +4,12 @@ import add, { insertOperations } from "./commands/add.ts";
 import help from "./commands/help.ts";
 import getUser from "./utils/get-user.ts";
 import supabase from "./supabase.ts";
-import OpenAI from "openai";
 import { ADD, HELP, UNDO } from "./commands.ts";
 import { freeStorage } from "grammy:storage";
 import { type BotContext, type SessionData } from "./types.ts";
 import registerUser from "./commands/start.ts";
+import processVoice from "./utils/process-voice.ts";
+import processText from "./utils/process-text.ts";
 
 // Setup type definitions for built-in Supabase Runtime APIs
 /// <reference types="https://esm.sh/@supabase/functions-js/src/edge-runtime.d.ts" />
@@ -17,11 +18,9 @@ const TELEGRAM_BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN");
 
 if (!TELEGRAM_BOT_TOKEN) {
   throw new Error(
-    `Environment variables missing: TELEGRAM_BOT_TOKEN`,
+    "Environment variables missing: TELEGRAM_BOT_TOKEN",
   );
 }
-
-const openai = new OpenAI({ apiKey: Deno.env.get("OPENAI_API_TOKEN") });
 
 const bot = new Bot<BotContext>(TELEGRAM_BOT_TOKEN);
 
@@ -66,7 +65,7 @@ bot.command("start", async (ctx) => {
     );
   } else {
     await ctx.reply(
-      "Podaj swój unikalny klucz Telegram. Znajdziesz go tutaj: https://tipplet.vercel.app/automations",
+      "Podaj swój unikalny klucz Telegram. Znajdziesz go tutaj: https://credivio.vercel.app/automations",
     );
   }
 });
@@ -91,65 +90,11 @@ bot.on("message:text", async (ctx) => {
     return;
   }
   console.log({ user });
-  const textPrompt = `Analyze client's message:
-  "${ctx.msg.text}"
-  Classify each operation either as 'income' or 'expense'. Generate a list of operations:
-  
-  type Operation = {
-    title: string;
-  amount: number;
-  currency: string;
-  type: "income" | "expense";
-  };
-  
-  Rules:
-  - return { operations: Operation[] } in json
-  - create a relevant 'title' in the same language as the client's message
-  - 'currency' is always 3-digit code
-  - if client's message is irrelevant, return empty array
-  - here's a default currency: ${user.currency}; you should use it case client didn't mention any other`;
-
-  console.log("Generating completion...", textPrompt);
-
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4o",
-    "response_format": { type: "json_object" },
-    messages: [{
-      role: "user",
-      "content": [
-        { type: "text", text: textPrompt },
-      ],
-    }],
-  });
-
-  const response = completion.choices[0].message.content;
-
-  if (typeof response !== "string") {
-    console.error("Completion error: Returned a non-string response", {
-      completion,
-    });
-    await ctx.reply(
-      "Wybacz, nie mogłem przetworzyć twojego zapytania. Może spróbujesz ponownie?",
-    );
-    return;
+  const { reply, operations } = await processText(ctx.msg.text, user);
+  if (operations.length > 0) {
+    ctx.session.lastPayments = operations;
   }
-
-  try {
-    const data = JSON.parse(response);
-    await insertOperations(
-      ctx,
-      data.operations,
-      user,
-    );
-  } catch (err) {
-    console.log("Parse error: Couldn't parse the completion response", {
-      response,
-      err,
-    });
-    await ctx.reply(
-      "Wybacz, nie mogłem przetworzyć twojego zapytania. Może spróbujesz ponownie?",
-    );
-  }
+  await ctx.reply(reply);
 });
 
 bot.on("message:photo", async (ctx) => {
@@ -205,7 +150,39 @@ bot.on("message:photo", async (ctx) => {
 
   const operations = data.operations as Payment[];
 
-  await insertOperations(ctx, operations, user);
+  const { reply, operations: payments } = await insertOperations(
+    operations,
+    user,
+  );
+  if (payments.length > 0) {
+    ctx.session.lastPayments = payments;
+  }
+  await ctx.reply(reply);
+});
+
+bot.on("message:voice", async (ctx) => {
+  await ctx.replyWithChatAction("typing");
+
+  const user = await getUser(ctx.from.id);
+
+  if (!user) {
+    ctx.reply(
+      "Nie znalazłem twojego konta! Zarejestruj się, aby zapisywać operacje. Wpisz komendę /start",
+    );
+    return;
+  }
+
+  const { file_path } = await ctx.getFile();
+
+  const { reply, operations } = await processVoice(
+    ctx.msg.voice,
+    user,
+    file_path,
+  );
+  if (operations.length > 0) {
+    ctx.session.lastPayments = operations;
+  }
+  await ctx.reply(reply);
 });
 
 const handleUpdate = webhookCallback(bot, "std/http");

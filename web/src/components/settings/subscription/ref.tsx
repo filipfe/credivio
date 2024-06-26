@@ -10,7 +10,7 @@ export default function ServiceRef({
   isEnabled,
   ...props
 }: Service & { isEnabled: boolean }) {
-  const { id, title, description, price, created_at, href } = props;
+  const { id, title, description, created_at, href } = props;
   const { activeService, setActiveService } = useContext(ServiceContext);
   const link = LINKS.find((item) => item.href === href);
   const Icon = link ? link.icon : <></>;
@@ -26,7 +26,7 @@ export default function ServiceRef({
         isActive ? "border-primary text-primary bg-primary/5" : ""
       }`}
     >
-      <Icon />
+      <Icon size={28} />
       <h3 className="font-medium text-lg">{title}</h3>
       <p className="text-sm opacity-80 line-clamp-2">{description}</p>
       {daysDiff < 30 && (
@@ -36,7 +36,7 @@ export default function ServiceRef({
           variant="shadow"
           classNames={{
             base: "bg-gradient-to-br from-primary to-secondary border-small border-white/50 shadow-secondary/30",
-            content: "drop-shadow shadow-black text-white",
+            content: "drop-shadow shadow-black text-white font-medium",
           }}
         >
           NOWA

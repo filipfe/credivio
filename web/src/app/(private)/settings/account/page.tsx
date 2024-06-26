@@ -1,3 +1,4 @@
+import Block from "@/components/ui/block";
 import { getAccount, updateAccount } from "@/lib/settings/actions";
 import { Button, Input } from "@nextui-org/react";
 import { CheckIcon } from "lucide-react";
@@ -6,14 +7,22 @@ export default async function Page() {
   const { result: user } = await getAccount();
 
   return (
-    <div className="px-12 pt-8 pb-24 flex flex-col gap-8">
-      <h1 className="text-3xl">Konto</h1>
-      <section className="grid grid-cols-3 gap-y-10 gap-x-6">
-        <form
-          className="bg-white rounded-lg py-8 px-10 flex flex-col gap-4"
-          action={updateAccount}
+    <section className="sm:px-10 py-4 sm:py-8 grid grid-cols-3 gap-y-10 gap-x-6">
+      <form action={updateAccount}>
+        <Block
+          title="Dane"
+          cta={
+            <Button
+              type="submit"
+              color="primary"
+              className="!h-7 self-end"
+              size="sm"
+            >
+              <CheckIcon size={16} />
+              Zapisz
+            </Button>
+          }
         >
-          <h2 className="text-lg">Dane</h2>
           <Input
             classNames={{ inputWrapper: "!bg-light" }}
             name="first_name"
@@ -38,17 +47,8 @@ export default async function Page() {
             defaultValue={user?.email}
             isDisabled
           />
-          <Button
-            type="submit"
-            color="primary"
-            variant="light"
-            className="self-end"
-          >
-            <CheckIcon size={16} />
-            Zapisz
-          </Button>
-        </form>
-      </section>
-    </div>
+        </Block>
+      </form>
+    </section>
   );
 }
