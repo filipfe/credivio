@@ -26,6 +26,8 @@ drop function if exists "public"."insert_operations"(p_operations jsonb, p_user_
 
 drop function if exists "public"."get_recurring_payments_upcoming_payments"();
 
+drop function if exists "public"."get_recurring_payments_active_payments"();
+
 alter type "public"."interval_unit_type" rename to "interval_unit_type__old_version_to_be_dropped";
 
 create type "public"."interval_unit_type" as enum ('day', 'month', 'year');
