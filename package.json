@@ -5,7 +5,8 @@
     "supabase:dev": "supabase start && supabase functions serve --no-verify-jwt --env-file ./supabase/.env --import-map ./supabase/functions/import_map.json",
     "supabase:reset": "supabase db reset",
     "supabase:deploy:dev": "supabase functions deploy --project-ref ssprqijuhymtwacivhup",
-    "supabase:deploy:prod": "supabase functions deploy --project-ref zjvcoczxcyffbcudeodc"
+    "supabase:deploy:prod": "supabase functions deploy --project-ref zjvcoczxcyffbcudeodc",
+    "build:web": "cd web && npm run build"
   },
   "devDependencies": {
     "supabase": "^1.167.4"
