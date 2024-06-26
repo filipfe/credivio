@@ -52,18 +52,16 @@ export default function OperationsByMonth({
         )
       }
     >
-      <div className="flex flex-col flex-1 min-h-80 sm:min-h-96">
-        {isLoading ? (
-          <LineChartLoader className="!p-0" hideTitle />
-        ) : results.length > 0 ? (
-          <LineChart data={results} currency={currency} type={type} />
-        ) : (
-          <Empty
-            title="Brak danych do wyświetlenia!"
-            cta={{ title: "Dodaj przychód", href: "/incomes/add" }}
-          />
-        )}
-      </div>
+      {isLoading ? (
+        <LineChartLoader className="!p-0" hideTitle />
+      ) : results.length > 0 ? (
+        <LineChart data={results} currency={currency} type={type} />
+      ) : (
+        <Empty
+          title="Brak danych do wyświetlenia!"
+          cta={{ title: "Dodaj przychód", href: "/incomes/add" }}
+        />
+      )}
     </Block>
   );
 }

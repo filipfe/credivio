@@ -22,7 +22,7 @@ export default async function Page({
     (item) => item.name === searchParams?.selected
   );
   return (
-    <div className="sm:px-10 pt-8 pb-24 h-full flex flex-col lg:grid grid-cols-2 gap-8">
+    <div className="sm:px-10 py-4 sm:py-8 h-full flex flex-col lg:grid grid-cols-2 gap-4 sm:gap-6">
       <ServiceProvider defaultService={defaultService}>
         <ServiceList services={services} ownedServices={ownedServices || []} />
         <ActiveService ownedServices={ownedServices || []} />
