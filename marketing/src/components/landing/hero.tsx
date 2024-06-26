@@ -20,12 +20,12 @@ export default function Hero() {
         </p>
         <div className="w-full flex items-center gap-4 max-w-max">
           <div className="bg-primary/20 rounded-md p-1 flex-1">
-            <button className="bg-primary py-2.5 text-sm px-5 rounded-md">
+            <button className="bg-primary py-2.5 text-sm px-5 rounded-md text-white">
               Rozpocznij
             </button>
           </div>
           <div className="border border-white/5 rounded-md p-1 flex-1">
-            <button className="rounded-md py-2.5 text-sm px-5 backdrop-blur-md border border-white/10">
+            <button className="rounded-md py-2.5 text-sm px-5 backdrop-blur-md border border-white/10 text-white">
               Więcej
             </button>
           </div>

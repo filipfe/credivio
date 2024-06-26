@@ -9,5 +9,10 @@
   },
   "devDependencies": {
     "supabase": "^1.167.4"
-  }
+  },
+  "workspaces": [
+    "web",
+    "supabase",
+    "marketing"
+  ]
 }

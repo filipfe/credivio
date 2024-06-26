@@ -10,7 +10,8 @@ const config: Config = {
         "primary-dark": "#115b61",
         // "primary-dark": "#272C7D",
         secondary: "#fdbb2d",
-        foreground: "#000",
+        foreground: "#041617",
+        light: "#FAFAFA",
       },
       fontSize: {
         xs: "12px",
