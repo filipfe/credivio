@@ -1,12 +1,13 @@
 import Link from "next/link";
 import GoalCard from "../landing/cards/goal";
 import IncomeCard from "../landing/cards/income";
+import GridBackground from "@/assets/svg/grid-bg";
 
 export default function Banner() {
   return (
     <section className="py-24">
       <div className="max-w-7xl mx-auto sm:rounded-xl bg-primary-dark py-32 sm:py-16 relative overflow-hidden">
-        <div className="flex flex-col items-center gap-6">
+        <div className="flex flex-col items-center gap-6 relative z-10">
           <h2 className="text-white text-3xl lg:text-4xl lg:leading-tight leading-tight font-bold max-w-lg text-center">
             Przejmij pełną kontrolę nad swoimi finansami osobistymi
           </h2>
@@ -20,11 +21,14 @@ export default function Banner() {
             </Link>
           </div>
         </div>
-        <div className="absolute right-6 -bottom-4">
+        <div className="absolute right-6 -bottom-4 z-10">
           <IncomeCard />
         </div>
-        <div className="absolute left-6 -top-4">
+        <div className="absolute left-6 -top-4 z-10">
           <GoalCard />
+        </div>
+        <div className="absolute inset-0 w-full h-full flex items-center justify-center">
+          <GridBackground />
         </div>
       </div>
     </section>
