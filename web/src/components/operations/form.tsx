@@ -247,7 +247,7 @@ export default function AddForm({
                   }}
                   maxLength={48}
                   showScrollIndicators
-                  onSelectionChange={(key) => setLabel(key.toString())}
+                  onSelectionChange={(key) => setLabel(key?.toString() || "")}
                 >
                   {labels.map((label) => (
                     <AutocompleteItem
