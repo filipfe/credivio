@@ -21,7 +21,7 @@ export default async function Timeline() {
         <ScrollShadow className="h-[calc(100vh-490px)]" hideScrollBar size={0}>
           <div className="flex flex-col h-full">
             {years
-              ? years.map(({ year, months }) =>
+              ? (years as Year[]).map(({ year, months }) =>
                   months.map((month) => (
                     <Month {...month} year={year} key={month.month} />
                   ))

@@ -4,7 +4,7 @@ export default function StockCard() {
       <span className="text-white/60 text-[12px]">PKNORLEN</span>
       <h3 className="text-white font-medium text-lg">PKN</h3>
       <div className="h-10">
-        <strong className="text-3xl font-bold">
+        <strong className="text-3xl font-bold text-white">
           {new Intl.NumberFormat("pl", {
             style: "currency",
             currency: "PLN",

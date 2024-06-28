@@ -3,12 +3,15 @@
 import { createClient } from "@/utils/supabase/client";
 
 export async function getChartLabels(
-  currency: string,
+  currency: string
 ): Promise<SupabaseResponse<ChartLabel>> {
   const supabase = createClient();
-  const { data: results, error } = await supabase.rpc("get_chart_labels", {
-    currency,
-  });
+  const { data: results, error } = await supabase.rpc(
+    "get_dashboard_chart_labels",
+    {
+      p_currency: currency,
+    }
+  );
 
   if (error) {
     return {
@@ -24,12 +27,12 @@ export async function getChartLabels(
 
 export async function getDailyTotalAmount(
   currency: string,
-  type: string,
+  type: string
 ): Promise<SupabaseResponse<DailyAmount>> {
   const supabase = createClient();
   const { data: results, error } = await supabase.rpc(
     "get_daily_total_amount",
-    { currency, type },
+    { p_currency: currency, p_type: type }
   );
 
   if (error) {

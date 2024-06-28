@@ -73,7 +73,9 @@ export async function updateSession(request: NextRequest) {
     const { data: services } = await supabase
       .from("services")
       .select("id, href, name");
-    const service = services?.find(({ href }) => pathname.startsWith(href));
+    const service = (services as Service[])?.find(({ href }) =>
+      pathname.startsWith(href)
+    );
     if (service) {
       const { data } = await supabase
         .from("user_services")

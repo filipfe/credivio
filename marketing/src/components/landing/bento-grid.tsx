@@ -54,7 +54,7 @@ export default function BentoGrid() {
         </div>
         <div className="relative z-10 flex flex-col justify-center gap-4 overflow-hidden items-center rounded-lg border border-white/10 bg-gradient-to-br from-[rgba(255,255,255,0.05)] to-[rgba(255,255,255,0)]">
           <div className="bg-primary/20 rounded-md p-1 w-max  relative z-10">
-            <button className="bg-primary py-2.5 text-sm px-5 rounded-md">
+            <button className="bg-primary py-2.5 text-sm px-5 rounded-md text-white">
               Rozpocznij
             </button>
           </div>

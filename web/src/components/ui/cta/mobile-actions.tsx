@@ -1,6 +1,5 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/client";
 import {
   Button,
   Dropdown,
@@ -15,31 +14,16 @@ import {
   PlusIcon,
   Wallet2Icon,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function MobileActions() {
-  const [areLoading, setAreLoading] = useState(true);
-  const [services, setServices] = useState<Service[]>([]);
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    const supabase = createClient();
-    (async () => {
-      const { data } = await supabase
-        .from("user_services")
-        .select("services(href)");
-      const results = data ? data.flatMap((item) => item.services) : [];
-      setServices(results as Service[]);
-      setAreLoading(false);
-    })();
-  }, []);
 
   return (
     <div className="fixed z-30 bottom-8 right-6 sm:hidden">
       <Dropdown
         isOpen={isOpen}
         onOpenChange={setIsOpen}
-        isDisabled={areLoading}
         className="fixed !right-6 !left-6 bottom-24 w-auto sm:hidden"
         disableAnimation
       >

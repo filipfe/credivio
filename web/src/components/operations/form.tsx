@@ -38,6 +38,7 @@ const defaultRecord: Omit<Operation, "id"> = {
   amount: "",
   description: "",
   currency: "",
+  doc_path: null,
 };
 
 export default function AddForm({
@@ -247,7 +248,7 @@ export default function AddForm({
                   }}
                   maxLength={48}
                   showScrollIndicators
-                  onSelectionChange={(key) => setLabel(key.toString())}
+                  onSelectionChange={(key) => setLabel(key?.toString() || "")}
                 >
                   {labels.map((label) => (
                     <AutocompleteItem

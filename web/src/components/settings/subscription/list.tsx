@@ -15,7 +15,7 @@ export default function ServiceList({
         className="max-h-[calc(100vh-208px)] flex flex-col gap-4 px-6 sm:px-10 pt-5 pb-6 sm:py-8"
         hideScrollBar
       >
-        <div className="flex flex-col gap-4 grid md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3">
+        <div className="flex flex-col gap-4  md:grid grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3">
           {services.map((service) => (
             <ServiceRef
               {...service}

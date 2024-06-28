@@ -6,21 +6,24 @@ import getUser from "../utils/get-user.ts";
 const constructReply = (operations: Payment[]) =>
   `💸 Dodałem następujące operacje:
 ${
-    operations.map(({ title, amount, type, currency }) =>
-      `• ${type === "expense" ? "Wydatek" : "Przychód"}: ${title} - ${
-        new Intl.NumberFormat("pl-PL", {
-          currency,
-          style: "currency",
-        }).format(amount)
-      }`
-    ).join("\n")
+    operations
+      .map(
+        ({ title, amount, type, label, currency }) =>
+          `• ${type === "expense" ? "Wydatek" : "Przychód"}: ${title} - ${
+            new Intl.NumberFormat("pl-PL", {
+              currency,
+              style: "currency",
+            }).format(amount)
+          }`,
+      )
+      .join("\n")
   }`;
 
 export async function insertOperations(
   operations: Payment[],
   user: Profile,
 ): Promise<ProcessReturn> {
-  const { data, error } = await supabase.rpc("insert_operations", {
+  const { data, error } = await supabase.rpc("actions_insert_operations", {
     p_operations: operations,
     p_user_id: user.id,
   });
@@ -31,6 +34,7 @@ export async function insertOperations(
       operations: data,
     };
   } else {
+    console.error(error);
     return {
       operations: [],
       reply: "Wystąpił błąd, spróbuj ponownie!",
