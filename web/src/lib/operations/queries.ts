@@ -9,7 +9,7 @@ export async function getChartLabels(
   const { data: results, error } = await supabase.rpc(
     "get_dashboard_chart_labels",
     {
-      currency,
+      p_currency: currency,
     }
   );
 
@@ -32,7 +32,7 @@ export async function getDailyTotalAmount(
   const supabase = createClient();
   const { data: results, error } = await supabase.rpc(
     "get_daily_total_amount",
-    { currency, type }
+    { p_currency: currency, p_type: type }
   );
 
   if (error) {

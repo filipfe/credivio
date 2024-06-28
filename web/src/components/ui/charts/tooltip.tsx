@@ -20,7 +20,7 @@ export default function ChartTooltip({
   if (!active || !payload || payload.length === 0) return;
   const value = payload[0].value ? parseFloat(payload[0].value.toString()) : 0;
 
-  const name = label || payload[0].name;
+  const name = label || payload[0].payload.name;
 
   return (
     <div
