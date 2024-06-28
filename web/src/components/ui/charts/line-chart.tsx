@@ -20,7 +20,9 @@ type Props = {
 
 export default function LineChart({ data, currency, type }: Props) {
   const { width, tickFormatter } = useYAxisWidth(currency);
-
+  data.map((d) => {
+    d;
+  });
   return (
     <ResponsiveContainer width="100%" height="100%" minHeight={320}>
       <Chart data={data} margin={{ top: 16, right: 20 }}>
@@ -38,7 +40,7 @@ export default function LineChart({ data, currency, type }: Props) {
           dataKey="date"
           tick={{ fontSize: 12 }}
           tickFormatter={(label) => {
-            const [day, month, year] = label.split("-");
+            const [year, month, day] = label.split("-");
             return new Intl.DateTimeFormat("pl-PL", {
               day: "2-digit",
               month: "short",
@@ -58,7 +60,7 @@ export default function LineChart({ data, currency, type }: Props) {
           isAnimationActive={false}
           contentStyle={{ backgroundColor: "#177981" }}
           labelFormatter={(label) => {
-            const [day, month, year] = label.split("-");
+            const [year, month, day] = label.split("-");
             return new Intl.DateTimeFormat("pl-PL", {
               weekday: "long",
               day: "2-digit",

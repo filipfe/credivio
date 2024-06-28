@@ -41,12 +41,12 @@ export async function signIn(formData: FormData) {
   const password = formData.get("password")?.toString() || "";
 
   const supabase = createClient();
-
+  console.log(email, password);
   const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
-
+  console.log(error);
   console.log({ error: error?.message });
 
   if (error) {

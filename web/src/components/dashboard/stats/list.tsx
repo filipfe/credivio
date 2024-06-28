@@ -12,7 +12,7 @@ export default async function StatsList({
 }) {
   const supabase = createClient();
   const { data: result, error } = await supabase.rpc("get_dashboard_stats", {
-    currency: defaultCurrency,
+    p_currency: defaultCurrency,
   });
 
   if (!result) {
