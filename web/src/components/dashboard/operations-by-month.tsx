@@ -33,7 +33,7 @@ export default function OperationsByMonth({
     deps: [currency, type],
     query: getDailyTotalAmount(currency, type),
   });
-
+  console.log(results);
   return (
     <Block
       className="xl:col-span-3 flex-1"
