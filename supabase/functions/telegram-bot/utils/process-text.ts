@@ -1,5 +1,6 @@
 import openai from "../../_shared/openai.ts";
 import { insertOperations } from "../commands/add.ts";
+import supabase from "../supabase.ts";
 import { ProcessReturn } from "../types.ts";
 import { Profile } from "../types.ts";
 
@@ -7,6 +8,12 @@ export default async function processText(
   message: string,
   user: Profile,
 ): Promise<ProcessReturn> {
+  const { data } = await supabase.rpc("get_telegram_user_labels", {
+    p_user_id: user.id,
+  });
+
+  const labels = data || [];
+
   const textPrompt = `Analyze user's message:
 "${message}"
 Classify each operation either as 'income' or 'expense'. Generate a list of operations:
@@ -16,14 +23,21 @@ type Operation = {
   amount: number;
   currency: string;
   type: "income" | "expense";
+  label?: string;
 };
 
-User's native language: ${user.language_code}
+User's native language: ${user.language_code} - use it for 'title' and 'label' unless user specified otherwise
 User's default currency: ${user.currency} - use it in case client didn't mention any other
+
+Important: Only insert 'label' when you classified operation as 'expense'
+If there's no matching label, you can come up with one yourself but choose very general naming
+If there's no good label to assign, don't include label field in the object
+
+List of available labels:
+${labels.length > 0 ? labels.join(",\n") : "None"}
 
 Rules:
 - return { operations: Operation[], message?: string } in json
-- create a relevant 'title' in the same language as the client's message
 - 'currency' is always 3-digit code
 - if user's message is irrelevant, return empty array and formulate a very short message directly to the client about what's wrong, don't be formal`;
 

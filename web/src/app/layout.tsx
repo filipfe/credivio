@@ -3,6 +3,7 @@ import "./globals.css";
 import { satoshi } from "@/assets/font/satoshi";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "react-hot-toast";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,6 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="light">
       <body className={satoshi.className}>
+        <Script
+          type="module"
+          defer
+          src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/hatch.js"
+        ></Script>
         {children}
         <NextTopLoader color="#177981" showSpinner={false} />
         <Toaster />

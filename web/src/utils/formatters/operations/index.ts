@@ -22,6 +22,7 @@ export default function operationFormatter(data: string[][]): Operation[] {
       currency,
       budget_after,
       description,
+      doc_path: null,
     };
   });
 }

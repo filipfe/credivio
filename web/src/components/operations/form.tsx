@@ -38,6 +38,7 @@ const defaultRecord: Omit<Operation, "id"> = {
   amount: "",
   description: "",
   currency: "",
+  doc_path: null,
 };
 
 export default function AddForm({
