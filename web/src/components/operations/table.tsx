@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { MouseEvent, useCallback, useEffect, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -11,12 +11,15 @@ import {
   Spinner,
   Pagination,
   ScrollShadow,
+  Button,
 } from "@nextui-org/react";
 import useTableQuery from "@/hooks/useTableQuery";
 import TopContent from "../ui/table/top-content";
 import Block from "../ui/block";
 import Empty from "../ui/empty";
 import useSelection from "@/hooks/useSelection";
+import { PaperclipIcon } from "lucide-react";
+import DocModal from "./doc-modal";
 
 export default function OperationTable({
   rows,
@@ -25,6 +28,7 @@ export default function OperationTable({
   children,
   ...props
 }: TableProps<Operation>) {
+  const [docPath, setDocPath] = useState<string | null>(null);
   const pages = Math.ceil(count / 10);
   const {
     items,
@@ -51,7 +55,7 @@ export default function OperationTable({
   }, [rows]);
 
   const columns = useCallback(
-    (hasLabel: boolean) => [
+    (hasLabel: boolean, hasDoc: boolean) => [
       { key: "issued_at", label: "DATA" },
       { key: "title", label: "TYTUŁ" },
       ...(items.some((item) => item.description)
@@ -60,6 +64,7 @@ export default function OperationTable({
       { key: "amount", label: "KWOTA" },
       { key: "currency", label: "WALUTA" },
       ...(hasLabel ? [{ key: "label", label: "ETYKIETA" }] : []),
+      ...(hasDoc ? [{ key: "doc_path", label: "" }] : []),
     ],
     [page]
   );
@@ -67,47 +72,55 @@ export default function OperationTable({
   const renderCell = useCallback((item: any, columnKey: any) => {
     const cellValue = item[columnKey];
 
-    if (viewOnly) {
-      switch (columnKey) {
-        case "title":
-          return (
-            <span className="line-clamp-1 break-all xl:max-w-[5vw]">
-              {cellValue}
-            </span>
-          );
-        case "description":
-          return (
-            <span className="line-clamp-1 break-all xl:max-w-[10vw]">
-              {cellValue}
-            </span>
-          );
-        case "issued_at":
-          return (
-            <span className="line-clamp-1 break-all w-[10ch]">
-              {new Intl.DateTimeFormat("pl-PL", {
-                dateStyle: "short",
-              }).format(new Date(cellValue))}
-            </span>
-          );
-        default:
-          return <span className="line-clamp-1 break-all">{cellValue}</span>;
-      }
-    } else {
-      switch (columnKey) {
-        case "issued_at":
-          return (
-            <span className="line-clamp-1 break-all w-[10ch]">
-              {new Intl.DateTimeFormat("pl-PL", {
-                dateStyle: "short",
-              }).format(new Date(cellValue))}
-            </span>
-          );
-        case "label":
-        case "description":
-          return cellValue || "-";
-        default:
-          return <span className="line-clamp-1 break-all">{cellValue}</span>;
-      }
+    switch (columnKey) {
+      case "title":
+        return (
+          <span className="line-clamp-1 break-all xl:max-w-[5vw]">
+            {cellValue}
+          </span>
+        );
+      case "label":
+        return (
+          <span className="line-clamp-1 break-all xl:max-w-[10vw]f">
+            {cellValue}
+          </span>
+        );
+      case "description":
+        return (
+          <span className="line-clamp-1 break-all xl:max-w-[10vw]">
+            {cellValue}
+          </span>
+        );
+      case "issued_at":
+        return (
+          <span className="line-clamp-1 break-all w-[10ch]">
+            {new Intl.DateTimeFormat("pl-PL", {
+              dateStyle: "short",
+            }).format(new Date(cellValue))}
+          </span>
+        );
+      case "doc_path":
+        const handleChange = (e: MouseEvent<HTMLButtonElement>) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setDocPath(cellValue);
+        };
+        return cellValue ? (
+          <Button
+            size="sm"
+            isIconOnly
+            onClick={handleChange}
+            radius="md"
+            disableRipple
+            className="flex items-center ml-auto relative z-40 -my-2 border border-primary/10"
+          >
+            <PaperclipIcon size={18} />
+          </Button>
+        ) : (
+          <></>
+        );
+      default:
+        return <span className="line-clamp-1 break-all">{cellValue}</span>;
     }
   }, []);
 
@@ -137,6 +150,7 @@ export default function OperationTable({
         />
       }
     >
+      <DocModal docPath={docPath} setDocPath={setDocPath} />
       <ScrollShadow orientation="horizontal" hideScrollBar>
         <Table
           removeWrapper
@@ -167,14 +181,16 @@ export default function OperationTable({
               : new Set(selectedKeys)
           }
           onSelectionChange={onSelectionChange}
-          onRowAction={(key) => onRowAction(key.toString())}
           classNames={{
             tr: "cursor-pointer",
             td: "[&_span:last-child]:before:!border-neutral-200",
           }}
         >
           <TableHeader>
-            {columns(rows.some((item) => item.label)).map((column) => (
+            {columns(
+              rows.some((item) => item.label),
+              rows.some((item) => item.doc_path)
+            ).map((column) => (
               <TableColumn
                 key={column.key}
                 allowsSorting={count > 0 && !viewOnly ? true : undefined}
@@ -204,7 +220,11 @@ export default function OperationTable({
             loadingContent={<Spinner />}
           >
             {(operation) => (
-              <TableRow key={operation.id} className="hover:bg-[#f7f7f8]">
+              <TableRow
+                onDoubleClick={(event) => onRowAction(operation.id)}
+                key={operation.id}
+                className="hover:bg-light"
+              >
                 {(columnKey) => (
                   <TableCell>{renderCell(operation, columnKey)}</TableCell>
                 )}

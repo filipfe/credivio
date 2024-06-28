@@ -5,4 +5,5 @@ interface Payment {
   currency: string;
   amount: number;
   type: "income" | "expense";
+  label?: string;
 }

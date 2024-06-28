@@ -17,6 +17,7 @@ interface Operation extends Payment {
   budget_after?: string;
   type?: OperationType;
   label?: string;
+  doc_path: string | null;
 }
 
 type Label = {

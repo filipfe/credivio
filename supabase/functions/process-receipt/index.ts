@@ -13,8 +13,9 @@ import { ChatCompletionContentPart } from "https://deno.land/x/openai@v4.51.0/re
 const openai = new OpenAI({ apiKey: Deno.env.get("OPENAI_API_TOKEN") });
 
 type UploadedFile = {
+  id: string;
   signedUrl?: string;
-  path?: string;
+  path: string | null;
   error?: string;
 };
 
@@ -99,12 +100,17 @@ Deno.serve(async (req) => {
             : data.signedUrl)
           : undefined;
         uploadedFiles.push({
+          id: uuid,
           path: upload.path,
           signedUrl,
           error: shareError?.message,
         });
       } else {
-        uploadedFiles.push({ error: uploadError?.message });
+        uploadedFiles.push({
+          id: uuid,
+          error: uploadError?.message,
+          path: null,
+        });
       }
     }
 
@@ -137,15 +143,20 @@ type Operation = {
   amount: number;
   currency: string;
   type: "income" | "expense";
+  doc_path: string | null;
 };
 
 Rules:
 - return { operations: Operation[] } in json
-- for each image 'id' is available here: ${
-        Object.keys(files)
-      }, on the image index
+- 'id' and 'doc_path' for each image are available on the image's index in this array:
+  [${
+        uploadedFiles.map(({ id, path }) => `{ id: ${id}, doc_path: ${path} }`)
+          .join(", ")
+      }],
 - 'title' should be in the same language as the document
 - 'currency' is always 3-digit code`;
+
+    console.log("Text prompt: ", textPrompt);
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",

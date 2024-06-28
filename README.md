@@ -20,9 +20,10 @@ Start the Next server
 
 ### Receipts scanning and Telegram Bot
 
-To use both of these feature install [Ngrok](https://ngrok.com/). Tunnel the Supabase API and update env variables:
+To use any of these feature locally install [Ngrok](https://ngrok.com/download). Set your auth-token, tunnel the Supabase API and update env variables:
 
 ```bash
+  ngrok config add-authtoken <token>
   ngrok http 54321
 ```
 
