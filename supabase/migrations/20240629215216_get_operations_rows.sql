@@ -1,6 +1,6 @@
 set check_function_bodies = off;
 
-CREATE OR REPLACE FUNCTION public.get_expenses_own_rows(p_page integer, p_sort text DEFAULT NULL::text, p_label text DEFAULT NULL::text, p_search text DEFAULT NULL::text, p_currency currency_type DEFAULT NULL::currency_type)
+CREATE OR REPLACE FUNCTION public.get_expenses_own_rows(p_page integer DEFAULT 1, p_sort text DEFAULT NULL::text, p_label text DEFAULT NULL::text, p_search text DEFAULT NULL::text, p_currency currency_type DEFAULT NULL::currency_type)
  RETURNS jsonb
  LANGUAGE plpgsql
 AS $function$
@@ -41,6 +41,10 @@ begin
       count(*) as total_count
     from
       expenses
+    where
+      (p_search is null or title ilike '%' || p_search || '%') and
+      (p_currency is null or currency = p_currency) and
+      (p_label is null or label = p_label)
   )
   select
     jsonb_build_object(
@@ -63,7 +67,7 @@ end;
 $function$
 ;
 
-CREATE OR REPLACE FUNCTION public.get_incomes_own_rows(p_page integer, p_sort text DEFAULT NULL::text, p_search text DEFAULT NULL::text, p_currency currency_type DEFAULT NULL::currency_type)      
+CREATE OR REPLACE FUNCTION public.get_incomes_own_rows(p_page integer DEFAULT 1, p_sort text DEFAULT NULL::text, p_search text DEFAULT NULL::text, p_currency currency_type DEFAULT NULL::currency_type)
  RETURNS jsonb
  LANGUAGE plpgsql
 AS $function$
@@ -100,6 +104,9 @@ begin
       count(*) as total_count
     from
       incomes
+    where
+      (p_search is null or title ilike '%' || p_search || '%') and
+      (p_currency is null or currency = p_currency)
   )
   select
     jsonb_build_object(
