@@ -155,7 +155,7 @@ export default function OperationTable({
         <Table
           removeWrapper
           shadow="none"
-          color="primary"
+          color="default"
           sortDescriptor={{
             column: sort?.includes("-")
               ? sort?.split("-")[1]
@@ -177,7 +177,7 @@ export default function OperationTable({
           }
           onSelectionChange={onSelectionChange}
           classNames={{
-            tr: "cursor-pointer",
+            tr: "cursor-pointer data-[selected=true]:[&>td]:before:bg-[#f2f2f2] [&_label[data-selected=true]>span::after]:bg-[#dadada]",
             td: "[&_span:last-child]:before:!border-neutral-200",
           }}
         >

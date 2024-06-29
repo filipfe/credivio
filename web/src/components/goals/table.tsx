@@ -10,25 +10,14 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableCellProps,
   TableColumn,
   TableHeader,
   TableRow,
   cn,
-  getKeyValue,
 } from "@nextui-org/react";
-import HorizontalScroll from "../ui/horizontal-scroll";
 import Block from "../ui/block";
 import { addDays, format, subDays } from "date-fns";
-import {
-  JSXElementConstructor,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import numberFormat from "@/utils/formatters/currency";
 import { ChevronDown } from "lucide-react";
 
@@ -158,7 +147,6 @@ const generateDates = (start: Date, end: Date): Date[] => {
 const today = new Date();
 
 export default function GoalsTable({ goals }: { goals: Goal[] }) {
-  const [editable, setEditable] = useState<Editable | null>(null!);
   const [scrollButtonVisible, setScrollButtonVisible] = useState(false);
   const tbodyRef = useRef<HTMLDivElement | null>(null);
 
@@ -204,7 +192,7 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
   }, [tbodyRef.current]);
 
   return (
-    <Block className="col-span-2">
+    <Block title="Wpłaty">
       <ScrollShadow orientation="horizontal" hideScrollBar>
         <Table
           color="primary"
@@ -213,13 +201,14 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
           isHeaderSticky
           removeWrapper
           classNames={{
-            base: "sm:max-h-[calc(100vh-210px)] scrollbar-hide py-px px-px overflow-y-scroll overflow-x-hidden min-w-max relative",
+            base: "max-h-[400px] sm:max-h-[calc(100vh-262px)] scrollbar-hide py-px px-px overflow-y-scroll overflow-x-hidden min-w-max relative",
             table: "min-h-[400px]",
+            thead: "[&>tr]:first:!shadow-none",
           }}
           baseRef={tbodyRef}
           bottomContent={
             scrollButtonVisible && (
-              <div className="absolute bottom-24 left-1/2">
+              <div className="absolute bottom-24 left-[calc(50%-41px)]">
                 <Button
                   size="sm"
                   radius="md"
@@ -241,7 +230,7 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
           shadow="none"
         >
           <TableHeader>
-            <TableColumn className="font-medium text-sm text-foreground-700">
+            <TableColumn className="font-medium text-sm text-foreground-700 shadow-[0_0_0_1px_rgba(23,121,129,0.1)]">
               Data
             </TableColumn>
             {
@@ -249,7 +238,7 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
                 <TableColumn
                   minWidth={288}
                   align="center"
-                  className="font-medium text-sm text-foreground-700"
+                  className="font-medium text-sm text-foreground-700 shadow-[0_-1px_0_0_rgba(23,121,129,0.1),0_1px_0_0_rgba(23,121,129,0.1)] last:shadow-[1px_0_0_0_rgba(23,121,129,0.1),0_-1px_0_0_rgba(23,121,129,0.1),0_1px_0_0_rgba(23,121,129,0.1)]"
                   key={id}
                 >
                   {title}
@@ -281,15 +270,7 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
                           {isToday ? (
                             <Popover placement="top">
                               <PopoverTrigger>
-                                <button
-                                  //   onClick={() =>
-                                  //     setEditable({
-                                  //       date: YMD,
-                                  //       goal_id: goal.id,
-                                  //     })
-                                  //   }
-                                  className="w-full bg-light border-primary/10 border rounded-md px-4 py-2"
-                                >
+                                <button className="w-full bg-light border-primary/10 border rounded-md px-4 py-2">
                                   {numberFormat(
                                     goal.currency,
                                     getPaymentAmount(YMD, goal.id)
@@ -323,16 +304,15 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
                 );
               }) as any
             }
-            <TableRow
-              className="sticky rounded-lg shadow-small bg-light z-10"
-              style={{ insetBlockEnd: 0 }}
-            >
-              <TableCell className="text-sm font-medium">Suma</TableCell>
+            <TableRow className="sticky z-10" style={{ insetBlockEnd: 0 }}>
+              <TableCell className="text-sm font-medium rounded-l-md shadow-[0_0_0_1px_rgba(23,121,129,0.1)] bg-light">
+                Suma
+              </TableCell>
               {
                 goals.map(({ id, currency, price }) => (
-                  <TableCell className="text-foreground-700">
+                  <TableCell className="text-foreground-700 bg-light shadow-[0_-1px_0_0_rgba(23,121,129,0.1),0_1px_0_0_rgba(23,121,129,0.1)] last:shadow-[1px_0_0_0_rgba(23,121,129,0.1),0_-1px_0_0_rgba(23,121,129,0.1),0_1px_0_0_rgba(23,121,129,0.1)] last:rounded-r-md">
                     <span className="font-semibold text-sm">
-                      {numberFormat(currency, sums[id])}
+                      {numberFormat(currency, sums[id] || 0)}
                     </span>{" "}
                     <span className="font-medium text-tiny">
                       / {numberFormat(currency, price)}
