@@ -193,7 +193,26 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
 
   return (
     <Block title="Wpłaty">
-      <ScrollShadow orientation="horizontal" hideScrollBar>
+      <ScrollShadow orientation="horizontal" hideScrollBar className="relative">
+        {scrollButtonVisible && (
+          <div className="absolute bottom-24 left-[calc(50%-41px)] z-20">
+            <Button
+              size="sm"
+              radius="md"
+              disableRipple
+              variant="shadow"
+              className="fixed border border-primary/10"
+              onClick={() => {
+                tbodyRef.current?.scrollTo({
+                  top: tbodyRef.current.scrollHeight,
+                  behavior: "smooth",
+                });
+              }}
+            >
+              <ChevronDown size={16} /> Dzisiaj
+            </Button>
+          </div>
+        )}
         <Table
           color="primary"
           aria-label="Goals table"
@@ -206,27 +225,6 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
             thead: "[&>tr]:first:!shadow-none",
           }}
           baseRef={tbodyRef}
-          bottomContent={
-            scrollButtonVisible && (
-              <div className="absolute bottom-24 left-[calc(50%-41px)]">
-                <Button
-                  size="sm"
-                  radius="md"
-                  disableRipple
-                  variant="shadow"
-                  className="fixed border border-primary/10"
-                  onClick={() => {
-                    tbodyRef.current?.scrollTo({
-                      top: tbodyRef.current.scrollHeight,
-                      behavior: "smooth",
-                    });
-                  }}
-                >
-                  <ChevronDown size={16} /> Dzisiaj
-                </Button>
-              </div>
-            )
-          }
           shadow="none"
         >
           <TableHeader>
