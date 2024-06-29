@@ -155,7 +155,7 @@ export default function OperationTable({
         <Table
           removeWrapper
           shadow="none"
-          color="primary"
+          color="default"
           sortDescriptor={{
             column: sort?.includes("-")
               ? sort?.split("-")[1]
@@ -168,11 +168,6 @@ export default function OperationTable({
           aria-label="operations-table"
           className="max-w-full w-full flex-1"
           selectionMode={selectionMode}
-          checkboxesProps={{
-            classNames: {
-              wrapper: "text-background",
-            },
-          }}
           selectedKeys={
             (viewOnly ? items : rows).every((item) =>
               selectedKeys.includes(item.id)
@@ -182,7 +177,7 @@ export default function OperationTable({
           }
           onSelectionChange={onSelectionChange}
           classNames={{
-            tr: "cursor-pointer",
+            tr: "cursor-pointer data-[selected=true]:[&>td]:before:bg-[#f2f2f2] [&_label[data-selected=true]>span::after]:bg-[#dadada]",
             td: "[&_span:last-child]:before:!border-neutral-200",
           }}
         >
@@ -221,7 +216,7 @@ export default function OperationTable({
           >
             {(operation) => (
               <TableRow
-                onDoubleClick={(event) => onRowAction(operation.id)}
+                onDoubleClick={(_event) => onRowAction(operation.id)}
                 key={operation.id}
                 className="hover:bg-light"
               >
