@@ -168,11 +168,6 @@ export default function OperationTable({
           aria-label="operations-table"
           className="max-w-full w-full flex-1"
           selectionMode={selectionMode}
-          checkboxesProps={{
-            classNames: {
-              wrapper: "text-background",
-            },
-          }}
           selectedKeys={
             (viewOnly ? items : rows).every((item) =>
               selectedKeys.includes(item.id)

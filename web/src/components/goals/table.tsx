@@ -1,7 +1,12 @@
 "use client";
 
 import {
+  Button,
   Input,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  ScrollShadow,
   Table,
   TableBody,
   TableCell,
@@ -9,6 +14,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  cn,
   getKeyValue,
 } from "@nextui-org/react";
 import HorizontalScroll from "../ui/horizontal-scroll";
@@ -23,6 +29,8 @@ import {
   useRef,
   useState,
 } from "react";
+import numberFormat from "@/utils/formatters/currency";
+import { ChevronDown } from "lucide-react";
 
 const payments = [
   {
@@ -147,13 +155,15 @@ const generateDates = (start: Date, end: Date): Date[] => {
   return dates;
 };
 
+const today = new Date();
+
 export default function GoalsTable({ goals }: { goals: Goal[] }) {
   const [editable, setEditable] = useState<Editable | null>(null!);
+  const [scrollButtonVisible, setScrollButtonVisible] = useState(false);
   const tbodyRef = useRef<HTMLDivElement | null>(null);
 
   const dates = useMemo(() => {
-    const today = new Date();
-    const startDate = subDays(today, 7);
+    const startDate = subDays(today, 21);
     return generateDates(startDate, today);
   }, []);
 
@@ -168,134 +178,169 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
     [payments]
   );
 
-  //   useEffect(() => {
-  //     if (!tbodyRef.current) return;
-  //     tbodyRef.current.scrollTop = tbodyRef.current.scrollHeight;
-  //   }, [goals]);
+  useEffect(() => {
+    if (!tbodyRef.current) return;
+    tbodyRef.current.scrollTop = tbodyRef.current.scrollHeight;
+  }, [goals]);
+
+  useEffect(() => {
+    if (!tbodyRef.current) return;
+    setScrollButtonVisible(
+      tbodyRef.current.scrollTop + tbodyRef.current.clientHeight <
+        tbodyRef.current.scrollHeight - 1
+    );
+    const onScroll = (_e: Event) => {
+      if (!tbodyRef.current) return;
+      setScrollButtonVisible(
+        tbodyRef.current.scrollTop + tbodyRef.current.clientHeight <
+          tbodyRef.current.scrollHeight - 65
+      );
+    };
+    tbodyRef.current.addEventListener("scroll", onScroll);
+    return () => {
+      tbodyRef.current &&
+        tbodyRef.current.removeEventListener("scroll", onScroll);
+    };
+  }, [tbodyRef.current]);
 
   return (
-    <Block>
-      <Table
-        aria-label="Goals table"
-        removeWrapper
-        isHeaderSticky
-        layout="fixed"
-        classNames={{
-          base: "max-h-[calc(var(--vh)*100-210px)] overflow-y-scroll overflow-x-hidden",
-          table: "min-h-[400px]",
-        }}
-        baseRef={tbodyRef}
-      >
-        <TableHeader>
-          <TableColumn>Date</TableColumn>
-          {
-            goals.map(({ id, title }) => (
-              <TableColumn align="center" key={id}>
-                {title}
-              </TableColumn>
-            )) as any
+    <Block className="col-span-2">
+      <ScrollShadow orientation="horizontal" hideScrollBar>
+        <Table
+          color="primary"
+          aria-label="Goals table"
+          radius="md"
+          isHeaderSticky
+          removeWrapper
+          classNames={{
+            base: "sm:max-h-[calc(100vh-210px)] scrollbar-hide py-px px-px overflow-y-scroll overflow-x-hidden min-w-max relative",
+            table: "min-h-[400px]",
+          }}
+          baseRef={tbodyRef}
+          bottomContent={
+            scrollButtonVisible && (
+              <div className="absolute bottom-24 left-1/2">
+                <Button
+                  size="sm"
+                  radius="md"
+                  disableRipple
+                  variant="shadow"
+                  className="fixed border border-primary/10"
+                  onClick={() => {
+                    tbodyRef.current?.scrollTo({
+                      top: tbodyRef.current.scrollHeight,
+                      behavior: "smooth",
+                    });
+                  }}
+                >
+                  <ChevronDown size={16} /> Dzisiaj
+                </Button>
+              </div>
+            )
           }
-        </TableHeader>
-        <TableBody>
-          {
-            dates.map((date) => {
-              const YMD = format(date, "yyyy-MM-dd");
-              return (
-                <TableRow key={date.toISOString()}>
-                  <TableCell className="min-w-max">{YMD}</TableCell>
-                  {
-                    goals.map((goal) => (
-                      <TableCell key={goal.id}>
-                        {/* <Input
-                        defaultValue={getPaymentAmount(
-                          format(date, "yyyy-MM-dd"),
-                          goal.id
-                        ).toString()}
-                        classNames={{
-                          inputWrapper:
-                            "!bg-light border border-primary/10 shadow-none",
-                        }}
-                      /> */}
-                        {editable &&
-                        editable.date === YMD &&
-                        editable.goal_id === goal.id ? (
-                          <input
-                            className="w-full bg-light border-primary/10 border rounded-md px-4 py-2"
-                            autoFocus
-                            defaultValue={getPaymentAmount(
-                              YMD,
-                              goal.id
-                            ).toString()}
-                            onBlur={() => setEditable(null)}
-                          />
-                        ) : date.toDateString() ===
-                          new Date().toDateString() ? (
-                          <button
-                            onClick={() =>
-                              setEditable({
-                                date: YMD,
-                                goal_id: goal.id,
-                              })
-                            }
-                            className="w-full bg-light border-primary/10 border rounded-md px-4 py-2"
-                          >
-                            {getPaymentAmount(YMD, goal.id).toString()}
-                          </button>
-                        ) : (
-                          getPaymentAmount(YMD, goal.id)
-                        )}
-                      </TableCell>
-                    )) as any
-                  }
-                </TableRow>
-              );
-            }) as any
-          }
-          <TableRow className="sticky rounded-lg" style={{ insetBlockEnd: 0 }}>
-            <TableCell className="text-sm font-medium rounded-l-md bg-light">
-              Suma
-            </TableCell>
+          shadow="none"
+        >
+          <TableHeader>
+            <TableColumn className="font-medium text-sm text-foreground-700">
+              Data
+            </TableColumn>
             {
-              goals.map(({ id }) => (
-                <TableCell className="font-medium text-sm bg-light last:rounded-r-md outline-primary/10 outline-y">
-                  {sums[id]}
-                </TableCell>
+              goals.map(({ id, title }) => (
+                <TableColumn
+                  minWidth={288}
+                  align="center"
+                  className="font-medium text-sm text-foreground-700"
+                  key={id}
+                >
+                  {title}
+                </TableColumn>
               )) as any
             }
-          </TableRow>
-        </TableBody>
-      </Table>
-      {/* <div>
-      <table border={1}>
-        <thead>
-          <tr>
-            <th>Date</th>
-            {goals.map((goal) => (
-              <th key={goal.id}>{goal.title}</th>
-            ))}
-          </tr>
-        </thead>
-      </table>
-        <div
-        ref={tbodyRef}
-        style={{ maxHeight: '400px', overflowY: 'auto' }}
-      >
-        <table>
-          <tbody>
-            {dates.map(date => (
-              <tr key={date.toISOString()}>
-                <td>{format(date, 'yyyy-MM-dd')}</td>
-                {goals.map(goal => (
-                  <td key={goal.id}>
-                    {getPaymentAmount(format(date, 'yyyy-MM-dd'), goal.id)}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      </div> */}
+          </TableHeader>
+          <TableBody className="py-px">
+            {
+              dates.map((date) => {
+                const YMD = format(date, "yyyy-MM-dd");
+                const isToday = today.toDateString() === date.toDateString();
+                return (
+                  <TableRow key={date.toISOString()}>
+                    <TableCell
+                      className={cn(
+                        "min-w-max",
+                        isToday ? "font-medium" : "font-normal"
+                      )}
+                    >
+                      {isToday ? "Dzisiaj" : YMD}
+                    </TableCell>
+                    {
+                      goals.map((goal) => (
+                        <TableCell key={goal.id}>
+                          {isToday ? (
+                            <Popover placement="top">
+                              <PopoverTrigger>
+                                <button
+                                  //   onClick={() =>
+                                  //     setEditable({
+                                  //       date: YMD,
+                                  //       goal_id: goal.id,
+                                  //     })
+                                  //   }
+                                  className="w-full bg-light border-primary/10 border rounded-md px-4 py-2"
+                                >
+                                  {numberFormat(
+                                    goal.currency,
+                                    getPaymentAmount(YMD, goal.id)
+                                  )}
+                                </button>
+                              </PopoverTrigger>
+                              <PopoverContent className="py-2">
+                                <Input
+                                  autoFocus
+                                  label="Kwota"
+                                  defaultValue={getPaymentAmount(
+                                    YMD,
+                                    goal.id
+                                  ).toString()}
+                                  classNames={{
+                                    inputWrapper: "!outline-none",
+                                  }}
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          ) : (
+                            numberFormat(
+                              goal.currency,
+                              getPaymentAmount(YMD, goal.id)
+                            )
+                          )}
+                        </TableCell>
+                      )) as any
+                    }
+                  </TableRow>
+                );
+              }) as any
+            }
+            <TableRow
+              className="sticky rounded-lg shadow-small bg-light"
+              style={{ insetBlockEnd: 0 }}
+            >
+              <TableCell className="text-sm font-medium">Suma</TableCell>
+              {
+                goals.map(({ id, currency, price }) => (
+                  <TableCell className="text-foreground-700">
+                    <span className="font-semibold text-sm">
+                      {numberFormat(currency, sums[id])}
+                    </span>{" "}
+                    <span className="font-medium text-tiny">
+                      / {numberFormat(currency, price)}
+                    </span>
+                  </TableCell>
+                )) as any
+              }
+            </TableRow>
+          </TableBody>
+        </Table>
+      </ScrollShadow>
     </Block>
   );
 }

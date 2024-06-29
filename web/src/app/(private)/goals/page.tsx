@@ -24,7 +24,7 @@ export default async function Page() {
   // );
 
   return (
-    <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6">
+    <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 lg:grid grid-cols-2">
       {/* <TimelineProvider>
         <Block
           title="Bieżące"
