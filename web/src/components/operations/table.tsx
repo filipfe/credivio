@@ -221,7 +221,7 @@ export default function OperationTable({
           >
             {(operation) => (
               <TableRow
-                onDoubleClick={(event) => onRowAction(operation.id)}
+                onDoubleClick={(_event) => onRowAction(operation.id)}
                 key={operation.id}
                 className="hover:bg-light"
               >

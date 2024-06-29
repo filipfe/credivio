@@ -9,22 +9,23 @@ import Link from "next/link";
 import { Button } from "@nextui-org/react";
 import { PlusIcon } from "lucide-react";
 import { redirect } from "next/navigation";
+import GoalsTable from "@/components/goals/table";
 
 export default async function Page() {
   const { results: goals, error } = await getGoals();
 
   if (goals.length === 0 && !error) redirect("/goals/add");
 
-  const priorityGoal = goals.find((goal) => goal.is_priority);
+  // const priorityGoal = goals.find((goal) => goal.is_priority);
 
-  const activeGoals = goals.filter(
-    (goal) =>
-      goal.deadline && new Date(goal.deadline).getTime() >= new Date().getTime()
-  );
+  // const activeGoals = goals.filter(
+  //   (goal) =>
+  //     goal.deadline && new Date(goal.deadline).getTime() >= new Date().getTime()
+  // );
 
   return (
-    <div className="px-10 pt-8 pb-24 flex flex-col h-full gap-8">
-      <TimelineProvider>
+    <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6">
+      {/* <TimelineProvider>
         <Block
           title="Bieżące"
           cta={
@@ -50,7 +51,8 @@ export default async function Page() {
           <Timeline goals={activeGoals} />
           {priorityGoal && <Preview {...priorityGoal} />}
         </div>
-      </TimelineProvider>
+      </TimelineProvider> */}
+      <GoalsTable goals={goals} />
     </div>
   );
 }

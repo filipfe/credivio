@@ -13,8 +13,8 @@ export default async function getUser(
     .single();
 
   if (error) {
-    console.log("Couldn't retrieve the user", error);
+    console.error("Couldn't retrieve the user", error);
   }
 
-  return data || null;
+  return data;
 }
