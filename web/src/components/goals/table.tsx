@@ -263,7 +263,10 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
                 const YMD = format(date, "yyyy-MM-dd");
                 const isToday = today.toDateString() === date.toDateString();
                 return (
-                  <TableRow key={date.toISOString()}>
+                  <TableRow
+                    className={cn(!isToday && "hover:bg-light")}
+                    key={date.toISOString()}
+                  >
                     <TableCell
                       className={cn(
                         "min-w-max",
@@ -321,7 +324,7 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
               }) as any
             }
             <TableRow
-              className="sticky rounded-lg shadow-small bg-light"
+              className="sticky rounded-lg shadow-small bg-light z-10"
               style={{ insetBlockEnd: 0 }}
             >
               <TableCell className="text-sm font-medium">Suma</TableCell>
