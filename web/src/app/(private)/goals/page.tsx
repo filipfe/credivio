@@ -11,6 +11,7 @@ import { PlusIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import Table from "@/components/goals/table";
 import List from "@/components/goals/list";
+import Priority from "@/components/goals/priority";
 
 export default async function Page() {
   const { results: goals, error } = await getGoals();
@@ -25,7 +26,7 @@ export default async function Page() {
   // );
 
   return (
-    <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 xl:grid grid-cols-2 xl:items-start">
+    <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 xl:grid grid-cols-2 grid-rows-[max-content_1fr]">
       <TimelineProvider>
         {/* <div className="grid gap-6 2xl:grid-cols-2 grid-cols-1">
           <Timeline goals={activeGoals} />
@@ -33,6 +34,7 @@ export default async function Page() {
           </div> */}
         <Table goals={goals} />
         <List goals={goals} />
+        <Priority goal={goals.find((goal) => goal.is_priority)} />
       </TimelineProvider>
     </div>
   );
