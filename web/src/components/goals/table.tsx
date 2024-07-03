@@ -20,118 +20,18 @@ import { addDays, format, subDays } from "date-fns";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import numberFormat from "@/utils/formatters/currency";
 import { ChevronDown } from "lucide-react";
+import useClientQuery from "@/hooks/useClientQuery";
+import { getGoalsPayments } from "@/lib/goals/actions";
+import Loader from "../stocks/loader";
 import formatAmount from "@/utils/operation/format-amount";
 
-const payments = [
-  {
-    date: "2024-06-29",
-    amount: 25.13,
-    goal_id: "5866b78e-de6c-4fda-8210-1b45fd963cba",
-  },
-  {
-    date: "2024-06-30",
-    amount: 20.47,
-    goal_id: "5866b78e-de6c-4fda-8210-1b45fd963cba",
-  },
-  {
-    date: "2024-07-01",
-    amount: 27.35,
-    goal_id: "5866b78e-de6c-4fda-8210-1b45fd963cba",
-  },
-  {
-    date: "2024-07-02",
-    amount: 23.56,
-    goal_id: "5b900d5c-d239-485b-acfb-ed7d091652c9",
-  },
-  {
-    date: "2024-07-03",
-    amount: 26.78,
-    goal_id: "5866b78e-de6c-4fda-8210-1b45fd963cba",
-  },
-  {
-    date: "2024-07-04",
-    amount: 29.49,
-    goal_id: "5866b78e-de6c-4fda-8210-1b45fd963cba",
-  },
-  {
-    date: "2024-07-05",
-    amount: 28.33,
-    goal_id: "5b900d5c-d239-485b-acfb-ed7d091652c9",
-  },
-  {
-    date: "2024-07-06",
-    amount: 24.67,
-    goal_id: "5b900d5c-d239-485b-acfb-ed7d091652c9",
-  },
-  {
-    date: "2024-07-07",
-    amount: 27.99,
-    goal_id: "5866b78e-de6c-4fda-8210-1b45fd963cba",
-  },
-  {
-    date: "2024-07-08",
-    amount: 25.56,
-    goal_id: "5b900d5c-d239-485b-acfb-ed7d091652c9",
-  },
-  {
-    date: "2024-07-09",
-    amount: 29.42,
-    goal_id: "5866b78e-de6c-4fda-8210-1b45fd963cba",
-  },
-  {
-    date: "2024-07-10",
-    amount: 21.78,
-    goal_id: "5b900d5c-d239-485b-acfb-ed7d091652c9",
-  },
-  {
-    date: "2024-07-12",
-    amount: 19.99,
-    goal_id: "7006a6f3-d566-4ac4-9869-a811a93f5a80",
-  },
-  {
-    date: "2024-07-14",
-    amount: 31.14,
-    goal_id: "7006a6f3-d566-4ac4-9869-a811a93f5a80",
-  },
-  {
-    date: "2024-07-15",
-    amount: 28.9,
-    goal_id: "5b900d5c-d239-485b-acfb-ed7d091652c9",
-  },
-  {
-    date: "2024-07-18",
-    amount: 22.56,
-    goal_id: "7006a6f3-d566-4ac4-9869-a811a93f5a80",
-  },
-  {
-    date: "2024-07-20",
-    amount: 24.75,
-    goal_id: "7006a6f3-d566-4ac4-9869-a811a93f5a80",
-  },
-  {
-    date: "2024-07-22",
-    amount: 26.5,
-    goal_id: "7006a6f3-d566-4ac4-9869-a811a93f5a80",
-  },
-  {
-    date: "2024-07-24",
-    amount: 29.88,
-    goal_id: "7006a6f3-d566-4ac4-9869-a811a93f5a80",
-  },
-  {
-    date: "2024-07-27",
-    amount: 28.0,
-    goal_id: "7006a6f3-d566-4ac4-9869-a811a93f5a80",
-  },
-];
-
-const sums = payments.reduce(
-  (prev, { goal_id, amount }) => ({
-    ...prev,
-    [goal_id]: (prev[goal_id] || 0) + amount,
-  }),
-  {} as Record<string, number>
-);
+// const sums = payments.reduce(
+//   (prev, { goal_id, amount }) => ({
+//     ...prev,
+//     [goal_id]: (prev[goal_id] || 0) + amount,
+//   }),
+//   {} as Record<string, number>
+// );
 
 const generateDates = (start: Date, end: Date): Date[] => {
   const dates = [];
@@ -146,7 +46,9 @@ const generateDates = (start: Date, end: Date): Date[] => {
 const today = new Date();
 
 export default function GoalsTable({ goals }: { goals: Goal[] }) {
-  console.log(goals);
+  const { results: payments, isLoading } = useClientQuery({
+    query: getGoalsPayments(),
+  });
   const [scrollButtonVisible, setScrollButtonVisible] = useState(false);
   const tbodyRef = useRef<HTMLDivElement | null>(null);
 
@@ -163,6 +65,18 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
       );
       return payment ? payment.amount : 0;
     },
+    [payments]
+  );
+
+  const sums = useMemo(
+    () =>
+      payments.reduce(
+        (prev, { goal_id, amount }) => ({
+          ...prev,
+          [goal_id]: (prev[goal_id] || 0) + amount,
+        }),
+        {} as Record<string, number>
+      ),
     [payments]
   );
 
@@ -190,6 +104,12 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
         tbodyRef.current.removeEventListener("scroll", onScroll);
     };
   }, [tbodyRef.current]);
+
+  console.log(payments);
+
+  if (isLoading) {
+    return <Loader title="Wpłaty" />;
+  }
 
   return (
     <Block title="Wpłaty" className="row-span-2">
