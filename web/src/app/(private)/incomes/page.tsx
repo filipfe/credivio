@@ -73,7 +73,7 @@ async function Incomes({ searchParams }: { searchParams: SearchParams }) {
     <div className="row-span-2 col-span-2 flex items-stretch">
       <IncomeTable
         title="Przychody"
-        rows={incomes}
+        rows={incomes || []}
         count={count || 0}
         type="income"
       />

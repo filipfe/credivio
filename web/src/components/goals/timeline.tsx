@@ -55,12 +55,13 @@ export default function Timeline({ goals }: { goals: Goal[] }) {
 }
 
 const DayRef = ({
-  goal: { id, title, deadline, saved, price, currency },
+  goal: { id, title, deadline, price, currency },
   isActive,
 }: {
   goal: Goal;
   isActive: boolean;
 }) => {
+  const saved = 0;
   const shortfall = price - saved;
   const isCompleted = shortfall <= 0;
 

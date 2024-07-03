@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function addOperations(
-  formData: FormData
+  formData: FormData,
 ): Promise<SupabaseResponse<Operation>> {
   const type = formData.get("type")?.toString() as OperationType;
   const label = formData.get("label")?.toString();
@@ -80,7 +80,7 @@ export async function getLatestOperations(): Promise<
 
 export async function getOperationsStats(
   currency: string,
-  type: string
+  type: string,
 ): Promise<SupabaseSingleRowResponse<OperationsStats>> {
   const supabase = createClient();
 
@@ -120,7 +120,7 @@ export async function getLabels(): Promise<SupabaseResponse<Label>> {
 export async function getPortfolioBudgets(): Promise<SupabaseResponse<Budget>> {
   const supabase = createClient();
   const { data: results, error } = await supabase.rpc(
-    "get_dashboard_portfolio_budgets"
+    "get_dashboard_portfolio_budgets",
   );
 
   if (error) {
@@ -133,4 +133,40 @@ export async function getPortfolioBudgets(): Promise<SupabaseResponse<Budget>> {
   return {
     results,
   };
+}
+
+export async function updateOperation(formData: FormData) {
+  try {
+    const value = formData.get("operation")?.toString();
+    const type = formData.get("type")?.toString();
+    if (!value) {
+      console.error("Edit error: Couldn't retrieve value from the form");
+      return {
+        error: "Niewłaściwe dane wejściowe, spróbuj ponownie!",
+        results: [],
+      };
+    }
+    const operation = JSON.parse(value) as Operation;
+    const { id, ...rest } = operation;
+
+    console.log(type, rest, id);
+    const supabase = createClient();
+    const { error } = await supabase.from(`${type}s`).update(rest).eq("id", id);
+    if (error) {
+      console.error("Edit error: While updating", error);
+      return {
+        error: "Wystąpił błąd, spróbuj ponownie!",
+        results: [],
+      };
+    }
+
+    revalidatePath(`/${type}s`);
+    revalidatePath("/");
+  } catch (err) {
+    console.error("Edit error: Couldn't update operation", err);
+    return {
+      error: "Wystąpił błąd, spróbuj ponownie!",
+      results: [],
+    };
+  }
 }

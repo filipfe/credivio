@@ -11,6 +11,7 @@ import {
 type Props<T> = {
   query: Promise<SupabaseResponse<T>>;
   deps?: DependencyList;
+  condition?: boolean;
 };
 
 type ReturnType<T> = {
@@ -22,11 +23,13 @@ type ReturnType<T> = {
 export default function useClientQuery<T>({
   deps = [],
   query,
+  condition,
 }: Props<T>): ReturnType<T> {
   const [results, setResults] = useState<T[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    if (condition === false) return;
     setIsLoading(true);
     (async () => {
       const { results: _results } = await query;
