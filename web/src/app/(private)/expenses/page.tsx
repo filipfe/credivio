@@ -75,7 +75,7 @@ async function Expenses({ searchParams }: { searchParams: SearchParams }) {
       <OperationTable
         title="Wydatki"
         type="expense"
-        rows={expenses}
+        rows={expenses || []}
         count={count || 0}
       />
     </div>
