@@ -11,6 +11,7 @@ import { SaveIcon } from "lucide-react";
 import {
   Dispatch,
   SetStateAction,
+  useCallback,
   useEffect,
   useState,
   useTransition,
@@ -25,24 +26,18 @@ type Props = {
   edited: Operation | null;
   setEdited: Dispatch<SetStateAction<Operation | null>>;
   type: OperationType;
+  onEdit?: (updated: Operation) => void;
 };
 
-export default function EditModal({ type, edited, setEdited }: Props) {
+export default function EditModal({ type, edited, onEdit, setEdited }: Props) {
   const [isPending, startTransition] = useTransition();
   const [updated, setUpdated] = useState(edited);
-  const { isOpen, onClose, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   useEffect(() => {
     edited && onOpen();
     setUpdated(edited);
   }, [edited]);
-
-  const isDisabled =
-    !!updated &&
-    !!edited &&
-    Object.entries(edited).every(
-      ([key, value]) => updated[key as keyof Operation] == value
-    );
 
   return (
     <Modal
@@ -54,18 +49,14 @@ export default function EditModal({ type, edited, setEdited }: Props) {
       <ModalContent>
         {(onClose) => (
           <>
-            <ModalHeader>Edytuj wydatek {edited?.title}</ModalHeader>
+            <ModalHeader className="font-normal">
+              <span>
+                Edytuj wydatek{" "}
+                <span className="font-bold">{edited?.title}</span>
+              </span>
+            </ModalHeader>
             <ModalBody className="relative flex items-center justify-center min-h-48 py-0 [&:has(+button)]:z-40 my-3">
-              {updated && (
-                <Manual
-                  operation={updated}
-                  onChange={(key, value) =>
-                    setUpdated((prev) =>
-                      prev ? { ...prev, [key]: value } : null
-                    )
-                  }
-                />
-              )}
+              {updated && <Manual value={updated} />}
               {type === "expense" && (
                 <div className="w-full">
                   <LabelInput
@@ -86,45 +77,62 @@ export default function EditModal({ type, edited, setEdited }: Props) {
               >
                 Anuluj
               </Button>
-              <form
-                action={(formData) =>
-                  startTransition(async () => {
-                    const res = await updateOperation(formData);
-                    if (res?.error) {
-                      toast.custom((t) => (
-                        <Toast {...t} type="error" message={res.error} />
-                      ));
-                    } else {
-                      onClose();
-                      toast.custom((t) => (
-                        <Toast
-                          {...t}
-                          type="success"
-                          message={`Pomyślnie zmodyfikowano operację ${edited?.title}!`}
-                        />
-                      ));
-                    }
-                  })
-                }
-              >
+              {onEdit ? (
                 <Button
                   color="primary"
                   disableRipple
-                  type="submit"
                   isLoading={isPending}
-                  isDisabled={isDisabled || isPending}
-                  disabled={isDisabled || isPending}
+                  isDisabled={isPending}
+                  disabled={isPending}
+                  onClick={() => {
+                    updated && onEdit(updated);
+                    onClose();
+                  }}
                 >
                   {!isPending && <SaveIcon size={16} />}
                   Zapisz
                 </Button>
-                <input
-                  type="hidden"
-                  name="operation"
-                  value={JSON.stringify(updated)}
-                />
-                <input type="hidden" name="type" value={type} />
-              </form>
+              ) : (
+                <form
+                  action={(formData) =>
+                    startTransition(async () => {
+                      const res = await updateOperation(formData);
+                      if (res?.error) {
+                        toast.custom((t) => (
+                          <Toast {...t} type="error" message={res.error} />
+                        ));
+                      } else {
+                        onClose();
+                        toast.custom((t) => (
+                          <Toast
+                            {...t}
+                            type="success"
+                            message={`Pomyślnie zmodyfikowano operację ${edited?.title}!`}
+                          />
+                        ));
+                      }
+                    })
+                  }
+                >
+                  <Button
+                    color="primary"
+                    disableRipple
+                    type="submit"
+                    isLoading={isPending}
+                    isDisabled={isPending}
+                    disabled={isPending}
+                  >
+                    {!isPending && <SaveIcon size={16} />}
+                    Zapisz
+                  </Button>
+                  <input
+                    type="hidden"
+                    name="operation"
+                    value={JSON.stringify(updated)}
+                  />
+                  <input type="hidden" name="type" value={type} />
+                </form>
+              )}
             </ModalFooter>
           </>
         )}

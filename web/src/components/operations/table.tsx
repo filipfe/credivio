@@ -87,7 +87,7 @@ export default function OperationTable({
         case "label":
           return (
             <span className="line-clamp-1 break-all xl:max-w-[10vw]f">
-              {cellValue}
+              {cellValue || "-"}
             </span>
           );
         case "description":
@@ -130,6 +130,27 @@ export default function OperationTable({
               type={props.type}
               operation={item}
               onSelect={() => onRowAction(item.id)}
+              onEdit={
+                viewOnly
+                  ? (updated) =>
+                      viewOnly.setRows((prev) => {
+                        const newArr = [...prev];
+                        const index = newArr.findIndex(
+                          (item) => item.id === updated.id
+                        );
+                        newArr[index] = updated;
+                        return newArr;
+                      })
+                  : undefined
+              }
+              onDelete={
+                viewOnly
+                  ? (id) =>
+                      viewOnly.setRows((prev) =>
+                        prev.filter((item) => item.id !== id)
+                      )
+                  : undefined
+              }
             />
           ) : (
             <></>
@@ -195,7 +216,10 @@ export default function OperationTable({
           onSelectionChange={onSelectionChange}
           classNames={{
             // tr: "cursor-pointer data-[selected=true]:[&>td]:before:bg-[#f2f2f2] [&_label[data-selected=true]>span::after]:bg-[#dadada]",
-            tr: selectedKeys.length > 0 ? "cursor-pointer" : "cursor-auto",
+            tr: cn(
+              selectedKeys.length > 0 ? "cursor-pointer" : "cursor-auto",
+              "data-[selected=true]:[&>td]:font-medium"
+            ),
             td: "[&_span:last-child]:before:!border-neutral-200",
           }}
         >

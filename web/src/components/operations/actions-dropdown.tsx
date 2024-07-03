@@ -12,14 +12,23 @@ import {
 } from "lucide-react";
 import { Fragment, Key, useState } from "react";
 import EditModal from "./modals/edit-modal";
+import DeleteModal from "./modals/delete-modal";
 
 type Props = {
   operation: Operation | null;
   onSelect: () => void;
+  onEdit?: (updated: Operation) => void;
+  onDelete?: (id: string) => void;
   type: OperationType;
 };
 
-export default function ActionsDropdown({ operation, type, onSelect }: Props) {
+export default function ActionsDropdown({
+  operation,
+  type,
+  onEdit,
+  onSelect,
+  onDelete,
+}: Props) {
   const [edited, setEdited] = useState<Operation | null>(null);
   const [deleted, setDeleted] = useState<Operation | null>(null);
 
@@ -30,6 +39,7 @@ export default function ActionsDropdown({ operation, type, onSelect }: Props) {
         return;
       case "edit":
         setEdited(operation);
+        return;
       case "delete":
         setDeleted(operation);
         return;
@@ -80,7 +90,19 @@ export default function ActionsDropdown({ operation, type, onSelect }: Props) {
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>
-      <EditModal edited={edited} setEdited={setEdited} type={type} />
+      <EditModal
+        edited={edited}
+        setEdited={setEdited}
+        type={type}
+        onEdit={onEdit}
+      />
+      {!onDelete && (
+        <DeleteModal
+          type={type}
+          deleted={deleted ? [deleted] : []}
+          onClose={() => setDeleted(null)}
+        />
+      )}
     </Fragment>
   );
 }

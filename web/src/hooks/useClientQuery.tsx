@@ -26,7 +26,7 @@ export default function useClientQuery<T>({
   condition,
 }: Props<T>): ReturnType<T> {
   const [results, setResults] = useState<T[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (condition === false) return;

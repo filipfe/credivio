@@ -136,28 +136,37 @@ bot.on("message:photo", async (ctx) => {
   body.append("user_id", user.id);
   body.append(crypto.randomUUID(), file);
 
-  const { data, error } = await supabase.functions.invoke("process-receipt", {
-    body,
-  });
+  console.log({ body });
 
-  if (error) {
+  try {
+    const { data, error } = await supabase.functions.invoke("process-receipt", {
+      body,
+    });
+
+    if (error) {
+      await ctx.reply(
+        "Wystąpił błąd przy przetwarzaniu twojego zdjęcia. Może spróbujesz ponownie?",
+      );
+      console.error(error);
+      return;
+    }
+
+    const operations = data.operations as Payment[];
+
+    const { reply, operations: payments } = await insertOperations(
+      operations,
+      user,
+    );
+    if (payments.length > 0) {
+      ctx.session.lastPayments = payments;
+    }
+    await ctx.reply(reply);
+  } catch (err) {
+    console.error("Caught an error: ", err);
     await ctx.reply(
       "Wystąpił błąd przy przetwarzaniu twojego zdjęcia. Może spróbujesz ponownie?",
     );
-    console.error(error);
-    return;
   }
-
-  const operations = data.operations as Payment[];
-
-  const { reply, operations: payments } = await insertOperations(
-    operations,
-    user,
-  );
-  if (payments.length > 0) {
-    ctx.session.lastPayments = payments;
-  }
-  await ctx.reply(reply);
 });
 
 bot.on("message:voice", async (ctx) => {
