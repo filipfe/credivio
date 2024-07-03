@@ -27,11 +27,6 @@ export const PAGES: Page[] = [
     icon: LayoutDashboardIcon,
   },
   {
-    title: "Automatyzacja",
-    href: "/automation",
-    icon: BotIcon,
-  },
-  {
     title: "Operacje",
     href: "/operations",
     icon: RepeatIcon,
@@ -60,23 +55,6 @@ export const PAGES: Page[] = [
           },
         ],
       },
-      // {
-      //   title: "Algorytmy",
-      //   href: "/algorithms",
-      //   icon: VariableIcon,
-      // },
-      {
-        title: "Cele",
-        href: "/goals",
-        icon: CheckCircleIcon,
-        links: [
-          {
-            title: "Dodaj",
-            icon: PlusIcon,
-            href: "/goals/add",
-          },
-        ],
-      },
       {
         title: "Płatności cykliczne",
         href: "/recurring-payments",
@@ -90,6 +68,16 @@ export const PAGES: Page[] = [
         ],
       },
     ],
+  },
+  {
+    title: "Automatyzacja",
+    href: "/automation",
+    icon: BotIcon,
+  },
+  {
+    title: "Cele",
+    href: "/goals",
+    icon: CheckCircleIcon,
   },
   {
     title: "Inwestycje",

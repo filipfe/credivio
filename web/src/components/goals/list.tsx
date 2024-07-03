@@ -9,7 +9,6 @@ export default function GoalsList({ goals }: { goals: Goal[] }) {
   return (
     <Block
       title="Bieżące"
-      className="max-h-max"
       cta={
         <Link href="/goals/add">
           <Button
