@@ -14,7 +14,7 @@ import {
 import Image from "next/image";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import Toast from "../ui/toast";
+import Toast from "../../ui/toast";
 import { DownloadIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -24,7 +24,7 @@ type Props = {
 };
 
 export default function DocModal({ docPath, setDocPath }: Props) {
-  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+  const { onClose, onOpenChange } = useDisclosure();
   const [mediaUrl, setMediaUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState({
     url: true,
@@ -35,7 +35,6 @@ export default function DocModal({ docPath, setDocPath }: Props) {
     setMediaUrl("");
     if (!docPath) return;
     setIsLoading({ url: true, image: true });
-    onOpen();
     const supabase = createClient();
     (async () => {
       const { data } = await supabase.storage
@@ -56,7 +55,7 @@ export default function DocModal({ docPath, setDocPath }: Props) {
 
   return (
     <Modal
-      isOpen={isOpen}
+      isOpen={!!docPath}
       onOpenChange={onOpenChange}
       onClose={() => setDocPath(null)}
     >
@@ -83,7 +82,7 @@ export default function DocModal({ docPath, setDocPath }: Props) {
                     setIsLoading((prev) => ({ ...prev, image: false }))
                   }
                   className={cn(
-                    "w-full h-auto rounded-md",
+                    "w-full h-auto rounded-md max-h-[80vh]",
                     isLoading.image && "sr-only"
                   )}
                   src={mediaUrl}

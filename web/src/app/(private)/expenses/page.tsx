@@ -1,5 +1,4 @@
 import OperationTable from "@/components/operations/table";
-import { getOwnRows } from "@/lib/general/actions";
 import Stat from "@/components/dashboard/stats/ref";
 import { Suspense } from "react";
 import Loader from "@/components/stocks/loader";
@@ -76,7 +75,7 @@ async function Expenses({ searchParams }: { searchParams: SearchParams }) {
       <OperationTable
         title="Wydatki"
         type="expense"
-        rows={expenses}
+        rows={expenses || []}
         count={count || 0}
       />
     </div>

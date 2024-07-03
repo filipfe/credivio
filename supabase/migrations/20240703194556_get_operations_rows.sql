@@ -14,7 +14,8 @@ begin
       amount,
       currency,
       label,
-      issued_at::date
+      issued_at::date,
+      doc_path
     from
       expenses
     where
@@ -54,7 +55,8 @@ begin
         'amount', c1.amount,
         'currency', c1.currency,
         'label', c1.label,
-        'issued_at', c1.issued_at
+        'issued_at', c1.issued_at,
+        'doc_path', c1.doc_path
       )),
       'count', (select total_count from cte2)
     ) as result
@@ -80,7 +82,8 @@ begin
       title,
       amount,
       currency,
-      issued_at::date
+      issued_at::date,
+      doc_path
     from
       incomes
     where
@@ -115,7 +118,8 @@ begin
         'title', c1.title,
         'amount', c1.amount,
         'currency', c1.currency,
-        'issued_at', c1.issued_at
+        'issued_at', c1.issued_at,
+        'doc_path', c1.doc_path
       )),
       'count', (select total_count from cte2)
     ) as result

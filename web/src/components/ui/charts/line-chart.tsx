@@ -81,6 +81,7 @@ export default function LineChart({ data, currency, type }: Props) {
           )}
         />
         <Line
+          isAnimationActive={false}
           dataKey="total_amount"
           stroke="#177981"
           strokeWidth={2}

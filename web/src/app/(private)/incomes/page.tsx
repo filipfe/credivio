@@ -3,7 +3,6 @@ import Stat from "@/components/dashboard/stats/ref";
 import IncomeTable from "@/components/operations/table";
 import Loader from "@/components/stocks/loader";
 import LineChartLoader from "@/components/ui/charts/line-loader";
-import { getOwnRows } from "@/lib/general/actions";
 import { getOperationsStats } from "@/lib/operations/actions";
 import { getDefaultCurrency } from "@/lib/settings/actions";
 import { createClient } from "@/utils/supabase/server";
@@ -74,7 +73,7 @@ async function Incomes({ searchParams }: { searchParams: SearchParams }) {
     <div className="row-span-2 col-span-2 flex items-stretch">
       <IncomeTable
         title="Przychody"
-        rows={incomes}
+        rows={incomes || []}
         count={count || 0}
         type="income"
       />

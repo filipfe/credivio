@@ -14,16 +14,16 @@ export default function Toast({
   const isBlank = type === "blank";
   return (
     <div
-      className={`rounded-md border py-4 px-6 flex items-center gap-8 bg-white border-primary/10 shadow-lg ${
+      className={`rounded-md max-w-sm border py-4 px-6 flex items-center gap-8 bg-white border-primary/10 shadow-lg ${
         visible ? "animate-enter" : "animate-exit"
       }`}
     >
       <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-start gap-2.5">
           {!isBlank && (
             <div
-              className={`h-2.5 w-2.5 rounded-full ${
-                isError ? "bg-danger" : "bg-primary"
+              className={`h-2.5 w-2.5 mt-1.5 min-w-2.5 rounded-full ${
+                isError ? "bg-danger" : "bg-success"
               }`}
             />
           )}
