@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import ChartTooltip from "./tooltip";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
+import { useMemo } from "react";
 
 type Props = {
   data: ChartLabel[];
@@ -21,6 +22,15 @@ type Props = {
 
 export default function BarChart({ data, currency }: Props) {
   const { width, tickFormatter } = useYAxisWidth(currency);
+
+  const dataWithColors = useMemo(
+    () =>
+      data.map((item, k) => ({
+        ...item,
+        color: k % 2 === 0 ? "#177981" : "#fdbb2d",
+      })),
+    [data]
+  );
 
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -50,13 +60,10 @@ export default function BarChart({ data, currency }: Props) {
           tickLine={false}
         />
         <Bar maxBarSize={120} dataKey="total_amount" radius={[24, 24, 0, 0]}>
-          {data.map((item, k) => (
+          {dataWithColors.map((item) => (
             <Cell
-              className={`transition-colors ${
-                k % 2 === 0
-                  ? "fill-primary hover:fill-primary/90"
-                  : "fill-secondary hover:fill-secondary/90"
-              }`}
+              className="transition-opacity opacity-100 hover:opacity-80"
+              fill={item.color}
               key={item.name}
             />
           ))}
@@ -64,7 +71,6 @@ export default function BarChart({ data, currency }: Props) {
         <Tooltip
           isAnimationActive={false}
           shared={false}
-          contentStyle={{ backgroundColor: "#177981" }}
           labelFormatter={(label) => label}
           content={(props) => (
             <ChartTooltip
