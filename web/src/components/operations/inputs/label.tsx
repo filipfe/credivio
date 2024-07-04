@@ -2,7 +2,6 @@ import useClientQuery from "@/hooks/useClientQuery";
 import { getLabels } from "@/lib/operations/actions";
 import { Autocomplete, AutocompleteItem, Tooltip } from "@nextui-org/react";
 import { HelpCircleIcon } from "lucide-react";
-import { useState } from "react";
 
 type Props = {
   value?: string;
