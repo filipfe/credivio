@@ -2,11 +2,13 @@
 
 import {
   Button,
+  cn,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Spinner,
   useDisclosure,
 } from "@nextui-org/react";
 import { SaveIcon } from "lucide-react";
@@ -23,7 +25,7 @@ type Props = {
   onEdit?: (updated: Operation) => void;
 };
 
-export default function EditModal({ type, edited, onEdit, setEdited }: Props) {
+export default function EditModal({ type, edited, setEdited }: Props) {
   const [isPending, startTransition] = useTransition();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
@@ -82,18 +84,19 @@ export default function EditModal({ type, edited, onEdit, setEdited }: Props) {
           >
             Anuluj
           </Button>
-          <Button
-            color="primary"
-            disableRipple
-            type="submit"
-            isDisabled={isPending}
-            disabled={isPending}
-            isLoading={isPending}
-            form="edit-form"
-          >
-            {!isPending && <SaveIcon size={16} />}
-            Zapisz
-          </Button>
+          <div className={isPending ? "opacity-60" : "opacity-100"}>
+            <Button
+              color="primary"
+              disableRipple
+              type="submit"
+              disabled={isPending}
+              isLoading={isPending}
+              form="edit-form"
+            >
+              {!isPending && <SaveIcon size={16} />}
+              Zapisz
+            </Button>
+          </div>
         </ModalFooter>
       </ModalContent>
     </Modal>

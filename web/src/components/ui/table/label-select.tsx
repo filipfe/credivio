@@ -13,55 +13,13 @@ export default function LabelSelect({ value, onChange }: State) {
   }, []);
 
   return (
-    // <Dropdown>
-    //   <DropdownTrigger>
-    //     <Button
-    //       size="sm"
-    //       endContent={<ChevronDownIcon size={16} />}
-    //       disableAnimation
-    //       variant="flat"
-    //       className="bg-light !h-9"
-    //     >
-    //       {value ? value : "Wybierz etykietę"}
-    //     </Button>
-    //   </DropdownTrigger>
-    //   <DropdownMenu
-    //     emptyContent="Brak etykiet!"
-    //     aria-label="Label filter"
-    //     selectedKeys={[value] as string[]}
-    //     selectionMode="single"
-    //     onSelectionChange={(keys) => {
-    //       const selectedKey = Array.from(keys)[0]?.toString();
-    //       onChange(selectedKey === "all" ? "" : selectedKey);
-    //     }}
-    //   >
-    //     {
-    //       (value && (
-    //         <DropdownItem className="!bg-white hover:!bg-light" key="all">
-    //           Wszystkie
-    //         </DropdownItem>
-    //       )) as any
-    //     }
-    //     {labels.map(({ name, count }) => (
-    //       <DropdownItem
-    //         className={`${
-    //           value === name ? "!bg-light" : "!bg-white hover:!bg-light"
-    //         }`}
-    //         title={name}
-    //         description={`${count} wydatków`}
-    //         key={name}
-    //       />
-    //     ))}
-    //   </DropdownMenu>
-    // </Dropdown>
-
     <Select
       name="label"
       placeholder="Jedzenie"
       aria-label="Label filter"
       label="Etykieta"
       size="sm"
-      selectedKeys={[value]}
+      selectedKeys={[value || "Wszystkie"]}
       onSelectionChange={(keys) => {
         const selectedKey = Array.from(keys)[0]?.toString();
         onChange(selectedKey === "all" ? "" : selectedKey);
@@ -73,11 +31,11 @@ export default function LabelSelect({ value, onChange }: State) {
       {
         (
           <SelectItem
-            value=""
+            value="Wszystkie"
             className={`${
               value === "" ? "!bg-light" : "!bg-white hover:!bg-light"
             }`}
-            key=""
+            key="Wszystkie"
           >
             Wszystkie
           </SelectItem>

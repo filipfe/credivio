@@ -15,6 +15,7 @@ export default function AmountInput({ defaultValue }: Props) {
       name="amount"
       label="Kwota"
       placeholder="0.00"
+      required
       isRequired
       value={amount}
       onBlur={(e) => {

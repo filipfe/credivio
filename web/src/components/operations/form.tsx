@@ -4,10 +4,11 @@ import { Button, Spinner, Tab, Tabs } from "@nextui-org/react";
 import {
   CheckIcon,
   FileSpreadsheetIcon,
+  PlusIcon,
   ScanTextIcon,
   WrenchIcon,
 } from "lucide-react";
-import { Fragment, useState, useTransition } from "react";
+import { FormEvent, Fragment, useState, useTransition } from "react";
 import { addOperations } from "@/lib/operations/actions";
 import OperationTable from "./table";
 import { v4 } from "uuid";
@@ -25,9 +26,24 @@ export default function AddForm({
   type: OperationType;
   defaultCurrency: string;
 }) {
-  const [label, setLabel] = useState("");
   const [isPending, startTransition] = useTransition();
   const [records, setRecords] = useState<Operation[]>([]);
+
+  const onSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    const operation: Operation = {
+      id: v4(),
+      title: formData.get("title")?.toString() || "",
+      amount: formData.get("amount")?.toString() || "",
+      issued_at: formData.get("issued_at")?.toString() || "",
+      currency: formData.get("currency")?.toString() || "",
+      description: formData.get("description")?.toString() || "",
+      label: formData.get("label")?.toString() || "",
+      doc_path: "",
+    };
+    setRecords((prev) => [...prev, operation]);
+  };
 
   return (
     <div className="flex flex-col xl:grid grid-cols-2 gap-4 sm:gap-8">
@@ -43,9 +59,22 @@ export default function AddForm({
             }
           >
             <Manual
+              type={type}
               defaultCurrency={defaultCurrency}
-              onAdd={(record) => setRecords((prev) => [...prev, record])}
+              id="add-form"
+              onSubmit={onSubmit}
             />
+            <Button
+              type="submit"
+              color="secondary"
+              form="add-form"
+              className="text-white h-9"
+              disableRipple
+            >
+              <PlusIcon size={16} />
+              Dodaj
+            </Button>
+            <div className="flex justify-end mt-6"></div>
           </Tab>
           <Tab
             key="csv"
@@ -95,11 +124,7 @@ export default function AddForm({
         >
           <div className="flex flex-col gap-8 justify-end h-full">
             {type === "expense" && (
-              <LabelInput
-                value={label}
-                onChange={(lbl) => setLabel(lbl)}
-                isDisabled={records.length === 0}
-              />
+              <LabelInput isDisabled={records.length === 0} />
             )}
             <Button
               isDisabled={isPending || records.length === 0}

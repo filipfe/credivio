@@ -1,15 +1,13 @@
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
 import { Input, Textarea } from "@nextui-org/react";
-import { FormHTMLAttributes } from "react";
+import { FormHTMLAttributes, useState } from "react";
 import LabelInput from "./label";
 import AmountInput from "./amount";
-import { v4 } from "uuid";
 
 interface Props extends FormHTMLAttributes<HTMLFormElement> {
   type: OperationType;
   initialValue?: Operation;
-  // onAdd?: (record: Operation) => void;
   defaultCurrency?: string;
   withLabel?: boolean;
 }
@@ -32,6 +30,7 @@ export default function Manual({
           label="Tytuł"
           placeholder="Wynagrodzenie"
           isRequired
+          required
           defaultValue={initialValue?.title}
         />
         <AmountInput defaultValue={initialValue?.amount} />
@@ -39,6 +38,8 @@ export default function Manual({
           name="currency"
           label="Waluta"
           elements={CURRENCIES}
+          required
+          isRequired
           defaultSelectedKeys={currency ? [currency] : []}
         />
         <Input
@@ -47,8 +48,11 @@ export default function Manual({
           label="Data uiszczenia"
           placeholder="24.01.2024"
           type="date"
+          required
           isRequired
-          defaultValue={initialValue?.issued_at}
+          defaultValue={
+            initialValue?.issued_at || new Date().toJSON().substring(0, 10)
+          }
         />
         <Textarea
           className="col-span-2"
@@ -58,50 +62,14 @@ export default function Manual({
           placeholder="Wynagrodzenie za luty"
           defaultValue={initialValue?.description}
         />
-        {withLabel && (
+        {type === "expense" && withLabel && (
           <div className="w-full col-span-2">
             <LabelInput defaultValue={initialValue?.label} />
           </div>
         )}
       </div>
-      {/* <input type="hidden" name="operation" value={JSON.stringify(record)} /> */}
       <input type="hidden" name="type" value={type} />
-      <input type="hidden" name="id" value={initialValue?.id || v4()} />
+      <input type="hidden" name="id" value={initialValue?.id} />
     </form>
   );
 }
-
-// const Form = ({
-//   children,
-//   onAdd,
-//   record,
-// }: { children: React.ReactNode; record: Operation } & Pick<Props, "onAdd">) => {
-//   const onSubmit = (e: FormEvent) => {
-//     e.preventDefault();
-//     onAdd && onAdd(record);
-//   };
-
-//   const isDisabled = ["title", "issued_at", "amount", "currency"].some(
-//     (key) => !record[key as keyof Operation]
-//   );
-
-//   return onAdd ? (
-//     <form onSubmit={onSubmit}>
-//       {children}
-//       <div className="flex justify-end mt-8">
-//         <Button
-//           color="secondary"
-//           type="submit"
-//           className="h-9 text-white"
-//           isDisabled={isDisabled}
-//           disabled={isDisabled}
-//         >
-//           <PlusIcon className="mt-0.5" size={16} />
-//           Dodaj
-//         </Button>
-//       </div>
-//     </form>
-//   ) : (
-//     children
-//   );
-// };

@@ -24,6 +24,7 @@ export default function LabelInput({ defaultValue, isDisabled }: Props) {
         label="Etykieta"
         placeholder="Jedzenie"
         isClearable={false}
+        multiple
         allowsCustomValue
         allowsEmptyCollection={false}
         isLoading={isLoading}
