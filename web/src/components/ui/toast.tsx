@@ -14,7 +14,7 @@ export default function Toast({
   const isBlank = type === "blank";
   return (
     <div
-      className={`rounded-md max-w-sm border py-4 px-6 flex items-center gap-8 bg-white border-primary/10 shadow-lg ${
+      className={`rounded-md max-w-sm border py-4 px-6 flex items-center gap-8 bg-white border-primary/10 ${
         visible ? "animate-enter" : "animate-exit"
       }`}
     >

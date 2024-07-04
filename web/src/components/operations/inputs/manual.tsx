@@ -1,46 +1,30 @@
-"use client";
-
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
-import formatAmount from "@/utils/operation/format-amount";
-import { Button, Input, Textarea } from "@nextui-org/react";
-import { PlusIcon } from "lucide-react";
-import { FormEvent, useEffect, useState } from "react";
+import { Input, Textarea } from "@nextui-org/react";
+import { FormHTMLAttributes } from "react";
+import LabelInput from "./label";
+import AmountInput from "./amount";
 import { v4 } from "uuid";
 
-const defaultRecord: Omit<Operation, "id"> = {
-  title: "",
-  issued_at: new Date().toISOString().substring(0, 10),
-  amount: "",
-  description: "",
-  currency: "",
-  doc_path: null,
-};
-
-type Props = {
-  value?: Operation;
-  onAdd?: (record: Operation) => void;
+interface Props extends FormHTMLAttributes<HTMLFormElement> {
+  type: OperationType;
+  initialValue?: Operation;
+  // onAdd?: (record: Operation) => void;
   defaultCurrency?: string;
-};
+  withLabel?: boolean;
+}
 
-export default function Manual({ value, onAdd, defaultCurrency }: Props) {
-  const [record, setRecord] = useState<Operation>(
-    value || {
-      ...defaultRecord,
-      currency: defaultCurrency || "USD",
-      id: v4(),
-    }
-  );
-
-  const onChange = (key: keyof Operation, value: any) =>
-    setRecord((prev) => ({ ...prev, [key]: value }));
-
-  useEffect(() => {
-    value && setRecord(value);
-  }, [value]);
+export default function Manual({
+  type,
+  initialValue,
+  defaultCurrency,
+  withLabel,
+  ...props
+}: Props) {
+  const currency = initialValue?.currency || defaultCurrency;
 
   return (
-    <Form onAdd={onAdd} record={record}>
+    <form {...props}>
       <div className="grid grid-cols-2 gap-4">
         <Input
           classNames={{ inputWrapper: "!bg-light" }}
@@ -48,32 +32,14 @@ export default function Manual({ value, onAdd, defaultCurrency }: Props) {
           label="Tytuł"
           placeholder="Wynagrodzenie"
           isRequired
-          value={record.title}
-          onChange={(e) => onChange("title", e.target.value)}
+          defaultValue={initialValue?.title}
         />
-        <Input
-          classNames={{ inputWrapper: "!bg-light" }}
-          name="amount"
-          label="Kwota"
-          placeholder="0.00"
-          isRequired
-          value={record.amount}
-          onBlur={(e) => {
-            const float = parseFloat(record.amount);
-
-            !isNaN(float) &&
-              onChange("amount", float == 0 ? "" : float.toString());
-          }}
-          onChange={(e) => onChange("amount", formatAmount(e.target.value))}
-        />
+        <AmountInput defaultValue={initialValue?.amount} />
         <UniversalSelect
           name="currency"
           label="Waluta"
-          selectedKeys={[record.currency]}
           elements={CURRENCIES}
-          onChange={(e) => {
-            onChange("currency", e.target.value);
-          }}
+          defaultSelectedKeys={currency ? [currency] : []}
         />
         <Input
           classNames={{ inputWrapper: "!bg-light" }}
@@ -82,8 +48,7 @@ export default function Manual({ value, onAdd, defaultCurrency }: Props) {
           placeholder="24.01.2024"
           type="date"
           isRequired
-          value={record.issued_at}
-          onChange={(e) => onChange("issued_at", e.target.value)}
+          defaultValue={initialValue?.issued_at}
         />
         <Textarea
           className="col-span-2"
@@ -91,45 +56,52 @@ export default function Manual({ value, onAdd, defaultCurrency }: Props) {
           name="description"
           label="Opis"
           placeholder="Wynagrodzenie za luty"
-          value={record.description}
-          onChange={(e) => onChange("description", e.target.value)}
+          defaultValue={initialValue?.description}
         />
+        {withLabel && (
+          <div className="w-full col-span-2">
+            <LabelInput defaultValue={initialValue?.label} />
+          </div>
+        )}
       </div>
-    </Form>
+      {/* <input type="hidden" name="operation" value={JSON.stringify(record)} /> */}
+      <input type="hidden" name="type" value={type} />
+      <input type="hidden" name="id" value={initialValue?.id || v4()} />
+    </form>
   );
 }
 
-const Form = ({
-  children,
-  onAdd,
-  record,
-}: { children: React.ReactNode; record: Operation } & Pick<Props, "onAdd">) => {
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    onAdd && onAdd(record);
-  };
+// const Form = ({
+//   children,
+//   onAdd,
+//   record,
+// }: { children: React.ReactNode; record: Operation } & Pick<Props, "onAdd">) => {
+//   const onSubmit = (e: FormEvent) => {
+//     e.preventDefault();
+//     onAdd && onAdd(record);
+//   };
 
-  const isDisabled = ["title", "issued_at", "amount", "currency"].some(
-    (key) => !record[key as keyof Operation]
-  );
+//   const isDisabled = ["title", "issued_at", "amount", "currency"].some(
+//     (key) => !record[key as keyof Operation]
+//   );
 
-  return onAdd ? (
-    <form onSubmit={onSubmit}>
-      {children}
-      <div className="flex justify-end mt-8">
-        <Button
-          color="secondary"
-          type="submit"
-          className="h-9 text-white"
-          isDisabled={isDisabled}
-          disabled={isDisabled}
-        >
-          <PlusIcon className="mt-0.5" size={16} />
-          Dodaj
-        </Button>
-      </div>
-    </form>
-  ) : (
-    children
-  );
-};
+//   return onAdd ? (
+//     <form onSubmit={onSubmit}>
+//       {children}
+//       <div className="flex justify-end mt-8">
+//         <Button
+//           color="secondary"
+//           type="submit"
+//           className="h-9 text-white"
+//           isDisabled={isDisabled}
+//           disabled={isDisabled}
+//         >
+//           <PlusIcon className="mt-0.5" size={16} />
+//           Dodaj
+//         </Button>
+//       </div>
+//     </form>
+//   ) : (
+//     children
+//   );
+// };
