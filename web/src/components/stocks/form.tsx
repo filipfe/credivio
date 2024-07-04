@@ -22,7 +22,7 @@ import {
   WrenchIcon,
 } from "lucide-react";
 import { ChangeEvent, Fragment, useState, useTransition } from "react";
-import parseCSV from "@/utils/operation/parse-csv";
+import parseCSV from "@/utils/operations/parse-csv";
 import { addStocks } from "@/lib/stocks/actions";
 import TransactionTable from "./transactions-table";
 import { v4 } from "uuid";

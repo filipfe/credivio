@@ -1,4 +1,4 @@
-import parseCSV from "@/utils/operation/parse-csv";
+import parseCSV from "@/utils/operations/parse-csv";
 import { Button } from "@nextui-org/react";
 import { PaperclipIcon } from "lucide-react";
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";

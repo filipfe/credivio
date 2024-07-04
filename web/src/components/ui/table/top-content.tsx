@@ -1,9 +1,5 @@
-import { Button, Input } from "@nextui-org/react";
-import {
-  ListTodoIcon,
-  MousePointerSquareDashedIcon,
-  SearchIcon,
-} from "lucide-react";
+import { Input } from "@nextui-org/react";
+import { SearchIcon } from "lucide-react";
 import Add from "../cta/add";
 
 import Filter from "./filter";

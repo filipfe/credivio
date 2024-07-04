@@ -64,17 +64,18 @@ export default function AddForm({
               id="add-form"
               onSubmit={onSubmit}
             />
-            <Button
-              type="submit"
-              color="secondary"
-              form="add-form"
-              className="text-white h-9"
-              disableRipple
-            >
-              <PlusIcon size={16} />
-              Dodaj
-            </Button>
-            <div className="flex justify-end mt-6"></div>
+            <div className="flex justify-end mt-6">
+              <Button
+                type="submit"
+                color="secondary"
+                form="add-form"
+                className="text-white h-9"
+                disableRipple
+              >
+                <PlusIcon size={16} />
+                Dodaj
+              </Button>
+            </div>
           </Tab>
           <Tab
             key="csv"

@@ -23,7 +23,7 @@ import { ChevronDown } from "lucide-react";
 import useClientQuery from "@/hooks/useClientQuery";
 import { getGoalsPayments } from "@/lib/goals/actions";
 import Loader from "../stocks/loader";
-import formatAmount from "@/utils/operation/format-amount";
+import formatAmount from "@/utils/operations/format-amount";
 
 // const sums = payments.reduce(
 //   (prev, { goal_id, amount }) => ({

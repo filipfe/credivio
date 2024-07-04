@@ -1,4 +1,4 @@
-import formatAmount from "@/utils/operation/format-amount";
+import formatAmount from "@/utils/operations/format-amount";
 import { Input } from "@nextui-org/react";
 import { useState } from "react";
 

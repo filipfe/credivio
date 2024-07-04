@@ -174,7 +174,7 @@ export default function OperationTable({
           handleSearch={handleSearch}
           deletionCallback={() => setSelectedKeys([])}
           search={search}
-          addHref={`/${props.type}s/add`}
+          addHref={viewOnly ? "" : `/${props.type}s/add`}
           state={{
             label: {
               value: searchQuery.label,

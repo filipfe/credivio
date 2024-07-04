@@ -12,11 +12,18 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { SaveIcon } from "lucide-react";
-import { Dispatch, SetStateAction, useEffect, useTransition } from "react";
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useTransition,
+} from "react";
 import Manual from "../inputs/manual";
 import { updateOperation } from "@/lib/operations/actions";
 import toast from "react-hot-toast";
 import Toast from "@/components/ui/toast";
+import formDataToOperation from "@/utils/operations/form-data-to-operation";
 
 type Props = {
   edited: Operation | null;
@@ -25,7 +32,7 @@ type Props = {
   onEdit?: (updated: Operation) => void;
 };
 
-export default function EditModal({ type, edited, setEdited }: Props) {
+export default function EditModal({ type, edited, onEdit, setEdited }: Props) {
   const [isPending, startTransition] = useTransition();
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
@@ -51,6 +58,14 @@ export default function EditModal({ type, edited, setEdited }: Props) {
     });
   };
 
+  const onSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    if (!onEdit) return;
+    const formData = new FormData(e.target as HTMLFormElement);
+    onEdit(formDataToOperation(formData, edited?.id) as Operation);
+    onClose();
+  };
+
   return (
     <Modal
       size="lg"
@@ -70,7 +85,8 @@ export default function EditModal({ type, edited, setEdited }: Props) {
               withLabel
               initialValue={edited}
               type={type}
-              action={onSubmitAction}
+              onSubmit={onEdit ? onSubmit : undefined}
+              action={onEdit ? undefined : onSubmitAction}
               id="edit-form"
             />
           )}

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Input, Spinner, Textarea } from "@nextui-org/react";
-import formatAmount from "@/utils/operation/format-amount";
+import formatAmount from "@/utils/operations/format-amount";
 import { useState, useTransition } from "react";
 import { CheckIcon } from "lucide-react";
 import { insertRows } from "@/lib/general/actions";
