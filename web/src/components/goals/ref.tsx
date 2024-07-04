@@ -3,7 +3,7 @@
 import { Button, Input, Progress, cn } from "@nextui-org/react";
 import { AlertOctagonIcon, CheckCircle2Icon, PlusIcon } from "lucide-react";
 import { useContext, useRef, useState, useTransition } from "react";
-import formatAmount, { formatMax } from "@/utils/operation/format-amount";
+import formatAmount, { formatMax } from "@/utils/operations/format-amount";
 import { updateRow } from "@/lib/general/actions";
 import useOutsideObserver from "@/hooks/useOutsideObserver";
 import Menu from "./menu";

@@ -25,7 +25,7 @@ export default function RootLayout({
         ></Script>
         {children}
         <NextTopLoader color="#177981" showSpinner={false} />
-        <Toaster />
+        <Toaster toastOptions={{ duration: 3000 }} />
       </body>
     </html>
   );

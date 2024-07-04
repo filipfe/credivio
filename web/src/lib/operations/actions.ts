@@ -137,21 +137,22 @@ export async function getPortfolioBudgets(): Promise<SupabaseResponse<Budget>> {
 
 export async function updateOperation(formData: FormData) {
   try {
-    const value = formData.get("operation")?.toString();
+    const id = formData.get("id")?.toString();
     const type = formData.get("type")?.toString();
-    if (!value) {
-      console.error("Edit error: Couldn't retrieve value from the form");
-      return {
-        error: "Niewłaściwe dane wejściowe, spróbuj ponownie!",
-        results: [],
-      };
-    }
-    const operation = JSON.parse(value) as Operation;
-    const { id, ...rest } = operation;
-
-    console.log(type, rest, id);
+    const operation = {
+      title: formData.get("title")?.toString(),
+      amount: formData.get("amount")?.toString(),
+      issued_at: formData.get("issued_at")?.toString(),
+      currency: formData.get("currency")?.toString(),
+      description: formData.get("description")?.toString(),
+      label: formData.get("label")?.toString(),
+    };
+    console.log(operation);
     const supabase = createClient();
-    const { error } = await supabase.from(`${type}s`).update(rest).eq("id", id);
+    const { error } = await supabase.from(`${type}s`).update(operation).eq(
+      "id",
+      id,
+    );
     if (error) {
       console.error("Edit error: While updating", error);
       return {
