@@ -1,15 +1,16 @@
+"use client";
+
 import useClientQuery from "@/hooks/useClientQuery";
 import { getLabels } from "@/lib/operations/actions";
 import { Autocomplete, AutocompleteItem, Tooltip } from "@nextui-org/react";
 import { HelpCircleIcon } from "lucide-react";
 
 type Props = {
-  value?: string;
-  onChange: (label: string) => void;
+  defaultValue?: string;
   isDisabled?: boolean;
 };
 
-export default function LabelInput({ value, onChange, isDisabled }: Props) {
+export default function LabelInput({ defaultValue, isDisabled }: Props) {
   const { results: labels, isLoading } = useClientQuery({
     deps: [isDisabled],
     query: getLabels(),
@@ -23,11 +24,12 @@ export default function LabelInput({ value, onChange, isDisabled }: Props) {
         label="Etykieta"
         placeholder="Jedzenie"
         isClearable={false}
+        multiple
         allowsCustomValue
         allowsEmptyCollection={false}
         isLoading={isLoading}
         isDisabled={isDisabled}
-        value={value}
+        defaultSelectedKey={defaultValue}
         inputProps={{
           classNames: {
             inputWrapper: "!bg-light",
@@ -35,7 +37,6 @@ export default function LabelInput({ value, onChange, isDisabled }: Props) {
         }}
         maxLength={48}
         showScrollIndicators
-        onSelectionChange={(key) => onChange(key?.toString() || "")}
       >
         {labels.map((label) => (
           <AutocompleteItem
