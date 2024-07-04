@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function addOperations(
-  formData: FormData
+  formData: FormData,
 ): Promise<SupabaseResponse<Operation>> {
   const type = formData.get("type")?.toString() as OperationType;
   const label = formData.get("label")?.toString();
@@ -80,7 +80,7 @@ export async function getLatestOperations(): Promise<
 
 export async function getOperationsStats(
   currency: string,
-  type: string
+  type: string,
 ): Promise<SupabaseSingleRowResponse<OperationsStats>> {
   const supabase = createClient();
 
@@ -120,7 +120,7 @@ export async function getLabels(): Promise<SupabaseResponse<Label>> {
 export async function getPortfolioBudgets(): Promise<SupabaseResponse<Budget>> {
   const supabase = createClient();
   const { data: results, error } = await supabase.rpc(
-    "get_dashboard_portfolio_budgets"
+    "get_dashboard_portfolio_budgets",
   );
 
   if (error) {
@@ -133,4 +133,41 @@ export async function getPortfolioBudgets(): Promise<SupabaseResponse<Budget>> {
   return {
     results,
   };
+}
+
+export async function updateOperation(formData: FormData) {
+  try {
+    const id = formData.get("id")?.toString();
+    const type = formData.get("type")?.toString();
+    const operation = {
+      title: formData.get("title")?.toString(),
+      amount: formData.get("amount")?.toString(),
+      issued_at: formData.get("issued_at")?.toString(),
+      currency: formData.get("currency")?.toString(),
+      description: formData.get("description")?.toString(),
+      label: formData.get("label")?.toString(),
+    };
+    console.log(operation);
+    const supabase = createClient();
+    const { error } = await supabase.from(`${type}s`).update(operation).eq(
+      "id",
+      id,
+    );
+    if (error) {
+      console.error("Edit error: While updating", error);
+      return {
+        error: "Wystąpił błąd, spróbuj ponownie!",
+        results: [],
+      };
+    }
+
+    revalidatePath(`/${type}s`);
+    revalidatePath("/");
+  } catch (err) {
+    console.error("Edit error: Couldn't update operation", err);
+    return {
+      error: "Wystąpił błąd, spróbuj ponownie!",
+      results: [],
+    };
+  }
 }

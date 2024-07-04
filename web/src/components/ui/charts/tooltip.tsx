@@ -9,7 +9,6 @@ export default function ChartTooltip({
   active,
   payload,
   label,
-  contentStyle,
   payloadName,
   labelFormatter,
   currency,
@@ -21,7 +20,7 @@ export default function ChartTooltip({
   const value = payload[0].value ? parseFloat(payload[0].value.toString()) : 0;
 
   const name = label || payload[0].payload.name;
-
+  console.log(payload);
   return (
     <div
       className={`rounded-md bg-white text-font border-font/10 border min-w-44 shadow-lg shadow-font/5`}
@@ -35,7 +34,7 @@ export default function ChartTooltip({
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 bg-white rounded-full flex items-center justify-center shadow">
             <div
-              style={{ backgroundColor: contentStyle?.backgroundColor }}
+              style={{ backgroundColor: payload[0].color }}
               className="w-2 h-2 rounded-full"
             />
           </div>

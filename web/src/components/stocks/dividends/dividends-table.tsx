@@ -28,7 +28,7 @@ const columns = ({
 }: Pick<Props, "simplified"> & { profitVisible?: boolean }) => [
   { key: "company", label: "SPÓŁKA" },
   { key: "amount", label: "WYSOKOŚĆ" },
-  { key: "ratio", label: "STOPA" },
+  { key: "ratio", label: "STOPA %" },
   { key: "date", label: "DZIEŃ DYWIDENDY" },
   ...(simplified
     ? []

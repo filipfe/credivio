@@ -5,7 +5,7 @@ import { ScrollShadow, cn } from "@nextui-org/react";
 import { useContext } from "react";
 
 type Props = {
-  children: React.ReactNode[];
+  children: React.ReactNode[] | React.ReactNode;
   className?: string;
   innerClassName?: string;
 };

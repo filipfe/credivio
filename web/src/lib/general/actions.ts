@@ -99,27 +99,6 @@ export async function updateRow(
   };
 }
 
-export async function getSpecificRow<T>(
-  id: string,
-  type: "income" | "expense" | "stock"
-): Promise<SupabaseResponse<T>> {
-  const supabase = createClient();
-  const { data, error } = await supabase
-    .from(`${type}s`)
-    .select("*")
-    .eq("id", id)
-    .single();
-  if (error) {
-    return {
-      results: [],
-      error: error.message,
-    };
-  }
-  return {
-    results: [data],
-  };
-}
-
 export async function deleteRows<T>({
   formData,
   body,

@@ -1,5 +1,4 @@
 import OperationTable from "@/components/operations/table";
-import { getOwnRows } from "@/lib/general/actions";
 import Stat from "@/components/dashboard/stats/ref";
 import { Suspense } from "react";
 import Loader from "@/components/stocks/loader";
@@ -7,6 +6,7 @@ import LineChartLoader from "@/components/ui/charts/line-loader";
 import { getOperationsStats } from "@/lib/operations/actions";
 import OperationsByMonth from "@/components/dashboard/operations-by-month";
 import { getDefaultCurrency } from "@/lib/settings/actions";
+import { createClient } from "@/utils/supabase/server";
 
 export default async function Page({
   searchParams,
@@ -59,17 +59,23 @@ export default async function Page({
 }
 
 async function Expenses({ searchParams }: { searchParams: SearchParams }) {
-  const { results: expenses, count } = await getOwnRows<Operation>(
-    "expense",
-    searchParams
-  );
+  const supabase = createClient();
+  const {
+    data: { results: expenses, count },
+  } = await supabase.rpc("get_expenses_own_rows", {
+    p_page: searchParams.page,
+    p_sort: searchParams.sort,
+    p_search: searchParams.search,
+    p_currency: searchParams.currency,
+    p_label: searchParams.label,
+  });
 
   return (
     <div className="row-span-2 col-span-2 flex items-stretch">
       <OperationTable
         title="Wydatki"
         type="expense"
-        rows={expenses}
+        rows={expenses || []}
         count={count || 0}
       />
     </div>

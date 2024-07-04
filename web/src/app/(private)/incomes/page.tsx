@@ -3,9 +3,9 @@ import Stat from "@/components/dashboard/stats/ref";
 import IncomeTable from "@/components/operations/table";
 import Loader from "@/components/stocks/loader";
 import LineChartLoader from "@/components/ui/charts/line-loader";
-import { getOwnRows } from "@/lib/general/actions";
 import { getOperationsStats } from "@/lib/operations/actions";
 import { getDefaultCurrency } from "@/lib/settings/actions";
+import { createClient } from "@/utils/supabase/server";
 import { Suspense } from "react";
 
 export default async function Page({
@@ -59,16 +59,21 @@ export default async function Page({
 }
 
 async function Incomes({ searchParams }: { searchParams: SearchParams }) {
-  const { results: incomes, count } = await getOwnRows<Operation>(
-    "income",
-    searchParams
-  );
+  const supabase = createClient();
+  const {
+    data: { results: incomes, count },
+  } = await supabase.rpc("get_incomes_own_rows", {
+    p_page: searchParams.page,
+    p_sort: searchParams.sort,
+    p_search: searchParams.search,
+    p_currency: searchParams.currency,
+  });
 
   return (
     <div className="row-span-2 col-span-2 flex items-stretch">
       <IncomeTable
         title="Przychody"
-        rows={incomes}
+        rows={incomes || []}
         count={count || 0}
         type="income"
       />
