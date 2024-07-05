@@ -57,7 +57,7 @@ export async function addGoalPayment(formData: FormData): Promise<
     amount,
     goal_id,
     date,
-  }).eq("date", date);
+  }).match({ date, goal_id });
 
   if (error) {
     console.log("Couldn't add goal payment: ", error);
