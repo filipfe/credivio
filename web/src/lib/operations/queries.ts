@@ -3,14 +3,14 @@
 import { createClient } from "@/utils/supabase/client";
 
 export async function getChartLabels(
-  currency: string
+  currency: string,
 ): Promise<SupabaseResponse<ChartLabel>> {
   const supabase = createClient();
   const { data: results, error } = await supabase.rpc(
     "get_dashboard_chart_labels",
     {
       p_currency: currency,
-    }
+    },
   );
 
   if (error) {
@@ -27,12 +27,12 @@ export async function getChartLabels(
 
 export async function getDailyTotalAmount(
   currency: string,
-  type: string
+  type: string,
 ): Promise<SupabaseResponse<DailyAmount>> {
   const supabase = createClient();
   const { data: results, error } = await supabase.rpc(
     "get_daily_total_amount",
-    { p_currency: currency, p_type: type }
+    { p_currency: currency, p_type: type },
   );
 
   if (error) {
@@ -44,5 +44,14 @@ export async function getDailyTotalAmount(
 
   return {
     results,
+  };
+}
+
+export async function getBudget(
+  currency: string,
+): Promise<SupabaseResponse<{ total_amount: number; currency: string }>> {
+  // const supabase = createClient();
+  return {
+    results: [{ total_amount: 2, currency: "PLN" }],
   };
 }

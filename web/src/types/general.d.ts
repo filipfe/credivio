@@ -10,7 +10,7 @@ type SettingsPage = Page & {
   description: string;
 };
 
-type SupabaseResponse<T> = {
+type SupabaseResponse<T = void> = {
   error?: string;
   results: T[];
   count?: number | null;
