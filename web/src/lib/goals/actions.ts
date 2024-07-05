@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
+import { revalidatePath } from "next/cache";
 
 export async function getGoals(): Promise<SupabaseResponse<Goal>> {
   const supabase = createClient();
@@ -45,13 +46,12 @@ export async function getGoalsPayments(): Promise<
 }
 
 export async function addGoalPayment(formData: FormData): Promise<
-  Pick<SupabaseResponse, "error">
+  Pick<SupabaseResponse, "error"> | undefined
 > {
   const amount = formData.get("amount")?.toString();
   const goal_id = formData.get("goal_id")?.toString();
+  const date = formData.get("date")?.toString();
   const supabase = createClient();
-
-  const date = new Date().toISOString().substring(0, 10);
 
   const { error } = await supabase.from("goals_payments").upsert({
     amount,
@@ -60,11 +60,11 @@ export async function addGoalPayment(formData: FormData): Promise<
   }).match({ date, goal_id });
 
   if (error) {
-    console.log("Couldn't add goal payment: ", error);
+    console.error("Couldn't add goal payment: ", error);
     return {
       error: error.message,
     };
   }
 
-  return {};
+  revalidatePath("/goals");
 }

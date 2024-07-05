@@ -1,11 +1,9 @@
 "use client";
 
 import useClientQuery from "@/hooks/useClientQuery";
-import { addGoalPayment } from "@/lib/goals/actions";
 import { getBudget } from "@/lib/operations/queries";
 import numberFormat from "@/utils/formatters/currency";
 import formatAmount from "@/utils/operations/format-amount";
-import { createClient } from "@/utils/supabase/client";
 import {
   Button,
   Input,
@@ -13,7 +11,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@nextui-org/react";
-import { useRef, useState } from "react";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import Toast from "../ui/toast";
+import useSWR from "swr";
+import { addGoalPayment } from "@/lib/goals/queries";
 
 type Props = {
   goal: Goal;
@@ -21,32 +23,60 @@ type Props = {
   max: number;
 };
 
-const date = new Date().toISOString();
-
 export default function PaymentPopover({
   amount: defaultAmount,
   goal,
   max,
 }: Props) {
   const [inputValue, setInputValue] = useState(defaultAmount.toString());
-  const [triggerValue, setTriggerValue] = useState(defaultAmount);
+  const { data, mutate } = useSWR("goals_payments");
   const { results } = useClientQuery({ query: getBudget(goal.currency) });
 
   async function onSubmit() {
-    const supabase = createClient();
-    const res = await supabase
-      .from("goals_payments")
-      .upsert({ date, goal_id: goal.id, amount: inputValue })
-      .match({ goal_id: goal.id, date });
-
-    console.log(res);
+    if (inputValue === defaultAmount.toString()) return;
+    const amount = parseFloat(inputValue);
+    if (amount > max) {
+      toast.custom((t) => (
+        <Toast {...t} type="error" message="Kwota przekracza cenę celu!" />
+      ));
+      setInputValue(defaultAmount.toString());
+      return;
+    }
+    const { error } = await addGoalPayment(goal.id, inputValue);
+    if (error) {
+      console.error("Couldn't add goal payment: ", error);
+      toast.custom((t) => (
+        <Toast
+          {...t}
+          type="error"
+          message="Wystąpił błąd przy dodawaniu płatności!"
+        />
+      ));
+    } else {
+      toast.custom((t) => (
+        <Toast
+          {...t}
+          type="success"
+          message={`Pomyślnie dodano płatność do celu ${goal.title}!`}
+        />
+      ));
+    }
+    const newPayments = data
+      ? data.map((payment: GoalPayment) =>
+          payment.goal_id === goal.id &&
+          payment.date === new Date().toISOString().substring(0, 10)
+            ? { ...payment, amount }
+            : payment
+        )
+      : [];
+    mutate(newPayments);
   }
 
   return (
     <Popover placement="top" onClose={onSubmit}>
       <PopoverTrigger>
         <button className="w-full bg-light border-primary/10 border rounded-md px-4 py-2">
-          {numberFormat(goal.currency, triggerValue)}
+          {numberFormat(goal.currency, defaultAmount)}
         </button>
       </PopoverTrigger>
       <PopoverContent className="py-2">
