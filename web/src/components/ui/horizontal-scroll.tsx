@@ -8,12 +8,14 @@ type Props = {
   children: React.ReactNode[] | React.ReactNode;
   className?: string;
   innerClassName?: string;
+  fullWidth?: boolean;
 };
 
 export default function HorizontalScroll({
   children,
   className,
   innerClassName,
+  fullWidth,
 }: Props) {
   const { isMenuHidden } = useContext(MenuContext);
   return (
@@ -23,8 +25,12 @@ export default function HorizontalScroll({
       className={cn(
         "w-full",
         isMenuHidden.desktop
-          ? "max-w-[100vw] sm:max-w-[calc(100vw-176px)]"
-          : "max-w-[100vw] sm:max-w-[calc(100vw-416px)]",
+          ? "max-w-[calc(100vw-48px)] sm:max-w-[calc(100vw-176px)]"
+          : cn(
+              fullWidth
+                ? "max-w-[100vw] sm:max-w-[calc(100vw-320px)]"
+                : "max-w-[calc(100vw-48px)] sm:max-w-[calc(100vw-416px)]"
+            ),
         className
       )}
     >

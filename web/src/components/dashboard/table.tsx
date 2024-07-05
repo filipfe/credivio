@@ -79,7 +79,7 @@ export default function BudgetTable({ budgets }: Props) {
         loadingContent={<Spinner label="Loading..." />}
       >
         {(item) => (
-          <TableRow key={item.currency} className="hover:bg-[#f7f7f8]">
+          <TableRow key={item.currency} className="hover:bg-light">
             {(columnKey) => (
               <TableCell>
                 {renderCell(item, columnKey as keyof Budget)}

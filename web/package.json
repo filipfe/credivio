@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.4.1",
-    "@supabase/ssr": "^0.3.0",
+    "@supabase/ssr": "^0.4.0",
     "@supabase/supabase-js": "^2.39.7",
     "axios": "^1.6.7",
     "chardet": "^2.0.0",
@@ -26,6 +26,7 @@
     "react-dropzone": "^14.2.3",
     "react-hot-toast": "^2.4.1",
     "recharts": "^2.12.2",
+    "swr": "^2.2.5",
     "use-debounce": "^10.0.0",
     "uuid": "^9.0.1"
   },
