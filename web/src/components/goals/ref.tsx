@@ -19,17 +19,6 @@ export default function GoalRef(goal: Goal) {
   const isCompleted = parseFloat(saved) >= price;
   const { activeRecord, setActiveRecord } = useContext(TimelineContext);
 
-  // function handleAdd() {
-  //   if (isPending || saved === defaultSaved.toString()) return;
-  //   const valid = (prev: string) =>
-  //     formatMax(parseFloat(prev || defaultSaved.toString() || "0"), price);
-  //   setSaved(valid);
-  //   startTransition(async () => {
-  //     await updateRow(id, "goal", { saved: valid(saved) });
-  //     setIsSavedEditable(false);
-  //   });
-  // }
-
   useOutsideObserver(formRef, () =>
     formRef.current?.dispatchEvent(
       new Event("submit", { cancelable: true, bubbles: true })

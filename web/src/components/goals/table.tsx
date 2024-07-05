@@ -2,10 +2,6 @@
 
 import {
   Button,
-  Input,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
   ScrollShadow,
   Table,
   TableBody,
@@ -20,19 +16,11 @@ import { addDays, format, subDays } from "date-fns";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import numberFormat from "@/utils/formatters/currency";
 import { ChevronDown } from "lucide-react";
-import useClientQuery from "@/hooks/useClientQuery";
-import { getGoalsPayments } from "@/lib/goals/actions";
 import Loader from "../stocks/loader";
 import formatAmount from "@/utils/operations/format-amount";
 import PaymentPopover from "./popover";
-
-// const sums = payments.reduce(
-//   (prev, { goal_id, amount }) => ({
-//     ...prev,
-//     [goal_id]: (prev[goal_id] || 0) + amount,
-//   }),
-//   {} as Record<string, number>
-// );
+import useSWR from "swr";
+import { getGoalsPayments } from "@/lib/goals/queries";
 
 const generateDates = (start: Date, end: Date): Date[] => {
   const dates = [];
@@ -46,10 +34,21 @@ const generateDates = (start: Date, end: Date): Date[] => {
 
 const today = new Date();
 
-export default function GoalsTable({ goals }: { goals: Goal[] }) {
-  const { results: payments, isLoading } = useClientQuery({
-    query: getGoalsPayments(),
-  });
+export default function GoalsTable({
+  goals,
+}: // payments,
+{
+  goals: Goal[];
+  // payments: GoalPayment[];
+}) {
+  // const { results: payments, isLoading } = useClientQuery({
+  //   query: getGoalsPayments(),
+  // });
+  const {
+    data: payments,
+    isLoading,
+    isValidating,
+  } = useSWR("goals_payments", getGoalsPayments, { keepPreviousData: true });
   const [scrollButtonVisible, setScrollButtonVisible] = useState(false);
   const tbodyRef = useRef<HTMLDivElement | null>(null);
 
@@ -61,7 +60,7 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
   // Helper function to get payment amount for a specific date and goal
   const getPaymentAmount = useCallback(
     (date: string, goal_id: string): number => {
-      const payment = payments.find(
+      const payment = payments?.find(
         (p) => p.date === date && p.goal_id === goal_id
       );
       return payment ? payment.amount : 0;
@@ -71,13 +70,15 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
 
   const sums = useMemo(
     () =>
-      payments.reduce(
-        (prev, { goal_id, amount }) => ({
-          ...prev,
-          [goal_id]: (prev[goal_id] || 0) + amount,
-        }),
-        {} as Record<string, number>
-      ),
+      Array.isArray(payments)
+        ? payments.reduce(
+            (prev, { goal_id, amount }) => ({
+              ...prev,
+              [goal_id]: (prev[goal_id] || 0) + amount,
+            }),
+            {} as Record<string, number>
+          )
+        : {},
     [payments]
   );
 
@@ -106,8 +107,8 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
     };
   }, [tbodyRef.current]);
 
-  if (isLoading) {
-    return <Loader title="Wpłaty" />;
+  if (isLoading && !isValidating) {
+    return <Loader title="Wpłaty" className="row-span-2" />;
   }
 
   return (
