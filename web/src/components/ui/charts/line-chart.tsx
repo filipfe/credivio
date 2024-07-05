@@ -8,9 +8,13 @@ import {
   XAxis,
   Tooltip,
   LineChart as Chart,
+  ReferenceLine,
+  ReferenceArea,
 } from "recharts";
 import ChartTooltip from "./tooltip";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { PeriodContext } from "@/app/(private)/(operations)/providers";
 
 type Props = {
   data: DailyAmount[];
@@ -19,11 +23,18 @@ type Props = {
 };
 
 export default function LineChart({ data, currency, type }: Props) {
+  const { period, setPeriod } = useContext(PeriodContext);
   const { width, tickFormatter } = useYAxisWidth(currency);
 
   return (
     <ResponsiveContainer width="100%" height="100%" minHeight={320}>
-      <Chart data={data} margin={{ top: 16, right: 20 }}>
+      <Chart
+        data={data}
+        margin={{ top: 16, right: 20 }}
+        onClick={({ activeLabel }) =>
+          activeLabel && setPeriod({ from: activeLabel, to: activeLabel })
+        }
+      >
         <YAxis
           width={width}
           tick={{ fontSize: 12 }}
@@ -88,6 +99,30 @@ export default function LineChart({ data, currency, type }: Props) {
           fillOpacity={1}
           dot={false}
         />
+        {period && (
+          <ReferenceLine
+            x={period.from}
+            stroke="#fdbb2d"
+            strokeWidth={2}
+            strokeOpacity={0.6}
+          />
+        )}
+        {period && period.from !== period.to && (
+          <ReferenceLine
+            x={period.to}
+            stroke="#fdbb2d"
+            strokeWidth={2}
+            strokeOpacity={0.6}
+          />
+        )}
+        {period && period.from !== period.to && (
+          <ReferenceArea
+            x1={period.from}
+            x2={period.to}
+            fill="#fdbb2d"
+            fillOpacity={0.2}
+          />
+        )}
       </Chart>
     </ResponsiveContainer>
   );

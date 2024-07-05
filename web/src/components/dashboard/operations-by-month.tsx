@@ -8,7 +8,7 @@ import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
 import useClientQuery from "@/hooks/useClientQuery";
 import { getDailyTotalAmount } from "@/lib/operations/queries";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 const getTitle = (type: "budget" | "income" | "expense") => {
   switch (type) {
@@ -21,13 +21,12 @@ const getTitle = (type: "budget" | "income" | "expense") => {
   }
 };
 
-export default function OperationsByMonth({
-  type,
-  defaultCurrency,
-}: {
+type Props = {
   type: "budget" | "income" | "expense";
   defaultCurrency: string;
-}) {
+};
+
+export default function OperationsByMonth({ type, defaultCurrency }: Props) {
   const [currency, setCurrency] = useState<string>(defaultCurrency);
   const { results, isLoading } = useClientQuery<DailyAmount>({
     deps: [currency, type],

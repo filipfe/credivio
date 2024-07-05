@@ -73,3 +73,8 @@ type ActionButtonProps = {
   icon: LucideIcon;
   onSubmit: () => Promise<void>;
 };
+
+type Period = {
+  from: string;
+  to: string;
+};
