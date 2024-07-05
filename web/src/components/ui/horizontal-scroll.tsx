@@ -25,11 +25,11 @@ export default function HorizontalScroll({
       className={cn(
         "w-full",
         isMenuHidden.desktop
-          ? "max-w-[100vw] sm:max-w-[calc(100vw-176px)]"
+          ? "max-w-[calc(100vw-48px)] sm:max-w-[calc(100vw-176px)]"
           : cn(
               fullWidth
                 ? "max-w-[100vw] sm:max-w-[calc(100vw-320px)]"
-                : "max-w-[100vw] sm:max-w-[calc(100vw-416px)]"
+                : "max-w-[calc(100vw-48px)] sm:max-w-[calc(100vw-416px)]"
             ),
         className
       )}

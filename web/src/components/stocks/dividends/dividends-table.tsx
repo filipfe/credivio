@@ -1,5 +1,6 @@
 "use client";
 
+import HorizontalScroll from "@/components/ui/horizontal-scroll";
 import numberFormat from "@/utils/formatters/currency";
 import { Spinner } from "@nextui-org/react";
 import {
@@ -83,32 +84,34 @@ export default function DividendsTable({
     : dividends;
 
   return (
-    <Table
-      shadow="none"
-      aria-label="dividend-table"
-      color="primary"
-      className="max-w-full w-full flex-1 rounded-t-lg"
-      removeWrapper
-    >
-      <TableHeader>
-        {columns({ profitVisible: !!holdings, simplified }).map((column) => (
-          <TableColumn key={column.key}>{column.label}</TableColumn>
-        ))}
-      </TableHeader>
-      <TableBody
-        items={validItems}
-        loadingContent={<Spinner label="Loading..." />}
+    <HorizontalScroll>
+      <Table
+        shadow="none"
+        aria-label="dividend-table"
+        color="primary"
+        className="max-w-full w-full flex-1 rounded-t-lg"
+        removeWrapper
       >
-        {(item) => (
-          <TableRow key={item.company + item.date} className="hover:bg-light">
-            {(columnKey) => (
-              <TableCell>
-                {renderCell(item, columnKey as keyof Dividend)}
-              </TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+        <TableHeader>
+          {columns({ profitVisible: !!holdings, simplified }).map((column) => (
+            <TableColumn key={column.key}>{column.label}</TableColumn>
+          ))}
+        </TableHeader>
+        <TableBody
+          items={validItems}
+          loadingContent={<Spinner label="Loading..." />}
+        >
+          {(item) => (
+            <TableRow key={item.company + item.date} className="hover:bg-light">
+              {(columnKey) => (
+                <TableCell>
+                  {renderCell(item, columnKey as keyof Dividend)}
+                </TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </HorizontalScroll>
   );
 }

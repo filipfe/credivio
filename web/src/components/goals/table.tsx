@@ -106,8 +106,6 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
     };
   }, [tbodyRef.current]);
 
-  console.log(payments);
-
   if (isLoading) {
     return <Loader title="Wpłaty" />;
   }

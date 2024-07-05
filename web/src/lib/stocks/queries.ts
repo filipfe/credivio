@@ -13,7 +13,6 @@ export async function getPriceHistory(
   );
   const err = await formatError(error);
 
-  console.log(err, data);
   if (err || !data) {
     return {
       error: err || "Internal server error",

@@ -5,7 +5,6 @@ import Link from "next/link";
 import numberFormat from "@/utils/formatters/currency";
 import useClientQuery from "@/hooks/useClientQuery";
 import { getPriceHistory } from "@/lib/stocks/queries";
-import LineChartLoader from "@/components/ui/charts/line-loader";
 
 export default function CompanyBlock({
   _symbol,
@@ -13,7 +12,7 @@ export default function CompanyBlock({
   _change,
   _quote,
 }: Stock) {
-  const { results, isLoading } = useClientQuery({
+  const { results } = useClientQuery({
     query: getPriceHistory(_symbol_short),
   });
 

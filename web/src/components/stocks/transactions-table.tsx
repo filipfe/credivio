@@ -82,7 +82,6 @@ export default function TransactionTable({
     <Block
       title={title}
       className="w-screen sm:w-full"
-      hideTitleMobile
       cta={
         topContent
           ? topContent
@@ -172,10 +171,15 @@ export default function TransactionTable({
       </ScrollShadow>
       {count > 0 && !simplified && (
         <Pagination
+          size="sm"
           isCompact
           showControls
+          showShadow={false}
           color="primary"
-          className="text-background mt-2 ml-auto mr-2"
+          className="text-background"
+          classNames={{
+            wrapper: "!shadow-none",
+          }}
           page={page}
           isDisabled={isLoading}
           total={pages}
