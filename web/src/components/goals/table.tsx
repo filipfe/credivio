@@ -24,6 +24,7 @@ import useClientQuery from "@/hooks/useClientQuery";
 import { getGoalsPayments } from "@/lib/goals/actions";
 import Loader from "../stocks/loader";
 import formatAmount from "@/utils/operations/format-amount";
+import PaymentPopover from "./popover";
 
 // const sums = payments.reduce(
 //   (prev, { goal_id, amount }) => ({
@@ -105,8 +106,6 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
     };
   }, [tbodyRef.current]);
 
-  console.log(payments);
-
   if (isLoading) {
     return <Loader title="Wpłaty" />;
   }
@@ -186,28 +185,17 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
                       goals.map((goal) => (
                         <TableCell key={goal.id}>
                           {isToday ? (
-                            <Popover placement="top">
-                              <PopoverTrigger>
-                                <button className="w-full bg-light border-primary/10 border rounded-md px-4 py-2">
-                                  {numberFormat(
-                                    goal.currency,
-                                    getPaymentAmount(YMD, goal.id)
-                                  )}
-                                </button>
-                              </PopoverTrigger>
-                              <PopoverContent className="py-2">
-                                <AmountInput
-                                  max={
-                                    goal.price -
-                                    ((sums[goal.id] || 0) -
-                                      (isToday
-                                        ? getPaymentAmount(YMD, goal.id)
-                                        : 0))
-                                  }
-                                  defaultAmount={getPaymentAmount(YMD, goal.id)}
-                                />
-                              </PopoverContent>
-                            </Popover>
+                            <PaymentPopover
+                              goal={goal}
+                              amount={getPaymentAmount(YMD, goal.id)}
+                              max={
+                                goal.price -
+                                ((sums[goal.id] || 0) -
+                                  (isToday
+                                    ? getPaymentAmount(YMD, goal.id)
+                                    : 0))
+                              }
+                            />
                           ) : (
                             numberFormat(
                               goal.currency,
@@ -244,38 +232,3 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
     </Block>
   );
 }
-
-const AmountInput = ({
-  defaultAmount,
-  max,
-}: {
-  defaultAmount: number;
-  max: number;
-}) => {
-  const [amount, setAmount] = useState(defaultAmount.toString());
-
-  return (
-    <div className="flex items-center relative">
-      <Input
-        autoFocus
-        label="Kwota"
-        isInvalid={parseFloat(amount) > max}
-        classNames={{
-          inputWrapper: "!outline-none",
-        }}
-        value={amount}
-        onValueChange={(value) => setAmount(formatAmount(value))}
-      />
-      <Button
-        size="sm"
-        radius="md"
-        isIconOnly
-        disableRipple
-        className="border border-primary/10 bg-white absolute right-2 min-w-12 z-10"
-        onClick={() => setAmount(max.toString())}
-      >
-        100%
-      </Button>
-    </div>
-  );
-};

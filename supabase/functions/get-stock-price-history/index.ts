@@ -2,6 +2,8 @@
 // https://deno.land/manual/getting_started/setup_your_environment
 // This enables autocomplete, go to definition, etc.
 
+import { corsHeaders } from "../_shared/cors.ts";
+
 // Setup type definitions for built-in Supabase Runtime APIs
 /// <reference types="https://esm.sh/v135/@supabase/functions-js@2.4.1/src/edge-runtime.d.ts" />
 
@@ -10,6 +12,9 @@ type Body = {
 };
 
 Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
   try {
     const { short_symbol } = (await req.json()) as Body;
     const now = new Date();
@@ -44,7 +49,7 @@ Deno.serve(async (req) => {
     }
 
     return new Response(JSON.stringify({ results }), {
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...corsHeaders },
       status: 200,
     });
   } catch (_err) {
@@ -54,7 +59,7 @@ Deno.serve(async (req) => {
         error: "Wystąpił błąd, spróbuj ponownie później!",
       }),
       {
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...corsHeaders },
         status: 400,
       },
     );

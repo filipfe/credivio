@@ -69,7 +69,7 @@ export default function ActiveService({
           </Button>
         </div>
       </div>
-      <Modal size="sm" onOpenChange={onOpenChange} isOpen={isOpen}>
+      <Modal onOpenChange={onOpenChange} isOpen={isOpen}>
         <ModalContent>
           {(onClose) => (
             <Fragment>
@@ -83,13 +83,7 @@ export default function ActiveService({
                 </strong>
               </ModalBody>
               <ModalFooter className="pb-6 px-8 grid grid-cols-2 gap-3 w-full mx-auto">
-                <Button
-                  disableRipple
-                  className="font-medium"
-                  onClick={onClose}
-                  variant="flat"
-                  color="primary"
-                >
+                <Button disableRipple className="font-medium" onClick={onClose}>
                   Anuluj
                 </Button>
                 <form

@@ -87,7 +87,7 @@ export default function StockTable({
       </TableHeader>
       <TableBody items={stocks} loadingContent={<Spinner label="Loading..." />}>
         {(item) => (
-          <TableRow key={item._symbol} className="hover:bg-[#f7f7f8]">
+          <TableRow key={item._symbol} className="hover:bg-light">
             {(columnKey) => (
               <TableCell>
                 {renderCell(item, columnKey as keyof TableStock)}
