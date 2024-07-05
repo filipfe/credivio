@@ -1,6 +1,7 @@
 "use client";
 
 import ChartTooltip from "@/components/ui/charts/tooltip";
+import useYAxisWidth from "@/hooks/useYAxisWidth";
 import { useState } from "react";
 import {
   Area,
@@ -20,7 +21,17 @@ type Props = {
   currency: string;
 };
 
+const numberFormat = new Intl.NumberFormat("pl-PL", {
+  style: "currency",
+  currency: "PLN",
+  notation: "standard",
+  maximumFractionDigits: 2,
+});
+
 export default function BigChart({ quotes, isUp, isDown, currency }: Props) {
+  const { width, tickFormatter } = useYAxisWidth(currency, (value) =>
+    numberFormat.format(value)
+  );
   const [activeTime, setActiveTime] = useState<number | null>(null);
   const prices = quotes.map(({ price }) => price);
   const maxPrice = Math.max(...prices);
@@ -28,7 +39,7 @@ export default function BigChart({ quotes, isUp, isDown, currency }: Props) {
   const diff = Math.abs(maxPrice - minPrice);
   const color = isUp ? "#32a852" : isDown ? "#f31212" : "#000";
   return (
-    <ResponsiveContainer width="100%" height={360}>
+    <ResponsiveContainer width="100%" height="100%">
       <AreaChart
         data={quotes}
         margin={{ top: 0, right: 0, bottom: 0, left: -10 }}
@@ -54,18 +65,11 @@ export default function BigChart({ quotes, isUp, isDown, currency }: Props) {
           </linearGradient>
         </defs>
         <YAxis
-          // tick={{ fontSize: 12 }}
-          // tickLine={false}
-          // tickFormatter={(value) =>
-          //   new Intl.NumberFormat("pl-PL", {
-          //     style: "currency",
-          //     currency: "PLN",
-          //     notation: "standard",
-          //     maximumFractionDigits: 2,
-          //   }).format(value)
-          // }
-          hide
-          domain={[minPrice - diff, maxPrice + diff]}
+          tick={{ fontSize: 12 }}
+          tickLine={false}
+          tickFormatter={tickFormatter}
+          width={width + 16}
+          // domain={[minPrice - diff, maxPrice + diff]}
           axisLine={false}
         />
         <XAxis

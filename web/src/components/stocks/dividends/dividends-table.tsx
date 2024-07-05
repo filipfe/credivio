@@ -100,10 +100,7 @@ export default function DividendsTable({
         loadingContent={<Spinner label="Loading..." />}
       >
         {(item) => (
-          <TableRow
-            key={item.company + item.date}
-            className="hover:bg-[#f7f7f8]"
-          >
+          <TableRow key={item.company + item.date} className="hover:bg-light">
             {(columnKey) => (
               <TableCell>
                 {renderCell(item, columnKey as keyof Dividend)}

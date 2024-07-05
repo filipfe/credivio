@@ -161,7 +161,7 @@ export default function TransactionTable({
             }
           >
             {(item) => (
-              <TableRow key={item.id} className="hover:bg-[#f7f7f8]">
+              <TableRow key={item.id} className="hover:bg-light">
                 {(columnKey) => (
                   <TableCell>{renderCell(item, columnKey)}</TableCell>
                 )}
