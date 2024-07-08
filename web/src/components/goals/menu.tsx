@@ -1,7 +1,6 @@
 "use client";
 
-import { deleteRows, updateRow } from "@/lib/general/actions";
-import { TimelineContext } from "@/app/(private)/goals/providers";
+import { deleteRows } from "@/lib/general/actions";
 import {
   Dropdown,
   DropdownItem,
@@ -14,7 +13,7 @@ import {
   PlusIcon,
   Trash2Icon,
 } from "lucide-react";
-import { Key, useContext, useState } from "react";
+import { Key, useState } from "react";
 import toast from "react-hot-toast";
 
 type Props = {
@@ -23,7 +22,6 @@ type Props = {
 };
 
 export default function Menu({ goal, onAdd }: Props) {
-  const { activeRecord, setActiveRecord } = useContext(TimelineContext);
   const [loadingKey, setLoadingKey] = useState<string | null>(null);
 
   async function onAction(key: Key) {
@@ -31,15 +29,6 @@ export default function Menu({ goal, onAdd }: Props) {
     switch (key) {
       case "add":
         onAdd && onAdd();
-        break;
-      case "priority":
-        const { error: updateError } = await updateRow(goal.id, "goal", {
-          is_priority: true,
-        });
-        updateError && toast.error(updateError.message);
-        setActiveRecord((prev) =>
-          prev ? { ...prev, is_priority: true } : prev
-        );
         break;
       case "delete":
         const { error: deleteError } = await deleteRows({
@@ -53,7 +42,6 @@ export default function Menu({ goal, onAdd }: Props) {
 
   const disabledKeys: string[] = [
     ...(loadingKey ? [loadingKey] : []),
-    ...(!goal.deadline || activeRecord?.id === goal.id ? ["locate"] : []),
     ...(goal.is_priority ? ["priority"] : []),
   ];
 

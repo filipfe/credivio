@@ -8,30 +8,10 @@ export async function getGoals(): Promise<SupabaseResponse<Goal>> {
   const { data: results, error } = await supabase
     .from("goals")
     .select(
-      "id, title, description, price, saved, currency, deadline, is_priority",
+      "id, title, description, price, currency, deadline, is_priority, payments:goals_payments(amount, date)",
     )
     .order("deadline")
     .order("created_at");
-
-  if (error) {
-    return {
-      results: [],
-      error: error.message,
-    };
-  }
-
-  return {
-    results,
-  };
-}
-
-export async function getGoalsPayments(): Promise<
-  SupabaseResponse<GoalPayment>
-> {
-  const supabase = createClient();
-  const { data: results, error } = await supabase
-    .from("goals_payments")
-    .select("goal_id, amount, date");
 
   if (error) {
     return {
@@ -50,14 +30,15 @@ export async function addGoalPayment(formData: FormData): Promise<
 > {
   const amount = formData.get("amount")?.toString();
   const goal_id = formData.get("goal_id")?.toString();
-  const date = formData.get("date")?.toString();
+  const date = new Date().toDateString();
   const supabase = createClient();
 
-  const { error } = await supabase.from("goals_payments").upsert({
-    amount,
-    goal_id,
-    date,
-  }).match({ date, goal_id });
+  const { error } = await supabase
+    .from("goals_payments")
+    .upsert(
+      { date, goal_id, amount },
+      { onConflict: ["date", "goal_id"] },
+    );
 
   if (error) {
     console.error("Couldn't add goal payment: ", error);

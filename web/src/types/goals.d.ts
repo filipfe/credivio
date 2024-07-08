@@ -6,6 +6,7 @@ type Goal = {
   currency: string;
   is_priority?: boolean;
   deadline?: string;
+  payments: GoalPayment[];
 };
 
 type GoalPayment = {
