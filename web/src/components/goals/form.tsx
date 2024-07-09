@@ -6,12 +6,16 @@ import { useState, useTransition } from "react";
 import { CheckIcon } from "lucide-react";
 import { insertRows } from "@/lib/general/actions";
 import toast from "react-hot-toast";
-import { v4 } from "uuid";
 import UniversalSelect from "../ui/universal-select";
 import { CURRENCIES } from "@/const";
 import Block from "../ui/block";
+import Toast from "../ui/toast";
 
-const defaultRecord: GoalRecord = {
+interface NewGoal extends Omit<Goal, "id" | "saved" | "price" | "payments"> {
+  price: string;
+}
+
+const defaultRecord: NewGoal = {
   title: "",
   price: "",
   currency: "",
@@ -24,7 +28,7 @@ export default function GoalForm({
   defaultCurrency: string;
 }) {
   const [isPending, startTransition] = useTransition();
-  const [singleRecord, setSingleRecord] = useState<GoalRecord>({
+  const [singleRecord, setSingleRecord] = useState<NewGoal>({
     ...defaultRecord,
     currency: defaultCurrency,
   });
@@ -35,7 +39,15 @@ export default function GoalForm({
         action={(formData) =>
           startTransition(async () => {
             const { error } = await insertRows({ formData });
-            error && toast.error(error);
+            if (error) {
+              toast.custom((t) => (
+                <Toast
+                  {...t}
+                  type="error"
+                  message="Wystąpił błąd przy dodawaniu celu"
+                />
+              ));
+            }
           })
         }
         className="grid grid-cols-2 gap-4"

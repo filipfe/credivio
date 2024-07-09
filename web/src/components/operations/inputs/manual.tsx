@@ -1,9 +1,10 @@
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
 import { Input, Textarea } from "@nextui-org/react";
-import { FormHTMLAttributes, useState } from "react";
+import { FormHTMLAttributes } from "react";
 import LabelInput from "./label";
 import AmountInput from "./amount";
+import { format } from "date-fns";
 
 interface Props extends FormHTMLAttributes<HTMLFormElement> {
   type: OperationType;
@@ -11,6 +12,8 @@ interface Props extends FormHTMLAttributes<HTMLFormElement> {
   defaultCurrency?: string;
   withLabel?: boolean;
 }
+
+const now = new Date();
 
 export default function Manual({
   type,
@@ -50,9 +53,7 @@ export default function Manual({
           type="date"
           required
           isRequired
-          defaultValue={
-            initialValue?.issued_at || new Date().toJSON().substring(0, 10)
-          }
+          defaultValue={initialValue?.issued_at || format(now, "yyyy-MM-dd")}
         />
         <Textarea
           className="col-span-2"

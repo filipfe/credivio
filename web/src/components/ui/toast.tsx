@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 export default function Toast({ id, type, message, visible }: ToastProps) {
   const isError = type === "error";
   const isBlank = type === "blank";
+  const isLoading = type === "loading";
   return (
     <AnimatePresence>
       {visible && (
@@ -14,22 +15,28 @@ export default function Toast({ id, type, message, visible }: ToastProps) {
           initial={{ transform: `translateX(-50%)`, opacity: 0 }}
           animate={{ transform: `translateX(0%)`, opacity: 1 }}
           exit={{ transform: `translateX(50%)`, opacity: 0 }}
-          className={`rounded-md max-w-sm border py-4 px-6 flex items-center gap-8 bg-white border-primary/10 ${
+          className={`rounded-md max-w-sm border py-4 px-6 flex items-center gap-8 bg-white shadow-xl shadow-font/[.03] border-primary/10 ${
             visible ? "animate-enter" : "animate-exit"
           }`}
           key="toast"
         >
           <div className="flex flex-col gap-1">
             <div className="flex items-start gap-2.5">
-              {!isBlank && (
-                <div
-                  className={`h-2.5 w-2.5 mt-1.5 min-w-2.5 rounded-full ${
-                    isError ? "bg-danger" : "bg-success"
-                  }`}
-                />
+              {isLoading ? (
+                <div className="mr-1.5">
+                  <l-hatch size={16} stroke={2} />
+                </div>
+              ) : (
+                !isBlank && (
+                  <div
+                    className={`h-2.5 w-2.5 mt-1.5 min-w-2.5 rounded-full ${
+                      isError ? "bg-danger" : "bg-success"
+                    }`}
+                  />
+                )
               )}
               <p className="text-sm mb-0.5">
-                {isError ? "Something went wrong!" : message?.toString()}
+                {isError ? "Coś poszło nie tak!" : message?.toString()}
               </p>
             </div>
             {isError && (

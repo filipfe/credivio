@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 
 export async function getOwnRows<T>(
   type: OperationType,
-  searchParams?: SearchParams
+  searchParams?: SearchParams,
 ): Promise<SupabaseResponse<T>> {
   try {
     const supabase = createClient();
@@ -59,7 +59,7 @@ export async function getOwnRows<T>(
     const page = Number(searchParams?.page);
     const { data, count, error } = await query.range(
       page ? page * 10 - 10 : 0,
-      page ? page * 10 - 1 : 9
+      page ? page * 10 - 1 : 9,
     );
 
     if (error) {
@@ -80,7 +80,7 @@ export async function getOwnRows<T>(
 export async function updateRow(
   id: string,
   type: OperationType,
-  fields: { [key: string]: any }
+  fields: { [key: string]: any },
 ) {
   const supabase = createClient();
   const { error } = await supabase.from(`${type}s`).update(fields).eq("id", id);
@@ -136,6 +136,7 @@ export async function deleteRows<T>({
     }
     const { error } = await query;
     if (error) {
+      console.error("Couldn't delete row: ", error);
       return {
         results: [],
         error: error.message,
