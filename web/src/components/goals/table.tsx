@@ -98,7 +98,11 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
 
   return (
     <Block title="Wpłaty" className="row-span-2">
-      <ScrollShadow orientation="horizontal" hideScrollBar className="relative">
+      <ScrollShadow
+        orientation="horizontal"
+        hideScrollBar
+        className="relative max-w-[calc(100vw-48px)]"
+      >
         {scrollButtonVisible && (
           <div className="absolute bottom-24 left-[calc(50%-41px)] z-20">
             <Button
@@ -165,7 +169,11 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
                         isToday ? "font-medium" : "font-normal"
                       )}
                     >
-                      {isToday ? "Dzisiaj" : YMD}
+                      {isToday
+                        ? "Dzisiaj"
+                        : new Intl.DateTimeFormat("pl-PL", {
+                            dateStyle: "long",
+                          }).format(date)}
                     </TableCell>
                     {
                       goals.map((goal) => (

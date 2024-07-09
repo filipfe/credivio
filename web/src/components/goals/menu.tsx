@@ -1,11 +1,13 @@
 "use client";
 
 import { deleteRows } from "@/lib/general/actions";
+import { updateAsPriority } from "@/lib/goals/actions";
 import {
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  useDisclosure,
 } from "@nextui-org/react";
 import {
   AlertOctagonIcon,
@@ -15,6 +17,7 @@ import {
 } from "lucide-react";
 import { Key, useState } from "react";
 import toast from "react-hot-toast";
+import Toast from "../ui/toast";
 
 type Props = {
   goal: Goal;
@@ -22,6 +25,7 @@ type Props = {
 };
 
 export default function Menu({ goal, onAdd }: Props) {
+  const { isOpen, onClose, onOpenChange } = useDisclosure();
   const [loadingKey, setLoadingKey] = useState<string | null>(null);
 
   async function onAction(key: Key) {
@@ -29,12 +33,25 @@ export default function Menu({ goal, onAdd }: Props) {
     switch (key) {
       case "add":
         onAdd && onAdd();
+        onClose();
+        break;
+      case "priority":
+        const { error: updateError } = await updateAsPriority(goal.id);
+        updateError &&
+          toast.custom((t) => (
+            <Toast {...t} type="error" message={updateError} />
+          ));
+        onClose();
         break;
       case "delete":
         const { error: deleteError } = await deleteRows({
           body: { type: "goal", data: goal.id },
         });
-        deleteError && toast.error(deleteError);
+        deleteError &&
+          toast.custom((t) => (
+            <Toast {...t} type="error" message={deleteError} />
+          ));
+        onClose();
         break;
     }
     setLoadingKey(null);
@@ -46,7 +63,7 @@ export default function Menu({ goal, onAdd }: Props) {
   ];
 
   return (
-    <Dropdown shadow="sm">
+    <Dropdown shadow="sm" isOpen={isOpen} onOpenChange={onOpenChange}>
       <DropdownTrigger>
         <button className="h-6 w-6 rounded-full grid place-content-center">
           <MoreVerticalIcon size={20} className="text-white" />
@@ -57,6 +74,7 @@ export default function Menu({ goal, onAdd }: Props) {
         variant="faded"
         aria-label="Dropdown menu with description"
         onAction={onAction}
+        closeOnSelect={false}
       >
         <DropdownItem
           key="add"

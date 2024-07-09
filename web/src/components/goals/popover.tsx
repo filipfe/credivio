@@ -14,7 +14,6 @@ import {
 import { useRef, useState, useTransition } from "react";
 import toast from "react-hot-toast";
 import Toast from "../ui/toast";
-import useSWR from "swr";
 import { addGoalPayment } from "@/lib/goals/actions";
 // import { addGoalPayment } from "@/lib/goals/queries";
 
@@ -32,7 +31,6 @@ export default function PaymentPopover({
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
   const [inputValue, setInputValue] = useState(defaultAmount.toString());
-  // const { data, mutate } = useSWR("goals_payments");
   const { results } = useClientQuery({ query: getBudget(goal.currency) });
 
   function onClose() {
@@ -48,63 +46,27 @@ export default function PaymentPopover({
     formRef.current?.dispatchEvent(
       new Event("submit", { cancelable: true, bubbles: true })
     );
-    // const { error } = await addGoalPayment(goal.id, inputValue);
-    // if (error) {
-    //   console.error("Couldn't add goal payment: ", error);
-    //   toast.custom((t) => (
-    //     <Toast
-    //       {...t}
-    //       type="error"
-    //       message="Wystąpił błąd przy dodawaniu płatności!"
-    //     />
-    //   ));
-    // } else {
-    //   toast.custom((t) => (
-    //     <Toast
-    //       {...t}
-    //       type="success"
-    //       message={`Pomyślnie dodano płatność do celu ${goal.title}!`}
-    //     />
-    //   ));
-    //   const now = new Date();
-    // const newPayments = data
-    //   ? data.map((payment: GoalPayment) =>
-    //       payment.goal_id === goal.id &&
-    //       payment.date ===
-    //         `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`
-    //         ? { ...payment, amount }
-    //         : payment
-    //     )
-    //   : [];
-    // mutate(newPayments);
-    // }
   }
 
   const onSubmit = (formData: FormData) =>
     startTransition(async () => {
-      const res = await addGoalPayment(formData);
-      if (res?.error) {
-        toast.custom(
-          (t) => (
-            <Toast
-              {...t}
-              type="error"
-              message="Wystąpił błąd przy dodawaniu płatności!"
-            />
-          ),
-          { duration: 3000 }
-        );
+      const { error } = await addGoalPayment(formData);
+      if (error) {
+        toast.custom((t) => (
+          <Toast
+            {...t}
+            type="error"
+            message="Wystąpił błąd przy dodawaniu płatności!"
+          />
+        ));
       } else {
-        toast.custom(
-          (t) => (
-            <Toast
-              {...t}
-              type="success"
-              message={`Pomyślnie dodano płatność do celu ${goal.title}!`}
-            />
-          ),
-          { duration: 3000 }
-        );
+        toast.custom((t) => (
+          <Toast
+            {...t}
+            type="success"
+            message={`Pomyślnie dodano płatność do celu ${goal.title}!`}
+          />
+        ));
       }
     });
 

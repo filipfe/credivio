@@ -7,7 +7,7 @@ import Menu from "./menu";
 import numberFormat from "@/utils/formatters/currency";
 
 export default function GoalRef(goal: Goal) {
-  const { title, price, currency, deadline, is_priority, payments } = goal;
+  const { title, price, currency, deadline, payments } = goal;
   const formRef = useRef<HTMLFormElement>(null);
 
   useOutsideObserver(formRef, () =>
@@ -23,28 +23,18 @@ export default function GoalRef(goal: Goal) {
 
   return (
     <div className="bg-primary rounded-lg max-h-max">
-      <div
-        className={cn(
-          "border shadow-[inset_0px_2px_9px_rgba(255,255,255,0.15)] border-white/10 bg-gradient-to-b from-white/5 to-white/[0.01] p-4 rounded-lg backdrop-blur-lg flex flex-col min-w-64 relative",
-          is_priority ? "gap-2" : "gap-1"
-        )}
-      >
+      <div className="border shadow-[inset_0px_2px_9px_rgba(255,255,255,0.15)] border-white/10 bg-gradient-to-b from-white/5 to-white/[0.01] p-4 rounded-lg backdrop-blur-lg flex flex-col min-w-64 relative gap-1">
         <div className="absolute right-4 top-4">
           <Menu goal={goal} />
         </div>
-        <small className={cn("text-white/60", !is_priority && "text-tiny")}>
+        <small className="text-white/60 text-tiny">
           {deadline
             ? new Intl.DateTimeFormat("pl-PL", {
                 dateStyle: "short",
               }).format(new Date(deadline))
             : "Bez terminu"}
         </small>
-        <h3
-          className={cn(
-            "text-white font-medium leading-tight line-clamp-1",
-            is_priority ? "text-xl" : "text-lg"
-          )}
-        >
+        <h3 className="text-white font-medium leading-tight line-clamp-1 text-lg">
           {title}
         </h3>
         <div className="h-10 flex items-end">

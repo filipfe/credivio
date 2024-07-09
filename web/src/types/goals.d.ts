@@ -14,7 +14,3 @@ type GoalPayment = {
   amount: number;
   date: string;
 };
-
-type GoalRecord = Omit<Goal, "id" | "saved" | "price"> & {
-  price: string;
-};

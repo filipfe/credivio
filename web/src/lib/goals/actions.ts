@@ -25,9 +25,9 @@ export async function getGoals(): Promise<SupabaseResponse<Goal>> {
   };
 }
 
-export async function addGoalPayment(formData: FormData): Promise<
-  Pick<SupabaseResponse, "error"> | undefined
-> {
+export async function addGoalPayment(
+  formData: FormData,
+): Promise<Pick<SupabaseResponse, "error">> {
   const amount = formData.get("amount")?.toString();
   const goal_id = formData.get("goal_id")?.toString();
   const date = new Date().toDateString();
@@ -48,4 +48,27 @@ export async function addGoalPayment(formData: FormData): Promise<
   }
 
   revalidatePath("/goals");
+
+  return {};
+}
+
+export async function updateAsPriority(id: string) {
+  const supabase = createClient();
+  const { error: removeError } = await supabase.from("goals").update({
+    is_priority: false,
+  }).eq("is_priority", true);
+  const { error: addError } = await supabase.from("goals").update({
+    is_priority: true,
+  }).eq("id", id);
+
+  if (removeError || addError) {
+    console.error("Couldn't set goal as priority: ", { removeError, addError });
+    return {
+      error: "Wystąpił błąd przy ustawianiu priorytetu",
+    };
+  }
+
+  revalidatePath("/goals");
+
+  return {};
 }
