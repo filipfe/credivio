@@ -6,14 +6,11 @@ type Goal = {
   currency: string;
   is_priority?: boolean;
   deadline?: string;
+  payments: GoalPayment[];
 };
 
 type GoalPayment = {
   goal_id: string;
   amount: number;
   date: string;
-};
-
-type GoalRecord = Omit<Goal, "id" | "saved" | "price"> & {
-  price: string;
 };

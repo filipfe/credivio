@@ -2,6 +2,23 @@
 
 import { createClient } from "@/utils/supabase/client";
 
+export async function getGoals(): Promise<Goal[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("goals")
+    .select(
+      "id, title, description, price, currency, deadline, is_priority, payments:goals_payments(amount)",
+    )
+    .order("deadline")
+    .order("created_at");
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
 export async function getGoalsPayments(): Promise<GoalPayment[]> {
   const supabase = createClient();
   const { data, error } = await supabase
@@ -21,7 +38,9 @@ export async function addGoalPayment(
 ): Promise<Omit<SupabaseResponse, "results">> {
   const supabase = createClient();
 
-  const date = new Date().toISOString().substring(0, 10);
+  const date = new Date().toDateString();
+
+  console.log(date);
 
   const { data, error } = await supabase
     .from("goals_payments")
