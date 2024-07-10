@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function addOperations(
-  formData: FormData,
+  formData: FormData
 ): Promise<SupabaseResponse<Operation>> {
   const type = formData.get("type")?.toString() as OperationType;
   const label = formData.get("label")?.toString();
@@ -64,7 +64,7 @@ export async function getLatestOperations(): Promise<
     .select("id, title, amount, currency, type, issued_at")
     .order("issued_at", { ascending: false })
     .order("created_at", { ascending: false })
-    .order("title")
+    .order("id")
     .limit(20);
 
   if (error) {
@@ -80,7 +80,7 @@ export async function getLatestOperations(): Promise<
 
 export async function getOperationsStats(
   currency: string,
-  type: string,
+  type: string
 ): Promise<SupabaseSingleRowResponse<OperationsStats>> {
   const supabase = createClient();
 
@@ -120,7 +120,7 @@ export async function getLabels(): Promise<SupabaseResponse<Label>> {
 export async function getPortfolioBudgets(): Promise<SupabaseResponse<Budget>> {
   const supabase = createClient();
   const { data: results, error } = await supabase.rpc(
-    "get_dashboard_portfolio_budgets",
+    "get_dashboard_portfolio_budgets"
   );
 
   if (error) {
@@ -149,10 +149,10 @@ export async function updateOperation(formData: FormData) {
     };
     console.log(operation);
     const supabase = createClient();
-    const { error } = await supabase.from(`${type}s`).update(operation).eq(
-      "id",
-      id,
-    );
+    const { error } = await supabase
+      .from(`${type}s`)
+      .update(operation)
+      .eq("id", id);
     if (error) {
       console.error("Edit error: While updating", error);
       return {

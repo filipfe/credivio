@@ -18,6 +18,7 @@ import CSVInput from "./inputs/csv";
 import operationFormatter from "@/utils/formatters/operations";
 import Manual from "./inputs/manual";
 import LabelInput from "./inputs/label";
+import PreviewTable from "../ui/preview-table";
 
 export default function AddForm({
   type,
@@ -38,7 +39,6 @@ export default function AddForm({
       amount: formData.get("amount")?.toString() || "",
       issued_at: formData.get("issued_at")?.toString() || "",
       currency: formData.get("currency")?.toString() || "",
-      description: formData.get("description")?.toString() || "",
       label: formData.get("label")?.toString() || "",
       doc_path: "",
     };
@@ -105,15 +105,7 @@ export default function AddForm({
           </Tab>
         </Tabs>
       </Block>
-      <OperationTable
-        title="Podgląd"
-        type={type}
-        rows={records}
-        count={records.length}
-        viewOnly={{
-          setRows: setRecords,
-        }}
-      >
+      <PreviewTable type={type} rows={records} count={records.length}>
         <form
           className="flex-1 relative"
           action={(e) =>
@@ -145,7 +137,7 @@ export default function AddForm({
             <input type="hidden" name="data" value={JSON.stringify(records)} />
           </div>
         </form>
-      </OperationTable>
+      </PreviewTable>
     </div>
   );
 }

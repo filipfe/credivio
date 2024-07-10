@@ -38,7 +38,7 @@ export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
   }, 300);
 
   const handleSort = (descriptor: SortDescriptor) => {
-    !viewOnly && setIsLoading(true);
+    setIsLoading(true);
     setSearchQuery((prev) => ({
       ...prev,
       page: 1,
@@ -48,12 +48,12 @@ export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
   };
 
   const handlePageChange = (page: number) => {
-    !viewOnly && setIsLoading(true);
+    setIsLoading(true);
     setSearchQuery((prev) => ({ ...prev, page }));
   };
 
   const handleCurrencyChange = (currency: string) => {
-    !viewOnly && setIsLoading(true);
+    setIsLoading(true);
     setSearchQuery((prev) => ({ ...prev, page: 1, currency }));
   };
 
@@ -67,15 +67,9 @@ export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   }, [searchQuery]);
 
-  useEffect(() => {
-    if (!viewOnly) return;
-    const start = ((searchQuery.page || 1) - 1) * 10;
-    const end = start + 10;
-    return setItems(rows.slice(start, end));
-  }, [rows, viewOnly, searchQuery.page]);
-
   return {
     items,
+    setItems,
     searchQuery,
     isLoading,
     setIsLoading,
