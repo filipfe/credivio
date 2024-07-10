@@ -11,13 +11,10 @@ interface Payment {
 }
 
 interface Operation extends Payment {
-  amount: string;
-  description: string;
-  currency_date?: string;
-  budget_after?: string;
-  type?: OperationType;
   label?: string;
   doc_path: string | null;
+  amount: string;
+  type?: OperationType;
 }
 
 type Label = {

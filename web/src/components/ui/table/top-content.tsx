@@ -13,6 +13,7 @@ type Props = FilterProps & {
   deletionCallback?: () => void;
   selected: string[];
   addHref?: string;
+  viewOnly?: boolean;
 };
 
 export default function TopContent({
@@ -23,6 +24,7 @@ export default function TopContent({
   addHref,
   deletionCallback,
   handleSearch,
+  viewOnly,
 }: Props) {
   return (
     <div className="flex-1 flex items-center justify-between gap-4 sm:gap-8">
@@ -44,6 +46,7 @@ export default function TopContent({
             callback={deletionCallback}
             items={selected}
             type={type as OperationType}
+            viewOnly={viewOnly}
           />
         )}
         <Filter
