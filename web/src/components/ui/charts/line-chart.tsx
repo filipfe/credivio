@@ -23,9 +23,20 @@ type Props = {
   type: string;
 };
 
+const dateFormatter = new Intl.DateTimeFormat("pl-PL", {
+  dateStyle: "long",
+});
+
 export default function LineChart({ data, currency, type }: Props) {
   const { period, setPeriod } = useContext(PeriodContext);
   const { width, tickFormatter } = useYAxisWidth(currency);
+
+  const isFromEarlier =
+    new Date(period.from).getTime() < new Date(data[0].date).getTime();
+
+  const isToLater =
+    new Date(period.to).getTime() >
+    new Date(data[data.length - 1].date).getTime();
 
   return (
     <ResponsiveContainer width="100%" height="100%" minHeight={320}>
@@ -109,28 +120,47 @@ export default function LineChart({ data, currency, type }: Props) {
               stroke="#fdbb2d"
               strokeWidth={2}
               strokeOpacity={0.6}
+              label={{
+                position: "top",
+                value: dateFormatter.format(new Date(period.to)),
+                fill: "#fdbb2d",
+                fontSize: 12,
+                fontWeight: 500,
+              }}
             />
           ) : (
             <ReferenceArea
-              x1={
-                new Date(period.from).getTime() <
-                new Date(data[0].date).getTime()
-                  ? data[0].date
-                  : period.from
-              }
+              x1={isFromEarlier ? data[0].date : period.from}
               x2={period.to}
-              // stroke="#a4bdbf"
-              // strokeOpacity={1}
               fill="#fdbb2d"
               fillOpacity={0.25}
               label={{
                 position: "top",
-                value: `${period.from} - ${period.to}`,
+                value: `${dateFormatter.format(
+                  new Date(period.from)
+                )} - ${dateFormatter.format(new Date(period.to))}`,
                 fontSize: 12,
-                offset: 16,
+                fontWeight: 500,
+                fill: "#fdbb2d",
               }}
             />
           ))}
+        {period.from && !isFromEarlier && (
+          <ReferenceLine
+            x={period.from}
+            stroke="#fdbb2d"
+            strokeWidth={2}
+            strokeOpacity={0.6}
+          />
+        )}
+        {period.to && !isToLater && (
+          <ReferenceLine
+            x={period.to}
+            stroke="#fdbb2d"
+            strokeWidth={2}
+            strokeOpacity={0.6}
+          />
+        )}
       </Chart>
     </ResponsiveContainer>
   );
