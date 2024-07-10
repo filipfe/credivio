@@ -74,6 +74,8 @@ async function Expenses({ searchParams }: { searchParams: SearchParams }) {
     p_search: searchParams.search,
     p_currency: searchParams.currency,
     p_label: searchParams.label,
+    // p_from: searchParams.from,
+    // p_to: searchParams.to,
   });
 
   return (

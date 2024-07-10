@@ -13,8 +13,9 @@ import {
 } from "recharts";
 import ChartTooltip from "./tooltip";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { PeriodContext } from "@/app/(private)/(operations)/providers";
+import { CategoricalChartState } from "recharts/types/chart/types";
 
 type Props = {
   data: DailyAmount[];
@@ -99,30 +100,37 @@ export default function LineChart({ data, currency, type }: Props) {
           fillOpacity={1}
           dot={false}
         />
-        {period && (
-          <ReferenceLine
-            x={period.from}
-            stroke="#fdbb2d"
-            strokeWidth={2}
-            strokeOpacity={0.6}
-          />
-        )}
-        {period && period.from !== period.to && (
-          <ReferenceLine
-            x={period.to}
-            stroke="#fdbb2d"
-            strokeWidth={2}
-            strokeOpacity={0.6}
-          />
-        )}
-        {period && period.from !== period.to && (
-          <ReferenceArea
-            x1={period.from}
-            x2={period.to}
-            fill="#fdbb2d"
-            fillOpacity={0.2}
-          />
-        )}
+
+        {period.from &&
+          period.to &&
+          (period.from === period.to ? (
+            <ReferenceLine
+              x={period.to}
+              stroke="#fdbb2d"
+              strokeWidth={2}
+              strokeOpacity={0.6}
+            />
+          ) : (
+            <ReferenceArea
+              x1={
+                new Date(period.from).getTime() <
+                new Date(data[0].date).getTime()
+                  ? data[0].date
+                  : period.from
+              }
+              x2={period.to}
+              // stroke="#a4bdbf"
+              // strokeOpacity={1}
+              fill="#fdbb2d"
+              fillOpacity={0.25}
+              label={{
+                position: "top",
+                value: `${period.from} - ${period.to}`,
+                fontSize: 12,
+                offset: 16,
+              }}
+            />
+          ))}
       </Chart>
     </ResponsiveContainer>
   );

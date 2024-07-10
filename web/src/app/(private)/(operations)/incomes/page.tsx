@@ -73,6 +73,8 @@ async function Incomes({ searchParams }: { searchParams: SearchParams }) {
     p_sort: searchParams.sort,
     p_search: searchParams.search,
     p_currency: searchParams.currency,
+    // p_from: searchParams.from,
+    // p_to: searchParams.to,
   });
 
   return (
