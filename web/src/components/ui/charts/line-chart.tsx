@@ -16,6 +16,7 @@ import useYAxisWidth from "@/hooks/useYAxisWidth";
 import { useCallback, useContext, useState } from "react";
 import { PeriodContext } from "@/app/(private)/(operations)/providers";
 import { CategoricalChartState } from "recharts/types/chart/types";
+import { isToday } from "date-fns";
 
 type Props = {
   data: DailyAmount[];
@@ -122,7 +123,9 @@ export default function LineChart({ data, currency, type }: Props) {
               strokeOpacity={0.6}
               label={{
                 position: "top",
-                value: dateFormatter.format(new Date(period.to)),
+                value: isToday(period.to)
+                  ? "Dzisiaj"
+                  : dateFormatter.format(new Date(period.to)),
                 fill: "#fdbb2d",
                 fontSize: 12,
                 fontWeight: 500,
