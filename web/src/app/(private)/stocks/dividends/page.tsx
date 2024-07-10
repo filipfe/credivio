@@ -1,4 +1,5 @@
 import DividendsTable from "@/components/stocks/dividends/dividends-table";
+import Block from "@/components/ui/block";
 import { getOwnRows } from "@/lib/general/actions";
 import { getDividendInfo } from "@/lib/stocks/actions";
 import getStockHoldings from "@/utils/stocks/get-stock-holdings";
@@ -13,15 +14,13 @@ export default async function Page() {
   const { future, past } = groupDividends(dividends);
   const holdings = getStockHoldings(ownStocks);
   return (
-    <div>
-      <section className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col mt-8 mx-10">
-        <h2 className="text-lg mb-2">Bieżące</h2>
+    <div className="sm:px-10 py-4 sm:py-8 flex flex-col gap-4 sm:gap-6">
+      <Block title="Bieżące">
         <DividendsTable dividends={sortDividends(future)} holdings={holdings} />
-      </section>
-      <section className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col mt-8 mx-10">
-        <h2 className="text-lg mb-2">Przeszłe</h2>
+      </Block>
+      <Block title="Przeszłe">
         <DividendsTable dividends={past} />
-      </section>
+      </Block>
     </div>
   );
 }

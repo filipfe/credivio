@@ -22,8 +22,8 @@ export default async function Page({
   const link = LINKS.find((item) => item.href === href);
   const Icon = link ? link.icon : <></>;
   return (
-    <div className="px-12 pt-8 pb-24 h-full flex flex-col items-center justify-center">
-      <Block className="text-center flex flex-col items-center gap-8 max-w-lg w-full !p-20">
+    <div className="sm:px-10 py-4 sm:py-8 h-full flex flex-col items-center justify-center">
+      <Block className="text-center flex flex-col items-center gap-8 max-w-lg w-full sm:py-16 py-8 sm:px-12 px-6">
         <Icon size={48} strokeWidth={1} />
         <h1 className="text-lg">
           Odblokuj <span className="font-medium">{title}</span> w cenie
@@ -37,7 +37,7 @@ export default async function Page({
         <p className="text-sm opacity-60">{description}</p>
 
         <Link href={`/settings/subscription?selected=${name}`}>
-          <Button color="primary" as="div">
+          <Button disableRipple color="primary" as="div">
             Odblokuj
           </Button>
         </Link>

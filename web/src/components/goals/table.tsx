@@ -2,10 +2,6 @@
 
 import {
   Button,
-  Input,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
   ScrollShadow,
   Table,
   TableBody,
@@ -17,21 +13,13 @@ import {
 } from "@nextui-org/react";
 import Block from "../ui/block";
 import { addDays, format, subDays } from "date-fns";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import numberFormat from "@/utils/formatters/currency";
 import { ChevronDown } from "lucide-react";
-import useClientQuery from "@/hooks/useClientQuery";
-import { getGoalsPayments } from "@/lib/goals/actions";
 import Loader from "../stocks/loader";
-import formatAmount from "@/utils/operations/format-amount";
-
-// const sums = payments.reduce(
-//   (prev, { goal_id, amount }) => ({
-//     ...prev,
-//     [goal_id]: (prev[goal_id] || 0) + amount,
-//   }),
-//   {} as Record<string, number>
-// );
+import PaymentPopover from "./popover";
+import useSWR from "swr";
+import { getGoalsPayments } from "@/lib/goals/queries";
 
 const generateDates = (start: Date, end: Date): Date[] => {
   const dates = [];
@@ -43,12 +31,20 @@ const generateDates = (start: Date, end: Date): Date[] => {
   return dates;
 };
 
+const getAmountByDate = (date: string, payments: GoalPayment[]): number =>
+  payments.find((p) => {
+    console.log(p.date, date);
+    return p.date === date;
+  })?.amount || 0;
+
 const today = new Date();
 
 export default function GoalsTable({ goals }: { goals: Goal[] }) {
-  const { results: payments, isLoading } = useClientQuery({
-    query: getGoalsPayments(),
-  });
+  // const {
+  //   data: payments,
+  //   isLoading,
+  //   isValidating,
+  // } = useSWR("goals_payments", getGoalsPayments, { keepPreviousData: true });
   const [scrollButtonVisible, setScrollButtonVisible] = useState(false);
   const tbodyRef = useRef<HTMLDivElement | null>(null);
 
@@ -58,26 +54,17 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
   }, []);
 
   // Helper function to get payment amount for a specific date and goal
-  const getPaymentAmount = useCallback(
-    (date: string, goal_id: string): number => {
-      const payment = payments.find(
-        (p) => p.date === date && p.goal_id === goal_id
-      );
-      return payment ? payment.amount : 0;
-    },
-    [payments]
-  );
 
   const sums = useMemo(
     () =>
-      payments.reduce(
-        (prev, { goal_id, amount }) => ({
+      goals.reduce(
+        (prev, { payments, id }) => ({
           ...prev,
-          [goal_id]: (prev[goal_id] || 0) + amount,
+          [id]: payments.reduce((prev, { amount }) => prev + amount, 0),
         }),
         {} as Record<string, number>
       ),
-    [payments]
+    [goals]
   );
 
   useEffect(() => {
@@ -105,15 +92,17 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
     };
   }, [tbodyRef.current]);
 
-  console.log(payments);
-
-  if (isLoading) {
-    return <Loader title="Wpłaty" />;
-  }
+  // if (isLoading && !isValidating) {
+  //   return <Loader title="Wpłaty" className="row-span-2" />;
+  // }
 
   return (
     <Block title="Wpłaty" className="row-span-2">
-      <ScrollShadow orientation="horizontal" hideScrollBar className="relative">
+      <ScrollShadow
+        orientation="horizontal"
+        hideScrollBar
+        className="relative max-w-[calc(100vw-48px)]"
+      >
         {scrollButtonVisible && (
           <div className="absolute bottom-24 left-[calc(50%-41px)] z-20">
             <Button
@@ -180,38 +169,31 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
                         isToday ? "font-medium" : "font-normal"
                       )}
                     >
-                      {isToday ? "Dzisiaj" : YMD}
+                      {isToday
+                        ? "Dzisiaj"
+                        : new Intl.DateTimeFormat("pl-PL", {
+                            dateStyle: "long",
+                          }).format(date)}
                     </TableCell>
                     {
                       goals.map((goal) => (
                         <TableCell key={goal.id}>
                           {isToday ? (
-                            <Popover placement="top">
-                              <PopoverTrigger>
-                                <button className="w-full bg-light border-primary/10 border rounded-md px-4 py-2">
-                                  {numberFormat(
-                                    goal.currency,
-                                    getPaymentAmount(YMD, goal.id)
-                                  )}
-                                </button>
-                              </PopoverTrigger>
-                              <PopoverContent className="py-2">
-                                <AmountInput
-                                  max={
-                                    goal.price -
-                                    ((sums[goal.id] || 0) -
-                                      (isToday
-                                        ? getPaymentAmount(YMD, goal.id)
-                                        : 0))
-                                  }
-                                  defaultAmount={getPaymentAmount(YMD, goal.id)}
-                                />
-                              </PopoverContent>
-                            </Popover>
+                            <PaymentPopover
+                              goal={goal}
+                              amount={getAmountByDate(YMD, goal.payments)}
+                              max={
+                                goal.price -
+                                ((sums[goal.id] || 0) -
+                                  (isToday
+                                    ? getAmountByDate(YMD, goal.payments)
+                                    : 0))
+                              }
+                            />
                           ) : (
                             numberFormat(
                               goal.currency,
-                              getPaymentAmount(YMD, goal.id)
+                              getAmountByDate(YMD, goal.payments)
                             )
                           )}
                         </TableCell>
@@ -244,38 +226,3 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
     </Block>
   );
 }
-
-const AmountInput = ({
-  defaultAmount,
-  max,
-}: {
-  defaultAmount: number;
-  max: number;
-}) => {
-  const [amount, setAmount] = useState(defaultAmount.toString());
-
-  return (
-    <div className="flex items-center relative">
-      <Input
-        autoFocus
-        label="Kwota"
-        isInvalid={parseFloat(amount) > max}
-        classNames={{
-          inputWrapper: "!outline-none",
-        }}
-        value={amount}
-        onValueChange={(value) => setAmount(formatAmount(value))}
-      />
-      <Button
-        size="sm"
-        radius="md"
-        isIconOnly
-        disableRipple
-        className="border border-primary/10 bg-white absolute right-2 min-w-12 z-10"
-        onClick={() => setAmount(max.toString())}
-      >
-        100%
-      </Button>
-    </div>
-  );
-};

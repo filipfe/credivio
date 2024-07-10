@@ -1,20 +1,27 @@
-import { getPriceHistory } from "@/lib/stocks/actions";
+"use client";
+
 import SmallChart from "./small-chart";
 import Link from "next/link";
 import numberFormat from "@/utils/formatters/currency";
+import useClientQuery from "@/hooks/useClientQuery";
+import { getPriceHistory } from "@/lib/stocks/queries";
 
-export default async function CompanyBlock({
+export default function CompanyBlock({
   _symbol,
   _symbol_short,
   _change,
   _quote,
 }: Stock) {
-  const { results } = await getPriceHistory(_symbol_short);
+  const { results } = useClientQuery({
+    query: getPriceHistory(_symbol_short),
+  });
+
   const quote = parseFloat(_quote);
   const isUp =
     _change?.toString().startsWith("+") &&
     !_change?.toString().endsWith("0.00");
   const isDown = _change?.toString().startsWith("-");
+
   return (
     <Link
       href={`/stocks/${_symbol}`}

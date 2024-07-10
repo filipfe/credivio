@@ -4,6 +4,7 @@ import { satoshi } from "@/assets/font/satoshi";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "react-hot-toast";
 import Script from "next/script";
+import Providers from "./providers";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -23,7 +24,7 @@ export default function RootLayout({
           defer
           src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/hatch.js"
         ></Script>
-        {children}
+        <Providers>{children}</Providers>
         <NextTopLoader color="#177981" showSpinner={false} />
         <Toaster toastOptions={{ duration: 3000 }} />
       </body>

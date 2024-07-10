@@ -9,7 +9,7 @@ export default async function LatestOperations() {
   return (
     <Block title="Ostatnie operacje" className="xl:col-span-6">
       <div className="-mx-[25px] sm:mx-0">
-        <HorizontalScroll innerClassName="px-6 sm:px-0">
+        <HorizontalScroll fullWidth innerClassName="px-6 sm:px-0">
           {operations.map((operation) => (
             <OperationRef payment={operation} key={operation.id} />
           ))}

@@ -139,28 +139,6 @@ export async function getAllStocks(): Promise<SupabaseResponse<Stock>> {
   }
 }
 
-export async function getPriceHistory(
-  short_symbol: string,
-): Promise<SupabaseResponse<PriceRecord>> {
-  const supabase = createClient();
-  const { data, error } = await supabase.functions.invoke(
-    "get-stock-price-history",
-    { body: { short_symbol } },
-  );
-  const err = await formatError(error);
-
-  if (err || !data) {
-    return {
-      error: err || "Internal server error",
-      results: [],
-    };
-  }
-
-  return {
-    results: data.results,
-  };
-}
-
 export async function getPricePeriod(
   short_symbol: string,
   period: string = "1D",
