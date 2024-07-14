@@ -18,22 +18,14 @@ import Block from "../ui/block";
 import numberFormat from "@/utils/formatters/currency";
 import Empty from "../ui/empty";
 
-const columns = ({
-  viewOnly,
-  simplified,
-}: {
-  viewOnly: boolean;
-  simplified?: boolean;
-}) => [
-  ...(!viewOnly && !simplified
-    ? [{ key: "issued_at", label: "DATA ZAWARCIA" }]
-    : []),
+const columns = ({ simplified }: { simplified?: boolean }) => [
+  ...(!simplified ? [{ key: "issued_at", label: "DATA ZAWARCIA" }] : []),
   { key: "symbol", label: "INSTRUMENT" },
   { key: "transaction_type", label: "TRANSAKCJA" },
   { key: "quantity", label: "ILOŚĆ" },
   { key: "price", label: "CENA" },
-  ...(!viewOnly && !simplified ? [{ key: "value", label: "WARTOŚĆ" }] : []),
-  ...(!viewOnly && !simplified ? [{ key: "currency", label: "WALUTA" }] : []),
+  ...(!simplified ? [{ key: "value", label: "WARTOŚĆ" }] : []),
+  ...(!simplified ? [{ key: "currency", label: "WALUTA" }] : []),
   ...(!simplified ? [{ key: "commission", label: "PROWIZJA" }] : []),
 ];
 
@@ -41,7 +33,6 @@ export default function TransactionTable({
   rows,
   count,
   simplified,
-  viewOnly,
   title,
   children,
   topContent,
@@ -55,7 +46,7 @@ export default function TransactionTable({
     setSearchQuery,
     handleSearch,
     handleCurrencyChange,
-  } = useTableQuery<StockTransaction>(rows, !!viewOnly);
+  } = useTableQuery<StockTransaction>(rows);
   const { page, sort, search } = searchQuery;
 
   useEffect(() => {
@@ -115,7 +106,7 @@ export default function TransactionTable({
             direction: sort?.includes("-") ? "descending" : "ascending",
           }}
           onSortChange={(descriptor: SortDescriptor) => {
-            !viewOnly && setIsLoading(true);
+            setIsLoading(true);
             setSearchQuery((prev) => ({
               ...prev,
               page: 1,
@@ -127,12 +118,10 @@ export default function TransactionTable({
           className="max-w-full w-full flex-1"
         >
           <TableHeader>
-            {columns({ viewOnly: !!viewOnly, simplified }).map((column) => (
+            {columns({ simplified }).map((column) => (
               <TableColumn
                 key={column.key}
-                allowsSorting={
-                  count > 0 && !viewOnly && !simplified ? true : undefined
-                }
+                allowsSorting={count > 0 && !simplified ? true : undefined}
                 className="sm:h-10 h-8 text-tiny"
               >
                 {column.label}
@@ -142,20 +131,16 @@ export default function TransactionTable({
           <TableBody
             isLoading={isLoading}
             loadingContent={<Spinner />}
-            items={viewOnly ? items : rows}
+            items={rows}
             emptyContent={
               <div className="text-center flex-1 justify-center flex flex-col items-center gap-3">
-                {viewOnly ? (
-                  <p>Dodaj akcje, aby zobaczyć je na podglądzie.</p>
-                ) : (
-                  <Empty
-                    title="Nie masz jeszcze żadnych akcji!"
-                    cta={{
-                      title: "Dodaj transkację",
-                      href: "/stocks/transactions/add",
-                    }}
-                  />
-                )}
+                <Empty
+                  title="Nie masz jeszcze żadnych akcji!"
+                  cta={{
+                    title: "Dodaj transkację",
+                    href: "/stocks/transactions/add",
+                  }}
+                />
               </div>
             }
           >
@@ -184,7 +169,7 @@ export default function TransactionTable({
           isDisabled={isLoading}
           total={pages}
           onChange={(page: number) => {
-            !viewOnly && setIsLoading(true);
+            setIsLoading(true);
             setSearchQuery((prev) => ({ ...prev, page }));
           }}
         />
