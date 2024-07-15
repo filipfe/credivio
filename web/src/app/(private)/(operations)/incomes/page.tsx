@@ -51,6 +51,7 @@ export default async function Page({
         <div className="col-[1/3] row-[2/3] flex flex-col order-last">
           <Suspense fallback={<LineChartLoader />}>
             <OperationsByMonth
+              withPeriod
               defaultCurrency={defaultCurrency}
               type="income"
             />

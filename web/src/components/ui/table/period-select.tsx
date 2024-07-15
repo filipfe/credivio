@@ -77,7 +77,11 @@ export default function PeriodSelect() {
           maxValue={today(getLocalTimeZone())}
           bottomContent={
             <div className="grid grid-cols-1 pb-2 px-2">
-              <Button size="sm" onClick={() => setPeriod({ from: "", to: "" })}>
+              <Button
+                disableRipple
+                size="sm"
+                onClick={() => setPeriod({ from: "", to: "" })}
+              >
                 <ListRestartIcon size={15} strokeWidth={2} /> Resetuj
               </Button>
             </div>

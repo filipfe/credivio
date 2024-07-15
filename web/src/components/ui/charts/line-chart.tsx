@@ -13,31 +13,39 @@ import {
 } from "recharts";
 import ChartTooltip from "./tooltip";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
-import { useCallback, useContext, useState } from "react";
+import { Dispatch, memo, SetStateAction, useContext } from "react";
 import { PeriodContext } from "@/app/(private)/(operations)/providers";
-import { CategoricalChartState } from "recharts/types/chart/types";
 import { isToday } from "date-fns";
 
 type Props = {
   data: DailyAmount[];
   currency: string;
   type: string;
+  period?: Period;
+  setPeriod?: Dispatch<SetStateAction<Period>>;
 };
 
 const dateFormatter = new Intl.DateTimeFormat("pl-PL", {
   dateStyle: "long",
 });
 
-export default function LineChart({ data, currency, type }: Props) {
-  const { period, setPeriod } = useContext(PeriodContext);
+export default function LineChart({
+  data,
+  currency,
+  type,
+  period,
+  setPeriod,
+}: Props) {
   const { width, tickFormatter } = useYAxisWidth(currency);
 
-  const isFromEarlier =
-    new Date(period.from).getTime() < new Date(data[0].date).getTime();
+  const isFromEarlier = period
+    ? new Date(period.from).getTime() < new Date(data[0].date).getTime()
+    : false;
 
-  const isToLater =
-    new Date(period.to).getTime() >
-    new Date(data[data.length - 1].date).getTime();
+  const isToLater = period
+    ? new Date(period.to).getTime() >
+      new Date(data[data.length - 1].date).getTime()
+    : false;
 
   return (
     <ResponsiveContainer width="100%" height="100%" minHeight={320}>
@@ -45,7 +53,9 @@ export default function LineChart({ data, currency, type }: Props) {
         data={data}
         margin={{ top: 16, right: 20 }}
         onClick={({ activeLabel }) =>
-          activeLabel && setPeriod({ from: activeLabel, to: activeLabel })
+          activeLabel &&
+          setPeriod &&
+          setPeriod({ from: activeLabel, to: activeLabel })
         }
       >
         <YAxis
@@ -113,7 +123,8 @@ export default function LineChart({ data, currency, type }: Props) {
           dot={false}
         />
 
-        {period.from &&
+        {period &&
+          period.from &&
           period.to &&
           (period.from === period.to ? (
             <ReferenceLine
@@ -148,7 +159,7 @@ export default function LineChart({ data, currency, type }: Props) {
               }}
             />
           ))}
-        {period.from && !isFromEarlier && (
+        {period && period.from && !isFromEarlier && (
           <ReferenceLine
             x={period.from}
             stroke="#fdbb2d"
@@ -156,7 +167,7 @@ export default function LineChart({ data, currency, type }: Props) {
             strokeOpacity={0.6}
           />
         )}
-        {period.to && !isToLater && (
+        {period && period.to && !isToLater && (
           <ReferenceLine
             x={period.to}
             stroke="#fdbb2d"

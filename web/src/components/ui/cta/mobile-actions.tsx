@@ -29,6 +29,7 @@ export default function MobileActions() {
       >
         <DropdownTrigger>
           <Button
+            disableRipple
             variant="shadow"
             size="lg"
             color="primary"
