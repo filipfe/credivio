@@ -83,6 +83,7 @@ export default function useTableQuery<T>(rows: T[], options?: Options) {
 
   return {
     items,
+    setItems,
     searchQuery,
     isLoading,
     setIsLoading,

@@ -34,8 +34,8 @@ import { PeriodContext } from "@/app/(private)/(operations)/providers";
 export default function OperationTable({
   rows,
   count,
-  viewOnly,
   children,
+  viewOnly,
   ...props
 }: TableProps<Operation>) {
   const [docPath, setDocPath] = useState<string | null>(null);
@@ -58,7 +58,7 @@ export default function OperationTable({
     onSelectionChange,
     onRowAction,
     setSelectedKeys,
-  } = useSelection((viewOnly ? items : rows).map((item) => item.id));
+  } = useSelection(items.map((item) => item.id));
   const { page, sort, search, label: _label } = searchQuery;
 
   useEffect(() => {
@@ -69,9 +69,6 @@ export default function OperationTable({
     (hasLabel: boolean, hasDoc: boolean) => [
       { key: "issued_at", label: "DATA" },
       { key: "title", label: "TYTUŁ" },
-      ...(items.some((item) => item.description)
-        ? [{ key: "description", label: "OPIS" }]
-        : []),
       { key: "amount", label: "KWOTA" },
       { key: "currency", label: "WALUTA" },
       ...(hasLabel ? [{ key: "label", label: "ETYKIETA" }] : []),
@@ -96,12 +93,6 @@ export default function OperationTable({
           return (
             <span className="line-clamp-1 break-all xl:max-w-[10vw]f">
               {cellValue || "-"}
-            </span>
-          );
-        case "description":
-          return (
-            <span className="line-clamp-1 break-all xl:max-w-[10vw]">
-              {cellValue}
             </span>
           );
         case "issued_at":
@@ -138,27 +129,6 @@ export default function OperationTable({
               type={props.type}
               operation={item}
               onSelect={() => onRowAction(item.id)}
-              onEdit={
-                viewOnly
-                  ? (updated) =>
-                      viewOnly.setRows((prev) => {
-                        const newArr = [...prev];
-                        const index = newArr.findIndex(
-                          (item) => item.id === updated.id
-                        );
-                        newArr[index] = updated;
-                        return newArr;
-                      })
-                  : undefined
-              }
-              onDelete={
-                viewOnly
-                  ? (id) =>
-                      viewOnly.setRows((prev) =>
-                        prev.filter((item) => item.id !== id)
-                      )
-                  : undefined
-              }
             />
           ) : (
             <></>
@@ -178,11 +148,12 @@ export default function OperationTable({
       cta={
         <TopContent
           {...props}
+          viewOnly={false}
           selected={selectedKeys}
           handleSearch={handleSearch}
           deletionCallback={() => setSelectedKeys([])}
           search={search}
-          addHref={viewOnly ? "" : `/${props.type}s/add`}
+          addHref={`/${props.type}s/add`}
           state={{
             label: {
               value: searchQuery.label,
@@ -216,9 +187,7 @@ export default function OperationTable({
           className="max-w-full w-full flex-1"
           selectionMode={selectionMode}
           selectedKeys={
-            (viewOnly ? items : rows).every((item) =>
-              selectedKeys.includes(item.id)
-            )
+            rows.every((item) => selectedKeys.includes(item.id))
               ? "all"
               : new Set(selectedKeys)
           }
@@ -239,28 +208,24 @@ export default function OperationTable({
             ).map((column) => (
               <TableColumn
                 key={column.key}
-                allowsSorting={count > 0 && !viewOnly ? true : undefined}
+                allowsSorting={count > 0 ? true : undefined}
               >
                 {column.label}
               </TableColumn>
             ))}
           </TableHeader>
           <TableBody
-            items={viewOnly ? items : rows}
+            items={rows}
             isLoading={isLoading}
             emptyContent={
               <Empty
                 title="Nie znaleziono operacji"
-                cta={
-                  viewOnly
-                    ? undefined
-                    : {
-                        title: `Dodaj ${
-                          props.type === "expense" ? "wydatek" : "przychód"
-                        }`,
-                        href: `/${props.type}s/add`,
-                      }
-                }
+                cta={{
+                  title: `Dodaj ${
+                    props.type === "expense" ? "wydatek" : "przychód"
+                  }`,
+                  href: `/${props.type}s/add`,
+                }}
               />
             }
             loadingContent={<Spinner />}
