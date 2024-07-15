@@ -7,6 +7,7 @@ import { getOperationsStats } from "@/lib/operations/actions";
 import { getDefaultCurrency } from "@/lib/settings/actions";
 import { createClient } from "@/utils/supabase/server";
 import { Suspense } from "react";
+import Providers from "../providers";
 
 export default async function Page({
   searchParams,
@@ -46,14 +47,20 @@ export default async function Page({
           stat={last_30_days}
         />
       </div>
-      <div className="col-[1/3] row-[2/3] flex flex-col order-last">
-        <Suspense fallback={<LineChartLoader />}>
-          <OperationsByMonth defaultCurrency={defaultCurrency} type="income" />
+      <Providers>
+        <div className="col-[1/3] row-[2/3] flex flex-col order-last">
+          <Suspense fallback={<LineChartLoader />}>
+            <OperationsByMonth
+              withPeriod
+              defaultCurrency={defaultCurrency}
+              type="income"
+            />
+          </Suspense>
+        </div>
+        <Suspense fallback={<Loader className="row-span-2 col-span-2" />}>
+          <Incomes searchParams={searchParams} />
         </Suspense>
-      </div>
-      <Suspense fallback={<Loader className="row-span-2 col-span-2" />}>
-        <Incomes searchParams={searchParams} />
-      </Suspense>
+      </Providers>
     </div>
   );
 }
@@ -67,6 +74,8 @@ async function Incomes({ searchParams }: { searchParams: SearchParams }) {
     p_sort: searchParams.sort,
     p_search: searchParams.search,
     p_currency: searchParams.currency,
+    // p_from: searchParams.from,
+    // p_to: searchParams.to,
   });
 
   return (

@@ -4,7 +4,6 @@ import { Fragment, useContext, useEffect, useRef } from "react";
 import Block from "../ui/block";
 import { Button, Chip, ScrollShadow } from "@nextui-org/react";
 import { CheckIcon, PlusIcon } from "lucide-react";
-import { TimelineContext } from "@/app/(private)/goals/providers";
 import numberFormat from "@/utils/formatters/currency";
 import { formatDistance } from "date-fns";
 import { pl } from "date-fns/locale";
@@ -12,13 +11,6 @@ import Empty from "../ui/empty";
 
 export default function Timeline({ goals }: { goals: Goal[] }) {
   const listRef = useRef<HTMLDivElement>(null);
-  const { activeRecord } = useContext(TimelineContext);
-
-  useEffect(() => {
-    if (!activeRecord || !listRef.current) return;
-    const element = document.getElementById(activeRecord.id);
-    element?.scrollIntoView({ behavior: "smooth", block: "center" });
-  }, [listRef.current, activeRecord]);
 
   return (
     <Block title="Oś czasu">
@@ -36,11 +28,7 @@ export default function Timeline({ goals }: { goals: Goal[] }) {
               </div>
             </div>
             {goals.map((goal) => (
-              <DayRef
-                goal={goal}
-                isActive={goal.id === activeRecord?.id}
-                key={goal.id}
-              />
+              <DayRef goal={goal} key={goal.id} />
             ))}
           </div>
         </ScrollShadow>
@@ -56,16 +44,16 @@ export default function Timeline({ goals }: { goals: Goal[] }) {
 
 const DayRef = ({
   goal: { id, title, deadline, price, currency },
-  isActive,
 }: {
   goal: Goal;
-  isActive: boolean;
 }) => {
   const saved = 0;
   const shortfall = price - saved;
   const isCompleted = shortfall <= 0;
 
   const daysLeft = formatDistance(deadline!, new Date(), { locale: pl });
+
+  const isActive = true;
 
   return (
     <Fragment>

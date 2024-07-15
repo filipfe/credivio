@@ -18,6 +18,9 @@ import CSVInput from "./inputs/csv";
 import operationFormatter from "@/utils/formatters/operations";
 import Manual from "./inputs/manual";
 import LabelInput from "./inputs/label";
+import PreviewTable from "../ui/preview-table";
+import toast from "react-hot-toast";
+import Toast from "../ui/toast";
 
 export default function AddForm({
   type,
@@ -38,12 +41,23 @@ export default function AddForm({
       amount: formData.get("amount")?.toString() || "",
       issued_at: formData.get("issued_at")?.toString() || "",
       currency: formData.get("currency")?.toString() || "",
-      description: formData.get("description")?.toString() || "",
       label: formData.get("label")?.toString() || "",
       doc_path: "",
     };
     setRecords((prev) => [...prev, operation]);
   };
+
+  const onSave = (formData: FormData) =>
+    startTransition(async () => {
+      const { error } = await addOperations(formData);
+      if (error) {
+        toast.custom((t) => <Toast {...t} type="error" message={error} />);
+      } else {
+        toast.custom((t) => (
+          <Toast {...t} type="success" message="Pomyślnie dodano operację!" />
+        ));
+      }
+    });
 
   return (
     <div className="flex flex-col xl:grid grid-cols-2 gap-4 sm:gap-8">
@@ -105,24 +119,8 @@ export default function AddForm({
           </Tab>
         </Tabs>
       </Block>
-      <OperationTable
-        title="Podgląd"
-        type={type}
-        rows={records}
-        count={records.length}
-        viewOnly={{
-          setRows: setRecords,
-        }}
-      >
-        <form
-          className="flex-1 relative"
-          action={(e) =>
-            startTransition(async () => {
-              const { error } = await addOperations(e);
-              console.log({ error });
-            })
-          }
-        >
+      <PreviewTable type={type} rows={records} count={records.length}>
+        <form className="flex-1 relative" action={onSave}>
           <div className="flex flex-col gap-8 justify-end h-full">
             {type === "expense" && (
               <LabelInput isDisabled={records.length === 0} />
@@ -145,7 +143,7 @@ export default function AddForm({
             <input type="hidden" name="data" value={JSON.stringify(records)} />
           </div>
         </form>
-      </OperationTable>
+      </PreviewTable>
     </div>
   );
 }

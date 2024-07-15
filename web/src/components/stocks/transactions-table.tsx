@@ -55,7 +55,7 @@ export default function TransactionTable({
     setSearchQuery,
     handleSearch,
     handleCurrencyChange,
-  } = useTableQuery<StockTransaction>(rows, !!viewOnly);
+  } = useTableQuery<StockTransaction>(rows, { viewOnly: !!viewOnly });
   const { page, sort, search } = searchQuery;
 
   useEffect(() => {

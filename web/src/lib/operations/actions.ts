@@ -36,14 +36,16 @@ export async function addOperations(
     const { error } = await supabase.from(`${type}s`).insert(results);
 
     if (error) {
+      console.error("Couldn't add operation: ", error);
       return {
-        error: error.message,
+        error: "Wystąpił błąd przy dodawaniu operacji, spróbuj ponownie!",
         results: [],
       };
     }
   } catch (err) {
+    console.error("Couldn't add operation: ", err);
     return {
-      error: "Parse error",
+      error: "Wystąpił błąd przy dodawaniu operacji, spróbuj ponownie!",
       results: [],
     };
   }
@@ -64,7 +66,7 @@ export async function getLatestOperations(): Promise<
     .select("id, title, amount, currency, type, issued_at")
     .order("issued_at", { ascending: false })
     .order("created_at", { ascending: false })
-    .order("title")
+    .order("id")
     .limit(20);
 
   if (error) {
@@ -149,10 +151,10 @@ export async function updateOperation(formData: FormData) {
     };
     console.log(operation);
     const supabase = createClient();
-    const { error } = await supabase.from(`${type}s`).update(operation).eq(
-      "id",
-      id,
-    );
+    const { error } = await supabase
+      .from(`${type}s`)
+      .update(operation)
+      .eq("id", id);
     if (error) {
       console.error("Edit error: While updating", error);
       return {

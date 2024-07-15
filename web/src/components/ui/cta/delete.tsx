@@ -24,6 +24,7 @@ type Props = {
 export default function Delete({ items, type, viewOnly, callback }: Props) {
   const [isPending, startTransition] = useTransition();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   return (
     <div>
       <div>

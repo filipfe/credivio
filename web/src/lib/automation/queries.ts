@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/client";
 
 export async function getLatestOperations(
-  platform: "telegram" | "discord",
+  platform: "telegram",
 ): Promise<SupabaseResponse<Payment>> {
   const supabase = createClient();
 

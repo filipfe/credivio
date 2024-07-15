@@ -1,5 +1,6 @@
 "use client";
 
+import { PeriodContext } from "@/app/(private)/(operations)/providers";
 import Block from "@/components/ui/block";
 import LineChart from "@/components/ui/charts/line-chart";
 import LineChartLoader from "@/components/ui/charts/line-loader";
@@ -8,7 +9,7 @@ import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
 import useClientQuery from "@/hooks/useClientQuery";
 import { getDailyTotalAmount } from "@/lib/operations/queries";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 const getTitle = (type: "budget" | "income" | "expense") => {
   switch (type) {
@@ -21,13 +22,18 @@ const getTitle = (type: "budget" | "income" | "expense") => {
   }
 };
 
-export default function OperationsByMonth({
-  type,
-  defaultCurrency,
-}: {
+type Props = {
   type: "budget" | "income" | "expense";
   defaultCurrency: string;
-}) {
+  withPeriod?: boolean;
+};
+
+export default function OperationsByMonth({
+  type,
+  withPeriod,
+  defaultCurrency,
+}: Props) {
+  const periodContext = useContext(PeriodContext);
   const [currency, setCurrency] = useState<string>(defaultCurrency);
   const { results, isLoading } = useClientQuery<DailyAmount>({
     deps: [currency, type],
@@ -55,7 +61,12 @@ export default function OperationsByMonth({
       {isLoading ? (
         <LineChartLoader className="!p-0" hideTitle />
       ) : results.length > 0 ? (
-        <LineChart data={results} currency={currency} type={type} />
+        <LineChart
+          data={results}
+          currency={currency}
+          type={type}
+          {...(withPeriod ? periodContext : {})}
+        />
       ) : (
         <Empty
           title="Brak danych do wyświetlenia!"

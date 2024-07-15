@@ -30,7 +30,7 @@ export const MenuContext = createContext<MenuContextType>({
   setIsMenuHidden: null!,
 });
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export default function Providers({ children }: { children: React.ReactNode }) {
   const { push } = useRouter();
   const pathname = usePathname();
   const [isMenuHidden, setIsMenuHidden] = useState<IsMenuHidden>({

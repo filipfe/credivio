@@ -52,6 +52,7 @@ const config: Config = {
             primary: {
               DEFAULT: "#177981",
               foreground: "#FFF",
+              "50": "rgba(23, 121, 129, 0.1)",
             },
             secondary: "#fdbb2d",
             content1: "#FFF",
