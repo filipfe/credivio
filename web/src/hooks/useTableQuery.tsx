@@ -3,7 +3,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
-export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
+type Options = {
+  viewOnly?: boolean;
+  period?: Period;
+};
+
+export default function useTableQuery<T>(rows: T[], options?: Options) {
   const router = useRouter();
   const pathname = usePathname();
   const [items, setItems] = useState<T[]>([]);
@@ -18,14 +23,14 @@ export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
 
   const handleLabelChange = useCallback(
     (selectedKey?: string) => {
-      !viewOnly && setIsLoading(true);
+      !options?.viewOnly && setIsLoading(true);
       setSearchQuery((prev) => ({
         ...prev,
         page: 1,
         label: selectedKey ? selectedKey : "",
       }));
     },
-    [viewOnly]
+    [options?.viewOnly]
   );
 
   const handleSearch = useDebouncedCallback((value: string) => {
@@ -38,7 +43,7 @@ export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
   }, 300);
 
   const handleSort = (descriptor: SortDescriptor) => {
-    setIsLoading(true);
+    !options?.viewOnly && setIsLoading(true);
     setSearchQuery((prev) => ({
       ...prev,
       page: 1,
@@ -48,24 +53,33 @@ export default function useTableQuery<T>(rows: T[], viewOnly?: boolean) {
   };
 
   const handlePageChange = (page: number) => {
-    setIsLoading(true);
+    !options?.viewOnly && setIsLoading(true);
     setSearchQuery((prev) => ({ ...prev, page }));
   };
 
   const handleCurrencyChange = (currency: string) => {
-    setIsLoading(true);
+    !options?.viewOnly && setIsLoading(true);
     setSearchQuery((prev) => ({ ...prev, page: 1, currency }));
   };
 
   useEffect(() => {
-    if (viewOnly) return;
+    console.log({ period: options?.period });
+    if (options?.viewOnly) return;
     const params = new URLSearchParams();
-    Object.keys(searchQuery).forEach((key) => {
-      const value = searchQuery[key as keyof typeof searchQuery];
+    const query = { ...searchQuery, ...(options?.period || {}) };
+    Object.keys(query).forEach((key) => {
+      const value = query[key as keyof typeof searchQuery];
       value && params.set(key, String(value));
     });
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
-  }, [searchQuery]);
+  }, [searchQuery, options]);
+
+  useEffect(() => {
+    if (!options?.viewOnly) return;
+    const start = ((searchQuery.page || 1) - 1) * 10;
+    const end = start + 10;
+    return setItems(rows.slice(start, end));
+  }, [rows, options?.viewOnly, searchQuery.page]);
 
   return {
     items,

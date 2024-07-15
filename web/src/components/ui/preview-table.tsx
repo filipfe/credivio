@@ -27,7 +27,6 @@ import Block from "./block";
 import TopContent from "./table/top-content";
 import DocModal from "../operations/modals/doc-modal";
 import Empty from "./empty";
-import ActionsDropdown from "../operations/actions-dropdown";
 
 type Props<T> = {
   count: number;
@@ -55,7 +54,7 @@ export default function PreviewTable({
     handlePageChange,
     handleLabelChange,
     handleCurrencyChange,
-  } = useTableQuery(rows, true);
+  } = useTableQuery(rows, { viewOnly: true });
   const { page, search, label, currency } = searchQuery;
   const {
     selectionMode,

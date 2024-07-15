@@ -1,6 +1,6 @@
 import { satoshi } from "@/assets/font/satoshi";
 import numberFormat from "@/utils/formatters/currency";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 const checkWidth = (label: string): number => {
   const tempElement = document.createElement("p");
@@ -25,16 +25,19 @@ export default function useYAxisWidth(
   formatter?: (value: number) => string
 ) {
   const [longestTick, setLongestTick] = useState(0);
-  const tickFormatter = (val: number): string => {
-    const formattedTick = formatter
-      ? formatter(val)
-      : numberFormat(currency, val, "compact");
-    const width = checkWidth(formattedTick);
-    if (width > longestTick) {
-      setLongestTick(width);
-    }
-    return formattedTick;
-  };
+  const tickFormatter = useCallback(
+    (val: number): string => {
+      const formattedTick = formatter
+        ? formatter(val)
+        : numberFormat(currency, val, "compact");
+      const width = checkWidth(formattedTick);
+      if (width > longestTick) {
+        setLongestTick(width);
+      }
+      return formattedTick;
+    },
+    [currency, formatter, longestTick]
+  );
   return {
     width: longestTick + 8.2 * 1,
     tickFormatter,

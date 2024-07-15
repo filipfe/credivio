@@ -1,6 +1,12 @@
 "use client";
 
-import { MouseEvent, useCallback, useEffect, useState } from "react";
+import {
+  MouseEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import {
   Table,
   TableHeader,
@@ -23,15 +29,18 @@ import useSelection from "@/hooks/useSelection";
 import { PaperclipIcon } from "lucide-react";
 import DocModal from "./modals/doc-modal";
 import ActionsDropdown from "./actions-dropdown";
+import { PeriodContext } from "@/app/(private)/(operations)/providers";
 
 export default function OperationTable({
   rows,
   count,
   children,
+  viewOnly,
   ...props
 }: TableProps<Operation>) {
   const [docPath, setDocPath] = useState<string | null>(null);
   const pages = Math.ceil(count / 10);
+  const { period } = useContext(PeriodContext);
   const {
     items,
     isLoading,
@@ -42,7 +51,7 @@ export default function OperationTable({
     handlePageChange,
     handleLabelChange,
     handleCurrencyChange,
-  } = useTableQuery(rows, false);
+  } = useTableQuery(rows, { viewOnly: !!viewOnly, period });
   const {
     selectionMode,
     selectedKeys,
@@ -155,6 +164,7 @@ export default function OperationTable({
               onChange: handleCurrencyChange,
             },
           }}
+          showPeriodFilter
         />
       }
     >
