@@ -124,7 +124,7 @@ export default function PreviewTable({
     handleSearch,
     handlePageChange,
     handleCurrencyChange,
-  } = useTableQuery(rows, true);
+  } = useTableQuery(rows, { viewOnly: true });
   const { page, search, currency } = searchQuery;
   const {
     selectionMode,

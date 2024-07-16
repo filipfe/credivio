@@ -1,3 +1,5 @@
+"use client";
+
 import { createClient } from "@/utils/supabase/client";
 
 export async function getLanguages(): Promise<SupabaseResponse<Language>> {
@@ -17,4 +19,24 @@ export async function getLanguages(): Promise<SupabaseResponse<Language>> {
   return {
     results,
   };
+}
+
+export async function getAccount(): Promise<Account> {
+  const supabase = createClient();
+
+  const {
+    data,
+    error: authError,
+  } = await supabase.from("profiles").select(
+    "first_name, last_name, email, language_code",
+  )
+    .single();
+
+  console.log({ data });
+
+  if (authError) {
+    throw new Error(authError.message);
+  }
+
+  return data;
 }

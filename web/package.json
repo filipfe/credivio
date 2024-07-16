@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@internationalized/date": "^3.5.4",
     "@nextui-org/react": "^2.4.1",
     "@nivo/radial-bar": "^0.87.0",
     "@supabase/ssr": "^0.4.0",

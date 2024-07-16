@@ -29,6 +29,8 @@ type SearchParams = {
   search?: string;
   label?: string; //expense
   currency?: string;
+  from?: string;
+  to?: string;
 };
 
 type Currency = {
@@ -72,4 +74,9 @@ type ActionButtonProps = {
   text: string;
   icon: LucideIcon;
   onSubmit: () => Promise<void>;
+};
+
+type Period = {
+  from: string;
+  to: string;
 };
