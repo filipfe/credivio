@@ -1,6 +1,6 @@
 import { BotContext } from "../types.ts";
 import getUser from "../utils/get-user.ts";
-import { ADD, UNDO } from "../commands.ts";
+import { ADD, GRAPH, UNDO } from "../commands.ts";
 
 export default async function help(ctx: BotContext) {
   if (!ctx.from) {
@@ -14,7 +14,10 @@ export default async function help(ctx: BotContext) {
     await ctx.reply(
       `🔎 Oto lista wszystkich dostępnych komend:
 /${ADD[user.language_code as keyof typeof ADD]} - Dodaj nową operację
-/${UNDO[user.language_code as keyof typeof UNDO]} - Cofnij ostatnią operację`,
+/${UNDO[user.language_code as keyof typeof UNDO]} - Cofnij ostatnią operację
+/${
+        GRAPH[user.language_code as keyof typeof GRAPH]
+      } - Wygeneruj tygodniowy wykres wydatków`,
     );
   } else {
     await ctx.reply("Zarejestruj się, aby kontynuować! Wpisz komendę /start");
