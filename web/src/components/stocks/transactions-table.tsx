@@ -83,7 +83,7 @@ export default function TransactionTable({
                 handleSearch={handleSearch}
                 search={search}
                 type="stock"
-                addHref="/stocks/transaction"
+                addHref="/stocks/transactions/add"
                 state={{
                   currency: {
                     value: searchQuery.currency,

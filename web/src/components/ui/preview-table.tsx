@@ -124,6 +124,7 @@ export default function PreviewTable({
     handleSearch,
     handlePageChange,
     handleCurrencyChange,
+    handleTransactionChange,
   } = useTableQuery(rows, { viewOnly: true });
   const { page, search, currency } = searchQuery;
   const {
@@ -178,6 +179,12 @@ export default function PreviewTable({
               value: searchQuery.currency,
               onChange: handleCurrencyChange,
             },
+            ...(type === "stock" && {
+              transaction: {
+                value: searchQuery.transaction,
+                onChange: handleTransactionChange,
+              },
+            }),
           }}
           viewOnly
         />
