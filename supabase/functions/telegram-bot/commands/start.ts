@@ -30,7 +30,7 @@ Twoja rejestracja przebiegła pomyślnie!`,
   await ctx.reply(
     `Możesz teraz pisać mi o swoich przychodach i wydatkach, a ja będę je zapisywać na twoim koncie!
     
-Możesz również wysyłać mi zdjęcia paragonów i faktur, które przetworzę i zapiszę jako odpowiednie operacje
+Możesz również wysyłać mi zdjęcia paragonów i faktur, które przetworzę i zapiszę jako odpowiednie operacje lub wysyłać mi wiadomości głosowe z informacjami o operacjach
 
 Aby zobaczyć dostępne komendy wpisz /pomoc
 

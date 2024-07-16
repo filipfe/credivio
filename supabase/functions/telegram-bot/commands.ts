@@ -12,3 +12,8 @@ export const HELP = {
   "pl-PL": "pomoc",
   "en-US": "help",
 };
+
+export const GRAPH = {
+  "pl-PL": "wykres",
+  "en-US": "graph",
+};

@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import { FormEvent, Fragment, useState, useTransition } from "react";
 import { addOperations } from "@/lib/operations/actions";
-import OperationTable from "./table";
 import { v4 } from "uuid";
 import Block from "../ui/block";
 import Scan from "./inputs/scan";
