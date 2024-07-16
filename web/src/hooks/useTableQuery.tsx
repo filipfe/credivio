@@ -19,6 +19,7 @@ export default function useTableQuery<T>(rows: T[], options?: Options) {
     search: "",
     label: "",
     currency: "",
+    transaction: "",
   });
 
   const handleLabelChange = useCallback(
@@ -62,6 +63,11 @@ export default function useTableQuery<T>(rows: T[], options?: Options) {
     setSearchQuery((prev) => ({ ...prev, page: 1, currency }));
   };
 
+  const handleTransactionChange = (transaction: string) => {
+    !options?.viewOnly && setIsLoading(true);
+    setSearchQuery((prev) => ({ ...prev, page: 1, transaction }));
+  };
+
   useEffect(() => {
     console.log({ period: options?.period });
     if (options?.viewOnly) return;
@@ -93,5 +99,6 @@ export default function useTableQuery<T>(rows: T[], options?: Options) {
     handlePageChange,
     handleLabelChange,
     handleCurrencyChange,
+    handleTransactionChange,
   };
 }
