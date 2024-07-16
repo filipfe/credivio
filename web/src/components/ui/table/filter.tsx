@@ -11,9 +11,10 @@ import { ListFilterIcon, ListRestartIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import CurrencySelect from "./currency-select";
 import LabelSelect from "./label-select";
+import TransactionSelect from "./transaction-select";
 
 export default function Filter({
-  enabled = { label: false, currency: true },
+  enabled = { label: false, currency: true, transaction: false },
   state,
 }: FilterProps) {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -52,6 +53,9 @@ export default function Filter({
           {enabled.label && state.label && <LabelSelect {...state.label} />}
           {enabled.currency && state.currency && (
             <CurrencySelect {...state.currency} />
+          )}
+          {enabled.transaction && state.transaction && (
+            <TransactionSelect {...state.transaction} />
           )}
           {numberOfParams > 0 && (
             <Button
