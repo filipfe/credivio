@@ -140,7 +140,9 @@ export default function PreviewTable({
     if (search) {
       filteredRows = filteredRows.filter((row) => {
         if (type === "stock") {
-          return (row as StockTransaction).symbol.toLowerCase();
+          return (row as StockTransaction).symbol
+            .toLowerCase()
+            .includes(search.toLowerCase());
         } else {
           return (row as Operation).title
             .toLowerCase()

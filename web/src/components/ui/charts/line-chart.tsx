@@ -13,8 +13,7 @@ import {
 } from "recharts";
 import ChartTooltip from "./tooltip";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
-import { Dispatch, memo, SetStateAction, useContext } from "react";
-import { PeriodContext } from "@/app/(private)/(operations)/providers";
+import { Dispatch, SetStateAction } from "react";
 import { isToday } from "date-fns";
 
 type Props = {

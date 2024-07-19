@@ -39,7 +39,6 @@ export default function TransactionTable({
 }: TableProps<StockTransaction>) {
   const pages = Math.ceil(count / 10);
   const {
-    items,
     isLoading,
     setIsLoading,
     searchQuery,
