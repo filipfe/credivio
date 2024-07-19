@@ -18,6 +18,10 @@ CREATE EXTENSION IF NOT EXISTS "pgsodium" WITH SCHEMA "pgsodium";
 
 COMMENT ON SCHEMA "public" IS 'standard public schema';
 
+CREATE EXTENSION IF NOT EXISTS "hypopg" WITH SCHEMA "extensions";
+
+CREATE EXTENSION IF NOT EXISTS "index_advisor" WITH SCHEMA "extensions";
+
 CREATE EXTENSION IF NOT EXISTS "pg_graphql" WITH SCHEMA "graphql";
 
 CREATE EXTENSION IF NOT EXISTS "pg_stat_statements" WITH SCHEMA "extensions";
@@ -247,7 +251,7 @@ $$;
 
 ALTER FUNCTION "public"."get_dashboard_portfolio_budgets"() OWNER TO "postgres";
 
-CREATE OR REPLACE FUNCTION "public"."get_general_dashboard_stats"("p_currency" "public"."currency_type") RETURNS "record"
+CREATE OR REPLACE FUNCTION "public"."get_dashboard_stats"("p_currency" "public"."currency_type") RETURNS "record"
     LANGUAGE "plpgsql"
     AS $_$
 declare
@@ -346,7 +350,7 @@ begin
 end;
 $_$;
 
-ALTER FUNCTION "public"."get_general_dashboard_stats"("p_currency" "public"."currency_type") OWNER TO "postgres";
+ALTER FUNCTION "public"."get_dashboard_stats"("p_currency" "public"."currency_type") OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."get_expenses_own_rows"("p_page" integer DEFAULT 1, "p_sort" "text" DEFAULT NULL::"text", "p_label" "text" DEFAULT NULL::"text", "p_search" "text" DEFAULT NULL::"text", "p_currency" "public"."currency_type" DEFAULT NULL::"public"."currency_type") RETURNS "jsonb"
     LANGUAGE "plpgsql"
@@ -1097,9 +1101,9 @@ GRANT ALL ON FUNCTION "public"."get_dashboard_portfolio_budgets"() TO "anon";
 GRANT ALL ON FUNCTION "public"."get_dashboard_portfolio_budgets"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."get_dashboard_portfolio_budgets"() TO "service_role";
 
-GRANT ALL ON FUNCTION "public"."get_general_dashboard_stats"("p_currency" "public"."currency_type") TO "anon";
-GRANT ALL ON FUNCTION "public"."get_general_dashboard_stats"("p_currency" "public"."currency_type") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_general_dashboard_stats"("p_currency" "public"."currency_type") TO "service_role";
+GRANT ALL ON FUNCTION "public"."get_dashboard_stats"("p_currency" "public"."currency_type") TO "anon";
+GRANT ALL ON FUNCTION "public"."get_dashboard_stats"("p_currency" "public"."currency_type") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_dashboard_stats"("p_currency" "public"."currency_type") TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."get_expenses_own_rows"("p_page" integer, "p_sort" "text", "p_label" "text", "p_search" "text", "p_currency" "public"."currency_type") TO "anon";
 GRANT ALL ON FUNCTION "public"."get_expenses_own_rows"("p_page" integer, "p_sort" "text", "p_label" "text", "p_search" "text", "p_currency" "public"."currency_type") TO "authenticated";
@@ -1210,7 +1214,49 @@ RESET ALL;
 -- Dumped schema changes for auth and storage
 --
 
+CREATE OR REPLACE FUNCTION "storage"."operation"() RETURNS "text"
+    LANGUAGE "plpgsql" STABLE
+    AS $$
+BEGIN
+    RETURN current_setting('storage.operation', true);
+END;
+$$;
+
+ALTER FUNCTION "storage"."operation"() OWNER TO "postgres";
+
 CREATE OR REPLACE TRIGGER "on_auth_user_created" AFTER INSERT ON "auth"."users" FOR EACH ROW EXECUTE FUNCTION "public"."handle_new_user"();
+
+ALTER TABLE "auth"."audit_log_entries" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "auth"."flow_state" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "auth"."identities" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "auth"."instances" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "auth"."mfa_amr_claims" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "auth"."mfa_challenges" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "auth"."mfa_factors" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "auth"."one_time_tokens" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "auth"."refresh_tokens" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "auth"."saml_providers" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "auth"."saml_relay_states" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "auth"."schema_migrations" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "auth"."sessions" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "auth"."sso_domains" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "auth"."sso_providers" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "auth"."users" ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Give users access to own folder 1u7gb_0" ON "storage"."objects" FOR SELECT USING ((("bucket_id" = 'docs'::"text") AND (( SELECT ("auth"."uid"())::"text" AS "uid") = ("storage"."foldername"("name"))[1])));
 
@@ -1219,6 +1265,10 @@ CREATE POLICY "Give users access to own folder 1u7gb_1" ON "storage"."objects" F
 CREATE POLICY "Give users access to own folder 1u7gb_2" ON "storage"."objects" FOR UPDATE USING ((("bucket_id" = 'docs'::"text") AND (( SELECT ("auth"."uid"())::"text" AS "uid") = ("storage"."foldername"("name"))[1])));
 
 CREATE POLICY "Give users access to own folder 1u7gb_3" ON "storage"."objects" FOR DELETE USING ((("bucket_id" = 'docs'::"text") AND (( SELECT ("auth"."uid"())::"text" AS "uid") = ("storage"."foldername"("name"))[1])));
+
+GRANT ALL ON FUNCTION "storage"."operation"() TO "anon";
+GRANT ALL ON FUNCTION "storage"."operation"() TO "authenticated";
+GRANT ALL ON FUNCTION "storage"."operation"() TO "service_role";
 
 GRANT ALL ON TABLE "storage"."s3_multipart_uploads" TO "postgres";
 GRANT ALL ON TABLE "storage"."s3_multipart_uploads_parts" TO "postgres";
