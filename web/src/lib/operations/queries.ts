@@ -31,7 +31,7 @@ export async function getDailyTotalAmount(
 ): Promise<SupabaseResponse<DailyAmount>> {
   const supabase = createClient();
   const { data: results, error } = await supabase.rpc(
-    "get_daily_total_amount",
+    "get_general_daily_total_amount",
     { p_currency: currency, p_type: type }
   );
 

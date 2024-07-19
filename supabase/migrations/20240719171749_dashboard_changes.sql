@@ -1,4 +1,43 @@
+drop function if exists "public"."get_daily_total_amount"(p_currency currency_type, p_type text);
+
 set check_function_bodies = off;
+
+CREATE OR REPLACE FUNCTION public.get_general_daily_total_amount(p_currency currency_type, p_type text)
+ RETURNS TABLE(date date, total_amount double precision)
+ LANGUAGE plpgsql
+AS $function$
+begin
+  return query
+  with daily_dates as (
+    select generate_series(
+      date_trunc('month', current_date),
+      (date_trunc('month', current_date) + interval '1 month - 1 day')::date,
+      interval '1 day'
+    )::date as date
+  )
+  select
+    d.date as date,
+    coalesce((
+      case
+        when $2 = 'balance' then sum(
+          case
+            when o.type = 'income' then amount
+            else -amount
+          end
+        )
+        else sum(amount)
+      end
+    ), 0) as total_amount
+  from daily_dates d
+  left join operations o on
+    d.date = o.issued_at::date and
+    o.currency = $1 and
+    ($2 = 'balance' or o.type = $2::operation_type)
+  group by d.date
+  order by d.date;
+end;
+$function$
+;
 
 CREATE OR REPLACE FUNCTION public.get_dashboard_chart_labels(p_currency currency_type)
  RETURNS TABLE(name text, total_amount double precision)
