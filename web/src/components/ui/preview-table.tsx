@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  MouseEvent,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { MouseEvent, ReactNode, useEffect, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -27,6 +20,84 @@ import Block from "./block";
 import TopContent from "./table/top-content";
 import DocModal from "../operations/modals/doc-modal";
 import Empty from "./empty";
+import { TRANSACTION_TYPES } from "@/const";
+
+const getColumns = (type: OperationType, hasDoc: boolean) => {
+  if (type === "stock") {
+    return [
+      { key: "issued_at", label: "DATA" },
+      { key: "symbol", label: "INSTRUMENT" },
+      { key: "transaction_type", label: "TRANSAKCJA" },
+      { key: "quantity", label: "ILOŚĆ" },
+      { key: "price", label: "CENA" },
+      { key: "commission", label: "PROWIZJA" },
+    ];
+  } else {
+    return [
+      { key: "issued_at", label: "DATA" },
+      { key: "title", label: "TYTUŁ" },
+      { key: "amount", label: "KWOTA" },
+      { key: "currency", label: "WALUTA" },
+      ...(hasDoc ? [{ key: "doc_path", label: "" }] : []),
+    ];
+  }
+};
+
+const renderCell = (
+  item: any,
+  columnKey: any,
+  setDocPath: (path: string) => void
+) => {
+  const cellValue = item[columnKey];
+
+  switch (columnKey) {
+    case "issued_at":
+      return (
+        <span className="line-clamp-1 break-all w-[10ch]">
+          {new Intl.DateTimeFormat("pl-PL", {
+            dateStyle: "short",
+          }).format(new Date(cellValue))}
+        </span>
+      );
+    case "title":
+      return (
+        <span className="line-clamp-1 break-all xl:max-w-[5vw]">
+          {cellValue}
+        </span>
+      );
+    case "transaction_type":
+      const transactionType = TRANSACTION_TYPES.find(
+        (type) => type.value === cellValue
+      )?.name;
+      return (
+        <span className="line-clamp-1 break-all xl:max-w-[5vw]">
+          {transactionType || cellValue}
+        </span>
+      );
+    case "doc_path":
+      const handleChange = (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setDocPath(cellValue);
+      };
+      return cellValue ? (
+        <Button
+          size="sm"
+          isIconOnly
+          onClick={handleChange}
+          radius="md"
+          disableRipple
+          className="flex items-center ml-auto relative z-40 -my-2 border border-primary/10"
+        >
+          <PaperclipIcon size={18} />
+        </Button>
+      ) : (
+        <></>
+      );
+    default:
+      return <span className="line-clamp-1 break-all">{cellValue}</span>;
+  }
+};
 
 type Props<T> = {
   count: number;
@@ -41,7 +112,7 @@ export default function PreviewTable({
   children,
   type,
   rows,
-}: Props<Operation>) {
+}: Props<Operation | StockTransaction>) {
   const [docPath, setDocPath] = useState<string | null>(null);
   const pages = Math.ceil(count / 10);
   const {
@@ -52,10 +123,10 @@ export default function PreviewTable({
     searchQuery,
     handleSearch,
     handlePageChange,
-    handleLabelChange,
     handleCurrencyChange,
+    handleTransactionChange,
   } = useTableQuery(rows, { viewOnly: true });
-  const { page, search, label, currency } = searchQuery;
+  const { page, search, currency } = searchQuery;
   const {
     selectionMode,
     selectedKeys,
@@ -67,9 +138,17 @@ export default function PreviewTable({
   useEffect(() => {
     let filteredRows = [...rows];
     if (search) {
-      filteredRows = filteredRows.filter((row) =>
-        row.title.toLowerCase().includes(search.toLowerCase())
-      );
+      filteredRows = filteredRows.filter((row) => {
+        if (type === "stock") {
+          return (row as StockTransaction).symbol
+            .toLowerCase()
+            .includes(search.toLowerCase());
+        } else {
+          return (row as Operation).title
+            .toLowerCase()
+            .includes(search.toLowerCase());
+        }
+      });
     }
 
     if (currency) {
@@ -78,70 +157,12 @@ export default function PreviewTable({
       );
     }
 
-    if (label) {
-      filteredRows = filteredRows.filter((row) => row.label?.includes(label));
-    }
-
     const start = ((searchQuery.page || 1) - 1) * 10;
     const end = start + 10;
     setItems(filteredRows.slice(start, end));
 
     isLoading && setIsLoading(false);
   }, [rows, searchQuery]);
-
-  const columns = useCallback(
-    (hasDoc: boolean) => [
-      { key: "issued_at", label: "DATA" },
-      { key: "title", label: "TYTUŁ" },
-      { key: "amount", label: "KWOTA" },
-      { key: "currency", label: "WALUTA" },
-      ...(hasDoc ? [{ key: "doc_path", label: "" }] : []),
-    ],
-    [page]
-  );
-
-  const renderCell = useCallback((item: any, columnKey: any) => {
-    const cellValue = item[columnKey];
-
-    switch (columnKey) {
-      case "issued_at":
-        return (
-          <span className="line-clamp-1 break-all w-[10ch]">
-            {new Intl.DateTimeFormat("pl-PL", {
-              dateStyle: "short",
-            }).format(new Date(cellValue))}
-          </span>
-        );
-      case "title":
-        return (
-          <span className="line-clamp-1 break-all xl:max-w-[5vw]">
-            {cellValue}
-          </span>
-        );
-      case "doc_path":
-        const handleChange = (e: MouseEvent<HTMLButtonElement>) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setDocPath(cellValue);
-        };
-        return cellValue ? (
-          <Button
-            size="sm"
-            isIconOnly
-            onClick={handleChange}
-            radius="md"
-            disableRipple
-            className="flex items-center ml-auto relative z-40 -my-2 border border-primary/10"
-          >
-            <PaperclipIcon size={18} />
-          </Button>
-        ) : (
-          <></>
-        );
-      default:
-        return <span className="line-clamp-1 break-all">{cellValue}</span>;
-    }
-  }, []);
 
   return (
     <Block
@@ -160,6 +181,12 @@ export default function PreviewTable({
               value: searchQuery.currency,
               onChange: handleCurrencyChange,
             },
+            ...(type === "stock" && {
+              transaction: {
+                value: searchQuery.transaction,
+                onChange: handleTransactionChange,
+              },
+            }),
           }}
           viewOnly
         />
@@ -188,14 +215,25 @@ export default function PreviewTable({
           }}
         >
           <TableHeader>
-            {columns(items.some((item) => item.doc_path)).map((column) => (
+            {getColumns(
+              type,
+              items.some(
+                (item) => type !== "stock" && (item as Operation).doc_path
+              )
+            ).map((column) => (
               <TableColumn key={column.key}>{column.label}</TableColumn>
             ))}
           </TableHeader>
           <TableBody
             items={items}
             isLoading={isLoading}
-            emptyContent={<Empty title="Brak dodanych operacji" />}
+            emptyContent={
+              <Empty
+                title={`Dodaj ${
+                  type === "stock" ? "akcje" : "operacje"
+                }, aby zobaczyć je na podglądzie.`}
+              />
+            }
             loadingContent={<Spinner />}
           >
             {(operation) => (
@@ -205,7 +243,9 @@ export default function PreviewTable({
                 className="hover:bg-light"
               >
                 {(columnKey) => (
-                  <TableCell>{renderCell(operation, columnKey)}</TableCell>
+                  <TableCell>
+                    {renderCell(operation, columnKey, setDocPath)}
+                  </TableCell>
                 )}
               </TableRow>
             )}

@@ -13,6 +13,11 @@ insert into storage.buckets (
   '{image/jpeg, image/png, application/pdf}'
 );
 
+-- LANGUAGES
+insert into languages (name, code) values
+  ('Polski', 'pl-PL'),
+  ('English', 'en-US');
+
 -- SERVICES
 insert into services (
   name, 

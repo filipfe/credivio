@@ -11,10 +11,10 @@ import useClientQuery from "@/hooks/useClientQuery";
 import { getDailyTotalAmount } from "@/lib/operations/queries";
 import { useContext, useState } from "react";
 
-const getTitle = (type: "budget" | "income" | "expense") => {
+const getTitle = (type: "balance" | "income" | "expense") => {
   switch (type) {
-    case "budget":
-      return "Budżet";
+    case "balance":
+      return "Bilans";
     case "income":
       return "Przychody";
     case "expense":
@@ -23,7 +23,7 @@ const getTitle = (type: "budget" | "income" | "expense") => {
 };
 
 type Props = {
-  type: "budget" | "income" | "expense";
+  type: "balance" | "income" | "expense";
   defaultCurrency: string;
   withPeriod?: boolean;
 };
@@ -45,7 +45,7 @@ export default function OperationsByMonth({
       className="xl:col-span-3 flex-1"
       title={`${getTitle(type)} wg 30 dni`}
       cta={
-        type === "budget" && (
+        type === "balance" && (
           <UniversalSelect
             className="w-20"
             size="sm"

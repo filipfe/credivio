@@ -17,19 +17,17 @@ import {
 import {
   CheckIcon,
   FileSpreadsheetIcon,
-  PaperclipIcon,
   PlusIcon,
   WrenchIcon,
 } from "lucide-react";
-import { ChangeEvent, Fragment, useState, useTransition } from "react";
-import parseCSV from "@/utils/operations/parse-csv";
+import { Fragment, useState, useTransition } from "react";
 import { addStocks } from "@/lib/stocks/actions";
-import TransactionTable from "./transactions-table";
 import { v4 } from "uuid";
 import stocksFormatter from "@/utils/formatters/stocks";
 import Block from "../ui/block";
 import UniversalSelect from "../ui/universal-select";
 import CSVInput from "../operations/inputs/csv";
+import PreviewTable from "../ui/preview-table";
 
 const defaultRecord: Omit<StockTransaction, "id"> = {
   symbol: "",
@@ -278,15 +276,7 @@ export default function Form({
           </Tabs>
         </Block>
       </form>
-      <TransactionTable
-        title="Podgląd"
-        rows={records}
-        type="stock"
-        count={records.length}
-        viewOnly={{
-          setRows: setRecords,
-        }}
-      >
+      <PreviewTable rows={records} type="stock" count={records.length}>
         <div className="flex-1 flex items-end justify-end">
           <form
             className="flex flex-col"
@@ -313,7 +303,7 @@ export default function Form({
             <input type="hidden" name="data" value={JSON.stringify(records)} />
           </form>
         </div>
-      </TransactionTable>
+      </PreviewTable>
     </div>
   );
 }

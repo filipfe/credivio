@@ -20,7 +20,7 @@ export default async function StatsList({
     throw new Error("Failed to retrieve the data!");
   }
 
-  const { incomes, expenses, budget } = result;
+  const { incomes, expenses, balance } = result;
 
   return (
     <Fragment>
@@ -63,10 +63,10 @@ export default async function StatsList({
         }
       />
       <Stat
-        title="Budżet"
+        title="Bilans"
         currency={defaultCurrency}
         description=""
-        stat={budget}
+        stat={balance}
       />
     </Fragment>
   );

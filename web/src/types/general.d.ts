@@ -63,10 +63,12 @@ interface FilterProps {
   enabled?: {
     label?: boolean;
     currency?: boolean;
+    transaction?: boolean;
   };
   state: {
     label?: State;
     currency?: State;
+    transaction?: State;
   };
 }
 

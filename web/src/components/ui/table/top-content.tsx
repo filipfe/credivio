@@ -54,7 +54,11 @@ export default function TopContent({
         )}
         {showPeriodFilter && <PeriodSelect />}
         <Filter
-          enabled={{ label: type === "expense", currency: true }}
+          enabled={{
+            label: type === "expense",
+            currency: true,
+            transaction: type === "stock",
+          }}
           state={state}
         />
         {addHref && (
