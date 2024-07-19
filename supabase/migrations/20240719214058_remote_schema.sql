@@ -1,6 +1,5 @@
 CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION handle_new_user();
 
-
 grant delete on table "storage"."s3_multipart_uploads" to "postgres";
 
 grant insert on table "storage"."s3_multipart_uploads" to "postgres";
