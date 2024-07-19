@@ -1,6 +1,6 @@
-drop type "public"."dashboard_stat_type";
-
 drop type "public"."dashboard_stats_type";
+
+drop type "public"."dashboard_stat_type";
 
 drop function if exists "public"."get_operations_stats"(p_currency currency_type, p_type operation_type);
 
