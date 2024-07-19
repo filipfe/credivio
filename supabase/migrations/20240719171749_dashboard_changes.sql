@@ -1,5 +1,24 @@
 set check_function_bodies = off;
 
+CREATE OR REPLACE FUNCTION public.get_dashboard_chart_labels(p_currency currency_type)
+ RETURNS TABLE(name text, total_amount double precision)
+ LANGUAGE plpgsql
+AS $function$begin
+  return query
+  select
+    label as name,
+    sum(amount) as total_amount
+  from expenses
+  where
+    currency = $1 and
+    label is not null and
+    date_trunc('month', issued_at) = date_trunc('month', current_date)
+  group by label
+  order by total_amount desc
+  limit 4;
+end;$function$
+;
+
 CREATE OR REPLACE FUNCTION public.get_dashboard_stats(p_currency currency_type)
  RETURNS record
  LANGUAGE plpgsql
