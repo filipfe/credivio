@@ -185,9 +185,47 @@ end;$$;
 
 ALTER FUNCTION "public"."enforce_single_priority"() OWNER TO "postgres";
 
+CREATE OR REPLACE FUNCTION "public"."get_daily_total_amount"("p_currency" "public"."currency_type", "p_type" "text") RETURNS TABLE("date" "date", "total_amount" double precision)
+    LANGUAGE "plpgsql"
+    AS $_$
+begin
+  return query
+  with daily_dates as (
+    select generate_series(current_date - interval '30 day', current_date, interval '1 day')::date as date
+  )
+  select
+    d.date as date,
+    coalesce((
+      case
+        when $2 = 'budget' then sum(
+          case
+            when o.type = 'income' then amount
+            else -amount
+          end
+        )
+        else sum(amount)
+      end
+    ), 0) as total_amount
+  from daily_dates d
+  left join operations o on (
+    case
+      when $2 = 'budget' then d.date >= o.issued_at::date
+      else d.date = o.issued_at::date
+    end
+  ) and
+  o.currency = $1 and
+  ($2 = 'budget' or o.type = $2::operation_type)
+  group by d.date
+  order by d.date;
+end;
+$_$;
+
+ALTER FUNCTION "public"."get_daily_total_amount"("p_currency" "public"."currency_type", "p_type" "text") OWNER TO "postgres";
+
 CREATE OR REPLACE FUNCTION "public"."get_dashboard_chart_labels"("p_currency" "public"."currency_type") RETURNS TABLE("name" "text", "total_amount" double precision)
     LANGUAGE "plpgsql"
-    AS $_$begin
+    AS $_$
+begin
   return query
   select
     label as name,
@@ -196,11 +234,12 @@ CREATE OR REPLACE FUNCTION "public"."get_dashboard_chart_labels"("p_currency" "p
   where
     currency = $1 and
     label is not null and
-    date_trunc('month', issued_at) = date_trunc('month', current_date)
+    issued_at >= current_date - 30
   group by label
   order by total_amount desc
   limit 4;
-end;$_$;
+end;
+$_$;
 
 ALTER FUNCTION "public"."get_dashboard_chart_labels"("p_currency" "public"."currency_type") OWNER TO "postgres";
 
@@ -257,95 +296,96 @@ CREATE OR REPLACE FUNCTION "public"."get_dashboard_stats"("p_currency" "public".
 declare
   result record;
 begin
-  with cte1 as (
+  with data as (
     select
       sum(
         case
-          when o.type = 'income' and date_trunc('month', o.issued_at) = date_trunc('month', current_date) then o.amount
+          when o.type = 'income' and o.issued_at >= current_date - 30 then o.amount
           else 0
         end
-      ) as current_month_incomes,
+      ) as current_total_incomes,
       sum(
         case
-          when o.type = 'expense' and date_trunc('month', o.issued_at) = date_trunc('month', current_date) then o.amount
+          when o.type = 'expense' and o.issued_at >= current_date - 30 then o.amount
           else 0
         end
-      ) as current_month_expenses,
+      ) as current_total_expenses,
       sum(
         case
-          when o.type = 'income' and date_trunc('month', o.issued_at) = date_trunc('month', current_date - interval '1 month') then o.amount
-          else 0
+          when o.type = 'income' then amount
+          else -amount
         end
-      ) as last_month_incomes,
+      ) as current_budget,
       sum(
         case
-          when o.type = 'expense' and date_trunc('month', o.issued_at) = date_trunc('month', current_date - interval '1 month') then o.amount
+          when o.type = 'income' and o.issued_at <= current_date - 31 and o.issued_at >= current_date - 61 then o.amount
           else 0
         end
-      ) as last_month_expenses
+      ) as latest_total_incomes,
+      sum(
+        case
+          when o.type = 'expense' and o.issued_at <= current_date - 31 and o.issued_at >= current_date - 61 then o.amount
+          else 0
+        end
+      ) as latest_total_expenses,
+      sum(
+        case
+          when o.issued_at <= current_date - 31 then
+            case
+              when o.type = 'income' then o.amount
+              else -o.amount
+            end
+          else 0
+        end
+      ) as latest_budget
     from operations o
-    where
-      o.currency = $1 and
-      date_trunc('month', o.issued_at) >= date_trunc('month', current_date - interval '1 month')
+    where o.currency = $1
   )
   select
     json_build_object(
-      'amount', c1.current_month_incomes,
+      'amount', d.current_total_incomes,
       'difference', (
         case
-          when c1.last_month_incomes = 0 then
-            case
-              when c1.current_month_incomes = 0 then 0
-              else 100
-            end
-          else round((abs(c1.current_month_incomes - c1.last_month_incomes) / c1.last_month_incomes * 100)::numeric, 2)
+          when d.latest_total_incomes = 0 then 100
+          else round((abs(d.current_total_incomes - d.latest_total_incomes) / d.latest_total_incomes * 100)::numeric, 2)
         end
       ),
       'difference_indicator', case
-        when c1.current_month_incomes > c1.last_month_incomes then 'positive'
-        when c1.current_month_incomes < c1.last_month_incomes  then 'negative'
+        when d.current_total_incomes > d.latest_total_incomes then 'positive'
+        when d.current_total_incomes < d.latest_total_incomes  then 'negative'
         else 'no_change'
       end
     ) as incomes,
     json_build_object(
-      'amount', c1.current_month_expenses,
+      'amount', d.current_total_expenses,
       'difference', (
         case
-          when c1.last_month_expenses = 0 then
-            case
-              when c1.current_month_expenses = 0 then 0
-              else 100
-            end
-          else round((abs(c1.current_month_expenses - c1.last_month_expenses) / c1.last_month_expenses * 100)::numeric, 2)
+          when d.latest_total_expenses = 0 then 100
+          else round((abs(d.current_total_expenses - d.latest_total_expenses) / d.latest_total_expenses * 100)::numeric, 2)
         end
       ),
       'difference_indicator', case
-        when c1.current_month_expenses > c1.last_month_expenses  then 'positive'
-        when c1.current_month_expenses < c1.last_month_expenses  then 'negative'
+        when d.current_total_expenses > d.latest_total_expenses  then 'positive'
+        when d.current_total_expenses < d.latest_total_expenses  then 'negative'
         else 'no_change'
       end
     ) as expenses,
     json_build_object(
-      'amount', c1.current_month_incomes - c1.current_month_expenses,
+      'amount', d.current_budget,
       'difference', (
         case
-          when c1.last_month_incomes - c1.last_month_expenses = 0 then
-            case
-              when c1.current_month_incomes - c1.current_month_expenses = 0 then 0
-              else 100
-            end
-          else round((abs(abs((c1.current_month_incomes - c1.current_month_expenses) - (c1.last_month_incomes - c1.last_month_expenses)) / (c1.last_month_incomes - c1.last_month_expenses)) * 100)::numeric, 2)
+          when d.latest_budget = 0 then 100
+          else round((abs(abs(d.current_budget - d.latest_budget) / d.latest_budget) * 100)::numeric, 2)
         end
       ),
       'difference_indicator', case
-        when c1.current_month_incomes - c1.current_month_expenses > c1.last_month_incomes - c1.last_month_expenses then 'positive'
-        when c1.current_month_incomes - c1.current_month_expenses < c1.last_month_incomes - c1.last_month_expenses then 'negative'
+        when d.current_budget > d.latest_budget then 'positive'
+        when d.current_budget < d.latest_budget then 'negative'
         else 'no_change'
       end
-    ) as balance
+    ) as budget
   into result
-  from cte1 c1;
-
+  from data d;
   return result;
 end;
 $_$;
@@ -420,43 +460,6 @@ end;
 $$;
 
 ALTER FUNCTION "public"."get_expenses_own_rows"("p_page" integer, "p_sort" "text", "p_label" "text", "p_search" "text", "p_currency" "public"."currency_type") OWNER TO "postgres";
-
-CREATE OR REPLACE FUNCTION "public"."get_general_daily_total_amount"("p_currency" "public"."currency_type", "p_type" "text") RETURNS TABLE("date" "date", "total_amount" double precision)
-    LANGUAGE "plpgsql"
-    AS $_$
-begin
-  return query
-  with daily_dates as (
-    select generate_series(
-      date_trunc('month', current_date),
-      (date_trunc('month', current_date) + interval '1 month - 1 day')::date,
-      interval '1 day'
-    )::date as date
-  )
-  select
-    d.date as date,
-    coalesce((
-      case
-        when $2 = 'balance' then sum(
-          case
-            when o.type = 'income' then amount
-            else -amount
-          end
-        )
-        else sum(amount)
-      end
-    ), 0) as total_amount
-  from daily_dates d
-  left join operations o on
-    d.date = o.issued_at::date and
-    o.currency = $1 and
-    ($2 = 'balance' or o.type = $2::operation_type)
-  group by d.date
-  order by d.date;
-end;
-$_$;
-
-ALTER FUNCTION "public"."get_general_daily_total_amount"("p_currency" "public"."currency_type", "p_type" "text") OWNER TO "postgres";
 
 CREATE OR REPLACE FUNCTION "public"."get_general_own_labels"() RETURNS TABLE("name" "text", "count" bigint)
     LANGUAGE "plpgsql"
@@ -1093,6 +1096,10 @@ GRANT ALL ON FUNCTION "public"."enforce_single_priority"() TO "anon";
 GRANT ALL ON FUNCTION "public"."enforce_single_priority"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."enforce_single_priority"() TO "service_role";
 
+GRANT ALL ON FUNCTION "public"."get_daily_total_amount"("p_currency" "public"."currency_type", "p_type" "text") TO "anon";
+GRANT ALL ON FUNCTION "public"."get_daily_total_amount"("p_currency" "public"."currency_type", "p_type" "text") TO "authenticated";
+GRANT ALL ON FUNCTION "public"."get_daily_total_amount"("p_currency" "public"."currency_type", "p_type" "text") TO "service_role";
+
 GRANT ALL ON FUNCTION "public"."get_dashboard_chart_labels"("p_currency" "public"."currency_type") TO "anon";
 GRANT ALL ON FUNCTION "public"."get_dashboard_chart_labels"("p_currency" "public"."currency_type") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."get_dashboard_chart_labels"("p_currency" "public"."currency_type") TO "service_role";
@@ -1108,10 +1115,6 @@ GRANT ALL ON FUNCTION "public"."get_dashboard_stats"("p_currency" "public"."curr
 GRANT ALL ON FUNCTION "public"."get_expenses_own_rows"("p_page" integer, "p_sort" "text", "p_label" "text", "p_search" "text", "p_currency" "public"."currency_type") TO "anon";
 GRANT ALL ON FUNCTION "public"."get_expenses_own_rows"("p_page" integer, "p_sort" "text", "p_label" "text", "p_search" "text", "p_currency" "public"."currency_type") TO "authenticated";
 GRANT ALL ON FUNCTION "public"."get_expenses_own_rows"("p_page" integer, "p_sort" "text", "p_label" "text", "p_search" "text", "p_currency" "public"."currency_type") TO "service_role";
-
-GRANT ALL ON FUNCTION "public"."get_general_daily_total_amount"("p_currency" "public"."currency_type", "p_type" "text") TO "anon";
-GRANT ALL ON FUNCTION "public"."get_general_daily_total_amount"("p_currency" "public"."currency_type", "p_type" "text") TO "authenticated";
-GRANT ALL ON FUNCTION "public"."get_general_daily_total_amount"("p_currency" "public"."currency_type", "p_type" "text") TO "service_role";
 
 GRANT ALL ON FUNCTION "public"."get_general_own_labels"() TO "anon";
 GRANT ALL ON FUNCTION "public"."get_general_own_labels"() TO "authenticated";
@@ -1214,17 +1217,441 @@ RESET ALL;
 -- Dumped schema changes for auth and storage
 --
 
-CREATE OR REPLACE FUNCTION "storage"."operation"() RETURNS "text"
+ALTER FUNCTION "storage"."operation"() OWNER TO "postgres";
+
+CREATE OR REPLACE FUNCTION "storage"."search"("prefix" "text", "bucketname" "text", "limits" integer DEFAULT 100, "levels" integer DEFAULT 1, "offsets" integer DEFAULT 0, "search" "text" DEFAULT ''::"text", "sortcolumn" "text" DEFAULT 'name'::"text", "sortorder" "text" DEFAULT 'asc'::"text") RETURNS TABLE("name" "text", "id" "uuid", "updated_at" timestamp with time zone, "created_at" timestamp with time zone, "last_accessed_at" timestamp with time zone, "metadata" "jsonb")
     LANGUAGE "plpgsql" STABLE
+    AS $_$
+declare
+  v_order_by text;
+  v_sort_order text;
+begin
+  case
+    when sortcolumn = 'name' then
+      v_order_by = 'name';
+    when sortcolumn = 'updated_at' then
+      v_order_by = 'updated_at';
+    when sortcolumn = 'created_at' then
+      v_order_by = 'created_at';
+    when sortcolumn = 'last_accessed_at' then
+      v_order_by = 'last_accessed_at';
+    else
+      v_order_by = 'name';
+  end case;
+
+  case
+    when sortorder = 'asc' then
+      v_sort_order = 'asc';
+    when sortorder = 'desc' then
+      v_sort_order = 'desc';
+    else
+      v_sort_order = 'asc';
+  end case;
+
+  v_order_by = v_order_by || ' ' || v_sort_order;
+
+  return query execute
+    'with folders as (
+       select path_tokens[$1] as folder
+       from storage.objects
+         where objects.name ilike $2 || $3 || ''%''
+           and bucket_id = $4
+           and array_length(objects.path_tokens, 1) <> $1
+       group by folder
+       order by folder ' || v_sort_order || '
+     )
+     (select folder as "name",
+            null as id,
+            null as updated_at,
+            null as created_at,
+            null as last_accessed_at,
+            null as metadata from folders)
+     union all
+     (select path_tokens[$1] as "name",
+            id,
+            updated_at,
+            created_at,
+            last_accessed_at,
+            metadata
+     from storage.objects
+     where objects.name ilike $2 || $3 || ''%''
+       and bucket_id = $4
+       and array_length(objects.path_tokens, 1) = $1
+     order by ' || v_order_by || ')
+     limit $5
+     offset $6' using levels, prefix, search, bucketname, limits, offsets;
+end;
+$_$;
+
+ALTER FUNCTION "storage"."search"("prefix" "text", "bucketname" "text", "limits" integer, "levels" integer, "offsets" integer, "search" "text", "sortcolumn" "text", "sortorder" "text") OWNER TO "supabase_storage_admin";
+
+CREATE OR REPLACE FUNCTION "storage"."update_updated_at_column"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
     AS $$
 BEGIN
-    RETURN current_setting('storage.operation', true);
+    NEW.updated_at = now();
+    RETURN NEW; 
 END;
 $$;
 
-ALTER FUNCTION "storage"."operation"() OWNER TO "postgres";
+ALTER FUNCTION "storage"."update_updated_at_column"() OWNER TO "supabase_storage_admin";
+
+SET default_tablespace = '';
+
+SET default_table_access_method = "heap";
+
+CREATE TABLE IF NOT EXISTS "auth"."audit_log_entries" (
+    "instance_id" "uuid",
+    "id" "uuid" NOT NULL,
+    "payload" "json",
+    "created_at" timestamp with time zone,
+    "ip_address" character varying(64) DEFAULT ''::character varying NOT NULL
+);
+
+ALTER TABLE "auth"."audit_log_entries" OWNER TO "supabase_auth_admin";
+
+COMMENT ON TABLE "auth"."audit_log_entries" IS 'Auth: Audit trail for user actions.';
+
+CREATE TABLE IF NOT EXISTS "auth"."flow_state" (
+    "id" "uuid" NOT NULL,
+    "user_id" "uuid",
+    "auth_code" "text" NOT NULL,
+    "code_challenge_method" "auth"."code_challenge_method" NOT NULL,
+    "code_challenge" "text" NOT NULL,
+    "provider_type" "text" NOT NULL,
+    "provider_access_token" "text",
+    "provider_refresh_token" "text",
+    "created_at" timestamp with time zone,
+    "updated_at" timestamp with time zone,
+    "authentication_method" "text" NOT NULL,
+    "auth_code_issued_at" timestamp with time zone
+);
+
+ALTER TABLE "auth"."flow_state" OWNER TO "supabase_auth_admin";
+
+COMMENT ON TABLE "auth"."flow_state" IS 'stores metadata for pkce logins';
+
+CREATE TABLE IF NOT EXISTS "auth"."identities" (
+    "provider_id" "text" NOT NULL,
+    "user_id" "uuid" NOT NULL,
+    "identity_data" "jsonb" NOT NULL,
+    "provider" "text" NOT NULL,
+    "last_sign_in_at" timestamp with time zone,
+    "created_at" timestamp with time zone,
+    "updated_at" timestamp with time zone,
+    "email" "text" GENERATED ALWAYS AS ("lower"(("identity_data" ->> 'email'::"text"))) STORED,
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL
+);
+
+ALTER TABLE "auth"."identities" OWNER TO "supabase_auth_admin";
+
+COMMENT ON TABLE "auth"."identities" IS 'Auth: Stores identities associated to a user.';
+
+COMMENT ON COLUMN "auth"."identities"."email" IS 'Auth: Email is a generated column that references the optional email property in the identity_data';
+
+CREATE TABLE IF NOT EXISTS "auth"."instances" (
+    "id" "uuid" NOT NULL,
+    "uuid" "uuid",
+    "raw_base_config" "text",
+    "created_at" timestamp with time zone,
+    "updated_at" timestamp with time zone
+);
+
+ALTER TABLE "auth"."instances" OWNER TO "supabase_auth_admin";
+
+COMMENT ON TABLE "auth"."instances" IS 'Auth: Manages users across multiple sites.';
+
+CREATE TABLE IF NOT EXISTS "auth"."mfa_amr_claims" (
+    "session_id" "uuid" NOT NULL,
+    "created_at" timestamp with time zone NOT NULL,
+    "updated_at" timestamp with time zone NOT NULL,
+    "authentication_method" "text" NOT NULL,
+    "id" "uuid" NOT NULL
+);
+
+ALTER TABLE "auth"."mfa_amr_claims" OWNER TO "supabase_auth_admin";
+
+COMMENT ON TABLE "auth"."mfa_amr_claims" IS 'auth: stores authenticator method reference claims for multi factor authentication';
+
+CREATE TABLE IF NOT EXISTS "auth"."mfa_challenges" (
+    "id" "uuid" NOT NULL,
+    "factor_id" "uuid" NOT NULL,
+    "created_at" timestamp with time zone NOT NULL,
+    "verified_at" timestamp with time zone,
+    "ip_address" "inet" NOT NULL
+);
+
+ALTER TABLE "auth"."mfa_challenges" OWNER TO "supabase_auth_admin";
+
+COMMENT ON TABLE "auth"."mfa_challenges" IS 'auth: stores metadata about challenge requests made';
+
+CREATE TABLE IF NOT EXISTS "auth"."mfa_factors" (
+    "id" "uuid" NOT NULL,
+    "user_id" "uuid" NOT NULL,
+    "friendly_name" "text",
+    "factor_type" "auth"."factor_type" NOT NULL,
+    "status" "auth"."factor_status" NOT NULL,
+    "created_at" timestamp with time zone NOT NULL,
+    "updated_at" timestamp with time zone NOT NULL,
+    "secret" "text"
+);
+
+ALTER TABLE "auth"."mfa_factors" OWNER TO "supabase_auth_admin";
+
+COMMENT ON TABLE "auth"."mfa_factors" IS 'auth: stores metadata about factors';
+
+CREATE TABLE IF NOT EXISTS "auth"."one_time_tokens" (
+    "id" "uuid" NOT NULL,
+    "user_id" "uuid" NOT NULL,
+    "token_type" "auth"."one_time_token_type" NOT NULL,
+    "token_hash" "text" NOT NULL,
+    "relates_to" "text" NOT NULL,
+    "created_at" timestamp without time zone DEFAULT "now"() NOT NULL,
+    "updated_at" timestamp without time zone DEFAULT "now"() NOT NULL,
+    CONSTRAINT "one_time_tokens_token_hash_check" CHECK (("char_length"("token_hash") > 0))
+);
+
+ALTER TABLE "auth"."one_time_tokens" OWNER TO "supabase_auth_admin";
+
+CREATE TABLE IF NOT EXISTS "auth"."refresh_tokens" (
+    "instance_id" "uuid",
+    "id" bigint NOT NULL,
+    "token" character varying(255),
+    "user_id" character varying(255),
+    "revoked" boolean,
+    "created_at" timestamp with time zone,
+    "updated_at" timestamp with time zone,
+    "parent" character varying(255),
+    "session_id" "uuid"
+);
+
+ALTER TABLE "auth"."refresh_tokens" OWNER TO "supabase_auth_admin";
+
+COMMENT ON TABLE "auth"."refresh_tokens" IS 'Auth: Store of tokens used to refresh JWT tokens once they expire.';
+
+CREATE SEQUENCE IF NOT EXISTS "auth"."refresh_tokens_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER TABLE "auth"."refresh_tokens_id_seq" OWNER TO "supabase_auth_admin";
+
+ALTER SEQUENCE "auth"."refresh_tokens_id_seq" OWNED BY "auth"."refresh_tokens"."id";
+
+CREATE TABLE IF NOT EXISTS "auth"."saml_providers" (
+    "id" "uuid" NOT NULL,
+    "sso_provider_id" "uuid" NOT NULL,
+    "entity_id" "text" NOT NULL,
+    "metadata_xml" "text" NOT NULL,
+    "metadata_url" "text",
+    "attribute_mapping" "jsonb",
+    "created_at" timestamp with time zone,
+    "updated_at" timestamp with time zone,
+    "name_id_format" "text",
+    CONSTRAINT "entity_id not empty" CHECK (("char_length"("entity_id") > 0)),
+    CONSTRAINT "metadata_url not empty" CHECK ((("metadata_url" = NULL::"text") OR ("char_length"("metadata_url") > 0))),
+    CONSTRAINT "metadata_xml not empty" CHECK (("char_length"("metadata_xml") > 0))
+);
+
+ALTER TABLE "auth"."saml_providers" OWNER TO "supabase_auth_admin";
+
+COMMENT ON TABLE "auth"."saml_providers" IS 'Auth: Manages SAML Identity Provider connections.';
+
+CREATE TABLE IF NOT EXISTS "auth"."saml_relay_states" (
+    "id" "uuid" NOT NULL,
+    "sso_provider_id" "uuid" NOT NULL,
+    "request_id" "text" NOT NULL,
+    "for_email" "text",
+    "redirect_to" "text",
+    "created_at" timestamp with time zone,
+    "updated_at" timestamp with time zone,
+    "flow_state_id" "uuid",
+    CONSTRAINT "request_id not empty" CHECK (("char_length"("request_id") > 0))
+);
+
+ALTER TABLE "auth"."saml_relay_states" OWNER TO "supabase_auth_admin";
+
+COMMENT ON TABLE "auth"."saml_relay_states" IS 'Auth: Contains SAML Relay State information for each Service Provider initiated login.';
+
+CREATE TABLE IF NOT EXISTS "auth"."schema_migrations" (
+    "version" character varying(255) NOT NULL
+);
+
+ALTER TABLE "auth"."schema_migrations" OWNER TO "supabase_auth_admin";
+
+COMMENT ON TABLE "auth"."schema_migrations" IS 'Auth: Manages updates to the auth system.';
+
+CREATE TABLE IF NOT EXISTS "auth"."sessions" (
+    "id" "uuid" NOT NULL,
+    "user_id" "uuid" NOT NULL,
+    "created_at" timestamp with time zone,
+    "updated_at" timestamp with time zone,
+    "factor_id" "uuid",
+    "aal" "auth"."aal_level",
+    "not_after" timestamp with time zone,
+    "refreshed_at" timestamp without time zone,
+    "user_agent" "text",
+    "ip" "inet",
+    "tag" "text"
+);
+
+ALTER TABLE "auth"."sessions" OWNER TO "supabase_auth_admin";
+
+COMMENT ON TABLE "auth"."sessions" IS 'Auth: Stores session data associated to a user.';
+
+COMMENT ON COLUMN "auth"."sessions"."not_after" IS 'Auth: Not after is a nullable column that contains a timestamp after which the session should be regarded as expired.';
+
+CREATE TABLE IF NOT EXISTS "auth"."sso_domains" (
+    "id" "uuid" NOT NULL,
+    "sso_provider_id" "uuid" NOT NULL,
+    "domain" "text" NOT NULL,
+    "created_at" timestamp with time zone,
+    "updated_at" timestamp with time zone,
+    CONSTRAINT "domain not empty" CHECK (("char_length"("domain") > 0))
+);
+
+ALTER TABLE "auth"."sso_domains" OWNER TO "supabase_auth_admin";
+
+COMMENT ON TABLE "auth"."sso_domains" IS 'Auth: Manages SSO email address domain mapping to an SSO Identity Provider.';
+
+CREATE TABLE IF NOT EXISTS "auth"."sso_providers" (
+    "id" "uuid" NOT NULL,
+    "resource_id" "text",
+    "created_at" timestamp with time zone,
+    "updated_at" timestamp with time zone,
+    CONSTRAINT "resource_id not empty" CHECK ((("resource_id" = NULL::"text") OR ("char_length"("resource_id") > 0)))
+);
+
+ALTER TABLE "auth"."sso_providers" OWNER TO "supabase_auth_admin";
+
+COMMENT ON TABLE "auth"."sso_providers" IS 'Auth: Manages SSO identity provider information; see saml_providers for SAML.';
+
+COMMENT ON COLUMN "auth"."sso_providers"."resource_id" IS 'Auth: Uniquely identifies a SSO provider according to a user-chosen resource ID (case insensitive), useful in infrastructure as code.';
+
+CREATE TABLE IF NOT EXISTS "auth"."users" (
+    "instance_id" "uuid",
+    "id" "uuid" NOT NULL,
+    "aud" character varying(255),
+    "role" character varying(255),
+    "email" character varying(255),
+    "encrypted_password" character varying(255),
+    "email_confirmed_at" timestamp with time zone,
+    "invited_at" timestamp with time zone,
+    "confirmation_token" character varying(255),
+    "confirmation_sent_at" timestamp with time zone,
+    "recovery_token" character varying(255),
+    "recovery_sent_at" timestamp with time zone,
+    "email_change_token_new" character varying(255),
+    "email_change" character varying(255),
+    "email_change_sent_at" timestamp with time zone,
+    "last_sign_in_at" timestamp with time zone,
+    "raw_app_meta_data" "jsonb",
+    "raw_user_meta_data" "jsonb",
+    "is_super_admin" boolean,
+    "created_at" timestamp with time zone,
+    "updated_at" timestamp with time zone,
+    "phone" "text" DEFAULT NULL::character varying,
+    "phone_confirmed_at" timestamp with time zone,
+    "phone_change" "text" DEFAULT ''::character varying,
+    "phone_change_token" character varying(255) DEFAULT ''::character varying,
+    "phone_change_sent_at" timestamp with time zone,
+    "confirmed_at" timestamp with time zone GENERATED ALWAYS AS (LEAST("email_confirmed_at", "phone_confirmed_at")) STORED,
+    "email_change_token_current" character varying(255) DEFAULT ''::character varying,
+    "email_change_confirm_status" smallint DEFAULT 0,
+    "banned_until" timestamp with time zone,
+    "reauthentication_token" character varying(255) DEFAULT ''::character varying,
+    "reauthentication_sent_at" timestamp with time zone,
+    "is_sso_user" boolean DEFAULT false NOT NULL,
+    "deleted_at" timestamp with time zone,
+    "is_anonymous" boolean DEFAULT false NOT NULL,
+    CONSTRAINT "users_email_change_confirm_status_check" CHECK ((("email_change_confirm_status" >= 0) AND ("email_change_confirm_status" <= 2)))
+);
+
+ALTER TABLE "auth"."users" OWNER TO "supabase_auth_admin";
+
+COMMENT ON TABLE "auth"."users" IS 'Auth: Stores user login data within a secure schema.';
+
+COMMENT ON COLUMN "auth"."users"."is_sso_user" IS 'Auth: Set this column to true when the account comes from SSO. These accounts can have duplicate emails.';
+
+CREATE TABLE IF NOT EXISTS "storage"."buckets" (
+    "id" "text" NOT NULL,
+    "name" "text" NOT NULL,
+    "owner" "uuid",
+    "created_at" timestamp with time zone DEFAULT "now"(),
+    "updated_at" timestamp with time zone DEFAULT "now"(),
+    "public" boolean DEFAULT false,
+    "avif_autodetection" boolean DEFAULT false,
+    "file_size_limit" bigint,
+    "allowed_mime_types" "text"[],
+    "owner_id" "text"
+);
+
+ALTER TABLE "storage"."buckets" OWNER TO "supabase_storage_admin";
+
+COMMENT ON COLUMN "storage"."buckets"."owner" IS 'Field is deprecated, use owner_id instead';
+
+CREATE TABLE IF NOT EXISTS "storage"."migrations" (
+    "id" integer NOT NULL,
+    "name" character varying(100) NOT NULL,
+    "hash" character varying(40) NOT NULL,
+    "executed_at" timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE "storage"."migrations" OWNER TO "supabase_storage_admin";
+
+CREATE TABLE IF NOT EXISTS "storage"."objects" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "bucket_id" "text",
+    "name" "text",
+    "owner" "uuid",
+    "created_at" timestamp with time zone DEFAULT "now"(),
+    "updated_at" timestamp with time zone DEFAULT "now"(),
+    "last_accessed_at" timestamp with time zone DEFAULT "now"(),
+    "metadata" "jsonb",
+    "path_tokens" "text"[] GENERATED ALWAYS AS ("string_to_array"("name", '/'::"text")) STORED,
+    "version" "text",
+    "owner_id" "text"
+);
+
+ALTER TABLE "storage"."objects" OWNER TO "supabase_storage_admin";
+
+COMMENT ON COLUMN "storage"."objects"."owner" IS 'Field is deprecated, use owner_id instead';
+
+CREATE TABLE IF NOT EXISTS "storage"."s3_multipart_uploads" (
+    "id" "text" NOT NULL,
+    "in_progress_size" bigint DEFAULT 0 NOT NULL,
+    "upload_signature" "text" NOT NULL,
+    "bucket_id" "text" NOT NULL,
+    "key" "text" NOT NULL COLLATE "pg_catalog"."C",
+    "version" "text" NOT NULL,
+    "owner_id" "text",
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
+);
+
+ALTER TABLE "storage"."s3_multipart_uploads" OWNER TO "supabase_storage_admin";
+
+CREATE TABLE IF NOT EXISTS "storage"."s3_multipart_uploads_parts" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "upload_id" "text" NOT NULL,
+    "size" bigint DEFAULT 0 NOT NULL,
+    "part_number" integer NOT NULL,
+    "bucket_id" "text" NOT NULL,
+    "key" "text" NOT NULL COLLATE "pg_catalog"."C",
+    "etag" "text" NOT NULL,
+    "owner_id" "text",
+    "version" "text" NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL
+);
+
+ALTER TABLE "storage"."s3_multipart_uploads_parts" OWNER TO "supabase_storage_admin";
+
+ALTER TABLE ONLY "auth"."refresh_tokens" ALTER COLUMN "id" SET DEFAULT "nextval"('"auth"."refresh_tokens_id_seq"'::"regclass");
 
 CREATE OR REPLACE TRIGGER "on_auth_user_created" AFTER INSERT ON "auth"."users" FOR EACH ROW EXECUTE FUNCTION "public"."handle_new_user"();
+
+CREATE OR REPLACE TRIGGER "update_objects_updated_at" BEFORE UPDATE ON "storage"."objects" FOR EACH ROW EXECUTE FUNCTION "storage"."update_updated_at_column"();
 
 ALTER TABLE "auth"."audit_log_entries" ENABLE ROW LEVEL SECURITY;
 
@@ -1266,9 +1693,157 @@ CREATE POLICY "Give users access to own folder 1u7gb_2" ON "storage"."objects" F
 
 CREATE POLICY "Give users access to own folder 1u7gb_3" ON "storage"."objects" FOR DELETE USING ((("bucket_id" = 'docs'::"text") AND (( SELECT ("auth"."uid"())::"text" AS "uid") = ("storage"."foldername"("name"))[1])));
 
+ALTER TABLE "storage"."buckets" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "storage"."migrations" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "storage"."objects" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "storage"."s3_multipart_uploads" ENABLE ROW LEVEL SECURITY;
+
+ALTER TABLE "storage"."s3_multipart_uploads_parts" ENABLE ROW LEVEL SECURITY;
+
+GRANT USAGE ON SCHEMA "auth" TO "anon";
+GRANT USAGE ON SCHEMA "auth" TO "authenticated";
+GRANT USAGE ON SCHEMA "auth" TO "service_role";
+GRANT ALL ON SCHEMA "auth" TO "supabase_auth_admin";
+GRANT ALL ON SCHEMA "auth" TO "dashboard_user";
+GRANT ALL ON SCHEMA "auth" TO "postgres";
+
+GRANT ALL ON SCHEMA "storage" TO "postgres";
+GRANT USAGE ON SCHEMA "storage" TO "anon";
+GRANT USAGE ON SCHEMA "storage" TO "authenticated";
+GRANT USAGE ON SCHEMA "storage" TO "service_role";
+GRANT ALL ON SCHEMA "storage" TO "supabase_storage_admin";
+GRANT ALL ON SCHEMA "storage" TO "dashboard_user";
+
+GRANT ALL ON FUNCTION "auth"."email"() TO "dashboard_user";
+
+GRANT ALL ON FUNCTION "auth"."jwt"() TO "postgres";
+GRANT ALL ON FUNCTION "auth"."jwt"() TO "dashboard_user";
+
+GRANT ALL ON FUNCTION "auth"."role"() TO "dashboard_user";
+
+GRANT ALL ON FUNCTION "auth"."uid"() TO "dashboard_user";
+
 GRANT ALL ON FUNCTION "storage"."operation"() TO "anon";
 GRANT ALL ON FUNCTION "storage"."operation"() TO "authenticated";
 GRANT ALL ON FUNCTION "storage"."operation"() TO "service_role";
 
+GRANT ALL ON TABLE "auth"."audit_log_entries" TO "dashboard_user";
+GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "auth"."audit_log_entries" TO "postgres";
+GRANT SELECT ON TABLE "auth"."audit_log_entries" TO "postgres" WITH GRANT OPTION;
+
+GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "auth"."flow_state" TO "postgres";
+GRANT SELECT ON TABLE "auth"."flow_state" TO "postgres" WITH GRANT OPTION;
+GRANT ALL ON TABLE "auth"."flow_state" TO "dashboard_user";
+
+GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "auth"."identities" TO "postgres";
+GRANT SELECT ON TABLE "auth"."identities" TO "postgres" WITH GRANT OPTION;
+GRANT ALL ON TABLE "auth"."identities" TO "dashboard_user";
+
+GRANT ALL ON TABLE "auth"."instances" TO "dashboard_user";
+GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "auth"."instances" TO "postgres";
+GRANT SELECT ON TABLE "auth"."instances" TO "postgres" WITH GRANT OPTION;
+
+GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "auth"."mfa_amr_claims" TO "postgres";
+GRANT SELECT ON TABLE "auth"."mfa_amr_claims" TO "postgres" WITH GRANT OPTION;
+GRANT ALL ON TABLE "auth"."mfa_amr_claims" TO "dashboard_user";
+
+GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "auth"."mfa_challenges" TO "postgres";
+GRANT SELECT ON TABLE "auth"."mfa_challenges" TO "postgres" WITH GRANT OPTION;
+GRANT ALL ON TABLE "auth"."mfa_challenges" TO "dashboard_user";
+
+GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "auth"."mfa_factors" TO "postgres";
+GRANT SELECT ON TABLE "auth"."mfa_factors" TO "postgres" WITH GRANT OPTION;
+GRANT ALL ON TABLE "auth"."mfa_factors" TO "dashboard_user";
+
+GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "auth"."one_time_tokens" TO "postgres";
+GRANT SELECT ON TABLE "auth"."one_time_tokens" TO "postgres" WITH GRANT OPTION;
+GRANT ALL ON TABLE "auth"."one_time_tokens" TO "dashboard_user";
+
+GRANT ALL ON TABLE "auth"."refresh_tokens" TO "dashboard_user";
+GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "auth"."refresh_tokens" TO "postgres";
+GRANT SELECT ON TABLE "auth"."refresh_tokens" TO "postgres" WITH GRANT OPTION;
+
+GRANT ALL ON SEQUENCE "auth"."refresh_tokens_id_seq" TO "dashboard_user";
+GRANT ALL ON SEQUENCE "auth"."refresh_tokens_id_seq" TO "postgres";
+
+GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "auth"."saml_providers" TO "postgres";
+GRANT SELECT ON TABLE "auth"."saml_providers" TO "postgres" WITH GRANT OPTION;
+GRANT ALL ON TABLE "auth"."saml_providers" TO "dashboard_user";
+
+GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "auth"."saml_relay_states" TO "postgres";
+GRANT SELECT ON TABLE "auth"."saml_relay_states" TO "postgres" WITH GRANT OPTION;
+GRANT ALL ON TABLE "auth"."saml_relay_states" TO "dashboard_user";
+
+GRANT ALL ON TABLE "auth"."schema_migrations" TO "dashboard_user";
+GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "auth"."schema_migrations" TO "postgres";
+GRANT SELECT ON TABLE "auth"."schema_migrations" TO "postgres" WITH GRANT OPTION;
+
+GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "auth"."sessions" TO "postgres";
+GRANT SELECT ON TABLE "auth"."sessions" TO "postgres" WITH GRANT OPTION;
+GRANT ALL ON TABLE "auth"."sessions" TO "dashboard_user";
+
+GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "auth"."sso_domains" TO "postgres";
+GRANT SELECT ON TABLE "auth"."sso_domains" TO "postgres" WITH GRANT OPTION;
+GRANT ALL ON TABLE "auth"."sso_domains" TO "dashboard_user";
+
+GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "auth"."sso_providers" TO "postgres";
+GRANT SELECT ON TABLE "auth"."sso_providers" TO "postgres" WITH GRANT OPTION;
+GRANT ALL ON TABLE "auth"."sso_providers" TO "dashboard_user";
+
+GRANT ALL ON TABLE "auth"."users" TO "dashboard_user";
+GRANT INSERT,REFERENCES,DELETE,TRIGGER,TRUNCATE,UPDATE ON TABLE "auth"."users" TO "postgres";
+GRANT SELECT ON TABLE "auth"."users" TO "postgres" WITH GRANT OPTION;
+
+GRANT ALL ON TABLE "storage"."buckets" TO "anon";
+GRANT ALL ON TABLE "storage"."buckets" TO "authenticated";
+GRANT ALL ON TABLE "storage"."buckets" TO "service_role";
+GRANT ALL ON TABLE "storage"."buckets" TO "postgres";
+
+GRANT ALL ON TABLE "storage"."migrations" TO "anon";
+GRANT ALL ON TABLE "storage"."migrations" TO "authenticated";
+GRANT ALL ON TABLE "storage"."migrations" TO "service_role";
+GRANT ALL ON TABLE "storage"."migrations" TO "postgres";
+
+GRANT ALL ON TABLE "storage"."objects" TO "anon";
+GRANT ALL ON TABLE "storage"."objects" TO "authenticated";
+GRANT ALL ON TABLE "storage"."objects" TO "service_role";
+GRANT ALL ON TABLE "storage"."objects" TO "postgres";
+
+GRANT ALL ON TABLE "storage"."s3_multipart_uploads" TO "service_role";
+GRANT SELECT ON TABLE "storage"."s3_multipart_uploads" TO "authenticated";
+GRANT SELECT ON TABLE "storage"."s3_multipart_uploads" TO "anon";
 GRANT ALL ON TABLE "storage"."s3_multipart_uploads" TO "postgres";
+
+GRANT ALL ON TABLE "storage"."s3_multipart_uploads_parts" TO "service_role";
+GRANT SELECT ON TABLE "storage"."s3_multipart_uploads_parts" TO "authenticated";
+GRANT SELECT ON TABLE "storage"."s3_multipart_uploads_parts" TO "anon";
 GRANT ALL ON TABLE "storage"."s3_multipart_uploads_parts" TO "postgres";
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "supabase_auth_admin" IN SCHEMA "auth" GRANT ALL ON SEQUENCES  TO "postgres";
+ALTER DEFAULT PRIVILEGES FOR ROLE "supabase_auth_admin" IN SCHEMA "auth" GRANT ALL ON SEQUENCES  TO "dashboard_user";
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "supabase_auth_admin" IN SCHEMA "auth" GRANT ALL ON FUNCTIONS  TO "postgres";
+ALTER DEFAULT PRIVILEGES FOR ROLE "supabase_auth_admin" IN SCHEMA "auth" GRANT ALL ON FUNCTIONS  TO "dashboard_user";
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "supabase_auth_admin" IN SCHEMA "auth" GRANT ALL ON TABLES  TO "postgres";
+ALTER DEFAULT PRIVILEGES FOR ROLE "supabase_auth_admin" IN SCHEMA "auth" GRANT ALL ON TABLES  TO "dashboard_user";
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "storage" GRANT ALL ON SEQUENCES  TO "postgres";
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "storage" GRANT ALL ON SEQUENCES  TO "anon";
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "storage" GRANT ALL ON SEQUENCES  TO "authenticated";
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "storage" GRANT ALL ON SEQUENCES  TO "service_role";
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "storage" GRANT ALL ON FUNCTIONS  TO "postgres";
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "storage" GRANT ALL ON FUNCTIONS  TO "anon";
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "storage" GRANT ALL ON FUNCTIONS  TO "authenticated";
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "storage" GRANT ALL ON FUNCTIONS  TO "service_role";
+
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "storage" GRANT ALL ON TABLES  TO "postgres";
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "storage" GRANT ALL ON TABLES  TO "anon";
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "storage" GRANT ALL ON TABLES  TO "authenticated";
+ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "storage" GRANT ALL ON TABLES  TO "service_role";
+
+RESET ALL;
