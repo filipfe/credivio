@@ -93,7 +93,7 @@ export async function getOperationsStats(
       p_type: type,
     }
   );
-  console.log(result, error);
+
   if (error) {
     return {
       result: null,
