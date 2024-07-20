@@ -28,6 +28,7 @@ export default function EmailInput() {
         size="sm"
         radius="md"
         color="primary"
+        disableRipple
         className="max-w-max self-end"
       >
         Zapisz

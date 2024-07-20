@@ -33,6 +33,7 @@ export default function PasswordInput() {
         size="sm"
         radius="md"
         color="primary"
+        disableRipple
         className="max-w-max self-end"
       >
         Zapisz

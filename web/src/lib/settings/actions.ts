@@ -27,27 +27,6 @@ export async function getAccount(): Promise<
   };
 }
 
-export async function updateAccount(formData: FormData) {
-  const supabase = createClient();
-  const data = {
-    first_name: formData.get("first_name") || null,
-    last_name: formData.get("last_name") || null,
-  };
-
-  const { data: { user } } = await supabase.auth.getUser();
-
-  const { error } = await supabase.from("profiles").update(data).eq(
-    "id",
-    user?.id,
-  );
-
-  if (error) {
-    return {
-      error: error.message,
-    };
-  }
-}
-
 export async function getPreferences(): Promise<
   SupabaseSingleRowResponse<Preferences>
 > {

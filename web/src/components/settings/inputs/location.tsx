@@ -22,6 +22,7 @@ export default function LocationInput() {
         size="sm"
         radius="md"
         color="primary"
+        disableRipple
         className="max-w-max self-end"
       >
         Zapisz

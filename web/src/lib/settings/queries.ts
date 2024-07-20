@@ -66,3 +66,23 @@ export async function getServices(): Promise<Service[]> {
     .returns<Service[]>();
   return [];
 }
+
+export async function updateAccount(account: Partial<Account>) {
+  const supabase = createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const { error } = await supabase.from("profiles").update(account).eq(
+    "id",
+    user?.id,
+  );
+
+  if (error) {
+    console.error(error);
+    return {
+      error: error.message,
+    };
+  }
+
+  return {};
+}

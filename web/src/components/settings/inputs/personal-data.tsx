@@ -1,12 +1,32 @@
-import { updateAccount } from "@/lib/settings/actions";
+import Toast from "@/components/ui/toast";
+import { updateAccount } from "@/lib/settings/queries";
 import { Button, Input } from "@nextui-org/react";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
+import toast from "react-hot-toast";
 import useSWR from "swr";
 
 export default function PersonalDataInput() {
-  const { data: account } = useSWR(["settings", "account"]);
+  const {
+    data: account,
+    mutate,
+    isValidating,
+  } = useSWR(["settings", "account"]);
+  const [firstName, setFirstName] = useState(account?.first_name || "");
+  const [lastName, setLastName] = useState(account?.last_name || "");
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    const updated = { first_name: firstName, last_name: lastName };
+    const { error } = await updateAccount(updated);
+    if (error) {
+      toast.custom((t) => (
+        <Toast {...t} type="error" message="Wystąpił błąd!" />
+      ));
+    } else {
+      toast.custom((t) => (
+        <Toast {...t} type="success" message="Pomyślnie zmieniono dane!" />
+      ));
+    }
+    mutate({ ...account, ...updated });
   };
   return (
     <form className="flex flex-col gap-4" onSubmit={onSubmit}>
@@ -21,7 +41,8 @@ export default function PersonalDataInput() {
         name="first_name"
         label={"Imię"}
         placeholder="Imię"
-        defaultValue={account?.first_name}
+        value={firstName}
+        onValueChange={(value) => setFirstName(value)}
         className="max-w-xl"
       />
       <Input
@@ -29,7 +50,8 @@ export default function PersonalDataInput() {
         label={"Nazwisko"}
         name="last_name"
         placeholder="Nazwisko"
-        defaultValue={account?.last_name}
+        value={lastName}
+        onValueChange={(value) => setLastName(value)}
         className="max-w-xl"
       />
       <Button
@@ -38,6 +60,12 @@ export default function PersonalDataInput() {
         color="primary"
         className="max-w-max self-end"
         type="submit"
+        disableRipple
+        isDisabled={
+          (account?.first_name === firstName &&
+            account?.last_name === lastName) ||
+          isValidating
+        }
       >
         Zapisz
       </Button>
