@@ -49,7 +49,7 @@ export async function getPreferences(): Promise<
 }
 
 export async function activateService(
-  formData: FormData,
+  formData: FormData
 ): Promise<SupabaseResponse<any>> {
   const service = formData.get("service")!.toString();
   const isActive = formData.get("is-active")!.toString();
@@ -113,7 +113,8 @@ export async function getDefaultCurrency(): Promise<
   if (!data || authError) {
     return {
       result: null,
-      error: authError.message ||
+      error:
+        authError.message ||
         "Błąd autoryzacji, spróbuj zalogować się ponownie!",
     };
   }
