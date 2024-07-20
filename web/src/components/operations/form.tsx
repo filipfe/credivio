@@ -20,6 +20,7 @@ import LabelInput from "./inputs/label";
 import PreviewTable from "../ui/preview-table";
 import toast from "react-hot-toast";
 import Toast from "../ui/toast";
+import { format } from "date-fns";
 
 export default function AddForm({
   type,
@@ -34,20 +35,28 @@ export default function AddForm({
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
+    const issuedAt = formData.get("issued_at")?.toString() || "";
+    const currentDate = format(new Date(), "yyyy-MM-dd");
+
     const operation: Operation = {
       id: v4(),
       title: formData.get("title")?.toString() || "",
       amount: formData.get("amount")?.toString() || "",
-      issued_at: formData.get("issued_at")?.toString() || "",
+      issued_at: issuedAt === currentDate ? new Date().toISOString() : issuedAt,
       currency: formData.get("currency")?.toString() || "",
-      label: formData.get("label")?.toString() || "",
       doc_path: "",
     };
+
+    if (type === "expense") {
+      operation.label = formData.get("label")?.toString() || "";
+    }
+
     setRecords((prev) => [...prev, operation]);
   };
 
   const onSave = (formData: FormData) =>
     startTransition(async () => {
+      console.log(formData);
       const { error } = await addOperations(formData);
       if (error) {
         toast.custom((t) => <Toast {...t} type="error" message={error} />);
