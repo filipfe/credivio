@@ -190,28 +190,34 @@ select
 from generate_series(1, 10);
 
 -- GOALS
--- with inserted_goals as (
---   insert into goals (title, price, currency, user_id, deadline, is_priority)
---   select
---     'goal' || floor(random() * 100000),
---     round((random() * 9500 + 500)::numeric, 2),
---     ( 
---       case
---         when random() < 0.5 then 'PLN'
---         else (array['USD', 'EUR', 'GBP', 'CHF'])[floor(random() * 4 + 1)]
---       end
---     )::currency_type,
---     '8d65ee5d-3897-4f61-b467-9bdc8df6f07f',
---     case
---       when random() < 0.1 then null
---       else (now() + (random() * interval '2 year'))::date
---     end,
---     true
---   from generate_series(1, 20) returning id, price
--- ) insert into goals_payments (goal_id, amount, date)
--- select 
---   id, 
---   round((random() * (price / 10))::numeric, 2), 
---   (now() - ((gs + floor(random() * 3)) * interval '1 day'))::date
--- from inserted_goals
--- cross join generate_series(1, 10) as gs;
+with inserted_goals as (
+  insert into goals (title, price, currency, user_id, deadline, is_priority)
+  select
+    'goal' || floor(random() * 100000),
+    round((random() * 9500 + 500)::numeric, 2),
+    ( 
+      case
+        when random() < 0.5 then 'PLN'
+        else (array['USD', 'EUR', 'GBP', 'CHF'])[floor(random() * 4 + 1)]
+      end
+    )::currency_type,
+    '8d65ee5d-3897-4f61-b467-9bdc8df6f07f',
+    case
+      when random() < 0.1 then null
+      else (now() + (random() * interval '2 year'))::date
+    end,
+    true
+  from generate_series(1, 20) returning id, price
+) insert into goals_payments (goal_id, amount, date)
+select 
+  id, 
+  round((random() * (price / 10))::numeric, 2), 
+  gs.date
+from inserted_goals
+cross join (
+  select 
+    now()::date - s.i as date
+  from generate_series(0, 29) s(i)
+  order by random()
+  limit 10
+) as gs;
