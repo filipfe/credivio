@@ -27,7 +27,7 @@ export default async function Page({
     throw new Error("Wystąpił błąd, spróbuj ponownie!");
   }
 
-  const { last_30_days, last_day } = result;
+  const { last_month, last_day } = result;
 
   return (
     <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 sm:grid grid-cols-2 xl:grid-cols-4 lg:grid-rows-[max-content_1fr]">
@@ -44,7 +44,7 @@ export default async function Page({
           title="30 dni"
           description=""
           currency={defaultCurrency}
-          stat={last_30_days}
+          stat={last_month}
         />
       </div>
       <Providers>
@@ -74,8 +74,8 @@ async function Incomes({ searchParams }: { searchParams: SearchParams }) {
     p_sort: searchParams.sort,
     p_search: searchParams.search,
     p_currency: searchParams.currency,
-    // p_from: searchParams.from,
-    // p_to: searchParams.to,
+    p_from: searchParams.from,
+    p_to: searchParams.to,
   });
 
   return (

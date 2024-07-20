@@ -86,13 +86,10 @@ export async function getOperationsStats(
 ): Promise<SupabaseSingleRowResponse<OperationsStats>> {
   const supabase = createClient();
 
-  const { data: result, error } = await supabase.rpc(
-    "get_general_operations_stats",
-    {
-      p_currency: currency,
-      p_type: type,
-    }
-  );
+  const { data: result, error } = await supabase.rpc("get_operations_stats", {
+    p_currency: currency,
+    p_type: type,
+  });
 
   if (error) {
     return {

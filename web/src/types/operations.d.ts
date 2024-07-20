@@ -46,7 +46,7 @@ type DashboardStats = {
 };
 
 type OperationsStats = {
-  last_30_days: Stat;
+  last_month: Stat;
   last_day: Stat;
 };
 
