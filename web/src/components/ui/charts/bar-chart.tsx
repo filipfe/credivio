@@ -14,6 +14,7 @@ import {
 import ChartTooltip from "./tooltip";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
 import { useMemo } from "react";
+import { COLORS } from "@/const";
 
 type Props = {
   data: ChartLabel[];
@@ -27,7 +28,7 @@ export default function BarChart({ data, currency }: Props) {
     () =>
       data.map((item, k) => ({
         ...item,
-        color: k % 2 === 0 ? "#177981" : "#fdbb2d",
+        color: COLORS[k % COLORS.length],
       })),
     [data]
   );
@@ -72,13 +73,27 @@ export default function BarChart({ data, currency }: Props) {
           isAnimationActive={false}
           shared={false}
           labelFormatter={(label) => label}
-          content={(props) => (
-            <ChartTooltip
-              {...props}
-              payloadName="Wydatki"
-              currency={currency}
-            />
-          )}
+          content={(props) => {
+            console.log({ props });
+            return (
+              <ChartTooltip
+                {...props}
+                payload={
+                  props.payload
+                    ? props.payload.map((record) => ({
+                        ...record,
+                        color: dataWithColors.find(
+                          (item) => item.name === record.payload.name
+                        )?.color,
+                      }))
+                    : []
+                }
+                payloadName="Wydatki"
+                currency={currency}
+                label={undefined}
+              />
+            );
+          }}
         />
       </BarChartWrapper>
     </ResponsiveContainer>

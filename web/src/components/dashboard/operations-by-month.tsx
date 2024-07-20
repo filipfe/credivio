@@ -7,9 +7,9 @@ import LineChartLoader from "@/components/ui/charts/line-loader";
 import Empty from "@/components/ui/empty";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
-import useClientQuery from "@/hooks/useClientQuery";
-import { getDailyTotalAmount } from "@/lib/operations/queries";
+import { getBalances, getDailyTotalAmounts } from "@/lib/operations/queries";
 import { useContext, useState } from "react";
+import useSWR from "swr";
 
 const getTitle = (type: "balance" | "income" | "expense") => {
   switch (type) {
@@ -24,46 +24,38 @@ const getTitle = (type: "balance" | "income" | "expense") => {
 
 type Props = {
   type: "balance" | "income" | "expense";
-  defaultCurrency: string;
   withPeriod?: boolean;
 };
 
-export default function OperationsByMonth({
-  type,
-  withPeriod,
-  defaultCurrency,
-}: Props) {
+export default function OperationsByMonth({ type, withPeriod }: Props) {
   const periodContext = useContext(PeriodContext);
-  const [currency, setCurrency] = useState<string>(defaultCurrency);
-  const { results, isLoading } = useClientQuery<DailyAmount>({
-    deps: [currency, type],
-    query: getDailyTotalAmount(currency, type),
-  });
+  const { data: results, isLoading } = useSWR("balances", () =>
+    getBalances({})
+  );
 
   return (
     <Block
       className="xl:col-span-3 flex-1"
       title={`${getTitle(type)} wg 30 dni`}
-      cta={
-        type === "balance" && (
-          <UniversalSelect
-            className="w-20"
-            size="sm"
-            name="currency"
-            aria-label="Waluta"
-            defaultSelectedKeys={[currency]}
-            elements={CURRENCIES}
-            onChange={(e) => setCurrency(e.target.value)}
-          />
-        )
-      }
+      // cta={
+      //   type === "balance" && (
+      //     <UniversalSelect
+      //       className="w-20"
+      //       size="sm"
+      //       name="currency"
+      //       aria-label="Waluta"
+      //       defaultSelectedKeys={[currency]}
+      //       elements={CURRENCIES}
+      //       onChange={(e) => setCurrency(e.target.value)}
+      //     />
+      //   )
+      // }
     >
       {isLoading ? (
         <LineChartLoader className="!p-0" hideTitle />
-      ) : results.length > 0 ? (
+      ) : results && results.length > 0 ? (
         <LineChart
           data={results}
-          currency={currency}
           type={type}
           {...(withPeriod ? periodContext : {})}
         />

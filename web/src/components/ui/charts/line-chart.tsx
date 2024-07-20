@@ -13,12 +13,12 @@ import {
 } from "recharts";
 import ChartTooltip from "./tooltip";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useMemo } from "react";
 import { isToday } from "date-fns";
+import { COLORS } from "@/const";
 
 type Props = {
   data: DailyAmount[];
-  currency: string;
   type: string;
   period?: Period;
   setPeriod?: Dispatch<SetStateAction<Period>>;
@@ -28,14 +28,8 @@ const dateFormatter = new Intl.DateTimeFormat("pl-PL", {
   dateStyle: "long",
 });
 
-export default function LineChart({
-  data,
-  currency,
-  type,
-  period,
-  setPeriod,
-}: Props) {
-  const { width, tickFormatter } = useYAxisWidth(currency);
+export default function LineChart({ data, type, period, setPeriod }: Props) {
+  const { width, tickFormatter } = useYAxisWidth();
 
   const isFromEarlier = period
     ? new Date(period.from).getTime() < new Date(data[0].date).getTime()
@@ -46,10 +40,44 @@ export default function LineChart({
       new Date(data[data.length - 1].date).getTime()
     : false;
 
+  const { currencies, dates } = useMemo(() => {
+    const currencies: string[] = [];
+    const dates = data.map(
+      ({ date, total_amounts }) =>
+        ({
+          date,
+          ...total_amounts.reduce((prev, { amount, currency }) => {
+            !currencies.includes(currency) && currencies.push(currency);
+            return {
+              ...prev,
+              [currency]: (prev[currency] || 0) + amount,
+            };
+          }, {} as Record<string, number>),
+        } as { date: string } & Record<string, number>)
+    );
+    return {
+      currencies,
+      dates,
+    };
+  }, [data]);
+
+  console.log(dates, currencies);
+
   return (
     <ResponsiveContainer width="100%" height="100%" minHeight={320}>
       <Chart
-        data={data}
+        data={dates.map((day) => {
+          const notIncluded = currencies
+            .filter((curr) => !Object.keys(day).includes(curr))
+            .reduce(
+              (prev, curr) => ({ ...prev, [curr]: 0 }),
+              {} as Record<string, number>
+            );
+          return {
+            ...day,
+            ...notIncluded,
+          };
+        })}
         margin={{ top: 16, right: 20 }}
         onClick={({ activeLabel }) =>
           activeLabel &&
@@ -60,11 +88,11 @@ export default function LineChart({
         <YAxis
           width={width}
           tick={{ fontSize: 12 }}
-          dataKey="total_amount"
           tickCount={8}
           axisLine={false}
           tickLine={false}
           tickFormatter={tickFormatter}
+          type="number"
         />
         <XAxis
           tickMargin={8}
@@ -80,6 +108,7 @@ export default function LineChart({
           minTickGap={32}
           axisLine={false}
           tickLine={false}
+          type="category"
         />
         <CartesianGrid
           opacity={0.6}
@@ -90,37 +119,32 @@ export default function LineChart({
         <Tooltip
           isAnimationActive={false}
           contentStyle={{ backgroundColor: "#177981" }}
-          labelFormatter={(label) => {
-            const [year, month, day] = label.split("-");
-            return new Intl.DateTimeFormat("pl-PL", {
-              weekday: "long",
-              day: "2-digit",
-              month: "long",
-              year: "numeric",
-            }).format(new Date(year, parseInt(month) - 1, day));
+          content={(props) => {
+            console.log(props);
+            return (
+              <ChartTooltip
+                {...props}
+                payloadName={
+                  type === "balance"
+                    ? "Budżet"
+                    : type === "income"
+                    ? "Przychody"
+                    : "Wydatki"
+                }
+              />
+            );
           }}
-          content={(props) => (
-            <ChartTooltip
-              {...props}
-              payloadName={
-                type === "budget"
-                  ? "Budżet"
-                  : type === "income"
-                  ? "Przychody"
-                  : "Wydatki"
-              }
-              currency={currency}
-            />
-          )}
         />
-        <Line
-          isAnimationActive={false}
-          dataKey="total_amount"
-          stroke="#177981"
-          strokeWidth={2}
-          fillOpacity={1}
-          dot={false}
-        />
+        {currencies.map((currency, k) => (
+          <Line
+            isAnimationActive={false}
+            dataKey={currency}
+            stroke={COLORS[k % COLORS.length]}
+            strokeWidth={2}
+            dot={false}
+            key={`line-${currency}`}
+          />
+        ))}
 
         {period &&
           period.from &&
