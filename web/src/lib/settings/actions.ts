@@ -9,10 +9,9 @@ export async function getAccount(): Promise<
 > {
   const supabase = createClient();
 
-  const {
-    data,
-    error: authError,
-  } = await supabase.from("profiles").select("first_name, last_name, email")
+  const { data, error: authError } = await supabase
+    .from("profiles")
+    .select("first_name, last_name, email")
     .single();
 
   if (authError) {
@@ -32,12 +31,10 @@ export async function getPreferences(): Promise<
 > {
   const supabase = createClient();
 
-  const {
-    data,
-    error: authError,
-  } = await supabase.from("profiles").select(
-    "currency, language:languages(code, name)",
-  ).single();
+  const { data, error: authError } = await supabase
+    .from("profiles")
+    .select("currency, language:languages(code, name)")
+    .single();
 
   if (!data || authError) {
     return {
@@ -108,12 +105,10 @@ export async function getDefaultCurrency(): Promise<
 > {
   const supabase = createClient();
 
-  const {
-    data,
-    error: authError,
-  } = await supabase.from("profiles").select(
-    "currency",
-  ).single();
+  const { data, error: authError } = await supabase
+    .from("profiles")
+    .select("currency")
+    .single();
 
   if (!data || authError) {
     return {
@@ -134,13 +129,18 @@ export async function updatePreferences(formData: FormData) {
 
   const supabase = createClient();
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   console.log("Updating...", { name, value });
 
-  const { error } = await supabase.from("profiles").update({
-    [name]: value,
-  }).eq("id", user?.id);
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      [name]: value,
+    })
+    .eq("id", user?.id);
 
   if (error) {
     return {
