@@ -27,7 +27,7 @@ export default async function Page({
     throw new Error("Failed to fetch the resource!");
   }
 
-  const { last_30_days, last_day } = result;
+  const { last_month, last_day } = result;
 
   return (
     <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 xl:grid grid-cols-4 xl:grid-rows-[max-content_1fr]">
@@ -44,7 +44,7 @@ export default async function Page({
           title="30 dni"
           description=""
           currency={defaultCurrency}
-          stat={last_30_days}
+          stat={last_month}
         />
       </div>
       <Providers>
@@ -75,8 +75,8 @@ async function Expenses({ searchParams }: { searchParams: SearchParams }) {
     p_search: searchParams.search,
     p_currency: searchParams.currency,
     p_label: searchParams.label,
-    // p_from: searchParams.from,
-    // p_to: searchParams.to,
+    p_from: searchParams.from,
+    p_to: searchParams.to,
   });
 
   return (
