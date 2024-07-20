@@ -40,3 +40,49 @@ export async function getAccount(): Promise<Account> {
 
   return data;
 }
+
+export async function getPreferences(): Promise<Preferences> {
+  const supabase = createClient();
+
+  const {
+    data,
+    error: authError,
+  } = await supabase.from("profiles").select(
+    "currency, language:languages(code, name)",
+  ).single();
+
+  if (!data || authError) {
+    throw new Error("Błąd autoryzacji, spróbuj zalogować się ponownie!");
+  }
+
+  return data;
+}
+
+export async function getServices(): Promise<Service[]> {
+  const supabase = createClient();
+  const { data: services } = await supabase
+    .from("services")
+    .select("*")
+    .returns<Service[]>();
+  return [];
+}
+
+export async function updateAccount(account: Partial<Account>) {
+  const supabase = createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const { error } = await supabase.from("profiles").update(account).eq(
+    "id",
+    user?.id,
+  );
+
+  if (error) {
+    console.error(error);
+    return {
+      error: error.message,
+    };
+  }
+
+  return {};
+}

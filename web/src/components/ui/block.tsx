@@ -7,6 +7,7 @@ type Props = {
   className?: string;
   mobileRadius?: boolean;
   hideTitleMobile?: boolean;
+  description?: string;
 };
 
 export default function Block({
@@ -14,6 +15,7 @@ export default function Block({
   cta,
   className,
   mobileRadius,
+  description,
   title,
   hideTitleMobile,
 }: Props) {
@@ -42,6 +44,9 @@ export default function Block({
           )}
           {cta}
         </div>
+      )}
+      {description && (
+        <p className="-mt-3 text-sm text-font/60 mb-1 sm:mb-2">{description}</p>
       )}
       {children}
     </article>

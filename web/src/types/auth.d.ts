@@ -6,4 +6,5 @@ type Service = {
   description: string;
   price: number;
   created_at?: string;
+  is_active: boolean;
 };
