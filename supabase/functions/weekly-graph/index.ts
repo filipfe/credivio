@@ -20,6 +20,16 @@ if (!HCTI_API_KEY || !HCTI_USER_ID || !SUPABASE_ANON_KEY || !SUPABASE_URL) {
   );
 }
 
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+
+if (!SUPABASE_SERVICE_ROLE_KEY) {
+  throw new Error(
+    "Environment variables missing: SUPABASE_SERVICE_ROLE_KEY",
+  );
+}
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
 type GraphProps = {
   currency: string;
   language_code: string;
@@ -247,46 +257,22 @@ Deno.serve(async (req) => {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  const { date } = await req.json();
+  const { date, user } = await req.json();
 
-  const authHeader = req.headers.get("Authorization");
-
-  if (!authHeader) {
+  if (!user) {
     return new Response(
-      JSON.stringify({
-        message: "Unauthorized",
-      }),
-      {
-        status: 422,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
+      JSON.stringify({ message: "Nie można pobrać informacji o koncie!" }),
+      { status: 400, headers: { "Content-Type": "application/json" } },
     );
   }
 
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    global: {
-      headers: {
-        Authorization: authHeader,
-      },
-    },
-  });
-
   const { from, to } = getWeekPeriod(new Date(date));
-
-  const { data: profile, error: profileError } = await supabase.from("profiles")
-    .select(
-      "language_code, currency",
-    ).single();
-
-  profileError && console.error(profileError);
 
   const { data: expenses, error } = await supabase.from("expenses").select(
     "amount, label, issued_at",
   ).gte("issued_at", from).lte("issued_at", to).eq(
     "currency",
-    profile?.currency || "PLN",
+    user.currency || "PLN",
   ).returns<Payment[]>();
 
   console.log({ expenses, error });
@@ -308,11 +294,11 @@ Deno.serve(async (req) => {
   }
 
   const html = renderGraph({
-    language_code: profile?.language_code,
+    language_code: user.language_code,
     from,
     to,
     expenses,
-    currency: profile?.currency,
+    currency: user.currency,
   });
 
   const response = await fetch("https://hcti.io/v1/image", {
