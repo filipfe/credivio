@@ -90,7 +90,7 @@ export async function getOperationsStats(
     p_currency: currency,
     p_type: type,
   });
-  console.log(result, error);
+
   if (error) {
     return {
       result: null,

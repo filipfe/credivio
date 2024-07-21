@@ -1,6 +1,5 @@
 "use client";
 
-import { ServiceContext } from "@/app/(private)/settings/subscription/providers";
 import Block from "@/components/ui/block";
 import { LINKS } from "@/const";
 import { activateService } from "@/lib/settings/actions";
@@ -16,23 +15,20 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { PauseIcon, PlayIcon } from "lucide-react";
-import { Fragment, useContext, useTransition } from "react";
+import { Fragment, useTransition } from "react";
 import toast from "react-hot-toast";
 
-export default function ActiveService({
-  ownedServices,
-}: {
-  ownedServices: string[];
-}) {
+type Props = {
+  service?: Service;
+};
+
+export default function ActiveService({ service }: Props) {
   const [isPending, startTransition] = useTransition();
-  const { activeService } = useContext(ServiceContext);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  if (!activeService) return;
-  const { id, title, href, description, price } = activeService;
+  if (!service) return;
+  const { id, title, href, description, price, is_active } = service;
   const link = LINKS.find((item) => item.href === href);
   const Icon = link ? link.icon : <></>;
-
-  const isActive = ownedServices.includes(id);
 
   return (
     <Block className="order-first">
@@ -52,20 +48,20 @@ export default function ActiveService({
           <sub className="text-sm font-medium">/ miesiąc</sub>
         </strong>
         <div className="flex items-center gap-2 mt-auto">
-          {!isActive && (
+          {!is_active && (
             <Button variant="light" color="primary">
               Wypróbuj
             </Button>
           )}
           <Button
-            variant={isActive ? "flat" : "shadow"}
+            variant={is_active ? "flat" : "shadow"}
             color="primary"
             startContent={
-              isActive ? <PauseIcon size={16} /> : <PlayIcon size={16} />
+              is_active ? <PauseIcon size={16} /> : <PlayIcon size={16} />
             }
             onClick={onOpen}
           >
-            {isActive ? "Dezaktywuj" : "Aktywuj"}
+            {is_active ? "Dezaktywuj" : "Aktywuj"}
           </Button>
         </div>
       </div>
@@ -74,12 +70,12 @@ export default function ActiveService({
           {(onClose) => (
             <Fragment>
               <ModalHeader className="text-center flex justify-center pt-8">
-                Czy na pewno chcesz aktywować {activeService.title}?
+                Czy na pewno chcesz aktywować {title}?
               </ModalHeader>
               <ModalBody className="text-center max-w-64 flex flex-col items-center w-full mx-auto my-4 text-sm">
                 Do twojej subskrypcji zostanie naliczona następująca kwota:{" "}
                 <strong className="font-semibold text-xl">
-                  {numberFormat("PLN", activeService.price)}
+                  {numberFormat("PLN", price)}
                 </strong>
               </ModalBody>
               <ModalFooter className="pb-6 px-8 grid grid-cols-2 gap-3 w-full mx-auto">
@@ -107,14 +103,14 @@ export default function ActiveService({
                     startContent={
                       isPending ? (
                         <Spinner color="white" size="sm" />
-                      ) : isActive ? (
+                      ) : is_active ? (
                         <PauseIcon size={16} />
                       ) : (
                         <PlayIcon size={16} />
                       )
                     }
                   >
-                    {isActive ? "Dezaktywuj" : "Aktywuj"}
+                    {is_active ? "Dezaktywuj" : "Aktywuj"}
                   </Button>
                   <input
                     type="hidden"
@@ -124,7 +120,7 @@ export default function ActiveService({
                   <input
                     type="hidden"
                     name="is-active"
-                    value={String(isActive)}
+                    value={String(is_active)}
                   />
                 </form>
               </ModalFooter>

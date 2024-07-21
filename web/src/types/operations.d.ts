@@ -30,7 +30,7 @@ type ChartLabel = {
 
 type DailyAmount = {
   date: string;
-  total_amount: number;
+  total_amounts: { currency: string; amount: number }[];
 };
 
 type Stat = {
@@ -46,7 +46,7 @@ type DashboardStats = {
 };
 
 type OperationsStats = {
-  last_30_days: Stat;
+  last_month: Stat;
   last_day: Stat;
 };
 

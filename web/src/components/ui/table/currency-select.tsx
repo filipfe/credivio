@@ -19,6 +19,7 @@ export default function CurrencySelect({ onChange, value }: State) {
         trigger: "!bg-light",
       }}
       disallowEmptySelection
+      className="w-full"
     >
       {
         (

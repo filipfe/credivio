@@ -1,7 +1,6 @@
 "use client";
 
 import useClientQuery from "@/hooks/useClientQuery";
-import { getBudget } from "@/lib/operations/queries";
 import numberFormat from "@/utils/formatters/currency";
 import formatAmount from "@/utils/operations/format-amount";
 import {
@@ -31,7 +30,6 @@ export default function PaymentPopover({
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
   const [inputValue, setInputValue] = useState(defaultAmount.toString());
-  const { results } = useClientQuery({ query: getBudget(goal.currency) });
 
   function onClose() {
     if (!inputValue || inputValue === defaultAmount.toString()) return;
@@ -78,19 +76,6 @@ export default function PaymentPopover({
         </button>
       </PopoverTrigger>
       <PopoverContent className="py-2">
-        <p className="mb-2">
-          Dostępny budżet:{" "}
-          {results.length > 0 ? (
-            <span className="font-medium">
-              {new Intl.NumberFormat("pl-PL", {
-                currency: goal.currency,
-                style: "currency",
-              }).format(results[0].total_amount)}
-            </span>
-          ) : (
-            <l-hatch size={12} />
-          )}
-        </p>
         <form ref={formRef} action={onSubmit}>
           <AmountInput
             max={max}

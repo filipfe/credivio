@@ -9,10 +9,9 @@ export async function getAccount(): Promise<
 > {
   const supabase = createClient();
 
-  const {
-    data,
-    error: authError,
-  } = await supabase.from("profiles").select("first_name, last_name, email")
+  const { data, error: authError } = await supabase
+    .from("profiles")
+    .select("first_name, last_name, email")
     .single();
 
   if (authError) {
@@ -27,38 +26,15 @@ export async function getAccount(): Promise<
   };
 }
 
-export async function updateAccount(formData: FormData) {
-  const supabase = createClient();
-  const data = {
-    first_name: formData.get("first_name") || null,
-    last_name: formData.get("last_name") || null,
-  };
-
-  const { data: { user } } = await supabase.auth.getUser();
-
-  const { error } = await supabase.from("profiles").update(data).eq(
-    "id",
-    user?.id,
-  );
-
-  if (error) {
-    return {
-      error: error.message,
-    };
-  }
-}
-
 export async function getPreferences(): Promise<
   SupabaseSingleRowResponse<Preferences>
 > {
   const supabase = createClient();
 
-  const {
-    data,
-    error: authError,
-  } = await supabase.from("profiles").select(
-    "currency, language:languages(code, name)",
-  ).single();
+  const { data, error: authError } = await supabase
+    .from("profiles")
+    .select("currency, language:languages(code, name)")
+    .single();
 
   if (!data || authError) {
     return {
@@ -73,7 +49,7 @@ export async function getPreferences(): Promise<
 }
 
 export async function activateService(
-  formData: FormData,
+  formData: FormData
 ): Promise<SupabaseResponse<any>> {
   const service = formData.get("service")!.toString();
   const isActive = formData.get("is-active")!.toString();
@@ -129,17 +105,16 @@ export async function getDefaultCurrency(): Promise<
 > {
   const supabase = createClient();
 
-  const {
-    data,
-    error: authError,
-  } = await supabase.from("profiles").select(
-    "currency",
-  ).single();
+  const { data, error: authError } = await supabase
+    .from("profiles")
+    .select("currency")
+    .single();
 
   if (!data || authError) {
     return {
       result: null,
-      error: authError.message ||
+      error:
+        authError.message ||
         "Błąd autoryzacji, spróbuj zalogować się ponownie!",
     };
   }
@@ -155,13 +130,18 @@ export async function updatePreferences(formData: FormData) {
 
   const supabase = createClient();
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   console.log("Updating...", { name, value });
 
-  const { error } = await supabase.from("profiles").update({
-    [name]: value,
-  }).eq("id", user?.id);
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      [name]: value,
+    })
+    .eq("id", user?.id);
 
   if (error) {
     return {

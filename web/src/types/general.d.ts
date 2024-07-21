@@ -31,6 +31,8 @@ type SearchParams = {
   currency?: string;
   from?: string;
   to?: string;
+  month?: number;
+  year?: number;
 };
 
 type Currency = {

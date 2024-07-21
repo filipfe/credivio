@@ -1,4 +1,3 @@
-import OperationsByMonth from "@/components/dashboard/operations-by-month";
 import Stat from "@/components/dashboard/stats/ref";
 import IncomeTable from "@/components/operations/table";
 import Loader from "@/components/stocks/loader";
@@ -8,6 +7,7 @@ import { getDefaultCurrency } from "@/lib/settings/actions";
 import { createClient } from "@/utils/supabase/server";
 import { Suspense } from "react";
 import Providers from "../providers";
+import OperationsByMonth from "@/components/operations/operations-by-month";
 
 export default async function Page({
   searchParams,
@@ -27,7 +27,7 @@ export default async function Page({
     throw new Error("Wystąpił błąd, spróbuj ponownie!");
   }
 
-  const { last_30_days, last_day } = result;
+  const { last_month, last_day } = result;
 
   return (
     <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 sm:grid grid-cols-2 xl:grid-cols-4 lg:grid-rows-[max-content_1fr]">
@@ -44,17 +44,13 @@ export default async function Page({
           title="30 dni"
           description=""
           currency={defaultCurrency}
-          stat={last_30_days}
+          stat={last_month}
         />
       </div>
       <Providers>
         <div className="col-[1/3] row-[2/3] flex flex-col order-last">
           <Suspense fallback={<LineChartLoader />}>
-            <OperationsByMonth
-              withPeriod
-              defaultCurrency={defaultCurrency}
-              type="income"
-            />
+            <OperationsByMonth type="income" />
           </Suspense>
         </div>
         <Suspense fallback={<Loader className="row-span-2 col-span-2" />}>
@@ -74,8 +70,8 @@ async function Incomes({ searchParams }: { searchParams: SearchParams }) {
     p_sort: searchParams.sort,
     p_search: searchParams.search,
     p_currency: searchParams.currency,
-    // p_from: searchParams.from,
-    // p_to: searchParams.to,
+    p_from: searchParams.from,
+    p_to: searchParams.to,
   });
 
   return (
