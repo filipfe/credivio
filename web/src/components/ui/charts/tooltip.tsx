@@ -25,7 +25,7 @@ export default function ChartTooltip({
           className={`rounded-md bg-white text-font border-font/10 border min-w-44 shadow-lg shadow-font/5`}
         >
           <div className="py-2 px-4">
-            <p className="text-sm">{label}</p>
+            <p className="text-sm font-medium">{label}</p>
           </div>
         </div>
       )}

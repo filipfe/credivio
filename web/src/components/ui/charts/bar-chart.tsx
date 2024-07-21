@@ -49,12 +49,9 @@ export default function BarChart({ data, currency }: Props) {
           tickFormatter={tickFormatter}
         />
         <XAxis
-          interval={0}
           dataKey="name"
           tick={{
             fontSize: 14,
-            fontWeight: 500,
-            opacity: 0.8,
           }}
           tickSize={12}
           axisLine={false}

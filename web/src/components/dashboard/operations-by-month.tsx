@@ -5,11 +5,13 @@ import Block from "@/components/ui/block";
 import LineChart from "@/components/ui/charts/line-chart";
 import LineChartLoader from "@/components/ui/charts/line-loader";
 import Empty from "@/components/ui/empty";
-import UniversalSelect from "@/components/ui/universal-select";
-import { CURRENCIES } from "@/const";
-import { getBalances, getDailyTotalAmounts } from "@/lib/operations/queries";
+import {
+  useBalanceHistory,
+  useOperationsAmountsHistory,
+} from "@/lib/operations/queries";
 import { useContext, useState } from "react";
-import useSWR from "swr";
+import MonthInput from "../ui/inputs/month";
+import YearInput from "../ui/inputs/year";
 
 const getTitle = (type: "balance" | "income" | "expense") => {
   switch (type) {
@@ -27,16 +29,43 @@ type Props = {
   withPeriod?: boolean;
 };
 
+const now = new Date();
+
+const getDisabledMonths = (curr: number): string[] => {
+  const result: string[] = [];
+  for (let i = curr + 1; i <= 11; i++) {
+    result.push(i.toString());
+  }
+  return result;
+};
+
 export default function OperationsByMonth({ type, withPeriod }: Props) {
   const periodContext = useContext(PeriodContext);
-  const { data: results, isLoading } = useSWR("balances", () =>
-    getBalances({})
-  );
-
+  const [currency, setCurrency] = useState<string | null>(null);
+  const [month, setMonth] = useState(now.getMonth());
+  const [year, setYear] = useState(now.getFullYear());
+  const { data: results, isLoading } =
+    type === "balance"
+      ? useBalanceHistory({ month: month + 1, year })
+      : useOperationsAmountsHistory(type, {});
   return (
     <Block
       className="xl:col-span-3 flex-1"
-      title={`${getTitle(type)} wg 30 dni`}
+      title={`${getTitle(type)}`}
+      cta={
+        <div className="flex items-center gap-2 flex-1 max-w-xs">
+          <MonthInput
+            value={month}
+            disabledKeys={
+              year === now.getFullYear()
+                ? getDisabledMonths(now.getMonth())
+                : []
+            }
+            onChange={(value) => setMonth(value)}
+          />
+          <YearInput value={year} onChange={(value) => setYear(value)} />
+        </div>
+      }
       // cta={
       //   type === "balance" && (
       //     <UniversalSelect

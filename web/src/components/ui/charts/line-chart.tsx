@@ -61,7 +61,7 @@ export default function LineChart({ data, type, period, setPeriod }: Props) {
     };
   }, [data]);
 
-  console.log(dates, currencies);
+  console.log(data, dates, currencies);
 
   return (
     <ResponsiveContainer width="100%" height="100%" minHeight={320}>
@@ -119,21 +119,25 @@ export default function LineChart({ data, type, period, setPeriod }: Props) {
         <Tooltip
           isAnimationActive={false}
           contentStyle={{ backgroundColor: "#177981" }}
-          content={(props) => {
-            console.log(props);
-            return (
-              <ChartTooltip
-                {...props}
-                payloadName={
-                  type === "balance"
-                    ? "Budżet"
-                    : type === "income"
-                    ? "Przychody"
-                    : "Wydatki"
-                }
-              />
-            );
-          }}
+          content={(props) => (
+            <ChartTooltip
+              {...props}
+              label={
+                props.label
+                  ? new Intl.DateTimeFormat("pl-PL", {
+                      dateStyle: "full",
+                    }).format(new Date(props.label))
+                  : undefined
+              }
+              payloadName={
+                type === "balance"
+                  ? "Budżet"
+                  : type === "income"
+                  ? "Przychody"
+                  : "Wydatki"
+              }
+            />
+          )}
         />
         {currencies.map((currency, k) => (
           <Line
