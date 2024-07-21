@@ -1,15 +1,11 @@
 import { useState } from "react";
 import ActiveService from "./subscription/active";
 import ServiceList from "./subscription/list";
-import useSWR from "swr";
-import { getServices } from "@/lib/settings/queries";
+import { useServices } from "@/lib/settings/queries";
 
 export default function Subscription() {
-  const [activeService, setActiveService] = useState<string | null>(null);
-  const { data: services, isLoading } = useSWR(
-    ["settings", "services"],
-    getServices
-  );
+  const [selectedService, setSelectedService] = useState<string | null>(null);
+  const { data: services, isLoading } = useServices();
 
   if (isLoading) {
     return (
@@ -20,11 +16,15 @@ export default function Subscription() {
   }
 
   return (
-    <div className="flex flex-col lg:grid grid-cols-3">
+    <div className="flex flex-col lg:grid grid-cols-2 lg:items-start gap-8">
       {/* <ServiceProvider defaultService={defaultService}> */}
-      <ServiceList services={[]} ownedServices={[]} />
+      <ServiceList
+        services={services || []}
+        selectedService={selectedService}
+        changeSelectedService={(id) => setSelectedService(id)}
+      />
       <ActiveService
-        service={services?.find(({ id }) => id === activeService)}
+        service={services?.find(({ id }) => id === selectedService)}
       />
       {/* </ServiceProvider> */}
     </div>

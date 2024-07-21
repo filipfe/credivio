@@ -1,6 +1,7 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
+import useSWR from "swr";
 
 export async function getLanguages(): Promise<SupabaseResponse<Language>> {
   const supabase = createClient();
@@ -60,12 +61,18 @@ export async function getPreferences(): Promise<Preferences> {
 
 export async function getServices(): Promise<Service[]> {
   const supabase = createClient();
-  const { data: services } = await supabase
-    .from("services")
-    .select("*")
-    .returns<Service[]>();
-  return [];
+  const { data: services, error } = await supabase.rpc(
+    "get_settings_subscription_services",
+  );
+
+  if (error) {
+    throw new Error(error.message || "Error");
+  }
+
+  return services;
 }
+
+export const useServices = () => useSWR("services", getServices);
 
 export async function updateAccount(account: Partial<Account>) {
   const supabase = createClient();
