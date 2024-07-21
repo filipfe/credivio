@@ -3,7 +3,7 @@ import { Fragment, Suspense } from "react";
 import StatsList from "@/components/dashboard/stats/list";
 import ExpensesByLabel from "@/components/dashboard/expenses-by-label";
 import { StatLoader } from "@/components/dashboard/stats/ref";
-import OperationsByMonth from "@/components/dashboard/operations-by-month";
+import BalanceByMonth from "@/components/dashboard/balance-by-month";
 import LatestOperations from "@/components/dashboard/latest-operations";
 import { OperationLoader } from "@/components/operations/ref";
 import Block from "@/components/ui/block";
@@ -26,7 +26,7 @@ export default async function Dashboard() {
         <LatestOperations />
       </Suspense>
       <ExpensesByLabel defaultCurrency={defaultCurrency} />
-      <OperationsByMonth type="balance" />
+      <BalanceByMonth />
       <Suspense fallback={latestOperationsFallback}>
         <PortfolioStructure />
       </Suspense>

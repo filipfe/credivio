@@ -20,6 +20,7 @@ import { COLORS } from "@/const";
 type Props = {
   data: DailyAmount[];
   type: string;
+  currency?: string;
   period?: Period;
   setPeriod?: Dispatch<SetStateAction<Period>>;
 };
@@ -28,8 +29,14 @@ const dateFormatter = new Intl.DateTimeFormat("pl-PL", {
   dateStyle: "long",
 });
 
-export default function LineChart({ data, type, period, setPeriod }: Props) {
-  const { width, tickFormatter } = useYAxisWidth();
+export default function LineChart({
+  data,
+  currency,
+  type,
+  period,
+  setPeriod,
+}: Props) {
+  const { width, tickFormatter } = useYAxisWidth(currency);
 
   const isFromEarlier = period
     ? new Date(period.from).getTime() < new Date(data[0].date).getTime()
@@ -60,8 +67,6 @@ export default function LineChart({ data, type, period, setPeriod }: Props) {
       dates,
     };
   }, [data]);
-
-  console.log(data, dates, currencies);
 
   return (
     <ResponsiveContainer width="100%" height="100%" minHeight={320}>

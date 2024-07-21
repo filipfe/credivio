@@ -4,10 +4,10 @@ import { Suspense } from "react";
 import Loader from "@/components/stocks/loader";
 import LineChartLoader from "@/components/ui/charts/line-loader";
 import { getOperationsStats } from "@/lib/operations/actions";
-import OperationsByMonth from "@/components/dashboard/operations-by-month";
 import { getDefaultCurrency } from "@/lib/settings/actions";
 import { createClient } from "@/utils/supabase/server";
 import Providers from "../providers";
+import OperationsByMonth from "@/components/operations/operations-by-month";
 
 export default async function Page({
   searchParams,
@@ -50,7 +50,7 @@ export default async function Page({
       <Providers>
         <div className="col-[1/3] row-[2/3] flex flex-col order-last">
           <Suspense fallback={<LineChartLoader />}>
-            <OperationsByMonth withPeriod type="expense" />
+            <OperationsByMonth type="expense" />
           </Suspense>
         </div>
         <Suspense fallback={<Loader className="row-span-2 col-span-2" />}>

@@ -15,6 +15,13 @@ export default function UniversalSelect(props: Props) {
       disallowEmptySelection
       {...props}
     >
+      {
+        (
+          <SelectItem value="Wszystkie" key="Wszystkie">
+            Wszystkie
+          </SelectItem>
+        ) as any
+      }
       {props.elements.map((element) => (
         <SelectItem
           value={typeof element === "string" ? element : element.value}

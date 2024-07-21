@@ -30,7 +30,7 @@ export default function Block({
       )}
     >
       {title && (
-        <div className="flex items-center gap-4 justify-between mb-1 sm:mb-2">
+        <div className="flex items-center gap-4 justify-between mb-1 sm:mb-2 h-8">
           {typeof title === "string" ? (
             <h3
               className={`sm:text-lg text-base ${
