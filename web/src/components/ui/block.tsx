@@ -22,7 +22,7 @@ export default function Block({
   return (
     <article
       className={cn(
-        "bg-white border-primary/10 px-6 sm:px-10 pt-5 pb-6 sm:py-8 gap-4 flex flex-col",
+        "bg-white px-6 sm:px-10 pt-5 pb-6 sm:py-8 gap-4 flex flex-col",
         className,
         mobileRadius
           ? "rounded-md border"
@@ -30,7 +30,7 @@ export default function Block({
       )}
     >
       {title && (
-        <div className="flex items-center gap-4 justify-between mb-1 sm:mb-2">
+        <div className="flex items-center gap-4 justify-between mb-1 sm:mb-2 h-8">
           {typeof title === "string" ? (
             <h3
               className={`sm:text-lg text-base ${

@@ -8,7 +8,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SWRConfig
       value={{
-        onError: (err) =>
+        onError: () =>
           toast.custom((t) => (
             <Toast
               {...t}

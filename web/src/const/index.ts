@@ -199,13 +199,14 @@ export const TRANSACTION_TYPES: Option<string>[] = [
   },
 ];
 
-export const COLORS = [
-  "#177981", // Primary color
-  "#ffc000", // Secondary color
-  "#3f51b5", // Light blue
-  "#ff9800", // Light orange
-  "#c02942", // Red
-  "#9e9e9e", // Gray
-  "#28a745", // Green
-  "#ffc107", // Yellow
-];
+// export const COLORS = [
+//   "#177981", // Primary color
+//   "#ffc000", // Secondary color
+//   "#3f51b5", // Light blue
+//   "#ff9800", // Light orange
+//   "#c02942", // Red
+//   "#9e9e9e", // Gray
+//   "#28a745", // Green
+//   "#ffc107", // Yellow
+// ];
+export const COLORS = ["#177981", "#fdbb2d", "#40E0D0", "#ff7f50", "#3f51b5"];

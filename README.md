@@ -57,3 +57,22 @@ To deploy a new feature:
 - Branch off from master with a new feature _<platform>/<feat>_
 - Create a Pull Request to _staging_ branch
 - Github Actions will automatically handle migrations and edge functions
+
+## Known Issues
+
+### supabase start
+
+Sometimes on Windows, after running _supabase start_, one of the ports is being blocked by winnat:
+
+```cmd
+failed to start docker container: Error response from daemon: Ports are not available: exposing port TCP 0.0.0.0:54322 -> 0.0.0.0:0: listen tcp 0.0.0.0:54322: bind: An attempt was made to access a socket in a way forbidden by its access permissions.
+```
+
+To resolve this:
+
+```cmd
+net stop winnat
+// start the supabase container
+npm run supabase:dev
+net start winnat
+```

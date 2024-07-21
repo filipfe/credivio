@@ -21,7 +21,7 @@ const checkWidth = (label: string): number => {
 };
 
 export default function useYAxisWidth(
-  currency: string,
+  currency?: string,
   formatter?: (value: number) => string
 ) {
   const [longestTick, setLongestTick] = useState(0);
@@ -29,7 +29,9 @@ export default function useYAxisWidth(
     (val: number): string => {
       const formattedTick = formatter
         ? formatter(val)
-        : numberFormat(currency, val, "compact");
+        : currency
+        ? numberFormat(currency, val, "compact")
+        : val.toString();
       const width = checkWidth(formattedTick);
       if (width > longestTick) {
         setLongestTick(width);
