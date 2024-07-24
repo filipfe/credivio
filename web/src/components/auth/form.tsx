@@ -1,10 +1,11 @@
 "use client";
 
 import { signIn, signUp } from "@/lib/auth/actions";
+import { createClient } from "@/utils/supabase/client";
 import { Button } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 
 export default function Form({
   children,
@@ -14,6 +15,15 @@ export default function Form({
   isSignUp?: boolean;
 }) {
   const [isPending, startTransition] = useTransition();
+  useEffect(() => {
+    (async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase.rpc(
+        "get_dashboard_portfolio_budgets"
+      );
+      console.log({ data, error });
+    })();
+  }, []);
   return (
     <form
       action={(formData) =>
