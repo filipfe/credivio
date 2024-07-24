@@ -12,12 +12,17 @@ type Body = {
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+const NOTIFICATION_SECRET = Deno.env.get("NOTIFICATION_SECRET");
 
-if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !NOTIFICATION_SECRET) {
   throw new Error(
-    "Environment variables missing: " + SUPABASE_SERVICE_ROLE_KEY
-      ? "SUPABASE_SERVICE_ROLE_KEY"
-      : "SUPABASE_URL",
+    `Environment variables missing: ${
+      Object.entries({
+        SUPABASE_URL,
+        SUPABASE_SERVICE_ROLE_KEY,
+        NOTIFICATION_SECRET,
+      }).filter(([_key, value]) => !value).map(([key]) => key).join(", ")
+    }`,
   );
 }
 
@@ -53,6 +58,10 @@ const sendNotification = async (user: Profile, { message, options }: Body) => {
 };
 
 Deno.serve(async (req) => {
+  const secretKey = req.headers.get("x-secret-key");
+  if (secretKey !== NOTIFICATION_SECRET) {
+    return new Response("Unauthorized", { status: 401 });
+  }
   const body = await req.json() as Body;
 
   const { data: users, error } = await supabase.from("profiles")
