@@ -1,4 +1,5 @@
 import { updateSettings } from "@/lib/settings/queries";
+import toast from "@/utils/toast";
 import { Time } from "@internationalized/date";
 import { TimeInput, TimeInputValue } from "@nextui-org/react";
 import { ClockIcon } from "lucide-react";
@@ -14,11 +15,21 @@ export default function HourInput() {
     try {
       await mutate(updateSettings("graph_time", value), {
         optimisticData: (prev: any) => ({ ...prev, graph_time: value }),
+        rollbackOnError: true,
+        revalidate: false,
+        populateCache: true,
       });
-    } catch (err) {}
+    } catch (err) {
+      toast({
+        type: "error",
+        message: "Wystąpił błąd przy zapisywaniu czasu!",
+      });
+    }
   };
 
-  console.log(data);
+  if (!data) {
+    return;
+  }
 
   const defaultDate = new Date();
   defaultDate.setUTCHours(parseInt(data.graph_time.split(":")[0]), 0, 0, 0);
