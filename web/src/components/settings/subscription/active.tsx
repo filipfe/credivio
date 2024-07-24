@@ -25,19 +25,19 @@ type Props = {
 export default function ActiveService({ service }: Props) {
   const [isPending, startTransition] = useTransition();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  if (!service) return;
+  if (!service) return <div></div>;
   const { id, title, href, description, price, is_active } = service;
   const link = LINKS.find((item) => item.href === href);
   const Icon = link ? link.icon : <></>;
 
   return (
-    <Block className="order-first">
+    <Block className="order-first lg:order-none">
       <div className="flex flex-col items-center gap-4 flex-1 mt-4">
         <div className="h-20 w-20 bg-light border border-primary/10 rounded-md grid place-content-center mb-4">
           <Icon size={32} />
         </div>
         <h3 className="text-2xl font-medium">{title}</h3>
-        <p className="text-sm text-center max-w-lg">{description}</p>
+        <p className="text-sm text-center">{description}</p>
         <div className="grid grid-cols-3 gap-4 my-4">
           <div className="border p-6 rounded-md bg-light"></div>
           <div className="border p-6 rounded-md bg-light"></div>

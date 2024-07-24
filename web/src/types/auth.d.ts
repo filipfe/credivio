@@ -8,3 +8,10 @@ type Service = {
   created_at?: string;
   is_active: boolean;
 };
+
+type Settings = {
+  telegram_id: string;
+  graph_time: string;
+  email_notifications: boolean;
+  telegram_notifications: boolean;
+};
