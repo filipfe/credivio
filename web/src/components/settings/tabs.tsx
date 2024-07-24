@@ -2,10 +2,16 @@
 
 import { Tab, Tabs } from "@nextui-org/react";
 import Account from "./account";
-import { LayersIcon, SlidersIcon, UserCogIcon } from "lucide-react";
+import {
+  BellRingIcon,
+  LayersIcon,
+  SlidersIcon,
+  UserCogIcon,
+} from "lucide-react";
 import Preferences from "./preferences";
 import TabTitle from "../ui/tab-title";
 import Subscription from "./subscription";
+import Notifications from "./notifications";
 
 export default function SettingsTabs() {
   return (
@@ -33,6 +39,12 @@ export default function SettingsTabs() {
         title={<TabTitle title="Subskrypcje i usługi" Icon={LayersIcon} />}
       >
         <Subscription />
+      </Tab>
+      <Tab
+        key="notifications"
+        title={<TabTitle title="Powiadomienia" Icon={BellRingIcon} />}
+      >
+        <Notifications />
       </Tab>
     </Tabs>
   );
