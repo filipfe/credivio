@@ -4,7 +4,7 @@ import bot from "../_shared/telegram-bot.ts";
 import { createClient } from "supabase";
 
 type Body = {
-  message: string;
+  message?: string;
   options?: {
     graph?: "daily" | "weekly" | "monthly";
   };
@@ -31,10 +31,9 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
 const sendNotification = async (user: Profile, { message, options }: Body) => {
   const { telegram_notifications, email_notifications } = user.settings;
   if (email_notifications) {
-    //
+    // send email
   }
 
-  if (!user.telegram_id || !telegram_notifications) return;
   if (options?.graph) {
     const { data: graph } = await supabase.functions.invoke(
       "weekly-graph",
@@ -42,11 +41,13 @@ const sendNotification = async (user: Profile, { message, options }: Body) => {
         body: { user, date: new Date().toISOString() },
       },
     );
+    if (!user.telegram_id || !telegram_notifications) return;
     await bot.api.sendPhoto(user.telegram_id, graph, {
-      caption: `Cześć ${user.first_name}!
-📊 Oto twój wykres wydatków z obecnego tygodnia na podstawie etykiet. Tak trzymaj!`,
+      caption: message || `Cześć ${user.first_name}!
+📊 Oto twój wykres wydatków z poprzedniego tygodnia na podstawie etykiet. Tak trzymaj!`,
     });
   } else {
+    if (!user.telegram_id || !telegram_notifications || !message) return;
     await bot.api.sendMessage(user.telegram_id, message);
   }
 };
@@ -54,15 +55,47 @@ const sendNotification = async (user: Profile, { message, options }: Body) => {
 Deno.serve(async (req) => {
   const body = await req.json() as Body;
 
-  const { data: users, error } = await supabase.from("profiles").select(
-    "id, first_name, currency, language_code, telegram_id, settings(telegram_notifications, email_notifications, graph_time)",
-  ).returns<Profile[]>();
+  const { data: users, error } = await supabase.from("profiles")
+    .select(
+      "id, first_name, currency, language_code, telegram_id, settings!inner(telegram_notifications, email_notifications, graph_time)",
+    )
+    .or("telegram_notifications.eq.true,email_notifications.eq.true", {
+      "foreignTable": "settings",
+    })
+    .returns<Profile[]>();
 
   if (error) {
     return new Response(JSON.stringify(error), { status: 500 });
   }
 
-  await Promise.all(users.map((user) => sendNotification(user, body)));
+  const now = new Date();
+
+  const utcHours = now.getUTCHours();
+
+  await Promise.all(
+    (body.options?.graph
+      ? users.filter((
+        { settings: { graph_time } },
+      ) => {
+        const date = new Date();
+        const offsetGreater = graph_time.includes("+");
+        const [time, timezoneOffset] = graph_time.split(
+          offsetGreater ? "+" : "-",
+        );
+        const [hour] = time.split(":").map(Number);
+        date.setUTCHours(
+          offsetGreater
+            ? hour - parseInt(timezoneOffset)
+            : hour + parseInt(timezoneOffset),
+          0,
+          0,
+          0,
+        );
+        return date.getUTCHours() === utcHours;
+      })
+      : users)
+      .map((user) => sendNotification(user, body)),
+  );
 
   return new Response("ok", { status: 200 });
 });

@@ -21,7 +21,7 @@ type Operation = {
   amount: number;
   currency: string;
   type: "income" | "expense";
-  label?: string;
+  label: string | null;
 };
 
 User's native language: ${user.language_code} - use it for 'title' and 'label' unless user specified otherwise

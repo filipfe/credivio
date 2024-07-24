@@ -8,7 +8,7 @@ const constructReply = (operations: Payment[]) =>
 ${
     operations
       .map(
-        ({ title, amount, type, label, currency }) =>
+        ({ title, amount, type, currency }) =>
           `• ${type === "expense" ? "Wydatek" : "Przychód"}: ${title} - ${
             new Intl.NumberFormat("pl-PL", {
               currency,
