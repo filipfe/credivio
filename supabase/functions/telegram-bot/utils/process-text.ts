@@ -1,8 +1,6 @@
 import openai from "../../_shared/openai.ts";
 import { insertOperations } from "../commands/add.ts";
 import supabase from "../supabase.ts";
-import { ProcessReturn } from "../types.ts";
-import { Profile } from "../types.ts";
 
 export default async function processText(
   message: string,

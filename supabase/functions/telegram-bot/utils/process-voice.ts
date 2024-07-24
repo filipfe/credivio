@@ -1,5 +1,4 @@
 import { Voice } from "https://deno.land/x/grammy_types@v3.9.0/message.ts";
-import { ProcessReturn, Profile } from "../types.ts";
 import processText from "./process-text.ts";
 
 export default async function processVoice(

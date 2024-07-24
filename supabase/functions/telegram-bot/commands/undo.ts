@@ -1,20 +1,22 @@
 import { CommandContext } from "grammy";
 import supabase from "../supabase.ts";
-import { BotContext } from "../types.ts";
+import { BotContext } from "../../_shared/telegram-bot.ts";
 
 const constructReply = (operations: Payment[]) =>
   `🔄 Pomyślnie usunięto następujące operacje:
-${operations
-  .map(
-    ({ title, amount, type, currency }) =>
-      `• ${
-        type === "expense" ? "Wydatek" : "Przychód"
-      }: ${title} - ${new Intl.NumberFormat("pl-PL", {
-        currency,
-        style: "currency",
-      }).format(amount)}`
-  )
-  .join("\n")}`;
+${
+    operations
+      .map(
+        ({ title, amount, type, currency }) =>
+          `• ${type === "expense" ? "Wydatek" : "Przychód"}: ${title} - ${
+            new Intl.NumberFormat("pl-PL", {
+              currency,
+              style: "currency",
+            }).format(amount)
+          }`,
+      )
+      .join("\n")
+  }`;
 
 export default async function undo(ctx: CommandContext<BotContext>) {
   const lastPayments = ctx.session.lastPayments;
@@ -23,7 +25,7 @@ export default async function undo(ctx: CommandContext<BotContext>) {
 
   if (lastPayments.length === 0) {
     await ctx.reply(
-      "Nie znaleziono ostatnich operacji, spróbuj usunąć je poprzez aplikację"
+      "Nie znaleziono ostatnich operacji, spróbuj usunąć je poprzez aplikację",
     );
     return;
   }
@@ -35,7 +37,7 @@ export default async function undo(ctx: CommandContext<BotContext>) {
   if (error || !data) {
     console.error("Couldn't delete operations: ", error);
     await ctx.reply(
-      "Wystąpił błąd, spróbuj ponownie lub usuń operacje poprzez aplikacje"
+      "Wystąpił błąd, spróbuj ponownie lub usuń operacje poprzez aplikacje",
     );
   } else {
     await ctx.reply(constructReply(data));
