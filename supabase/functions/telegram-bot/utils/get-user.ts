@@ -1,12 +1,11 @@
 import supabase from "../supabase.ts";
-import { Profile } from "../types.ts";
 
 export default async function getUser(
   telegram_id: number,
 ): Promise<Profile | null> {
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, first_name, currency, language_code")
+    .select("id, first_name, currency, language_code, telegram_id")
     .match({
       telegram_id,
     })

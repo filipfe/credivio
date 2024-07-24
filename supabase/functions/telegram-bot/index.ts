@@ -1,4 +1,4 @@
-import { Bot, session, webhookCallback } from "grammy";
+import { session, webhookCallback } from "grammy";
 import undo from "./commands/undo.ts";
 import add, { insertOperations } from "./commands/add.ts";
 import help from "./commands/help.ts";
@@ -6,7 +6,7 @@ import getUser from "./utils/get-user.ts";
 import supabase from "./supabase.ts";
 import { ADD, GRAPH, HELP, UNDO } from "./commands.ts";
 import { freeStorage } from "grammy:storage";
-import { type BotContext, type SessionData } from "./types.ts";
+import bot, { type SessionData } from "../_shared/telegram-bot.ts";
 import registerUser from "./commands/start.ts";
 import processVoice from "./utils/process-voice.ts";
 import processText from "./utils/process-text.ts";
@@ -14,16 +14,6 @@ import graph from "./commands/graph.ts";
 
 // Setup type definitions for built-in Supabase Runtime APIs
 /// <reference types="https://esm.sh/@supabase/functions-js/src/edge-runtime.d.ts" />
-
-const TELEGRAM_BOT_TOKEN = Deno.env.get("TELEGRAM_BOT_TOKEN");
-
-if (!TELEGRAM_BOT_TOKEN) {
-  throw new Error(
-    "Environment variables missing: TELEGRAM_BOT_TOKEN",
-  );
-}
-
-const bot = new Bot<BotContext>(TELEGRAM_BOT_TOKEN);
 
 bot.use(
   session({
@@ -130,7 +120,7 @@ bot.on("message:photo", async (ctx) => {
   const format = filename.split(".").pop();
 
   const blob = await fetch(
-    `https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}/${file_path}`,
+    `https://api.telegram.org/file/bot${bot.token}/${file_path}`,
   ).then((res) => res.blob());
 
   const file = new Blob([blob], {
