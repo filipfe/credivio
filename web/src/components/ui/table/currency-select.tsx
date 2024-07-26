@@ -3,13 +3,23 @@
 import { CURRENCIES } from "@/const";
 import { Select, SelectItem } from "@nextui-org/react";
 
-export default function CurrencySelect({ onChange, value }: State) {
+interface Props extends State {
+  disallowAll?: boolean;
+  size?: "sm" | "md" | "lg";
+}
+
+export default function CurrencySelect({
+  onChange,
+  value,
+  size = "sm",
+  disallowAll,
+}: Props) {
   return (
     <Select
       name="currency"
       placeholder="PLN"
       label="Waluta"
-      size="sm"
+      size={size}
       selectedKeys={[value]}
       onSelectionChange={(keys) => {
         const selectedKey = Array.from(keys)[0]?.toString();
@@ -21,8 +31,8 @@ export default function CurrencySelect({ onChange, value }: State) {
       disallowEmptySelection
       className="w-full"
     >
-      {
-        (
+      {!disallowAll &&
+        ((
           <SelectItem
             value=""
             className={`${
@@ -32,8 +42,7 @@ export default function CurrencySelect({ onChange, value }: State) {
           >
             Wszystkie
           </SelectItem>
-        ) as any
-      }
+        ) as any)}
       {CURRENCIES.map((curr) => (
         <SelectItem
           value={curr}

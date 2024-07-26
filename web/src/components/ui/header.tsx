@@ -61,10 +61,16 @@ export default function Header() {
           ))}
         </Breadcrumbs>
         <form action={signOut} className="hidden sm:block">
-          <button className="py-3 px-6 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-light bg-white">
+          <Button
+            type="submit"
+            size="sm"
+            className="font-medium"
+            radius="md"
+            variant="light"
+          >
             <LogOutIcon size={16} />
             Wyloguj
-          </button>
+          </Button>
         </form>
         <Button
           onPress={() =>
