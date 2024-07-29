@@ -27,9 +27,9 @@ export default async function Dashboard() {
       </Suspense>
       <ExpensesByLabel defaultCurrency={defaultCurrency} />
       <BalanceByMonth />
-      <Suspense fallback={latestOperationsFallback}>
+      {/* <Suspense fallback={latestOperationsFallback}>
         <PortfolioStructure />
-      </Suspense>
+      </Suspense> */}
     </div>
   );
 }
