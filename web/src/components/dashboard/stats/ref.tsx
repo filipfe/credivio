@@ -27,7 +27,7 @@ export default function Stat({
       </div>
       <div className="flex items-center gap-2">
         <h4 className="text-3xl">
-          {numberFormat(currency, amount || stat!.amount)}
+          {numberFormat(currency, stat ? stat.amount : amount!)}
         </h4>
         {stat &&
           (stat.difference_indicator === "no_change" ? (
