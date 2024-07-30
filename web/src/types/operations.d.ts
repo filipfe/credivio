@@ -11,7 +11,7 @@ interface Payment {
 }
 
 interface Operation extends Payment {
-  label?: string;
+  label?: string | null;
   doc_path: string | null;
   amount: string;
   type?: OperationType;

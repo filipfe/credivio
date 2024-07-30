@@ -69,7 +69,6 @@ export default function useTableQuery<T>(rows: T[], options?: Options) {
   };
 
   useEffect(() => {
-    console.log({ period: options?.period });
     if (options?.viewOnly) return;
     const params = new URLSearchParams();
     const query = { ...searchQuery, ...(options?.period || {}) };

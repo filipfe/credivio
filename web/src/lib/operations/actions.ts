@@ -7,43 +7,31 @@ import { redirect } from "next/navigation";
 export async function addOperations(
   formData: FormData
 ): Promise<SupabaseResponse<Operation>> {
-  const type = formData.get("type")?.toString() as OperationType;
-  const label = formData.get("label")?.toString();
-  const data = formData.get("data")!.toString();
+  const type = formData.get("type")!.toString() as OperationType;
+  const data: Operation[] = JSON.parse(formData.get("data")!.toString());
 
-  try {
-    let results: Operation[] = JSON.parse(data);
-    const supabase = createClient();
+  const supabase = createClient();
 
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
 
-    if (!user || authError) {
-      return {
-        results: [],
-        error: "Błąd autoryzacji, spróbuj zalogować się ponownie!",
-      };
-    }
+  if (!user || authError) {
+    return {
+      results: [],
+      error: "Błąd autoryzacji, spróbuj zalogować się ponownie!",
+    };
+  }
 
-    if (label) {
-      results = results.map((item) => ({ ...item, label, user_id: user.id }));
-    } else {
-      results = results.map((item) => ({ ...item, user_id: user.id }));
-    }
+  const { error } = await supabase.rpc("actions_insert_operations", {
+    p_operations: data,
+    p_user_id: user.id,
+    p_type: type,
+  });
 
-    const { error } = await supabase.from(`${type}s`).insert(results);
-
-    if (error) {
-      console.error("Couldn't add operation: ", error);
-      return {
-        error: "Wystąpił błąd przy dodawaniu operacji, spróbuj ponownie!",
-        results: [],
-      };
-    }
-  } catch (err) {
-    console.error("Couldn't add operation: ", err);
+  if (error) {
+    console.error("Couldn't add operation: ", error);
     return {
       error: "Wystąpił błąd przy dodawaniu operacji, spróbuj ponownie!",
       results: [],
