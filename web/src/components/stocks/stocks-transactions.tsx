@@ -21,7 +21,7 @@ export default async function StocksAndTransactions() {
           type="stock"
           title="Ostatnie transakcje"
           count={count || 0}
-          rows={transactions}
+          rows={transactions || []}
           simplified
           topContent={cta}
         />

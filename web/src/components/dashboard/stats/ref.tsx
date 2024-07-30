@@ -1,5 +1,5 @@
 import numberFormat from "@/utils/formatters/currency";
-import { Chip, Skeleton, cn } from "@nextui-org/react";
+import { Skeleton, cn } from "@nextui-org/react";
 import { ArrowDownIcon, ArrowUpIcon, Minus } from "lucide-react";
 
 type Props = {
@@ -27,7 +27,7 @@ export default function Stat({
       </div>
       <div className="flex items-center gap-2">
         <h4 className="text-3xl">
-          {numberFormat(currency, amount || stat!.amount)}
+          {numberFormat(currency, stat ? stat.amount : amount!)}
         </h4>
         {stat &&
           (stat.difference_indicator === "no_change" ? (
@@ -45,28 +45,6 @@ export default function Stat({
               {stat.difference}%
             </div>
           ))}
-
-        {/* <Chip
-        size="sm"
-          color={
-            stat.difference_indicator === "positive"
-              ? "primary"
-              : stat.difference_indicator === "negative"
-              ? "danger"
-              : "default"
-          }
-          variant="flat"
-          className="font-medium"
-          startContent={
-            stat.difference_indicator === "positive" ? (
-              <ArrowUpIcon size={16} />
-            ) : stat.difference_indicator === "negative" ? (
-              <ArrowDownIcon size={16} />
-            ) : undefined
-          }
-        >
-          {stat.difference}%
-        </Chip> */}
       </div>
       {description && <p>{description}</p>}
     </div>

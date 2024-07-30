@@ -45,17 +45,23 @@ export async function addOperations(
   redirect(path);
 }
 
-export async function getLatestOperations(): Promise<
-  SupabaseResponse<Payment>
-> {
+export async function getLatestOperations(
+  from?: string
+): Promise<SupabaseResponse<Payment>> {
   const supabase = createClient();
-  const { data: results, error } = await supabase
+  let query = supabase
     .from("operations")
     .select("id, title, amount, currency, type, issued_at")
     .order("issued_at", { ascending: false })
     .order("created_at", { ascending: false })
     .order("id")
     .limit(20);
+
+  if (from) {
+    query = query.eq(`from_${from}`, true);
+  }
+
+  const { data: results, error } = await query;
 
   if (error) {
     return {
