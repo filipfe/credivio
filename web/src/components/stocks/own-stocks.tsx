@@ -1,6 +1,5 @@
 import { getSpecificStocks } from "@/lib/stocks/actions";
 import Block from "../ui/block";
-import getStockHoldings from "@/utils/stocks/get-stock-holdings";
 import { ScrollShadow } from "@nextui-org/react";
 import StockTable from "./table";
 import { Fragment } from "react";
@@ -8,21 +7,13 @@ import HorizontalScroll from "../ui/horizontal-scroll";
 import CompanyBlock from "./company/company-block";
 import Empty from "../ui/empty";
 
-export default async function OwnStocks({
-  transactions,
-}: {
-  transactions: StockTransaction[];
-}) {
-  const holdings: Holdings =
-    transactions.length > 0 ? getStockHoldings(transactions) : {};
-  const stocksNames: string[] = Object.keys(holdings)
-    .sort((a, b) => holdings[b] - holdings[a])
-    .slice(0, 6);
+export default async function OwnStocks({ holdings }: { holdings: Holdings }) {
+  const stocksNames: string[] = Object.keys(holdings);
   const { results: stocks } = await getSpecificStocks(stocksNames);
 
   return (
     <Fragment>
-      {stocks.length > 0 && (
+      {stocksNames.length > 0 && (
         <HorizontalScroll fullWidth className="col-span-full">
           {stocks.map((item, k) => (
             <CompanyBlock {...item} key={`company-block:${k}`} />
@@ -30,7 +21,7 @@ export default async function OwnStocks({
         </HorizontalScroll>
       )}
       <Block title="Moje instrumenty" className="col-span-2 w-screen sm:w-auto">
-        {transactions.length > 0 ? (
+        {stocksNames.length > 0 ? (
           <ScrollShadow
             className="w-full"
             hideScrollBar

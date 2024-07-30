@@ -28,6 +28,7 @@ type SearchParams = {
   page?: string;
   search?: string;
   label?: string; //expense
+  transaction?: "buy" | "sell";
   currency?: string;
   from?: string;
   to?: string;
