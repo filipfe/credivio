@@ -6,7 +6,8 @@ type Props = {
   title: string;
   description: string;
   currency: string;
-  stat: Stat;
+  amount?: number;
+  stat?: Stat;
   cta?: React.ReactNode;
 };
 
@@ -14,6 +15,7 @@ export default function Stat({
   title,
   description,
   currency,
+  amount,
   cta,
   stat,
 }: Props) {
@@ -24,22 +26,26 @@ export default function Stat({
         {cta}
       </div>
       <div className="flex items-center gap-2">
-        <h4 className="text-3xl">{numberFormat(currency, stat.amount)}</h4>
-        {stat.difference_indicator === "no_change" ? (
-          <div className="bg-default text-default-dark flex items-center gap-1 rounded-full px-1 py-0.5 font-medium text-sm">
-            <Minus size={16} />
-          </div>
-        ) : stat.difference_indicator === "positive" ? (
-          <div className="bg-success-light text-success flex items-center gap-1 rounded-full px-1 py-0.5 font-medium text-sm">
-            <ArrowUpIcon size={16} />
-            {stat.difference}%
-          </div>
-        ) : (
-          <div className="bg-danger-light text-danger flex items-center gap-1 rounded-full px-1 py-0.5 font-medium text-sm">
-            <ArrowDownIcon size={16} />
-            {stat.difference}%
-          </div>
-        )}
+        <h4 className="text-3xl">
+          {numberFormat(currency, amount || stat!.amount)}
+        </h4>
+        {stat &&
+          (stat.difference_indicator === "no_change" ? (
+            <div className="bg-default text-default-dark flex items-center gap-1 rounded-full px-1 py-0.5 font-medium text-sm">
+              <Minus size={16} />
+            </div>
+          ) : stat.difference_indicator === "positive" ? (
+            <div className="bg-success-light text-success flex items-center gap-1 rounded-full px-1 py-0.5 font-medium text-sm">
+              <ArrowUpIcon size={16} />
+              {stat.difference}%
+            </div>
+          ) : (
+            <div className="bg-danger-light text-danger flex items-center gap-1 rounded-full px-1 py-0.5 font-medium text-sm">
+              <ArrowDownIcon size={16} />
+              {stat.difference}%
+            </div>
+          ))}
+
         {/* <Chip
         size="sm"
           color={
