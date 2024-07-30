@@ -39,12 +39,6 @@ type Stat = {
   difference_indicator: "positive" | "negative" | "no_change";
 };
 
-type DashboardStats = {
-  incomes: Stat;
-  expenses: Stat;
-  budget: Stat;
-};
-
 type OperationsStats = {
   last_month: Stat;
   last_day: Stat;
