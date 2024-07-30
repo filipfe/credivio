@@ -1,4 +1,3 @@
-import { getOwnRows } from "@/lib/general/actions";
 import { Fragment, Suspense } from "react";
 import TransactionTable from "./transactions-table";
 import { ChevronRightIcon } from "lucide-react";
@@ -6,23 +5,23 @@ import Link from "next/link";
 import { Button } from "@nextui-org/react";
 import Loader from "./loader";
 import OwnStocks from "./own-stocks";
+import { getHoldings, getOwnStocks } from "@/lib/stocks/actions";
 
 export default async function StocksAndTransactions() {
-  const { results: transactions, count } = await getOwnRows<StockTransaction>(
-    "stock"
-  );
+  const [{ result: holdings }, { results: transactions, count }] =
+    await Promise.all([getHoldings(6), getOwnStocks(undefined, 6)]);
 
   return (
     <Fragment>
       <Suspense fallback={<Loader className="col-span-2" />}>
-        <OwnStocks transactions={transactions} />
+        <OwnStocks holdings={holdings || {}} />
       </Suspense>
       <div className="col-span-2 flex items-stretch">
         <TransactionTable
           type="stock"
           title="Ostatnie transakcje"
           count={count || 0}
-          rows={transactions.slice(0, 6)}
+          rows={transactions}
           simplified
           topContent={cta}
         />

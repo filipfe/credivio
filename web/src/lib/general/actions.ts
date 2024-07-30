@@ -4,83 +4,10 @@ import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function getOwnRows<T>(
-  type: OperationType,
-  searchParams?: SearchParams,
-): Promise<SupabaseResponse<T>> {
-  try {
-    const supabase = createClient();
-    let query = supabase.from(`${type}s`).select("*", {
-      count: "exact",
-      head: false,
-    });
-
-    if (searchParams?.currency) {
-      query = query.eq("currency", searchParams?.currency);
-    }
-
-    if (type === "expense" && searchParams?.label) {
-      query = query.eq("label", searchParams.label);
-    }
-
-    if (searchParams?.search) {
-      const { search } = searchParams;
-      let searchString = "";
-      const ilike = `.ilike.%${search}%`;
-      if (type === "stock") searchString = "symbol" + ilike;
-      else searchString = "title" + ilike + ",description" + ilike;
-      query = query.or(searchString);
-    }
-
-    if (searchParams?.sort) {
-      const { sort } = searchParams;
-      const ascending = !sort.includes("-");
-
-      query = query.order(!ascending ? sort.split("-")[1] : sort, {
-        ascending: ascending,
-      });
-
-      if (!sort.includes("issued_at")) {
-        query = query.order("issued_at", { ascending: false });
-      }
-
-      if (sort.includes("-issued_at")) {
-        query = query.order("created_at", { ascending: false });
-      } else {
-        query = query.order("created_at");
-      }
-    } else {
-      if (type !== "goal") {
-        query = query.order("issued_at", { ascending: false });
-      }
-      query = query.order("created_at", { ascending: false });
-    }
-
-    const page = Number(searchParams?.page);
-    const { data, count, error } = await query.range(
-      page ? page * 10 - 10 : 0,
-      page ? page * 10 - 1 : 9,
-    );
-
-    if (error) {
-      return { results: [], error: error.message };
-    }
-    return {
-      count,
-      results: data as unknown as T[],
-    };
-  } catch (err) {
-    return {
-      results: [],
-      error: "Error",
-    };
-  }
-}
-
 export async function updateRow(
   id: string,
   type: OperationType,
-  fields: { [key: string]: any },
+  fields: { [key: string]: any }
 ) {
   const supabase = createClient();
   const { error } = await supabase.from(`${type}s`).update(fields).eq("id", id);

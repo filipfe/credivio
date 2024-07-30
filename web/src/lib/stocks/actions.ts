@@ -5,12 +5,38 @@ import axios from "axios";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function getHoldings(): Promise<
-  SupabaseSingleRowResponse<Holdings>
-> {
+export async function getOwnStocks(
+  searchParams?: SearchParams,
+  limit?: number
+): Promise<SupabaseResponse<StockTransaction>> {
   const supabase = createClient();
 
-  const { data: result, error } = await supabase.rpc("get_stocks_holdings");
+  const { data: result, error } = await supabase.rpc("get_stocks_own_rows", {
+    p_limit: limit,
+    p_page: searchParams?.page,
+    p_sort: searchParams?.sort,
+    p_search: searchParams?.search,
+    p_transaction_type: searchParams?.transaction,
+    p_currency: searchParams?.currency,
+    p_from: searchParams?.from,
+    p_to: searchParams?.to,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return result;
+}
+
+export async function getHoldings(
+  limit?: number
+): Promise<SupabaseSingleRowResponse<Holdings>> {
+  const supabase = createClient();
+
+  const { data: result, error } = await supabase.rpc("get_stocks_holdings", {
+    p_limit: limit,
+  });
 
   if (error) {
     throw new Error(error.message);
