@@ -11,6 +11,7 @@ import {
 } from "@nextui-org/react";
 import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
 import { useCallback } from "react";
+import Empty from "../ui/empty";
 
 type Props = {
   stocks: TableStock[];
@@ -85,7 +86,21 @@ export default function StockTable({
           <TableColumn key={column.key}>{column.label}</TableColumn>
         ))}
       </TableHeader>
-      <TableBody items={stocks} loadingContent={<Spinner label="Loading..." />}>
+      <TableBody
+        items={stocks}
+        loadingContent={<Spinner label="Loading..." />}
+        emptyContent={
+          <div className="text-center flex-1 justify-center flex flex-col items-center gap-3">
+            <Empty
+              title="Nie masz jeszcze żadnych akcji!"
+              cta={{
+                title: "Dodaj transkację",
+                href: "/stocks/transactions/add",
+              }}
+            />
+          </div>
+        }
+      >
         {(item) => (
           <TableRow key={item._symbol} className="hover:bg-light">
             {(columnKey) => (
