@@ -6,7 +6,7 @@ import { Autocomplete, AutocompleteItem, Tooltip } from "@nextui-org/react";
 import { HelpCircleIcon } from "lucide-react";
 
 type Props = {
-  defaultValue?: string;
+  defaultValue?: string | null;
   isDisabled?: boolean;
 };
 
@@ -29,7 +29,7 @@ export default function LabelInput({ defaultValue, isDisabled }: Props) {
         allowsEmptyCollection={false}
         isLoading={isLoading}
         isDisabled={isDisabled}
-        defaultSelectedKey={defaultValue}
+        defaultSelectedKey={defaultValue ? defaultValue : undefined}
         inputProps={{
           classNames: {
             inputWrapper: "!bg-light",
