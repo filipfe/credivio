@@ -1,14 +1,14 @@
 import { CommandContext } from "grammy";
 import supabase from "../supabase.ts";
-import { BotContext, ProcessReturn, Profile } from "../types.ts";
 import getUser from "../utils/get-user.ts";
+import { BotContext } from "../../_shared/telegram-bot.ts";
 
 const constructReply = (operations: Payment[]) =>
   `💸 Dodałem następujące operacje:
 ${
     operations
       .map(
-        ({ title, amount, type, label, currency }) =>
+        ({ title, amount, type, currency }) =>
           `• ${type === "expense" ? "Wydatek" : "Przychód"}: ${title} - ${
             new Intl.NumberFormat("pl-PL", {
               currency,

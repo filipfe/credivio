@@ -2,12 +2,12 @@
 
 import useClientQuery from "@/hooks/useClientQuery";
 import Empty from "../ui/empty";
-import { getLatestOperations } from "@/lib/automation/queries";
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { createClient } from "@/utils/supabase/client";
 import OperationRef from "../operations/ref";
 import { ScrollShadow } from "@nextui-org/react";
 import { AnimatePresence, motion } from "framer-motion";
+import { getLatestOperations } from "@/lib/operations/actions";
 
 export default function LatestOperations() {
   const scrollAreaRef = useRef<HTMLElement | null>(null);
@@ -52,7 +52,7 @@ export default function LatestOperations() {
     if (!scrollAreaRef.current) return;
     scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
   }, [results]);
-
+  const reversedResults = [...results].reverse();
   return (
     <div className="flex flex-col gap-4 flex-1">
       <h3 className="text-sm sm:text-base">Ostatnie operacje</h3>
@@ -67,7 +67,7 @@ export default function LatestOperations() {
           ) : results.length > 0 ? (
             <div className="flex flex-col gap-4">
               <AnimatePresence>
-                {results.map((operation, k) => (
+                {reversedResults.map((operation, k) => (
                   <motion.div
                     layout
                     initial={{ opacity: 0, scale: 1, y: 50, x: 0 }}

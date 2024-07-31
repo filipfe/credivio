@@ -1,6 +1,6 @@
-import { BotContext } from "../types.ts";
 import getUser from "../utils/get-user.ts";
 import { ADD, GRAPH, UNDO } from "../commands.ts";
+import { BotContext } from "../../_shared/telegram-bot.ts";
 
 export default async function help(ctx: BotContext) {
   if (!ctx.from) {

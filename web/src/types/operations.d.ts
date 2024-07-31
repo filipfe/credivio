@@ -11,7 +11,7 @@ interface Payment {
 }
 
 interface Operation extends Payment {
-  label?: string;
+  label?: string | null;
   doc_path: string | null;
   amount: string;
   type?: OperationType;
@@ -37,12 +37,6 @@ type Stat = {
   amount: number;
   difference: number;
   difference_indicator: "positive" | "negative" | "no_change";
-};
-
-type DashboardStats = {
-  incomes: Stat;
-  expenses: Stat;
-  budget: Stat;
 };
 
 type OperationsStats = {

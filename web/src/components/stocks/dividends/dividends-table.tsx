@@ -15,7 +15,7 @@ import { useCallback } from "react";
 
 type Props = {
   dividends: Dividend[];
-  holdings?: Holdings;
+  holdings?: Holdings | null;
   simplified?: boolean;
 };
 

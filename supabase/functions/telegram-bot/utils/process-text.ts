@@ -1,8 +1,6 @@
 import openai from "../../_shared/openai.ts";
 import { insertOperations } from "../commands/add.ts";
 import supabase from "../supabase.ts";
-import { ProcessReturn } from "../types.ts";
-import { Profile } from "../types.ts";
 
 export default async function processText(
   message: string,
@@ -23,7 +21,7 @@ type Operation = {
   amount: number;
   currency: string;
   type: "income" | "expense";
-  label?: string;
+  label: string | null;
 };
 
 User's native language: ${user.language_code} - use it for 'title' and 'label' unless user specified otherwise

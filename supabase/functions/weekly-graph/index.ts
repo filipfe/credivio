@@ -270,10 +270,11 @@ Deno.serve(async (req) => {
 
   const { data: expenses, error } = await supabase.from("expenses").select(
     "amount, label, issued_at",
-  ).gte("issued_at", from).lte("issued_at", to).eq(
-    "currency",
-    user.currency || "PLN",
-  ).returns<Payment[]>();
+  )
+    .gte("issued_at", from)
+    .lte("issued_at", to)
+    .match({ user_id: user.id, currency: user.currency || "PLN" })
+    .returns<Payment[]>();
 
   console.log({ expenses, error });
 

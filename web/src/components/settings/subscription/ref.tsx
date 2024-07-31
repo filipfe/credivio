@@ -1,28 +1,30 @@
-"use client";
-
 import { LINKS } from "@/const";
 import { Chip } from "@nextui-org/react";
 import { CheckIcon } from "lucide-react";
 
+type Props = {
+  service: Service;
+  isSelected: boolean;
+  changeSelectedService: (id: string) => void;
+};
+
 export default function ServiceRef({
-  isEnabled,
-  ...props
-}: Service & { isEnabled: boolean }) {
-  const { id, title, description, created_at, href } = props;
-  // const { activeService, setActiveService } = useContext(ServiceContext);
+  service,
+  isSelected,
+  changeSelectedService,
+}: Props) {
+  const { id, title, description, created_at, href, is_active } = service;
   const link = LINKS.find((item) => item.href === href);
   const Icon = link ? link.icon : <></>;
-  const isActive = false;
-  // const isActive = activeService?.id === id;
   const daysDiff = Math.round(
     Math.abs(new Date(created_at!).getTime() - new Date().getTime()) /
       (1000 * 60 * 60 * 24)
   );
   return (
     <button
-      // onClick={() => setActiveService(props)}
-      className={`rounded-md border p-6 flex flex-col items-center gap-2 relative ${
-        isActive ? "border-primary text-primary bg-primary/5" : ""
+      onClick={() => changeSelectedService(id)}
+      className={`rounded-md border p-6 max-h-max flex flex-col items-center gap-2 relative ${
+        isSelected ? "border-primary text-primary bg-primary/5" : ""
       }`}
     >
       <Icon size={28} />
@@ -41,7 +43,7 @@ export default function ServiceRef({
           NOWA
         </Chip>
       )}
-      {isEnabled && (
+      {is_active && (
         <Chip
           className="absolute -right-2 -top-2"
           size="sm"

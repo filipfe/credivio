@@ -44,11 +44,11 @@ export default function AddForm({
       amount: formData.get("amount")?.toString() || "",
       issued_at: issuedAt === currentDate ? new Date().toISOString() : issuedAt,
       currency: formData.get("currency")?.toString() || "",
-      doc_path: "",
+      doc_path: null,
     };
 
     if (type === "expense") {
-      operation.label = formData.get("label")?.toString() || "";
+      operation.label = formData.get("label")?.toString() || null;
     }
 
     setRecords((prev) => [...prev, operation]);
@@ -56,7 +56,6 @@ export default function AddForm({
 
   const onSave = (formData: FormData) =>
     startTransition(async () => {
-      console.log(formData);
       const { error } = await addOperations(formData);
       if (error) {
         toast.custom((t) => <Toast {...t} type="error" message={error} />);
