@@ -4,12 +4,12 @@ import { Button, Input, Spinner, Textarea } from "@nextui-org/react";
 import formatAmount from "@/utils/operations/format-amount";
 import { useState, useTransition } from "react";
 import { CheckIcon } from "lucide-react";
-import { insertRows } from "@/lib/general/actions";
 import toast from "react-hot-toast";
 import UniversalSelect from "../ui/universal-select";
 import { CURRENCIES } from "@/const";
 import Block from "../ui/block";
 import Toast from "../ui/toast";
+import { addGoal } from "@/lib/goals/actions";
 
 interface NewGoal extends Omit<Goal, "id" | "saved" | "price" | "payments"> {
   price: string;
@@ -38,7 +38,7 @@ export default function GoalForm({
       <form
         action={(formData) =>
           startTransition(async () => {
-            const { error } = await insertRows({ formData });
+            const { error } = await addGoal(formData);
             if (error) {
               toast.custom((t) => (
                 <Toast
