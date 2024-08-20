@@ -43,9 +43,7 @@ export default function NavLink({
   ) : (
     <Link
       className={`px-3 sm:px-4 rounded-lg text-sm font-medium flex justify-center items-center gap-3 sm:gap-3.5 ${
-        isActive
-          ? "bg-light border border-primary/10"
-          : "hover:bg-light bg-white text-font/70"
+        isActive ? "bg-light border" : "hover:bg-light bg-white text-font/70"
       }`}
       href={href}
       style={{ fontSize: 13, height: 34 }}

@@ -36,7 +36,7 @@ export default function Header() {
           <AlignJustifyIcon size={20} />
         </Button>
       </header>
-      <header className="flex items-center gap-4 justify-between px-4 sm:px-10 h-16 sm:h-20 fixed sm:sticky top-0 left-0 bg-white z-50 w-full sm:w-auto">
+      <header className="flex items-center border-b gap-4 justify-between px-4 sm:px-10 h-16 sm:h-20 fixed sm:sticky top-0 left-0 bg-white z-50 w-full sm:w-auto">
         <Breadcrumbs
           maxItems={3}
           itemsAfterCollapse={1}

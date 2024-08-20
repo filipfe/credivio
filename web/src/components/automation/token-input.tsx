@@ -26,15 +26,14 @@ export default function TokenInput({ token }: { token: string }) {
         disableAnimation
         label="Klucz Telegram"
         classNames={{
-          inputWrapper:
-            "!bg-light border border-primary/10 shadow-none select-none",
+          inputWrapper: "!bg-light border shadow-none select-none",
         }}
         onClick={() => navigator.clipboard.writeText(token)}
       />
       <Button
         isIconOnly
         disableRipple
-        className="border border-primary/10 absolute right-2"
+        className="border absolute right-2"
         onClick={() => {
           navigator.clipboard.writeText(token);
           setCopied(true);

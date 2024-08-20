@@ -33,7 +33,7 @@ export default function ActiveService({ service }: Props) {
   return (
     <Block className="order-first lg:order-none">
       <div className="flex flex-col items-center gap-4 flex-1 mt-4">
-        <div className="h-20 w-20 bg-light border border-primary/10 rounded-md grid place-content-center mb-4">
+        <div className="h-20 w-20 bg-light border rounded-md grid place-content-center mb-4">
           <Icon size={32} />
         </div>
         <h3 className="text-2xl font-medium">{title}</h3>
