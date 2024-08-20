@@ -28,7 +28,7 @@ export default async function StatsList({
         title="Przychody"
         currency={defaultCurrency}
         description=""
-        amount={incomes}
+        amount={incomes.amount}
         cta={
           <Link href="/incomes/add">
             <Button
@@ -47,7 +47,7 @@ export default async function StatsList({
         title="Wydatki"
         currency={defaultCurrency}
         description=""
-        amount={expenses}
+        amount={expenses.amount}
         cta={
           <Link href="/expenses/add">
             <Button
@@ -66,7 +66,7 @@ export default async function StatsList({
         title="Bilans"
         currency={defaultCurrency}
         description=""
-        amount={balance}
+        amount={balance.amount}
       />
     </Fragment>
   );

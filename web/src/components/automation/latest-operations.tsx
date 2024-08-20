@@ -56,7 +56,7 @@ export default function LatestOperations() {
   return (
     <div className="flex flex-col gap-4 flex-1">
       <h3 className="text-sm sm:text-base">Ostatnie operacje</h3>
-      <div className="flex-1 rounded-md bg-light border border-primary/10 flex flex-col relative min-h-48">
+      <div className="flex-1 rounded-md bg-light border flex flex-col relative min-h-48">
         <ScrollShadow
           ref={scrollAreaRef}
           hideScrollBar

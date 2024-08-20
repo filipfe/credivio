@@ -4,7 +4,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="max-w-7xl mx-auto flex flex-col lg:grid grid-cols-[3fr_1fr] gap-24">
         <section className="flex flex-col gap-6">{children}</section>
         <aside className="sr-only lg:not-sr-only">
-          <nav className="sticky top-20 border border-primary/10 p-6 rounded-md lg:h-max">
+          <nav className="sticky top-20 border p-6 rounded-md lg:h-max">
             <ul></ul>
           </nav>
         </aside>

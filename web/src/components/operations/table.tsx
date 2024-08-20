@@ -116,7 +116,7 @@ export default function OperationTable({
               onClick={handleChange}
               radius="md"
               disableRipple
-              className="flex items-center ml-auto relative z-40 -my-2 border border-primary/10"
+              className="flex items-center ml-auto relative z-40 -my-2 border"
             >
               <PaperclipIcon size={18} />
             </Button>
