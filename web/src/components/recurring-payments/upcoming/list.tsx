@@ -3,15 +3,6 @@ import Block from "@/components/ui/block";
 import Empty from "@/components/ui/empty";
 import HorizontalScroll from "@/components/ui/horizontal-scroll";
 import { createClient } from "@/utils/supabase/server";
-import { PauseIcon } from "lucide-react";
-
-const actions: ActionButtonProps[] = [
-  {
-    text: "Anuluj",
-    icon: PauseIcon,
-    onSubmit: async () => {},
-  },
-];
 
 export default async function Upcoming() {
   const supabase = createClient();
@@ -26,7 +17,6 @@ export default async function Upcoming() {
           {(payments as UpcomingRecurringPayment[]).map((payment) => (
             <OperationRef
               payment={{ ...payment, issued_at: payment.payment_date }}
-              actions={actions}
               key={payment.id}
             />
           ))}
