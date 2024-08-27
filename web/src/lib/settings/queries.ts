@@ -121,3 +121,21 @@ export async function updateSettings(key: string, value: any) {
 
   return data;
 }
+
+export async function getDefaultCurrency(): Promise<string> {
+  const supabase = createClient();
+
+  const { data, error: authError } = await supabase
+    .from("profiles")
+    .select("currency")
+    .single();
+
+  if (!data || authError) {
+    throw new Error(
+      authError.message ||
+        "Błąd autoryzacji, spróbuj zalogować się ponownie!",
+    );
+  }
+
+  return data.currency;
+}
