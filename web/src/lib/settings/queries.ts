@@ -33,8 +33,6 @@ export async function getAccount(): Promise<Account> {
   )
     .single();
 
-  console.log({ data });
-
   if (authError) {
     throw new Error(authError.message);
   }

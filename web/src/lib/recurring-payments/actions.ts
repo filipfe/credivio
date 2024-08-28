@@ -2,6 +2,7 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function getRecurringPayments(): Promise<
   SupabaseResponse<RecurringPayment>
@@ -53,6 +54,7 @@ export async function addRecurringPayment(formData: FormData) {
   const amount = formData.get("amount")?.toString();
   const currency = formData.get("currency")?.toString();
   const start_date = formData.get("start_date")?.toString();
+  const type = formData.get("type")?.toString();
   const interval_unit = formData.get("interval_unit")?.toString();
   const interval_amount = formData.get("interval_amount")?.toString();
 
@@ -65,13 +67,16 @@ export async function addRecurringPayment(formData: FormData) {
     interval_amount,
     interval_unit,
     currency,
+    type,
   });
 
   if (error) {
+    console.log(error);
     return {
       error: error.message,
     };
   }
 
-  return {};
+  revalidatePath("/recurring-payments");
+  redirect("/recurring-payments");
 }

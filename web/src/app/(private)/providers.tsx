@@ -2,6 +2,8 @@
 
 import Header from "@/components/ui/header";
 import Sidebar from "@/components/ui/sidebar";
+import usePreferences from "@/hooks/usePreferences";
+import { getAccount } from "@/lib/settings/queries";
 import { NextUIProvider } from "@nextui-org/react";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -11,6 +13,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import useSWR from "swr";
 
 type IsMenuHidden = {
   mobile: boolean;
@@ -38,12 +41,14 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     desktop: false,
   });
 
+  const { data: preferences } = usePreferences();
+
   useEffect(() => {
     setIsMenuHidden((prev) => ({ ...prev, mobile: true }));
   }, [pathname]);
 
   return (
-    <NextUIProvider navigate={push}>
+    <NextUIProvider navigate={push} locale={preferences?.language.code}>
       <MenuContext.Provider value={{ isMenuHidden, setIsMenuHidden }}>
         <div
           className={`min-h-screen max-w-screen grid grid-rows-[64px_1fr] sm:grid-rows-[80px_1fr] ${
