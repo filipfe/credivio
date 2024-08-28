@@ -1,4 +1,5 @@
 import { cn } from "@nextui-org/react";
+import { HTMLAttributes } from "react";
 
 type Props = {
   title?: string | React.ReactNode;
@@ -50,5 +51,24 @@ export default function Block({
       )}
       {children}
     </article>
+  );
+}
+
+interface SectionProps extends HTMLAttributes<HTMLDivElement> {}
+
+export function Section({
+  title,
+  className,
+  children,
+  ...props
+}: SectionProps) {
+  return (
+    <div
+      className="first:border-t-0 first:pt-0 border-t pt-4 pb-8 last:pb-4 flex flex-col gap-4"
+      {...props}
+    >
+      {title && <h4 className="text-sm">{title}</h4>}
+      <div className={className}>{children}</div>
+    </div>
   );
 }

@@ -33,8 +33,6 @@ export async function getAccount(): Promise<Account> {
   )
     .single();
 
-  console.log({ data });
-
   if (authError) {
     throw new Error(authError.message);
   }
@@ -120,4 +118,22 @@ export async function updateSettings(key: string, value: any) {
   }
 
   return data;
+}
+
+export async function getDefaultCurrency(): Promise<string> {
+  const supabase = createClient();
+
+  const { data, error: authError } = await supabase
+    .from("profiles")
+    .select("currency")
+    .single();
+
+  if (!data || authError) {
+    throw new Error(
+      authError.message ||
+        "Błąd autoryzacji, spróbuj zalogować się ponownie!",
+    );
+  }
+
+  return data.currency;
 }

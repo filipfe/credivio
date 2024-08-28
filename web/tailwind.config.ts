@@ -69,7 +69,7 @@ const config: Config = {
             },
             success: "#32a852",
             danger: {
-              DEFAULT: "#B33939",
+              DEFAULT: "#FF5733",
               foreground: "#FFF",
             },
           },

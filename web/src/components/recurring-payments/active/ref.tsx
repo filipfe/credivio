@@ -3,23 +3,21 @@ import Menu from "./menu";
 
 export default function ActiveRecurringPayment({
   title,
-  next_payment_date,
-  last_payment_date,
   currency,
   type,
   amount,
   interval_amount,
   interval_unit,
-}: RecurringPayment) {
+}: WithId<RecurringPayment>) {
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-col">
         <h3 className="text-lg line-clamp-1">{title}</h3>
-        <small className="text-neutral-500">
+        {/* <small className="text-neutral-500">
           Ostatnia płatność: {new Date(last_payment_date).toLocaleDateString()}{" "}
           | Następna płatność:{" "}
           {new Date(next_payment_date).toLocaleDateString()}
-        </small>
+        </small> */}
       </div>
       <div className="flex items-end gap-2">
         <div

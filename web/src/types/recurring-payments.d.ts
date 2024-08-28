@@ -1,9 +1,13 @@
-interface RecurringPayment extends Payment {
-  next_payment_date: string;
-  last_payment_date: string;
+type RecurringPayment = {
+  created_at: string;
+  title: string;
+  amount: number;
   interval_amount: number;
   interval_unit: string;
-}
+  type: "income" | "expense";
+  start_date: string;
+  currency: string;
+};
 
 interface UpcomingRecurringPayment extends Payment {
   payment_date: string;
