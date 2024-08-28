@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function getRecurringPayments(): Promise<
-  SupabaseResponse<RecurringPayment>
+  SupabaseResponse<WithId<RecurringPayment>>
 > {
   const supabase = createClient();
   const { data: results, error } = await supabase.rpc(
