@@ -18,7 +18,6 @@ import {
   Pagination,
   ScrollShadow,
   Button,
-  Dropdown,
   cn,
 } from "@nextui-org/react";
 import useTableQuery from "@/hooks/useTableQuery";

@@ -1,14 +1,11 @@
 import numberFormat from "@/utils/formatters/currency";
 import Menu from "./menu";
 
-export default function ActiveRecurringPayment({
-  title,
-  currency,
-  type,
-  amount,
-  interval_amount,
-  interval_unit,
-}: WithId<RecurringPayment>) {
+export default function ActiveRecurringPayment(
+  recurringPayment: WithId<RecurringPayment>
+) {
+  const { id, title, currency, type, amount, interval_amount, interval_unit } =
+    recurringPayment;
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-col">
@@ -33,7 +30,7 @@ export default function ActiveRecurringPayment({
           / {interval_amount} {interval_unit}
         </sub>
       </div>
-      <Menu />
+      <Menu {...recurringPayment} />
       {/* <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
