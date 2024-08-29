@@ -92,11 +92,11 @@ export default function Table({ payments }: Props) {
   );
 
   return (
-    <>
+    <div className="flex flex-col justify-between gap-2.5 flex-1">
       <ScrollShadow
         hideScrollBar
         orientation="horizontal"
-        className="max-w-[calc(100vw-48px)] overflow-y-hidden h-max"
+        className="max-w-[calc(100vw-48px)] sm:max-h-[calc(100vh-558px)]"
       >
         <Tbl hideHeader removeWrapper isStriped>
           <TableHeader
@@ -148,6 +148,6 @@ export default function Table({ payments }: Props) {
         total={2}
         onChange={(page) => {}}
       />
-    </>
+    </div>
   );
 }
