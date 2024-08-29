@@ -18,7 +18,6 @@ import {
   Pagination,
   ScrollShadow,
   Button,
-  Dropdown,
   cn,
 } from "@nextui-org/react";
 import useTableQuery from "@/hooks/useTableQuery";
@@ -250,7 +249,7 @@ export default function OperationTable({
             color="primary"
             className="text-background"
             classNames={{
-              wrapper: "!shadow-none",
+              wrapper: "!shadow-none border",
             }}
             page={page}
             isDisabled={isLoading}

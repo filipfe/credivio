@@ -19,18 +19,22 @@ tomorrow.setDate(tomorrow.getDate() + 1);
 
 interface NewRecurringPayment
   extends Partial<
-    Omit<RecurringPayment, "amount" | "created_at" | "type" | "start_date">
+    Omit<
+      RecurringPayment,
+      "amount" | "created_at" | "type" | "start_date" | "interval_amount"
+    >
   > {
   amount: string;
   type?: "income" | "expense";
   start_date: CalendarDate;
+  interval_amount: string;
 }
 
 const defaultRecord: Omit<NewRecurringPayment, "currency"> = {
   title: "",
   amount: "",
   start_date: parseDate(format(tomorrow, "yyyy-MM-dd")),
-  interval_amount: 1,
+  interval_amount: "1",
   interval_unit: "month",
 };
 
@@ -64,7 +68,10 @@ export default function RecurringPaymentForm() {
           })
         }
       >
-        <Section className="flex flex-col md:grid grid-cols-2 gap-4">
+        <Section
+          title="Dane"
+          className="flex flex-col md:grid grid-cols-2 gap-4"
+        >
           <Input
             classNames={{ inputWrapper: "!bg-light" }}
             name="title"
@@ -136,9 +143,24 @@ export default function RecurringPaymentForm() {
           />
         </Section>
         <Section
-          title="Czas"
-          className="flex flex-col md:grid grid-cols-2 gap-4"
+          title="Interwał"
+          className="grid grid-cols-[88px_1fr] md:grid-cols-[88px_1fr_1fr] gap-4"
         >
+          <Input
+            classNames={{ inputWrapper: "!bg-light" }}
+            name="interval_amount"
+            label="Wartość"
+            placeholder="1"
+            isRequired
+            required
+            value={singleRecord.interval_amount}
+            onChange={(e) =>
+              setSingleRecord((prev) => ({
+                ...prev,
+                interval_amount: e.target.value.replace(/\D/g, ""),
+              }))
+            }
+          />
           <UniversalSelect
             name="interval_unit"
             label="Interwał"
@@ -162,6 +184,7 @@ export default function RecurringPaymentForm() {
             }
           />
           <DateInput
+            className="col-span-2 md:col-span-1"
             classNames={{ inputWrapper: "!bg-light" }}
             name="start_date"
             isRequired

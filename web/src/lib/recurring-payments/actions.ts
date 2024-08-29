@@ -10,6 +10,7 @@ export async function getRecurringPayments(): Promise<
   const supabase = createClient();
   const { data: results, error } = await supabase.rpc(
     "get_recurring_payments_active_payments",
+    // params,
   );
 
   if (error) {
@@ -22,6 +23,46 @@ export async function getRecurringPayments(): Promise<
   return {
     results,
   };
+}
+
+export async function getPastRecurringPayments(): Promise<
+  SupabaseResponse<Year>
+> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .rpc("get_recurring_payments_timeline_data", {
+      p_offset: 0,
+    })
+    .returns<Year[]>();
+
+  if (error) {
+    return {
+      results: [],
+      error: error.message,
+    };
+  }
+
+  return {
+    results: data,
+  };
+}
+
+export async function getUpcomingRecurringPayments(): Promise<
+  SupabaseResponse<UpcomingRecurringPayment>
+> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc(
+    "get_recurring_payments_upcoming_payments",
+  );
+
+  if (error) {
+    return {
+      results: [],
+      error: error.message,
+    };
+  }
+
+  return { results: data };
 }
 
 export async function deleteRecurringPayment(formData: FormData) {
