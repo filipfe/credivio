@@ -1,10 +1,9 @@
 import Block from "@/components/ui/block";
 import { getRecurringPayments } from "@/lib/recurring-payments/actions";
-import ActiveRecurringPayment from "./ref";
 import Empty from "@/components/ui/empty";
 import Table from "./table";
 import Link from "next/link";
-import { Button, ScrollShadow } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { Plus } from "lucide-react";
 
 export default async function ActiveRecurringPaymentsList() {

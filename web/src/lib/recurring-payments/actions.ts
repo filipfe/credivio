@@ -4,13 +4,13 @@ import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function getRecurringPayments(params: SearchParams): Promise<
+export async function getRecurringPayments(): Promise<
   SupabaseResponse<WithId<RecurringPayment>>
 > {
   const supabase = createClient();
   const { data: results, error } = await supabase.rpc(
     "get_recurring_payments_active_payments",
-    params,
+    // params,
   );
 
   if (error) {
