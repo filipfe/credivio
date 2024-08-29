@@ -25,6 +25,8 @@ export default async function OwnStocks({ holdings }: { holdings: Holdings }) {
   const stocksNames: string[] = Object.keys(holdings);
   const { results: stocks } = await getSpecificStocks(stocksNames);
 
+  if (stocks.length === 0) return <></>;
+
   return (
     <Fragment>
       <HorizontalScroll fullWidth className="col-span-full">

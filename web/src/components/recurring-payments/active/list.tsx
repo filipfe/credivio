@@ -4,7 +4,7 @@ import ActiveRecurringPayment from "./ref";
 import Empty from "@/components/ui/empty";
 import Table from "./table";
 import Link from "next/link";
-import { Button } from "@nextui-org/react";
+import { Button, ScrollShadow } from "@nextui-org/react";
 import { Plus } from "lucide-react";
 
 export default async function ActiveRecurringPaymentsList() {
@@ -17,6 +17,7 @@ export default async function ActiveRecurringPaymentsList() {
         //     <ActiveRecurringPayment {...payment} key={payment.id} />
         //   ))}
         // </div>
+
         <Table payments={payments} />
       ) : (
         <Empty

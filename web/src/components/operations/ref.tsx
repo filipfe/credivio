@@ -14,13 +14,14 @@ export default function OperationRef({
     <div className="rounded-md bg-primary max-w-max">
       <div className="border shadow-[inset_0px_2px_9px_rgba(255,255,255,0.4)] border-white/10 bg-gradient-to-b from-white/5 to-white/[0.01] p-4 rounded-md backdrop-blur-lg flex flex-col gap-2 min-w-64">
         <div className="flex items-center justify-between gap-4">
-          <h4 className="text-white text-sm font-medium line-clamp-1">
+          <h4 className="text-white text-sm font-medium line-clamp-1 max-w-32 break-keep">
             {title}
           </h4>
           <small className="text-white/80">
             {formatDistance(issued_at, new Date(), {
               addSuffix: true,
               locale: pl,
+              includeSeconds: false,
             })}
           </small>
         </div>

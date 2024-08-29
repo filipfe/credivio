@@ -249,7 +249,7 @@ export default function OperationTable({
             color="primary"
             className="text-background"
             classNames={{
-              wrapper: "!shadow-none",
+              wrapper: "!shadow-none border",
             }}
             page={page}
             isDisabled={isLoading}

@@ -2,10 +2,9 @@
 
 import numberFormat from "@/utils/formatters/currency";
 import {
-  Badge,
-  Chip,
   cn,
-  getKeyValue,
+  Pagination,
+  ScrollShadow,
   TableBody,
   TableCell,
   TableColumn,
@@ -13,10 +12,8 @@ import {
   TableRow,
   Table as Tbl,
 } from "@nextui-org/react";
-import { Key, useCallback } from "react";
+import { useCallback } from "react";
 import Menu from "./menu";
-import usePreferences from "@/hooks/usePreferences";
-import formatInterval from "@/lib/recurring-payments/utils";
 import { formatDuration } from "date-fns";
 import { pl } from "date-fns/locale";
 
@@ -34,7 +31,6 @@ type Props = {
 };
 
 export default function Table({ payments }: Props) {
-  const { data: preferences } = usePreferences();
   const renderCell = useCallback(
     (
       item: WithId<RecurringPayment>,
@@ -43,18 +39,27 @@ export default function Table({ payments }: Props) {
       switch (columnKey) {
         case "type":
           return (
-            <div
-              className={cn(
-                "h-2.5 w-2.5 rounded-full",
-                item.type === "expense" ? "bg-danger" : "bg-success"
-              )}
-            />
+            <></>
+            // <div
+            //   className={cn(
+            //     "h-2.5 w-2.5 rounded-full",
+            //     // item.type === "expense" ? "bg-danger" : "bg-success"
+            //     "bg-success"
+            //   )}
+            // />
           );
         case "amount":
-          return `${item.type === "income" ? "+" : "-"} ${numberFormat(
-            item.currency,
-            item[columnKey]
-          )}`;
+          return (
+            <span
+              className={cn(
+                "font-semibold whitespace-nowrap",
+                item.type === "income" ? "text-success" : "text-danger"
+              )}
+            >
+              {item.type === "income" ? "+" : "-"}{" "}
+              {numberFormat(item.currency, item[columnKey])}
+            </span>
+          );
         case "actions":
           return (
             <div className="max-w-max ml-auto">
@@ -87,34 +92,62 @@ export default function Table({ payments }: Props) {
   );
 
   return (
-    <Tbl hideHeader removeWrapper isStriped>
-      <TableHeader
-        columns={[
-          { key: "type", label: "" },
-          ...columns,
-          { key: "actions", label: "" },
-        ]}
+    <>
+      <ScrollShadow
+        hideScrollBar
+        orientation="horizontal"
+        className="max-w-[calc(100vw-48px)] overflow-y-hidden h-max"
       >
-        {(column) => (
-          <TableColumn className="uppercase" key={column.key}>
-            {column.label}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody items={payments}>
-        {(payment) => (
-          <TableRow className="[&:hover>td]:bg-light">
-            {(columnKey) => (
-              <TableCell className={cn(columnKey === "type" && "w-2.5")}>
-                {renderCell(
-                  payment,
-                  columnKey as keyof WithId<RecurringPayment>
-                )}
-              </TableCell>
+        <Tbl hideHeader removeWrapper isStriped>
+          <TableHeader
+            columns={[
+              // { key: "type", label: "" },
+              ...columns,
+              { key: "actions", label: "" },
+            ]}
+          >
+            {(column) => (
+              <TableColumn className="uppercase" key={column.key}>
+                {column.label}
+              </TableColumn>
             )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Tbl>
+          </TableHeader>
+          <TableBody items={payments}>
+            {(payment) => (
+              <TableRow className="[&:hover>td]:bg-light">
+                {(columnKey) => (
+                  <TableCell
+                    className={cn(
+                      "whitespace-nowrap",
+                      columnKey === "type" && "w-2.5"
+                    )}
+                  >
+                    {renderCell(
+                      payment,
+                      columnKey as keyof WithId<RecurringPayment>
+                    )}
+                  </TableCell>
+                )}
+              </TableRow>
+            )}
+          </TableBody>
+        </Tbl>
+      </ScrollShadow>
+      <Pagination
+        size="sm"
+        isCompact
+        showControls
+        showShadow={false}
+        color="primary"
+        className="text-background"
+        classNames={{
+          wrapper: "!shadow-none border ml-auto",
+        }}
+        page={1}
+        // isDisabled={isLoading}
+        total={2}
+        onChange={(page) => {}}
+      />
+    </>
   );
 }

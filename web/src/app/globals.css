@@ -18,9 +18,10 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
+body {
   overflow-x: hidden;
   overflow-y: auto;
+  background-color: #fafafa;
 }
 
 .recharts-yAxis .recharts-cartesian-axis-tick:first-child {

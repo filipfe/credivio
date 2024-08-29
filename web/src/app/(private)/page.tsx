@@ -18,7 +18,7 @@ export default async function Dashboard() {
   }
 
   return (
-    <div className="sm:px-10 py-4 sm:py-8 sm:pb-24 flex flex-col xl:grid grid-cols-6 gap-4 sm:gap-6">
+    <div className="sm:px-10 py-4 sm:py-8 flex flex-col xl:grid grid-cols-6 gap-4 sm:gap-6">
       <Suspense fallback={statsFallback}>
         <StatsList defaultCurrency={defaultCurrency} />
       </Suspense>

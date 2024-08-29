@@ -2,19 +2,16 @@ import OperationRef from "@/components/operations/ref";
 import Block from "@/components/ui/block";
 import Empty from "@/components/ui/empty";
 import HorizontalScroll from "@/components/ui/horizontal-scroll";
-import { createClient } from "@/utils/supabase/server";
+import { getUpcomingRecurringPayments } from "@/lib/recurring-payments/actions";
 
 export default async function Upcoming() {
-  const supabase = createClient();
-  const { data: payments } = await supabase.rpc(
-    "get_recurring_payments_upcoming_payments"
-  );
+  const { results: payments } = await getUpcomingRecurringPayments();
 
   return (
     <Block title="Nadchodzące">
-      {payments && payments.length > 0 ? (
+      {payments.length > 0 ? (
         <HorizontalScroll>
-          {(payments as UpcomingRecurringPayment[]).map((payment) => (
+          {payments.map((payment) => (
             <OperationRef
               payment={{ ...payment, issued_at: payment.payment_date }}
               key={payment.id}
