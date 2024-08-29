@@ -68,7 +68,10 @@ export default function RecurringPaymentForm() {
           })
         }
       >
-        <Section className="flex flex-col md:grid grid-cols-2 gap-4">
+        <Section
+          title="Dane"
+          className="flex flex-col md:grid grid-cols-2 gap-4"
+        >
           <Input
             classNames={{ inputWrapper: "!bg-light" }}
             name="title"
@@ -181,6 +184,7 @@ export default function RecurringPaymentForm() {
             }
           />
           <DateInput
+            className="col-span-2 md:col-span-1"
             classNames={{ inputWrapper: "!bg-light" }}
             name="start_date"
             isRequired
