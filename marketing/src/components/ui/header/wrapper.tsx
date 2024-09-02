@@ -29,7 +29,7 @@ export default function Wrapper({ children }: { children: React.ReactNode[] }) {
             "max-w-7xl mx-auto flex items-center justify-between h-14 rounded-lg px-1",
             pathname === "/"
               ? "border border-white/10 [&_nav>a]:text-white [&>a]:text-white bg-gradient-to-br from-[rgba(255,255,255,0.05)] to-[rgba(255,255,255,0)]"
-              : "border border-primary/10 [&_nav>a]:text-foreground [&>a]:text-foreground"
+              : "border  [&_nav>a]:text-foreground [&>a]:text-foreground"
           )}
         >
           {children}
@@ -47,7 +47,7 @@ export default function Wrapper({ children }: { children: React.ReactNode[] }) {
               "max-w-7xl mx-auto flex items-center justify-between h-14 rounded-b-lg border bg-gradient-to-br from-[rgba(255,255,255,0.05)] to-[rgba(255,255,255,0)] px-1",
               pathname === "/"
                 ? "bg-primary-dark border-white/10 [&_nav>a]:text-white [&>a]:text-white"
-                : "bg-white border-primary/10 [&_nav>a]:text-foreground [&>a]:text-foreground"
+                : "bg-white [&_nav>a]:text-foreground [&>a]:text-foreground"
             )}
           >
             {children}

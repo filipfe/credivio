@@ -10,6 +10,7 @@ import {
   RangeCalendar,
   RangeValue,
 } from "@nextui-org/react";
+import { I18nProvider } from "@react-aria/i18n";
 import { CalendarDaysIcon, ListRestartIcon } from "lucide-react";
 import { useContext, useRef, useState } from "react";
 
@@ -61,32 +62,34 @@ export default function PeriodSelect() {
         </div>
       </PopoverTrigger>
       <PopoverContent>
-        <RangeCalendar
-          showShadow={false}
-          value={
-            numberOfParams === 2
-              ? { start: parseDate(period.from), end: parseDate(period.to) }
-              : undefined
-          }
-          onChange={onChange}
-          classNames={{
-            base: "!bg-white",
-            gridHeader: "!shadow-none",
-            title: "select-none",
-          }}
-          maxValue={today(getLocalTimeZone())}
-          bottomContent={
-            <div className="grid grid-cols-1 pb-2 px-2">
-              <Button
-                disableRipple
-                size="sm"
-                onClick={() => setPeriod({ from: "", to: "" })}
-              >
-                <ListRestartIcon size={15} strokeWidth={2} /> Resetuj
-              </Button>
-            </div>
-          }
-        />
+        <I18nProvider locale="zh-CN-u-ca-chinese">
+          <RangeCalendar
+            showShadow={false}
+            value={
+              numberOfParams === 2
+                ? { start: parseDate(period.from), end: parseDate(period.to) }
+                : undefined
+            }
+            onChange={onChange}
+            classNames={{
+              base: "!bg-white",
+              gridHeader: "!shadow-none",
+              title: "select-none",
+            }}
+            maxValue={today(getLocalTimeZone())}
+            bottomContent={
+              <div className="grid grid-cols-1 pb-2 px-2">
+                <Button
+                  disableRipple
+                  size="sm"
+                  onClick={() => setPeriod({ from: "", to: "" })}
+                >
+                  <ListRestartIcon size={15} strokeWidth={2} /> Resetuj
+                </Button>
+              </div>
+            }
+          />
+        </I18nProvider>
       </PopoverContent>
     </Popover>
   );

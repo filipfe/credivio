@@ -85,3 +85,5 @@ type Period = {
   from: string;
   to: string;
 };
+
+type WithId<T> = T & { id: string };

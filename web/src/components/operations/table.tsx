@@ -18,7 +18,6 @@ import {
   Pagination,
   ScrollShadow,
   Button,
-  Dropdown,
   cn,
 } from "@nextui-org/react";
 import useTableQuery from "@/hooks/useTableQuery";
@@ -116,7 +115,7 @@ export default function OperationTable({
               onClick={handleChange}
               radius="md"
               disableRipple
-              className="flex items-center ml-auto relative z-40 -my-2 border border-primary/10"
+              className="flex items-center ml-auto relative z-40 -my-2 border"
             >
               <PaperclipIcon size={18} />
             </Button>
@@ -250,7 +249,7 @@ export default function OperationTable({
             color="primary"
             className="text-background"
             classNames={{
-              wrapper: "!shadow-none",
+              wrapper: "!shadow-none border",
             }}
             page={page}
             isDisabled={isLoading}

@@ -71,7 +71,7 @@ export default function PaymentPopover({
   return (
     <Popover placement="top" onClose={onClose}>
       <PopoverTrigger>
-        <button className="w-full bg-light border-primary/10 border rounded-md px-4 py-2">
+        <button className="w-full bg-light border rounded-md px-4 py-2">
           {numberFormat(goal.currency, defaultAmount)}
         </button>
       </PopoverTrigger>
@@ -115,7 +115,7 @@ const AmountInput = ({ value, onChange, max }: InputProps) => {
         radius="md"
         isIconOnly
         disableRipple
-        className="border border-primary/10 bg-white absolute right-2 min-w-12 z-10"
+        className="border bg-white absolute right-2 min-w-12 z-10"
         onClick={() => onChange(max.toString())}
       >
         100%

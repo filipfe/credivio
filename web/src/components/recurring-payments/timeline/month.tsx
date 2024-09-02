@@ -8,7 +8,7 @@ export default function Month({
   total_amounts,
 }: Month & { year: number }) {
   const monthDate = new Date();
-  monthDate.setMonth(month);
+  monthDate.setMonth(month - 1);
 
   return (
     <div className="relative">
@@ -21,7 +21,7 @@ export default function Month({
           </h2>
           <small className="text-white/80">{year}</small>
         </div>
-        <small className="text-white">
+        <small className="text-white text-right">
           Łącznie:{" "}
           <span className="font-medium">
             {Object.entries(total_amounts)
@@ -32,7 +32,7 @@ export default function Month({
           </span>
         </small>
       </div>
-      <div className="py-6 flex flex-col justify-between">
+      <div className="py-4 flex flex-col justify-between">
         {payments.map((payment) => (
           <PaymentRef {...payment} key={payment.id} />
         ))}

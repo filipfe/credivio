@@ -62,7 +62,7 @@ export default function Form({
             <span className="text-tiny text-font/40">LUB</span>
           </div>
         </div>
-        <Button variant="faded" className="border border-primary/10">
+        <Button variant="faded" className="border">
           <Image
             className="max-w-5"
             width={240}

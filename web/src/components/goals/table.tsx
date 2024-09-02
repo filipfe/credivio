@@ -110,7 +110,7 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
               radius="md"
               disableRipple
               variant="shadow"
-              className="fixed border border-primary/10"
+              className="fixed border"
               onClick={() => {
                 tbodyRef.current?.scrollTo({
                   top: tbodyRef.current.scrollHeight,
@@ -129,7 +129,7 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
           isHeaderSticky
           removeWrapper
           classNames={{
-            base: "max-h-[400px] sm:max-h-[calc(100vh-262px)] scrollbar-hide py-px px-px overflow-y-scroll overflow-x-hidden min-w-max relative",
+            base: "max-h-[400px] sm:max-h-[calc(100vh-266px)] scrollbar-hide py-px px-px overflow-y-scroll overflow-x-hidden min-w-max relative",
             table: "min-h-[400px]",
             thead: "[&>tr]:first:!shadow-none",
           }}

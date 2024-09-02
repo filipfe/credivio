@@ -30,7 +30,7 @@ export default function Sidebar() {
     <div>
       <aside
         ref={aside}
-        className={`fixed sm:sticky top-16 bottom-0 left-0 sm:top-20 w-full bg-white sm:h-[calc(100vh-80px)] px-3 sm:px-4 flex flex-col justify-between sm:pt-0 pt-4 pb-4 z-50 sm:transition-none transition-transform ${
+        className={`fixed border-r sm:sticky top-16 bottom-0 left-0 sm:top-20 w-full bg-white sm:h-[calc(100vh-80px)] px-3 sm:px-4 flex flex-col gap-2 justify-between sm:pt-0 pt-4 pb-4 z-50 sm:transition-none transition-transform ${
           isMenuHidden.desktop
             ? "max-w-[14rem] sm:max-w-[6rem]"
             : "max-w-[14rem] sm:max-w-[15rem]"
