@@ -8,6 +8,7 @@ import { getDefaultCurrency } from "@/lib/settings/actions";
 import { createClient } from "@/utils/supabase/server";
 import Providers from "../providers";
 import OperationsByMonth from "@/components/operations/operations-by-month";
+import Limits from "@/components/operations/limits";
 
 export default async function Page({
   searchParams,
@@ -30,7 +31,7 @@ export default async function Page({
   const { last_month, last_day } = result;
 
   return (
-    <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 xl:grid grid-cols-4 xl:grid-rows-[max-content_1fr]">
+    <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 xl:grid grid-cols-4 xl:grid-rows-[max-content_max-content_1fr]">
       <div className="col-[1/2]">
         <Stat
           title="Dzisiaj"
@@ -47,13 +48,14 @@ export default async function Page({
           stat={last_month}
         />
       </div>
+      <Limits />
       <Providers>
-        <div className="col-[1/3] row-[2/3] flex flex-col order-last">
+        <div className="col-[1/3] row-[3/4] flex flex-col order-last">
           <Suspense fallback={<LineChartLoader />}>
             <OperationsByMonth type="expense" />
           </Suspense>
         </div>
-        <Suspense fallback={<Loader className="row-span-2 col-span-2" />}>
+        <Suspense fallback={<Loader className="row-span-3 col-span-2" />}>
           <Expenses searchParams={searchParams} />
         </Suspense>
       </Providers>
@@ -76,7 +78,7 @@ async function Expenses({ searchParams }: { searchParams: SearchParams }) {
   });
 
   return (
-    <div className="row-span-2 col-span-2 flex items-stretch">
+    <div className="row-span-3 col-span-2 flex items-stretch">
       <OperationTable
         title="Wydatki"
         type="expense"

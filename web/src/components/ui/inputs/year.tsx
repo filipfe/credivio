@@ -1,7 +1,7 @@
 import { Select, SelectItem } from "@nextui-org/react";
 
 type Props = {
-  value: number;
+  value?: number;
   onChange: (value: number) => void;
 };
 
@@ -12,11 +12,13 @@ export default function YearInput({ value, onChange }: Props) {
     <Select
       name="year"
       aria-label="Year filter"
+      placeholder="Rok"
       size="sm"
-      selectedKeys={[value.toString()]}
+      radius="md"
+      selectedKeys={value ? [value.toString()] : []}
       onChange={(e) => onChange(parseInt(e.target.value))}
       classNames={{
-        trigger: "!bg-light",
+        trigger: "!bg-light shadow-none border",
       }}
       disallowEmptySelection
       className="w-36"

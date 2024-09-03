@@ -23,6 +23,7 @@ type Props = {
   currency?: string;
   period?: Period;
   setPeriod?: Dispatch<SetStateAction<Period>>;
+  minHeight?: number;
 };
 
 const dateFormatter = new Intl.DateTimeFormat("pl-PL", {
@@ -35,6 +36,7 @@ export default function LineChart({
   type,
   period,
   setPeriod,
+  minHeight = 320,
 }: Props) {
   const { width, tickFormatter } = useYAxisWidth(currency);
 
@@ -69,7 +71,7 @@ export default function LineChart({
   }, [data]);
 
   return (
-    <ResponsiveContainer width="100%" height="100%" minHeight={320}>
+    <ResponsiveContainer width="100%" height="100%" minHeight={minHeight}>
       <Chart
         data={dates.map((day) => {
           const notIncluded = currencies

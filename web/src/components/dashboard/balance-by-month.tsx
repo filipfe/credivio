@@ -8,19 +8,11 @@ import { useBalanceHistory } from "@/lib/operations/queries";
 import { useState } from "react";
 import MonthInput from "../ui/inputs/month";
 import YearInput from "../ui/inputs/year";
+import getDisabledMonths from "@/utils/operations/get-disabled-months";
 
 const now = new Date();
 
-const getDisabledMonths = (curr: number): string[] => {
-  const result: string[] = [];
-  for (let i = curr + 1; i <= 11; i++) {
-    result.push(i.toString());
-  }
-  return result;
-};
-
 export default function BalanceByMonth() {
-  const [currency, setCurrency] = useState<string | null>(null);
   const [month, setMonth] = useState(now.getMonth());
   const [year, setYear] = useState(now.getFullYear());
   const { data: results, isLoading } = useBalanceHistory({
@@ -45,19 +37,6 @@ export default function BalanceByMonth() {
           <YearInput value={year} onChange={(value) => setYear(value)} />
         </div>
       }
-      // cta={
-      //   type === "balance" && (
-      //     <UniversalSelect
-      //       className="w-20"
-      //       size="sm"
-      //       name="currency"
-      //       aria-label="Waluta"
-      //       defaultSelectedKeys={[currency]}
-      //       elements={CURRENCIES}
-      //       onChange={(e) => setCurrency(e.target.value)}
-      //     />
-      //   )
-      // }
     >
       {isLoading ? (
         <LineChartLoader className="!p-0" hideTitle />

@@ -8,6 +8,7 @@ import { Plus } from "lucide-react";
 
 export default async function ActiveRecurringPaymentsList() {
   const { results: payments } = await getRecurringPayments();
+
   return (
     <Block title="Aktywne" cta={cta}>
       {payments.length > 0 ? (

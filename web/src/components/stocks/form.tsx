@@ -94,7 +94,11 @@ export default function Form({
                       symbol: symb.toString(),
                     }))
                   }
-                  inputProps={{ classNames: { inputWrapper: "!bg-light" } }}
+                  inputProps={{
+                    classNames: {
+                      inputWrapper: "!bg-light shadow-none border",
+                    },
+                  }}
                 >
                   {(stock) => (
                     <AutocompleteItem
@@ -124,7 +128,7 @@ export default function Form({
                   }}
                 />
                 <Input
-                  classNames={{ inputWrapper: "!bg-light" }}
+                  classNames={{ inputWrapper: "!bg-light shadow-none border" }}
                   name="quantity"
                   label="Ilość"
                   placeholder="124"
@@ -151,7 +155,7 @@ export default function Form({
                   }}
                 />
                 <Input
-                  classNames={{ inputWrapper: "!bg-light" }}
+                  classNames={{ inputWrapper: "!bg-light shadow-none border" }}
                   name="price"
                   label="Cena"
                   placeholder="0.00"
@@ -182,7 +186,7 @@ export default function Form({
                   }}
                 />
                 <Input
-                  classNames={{ inputWrapper: "!bg-light" }}
+                  classNames={{ inputWrapper: "!bg-light shadow-none border" }}
                   name="commission"
                   label="Prowizja"
                   placeholder="0.00"
@@ -227,7 +231,7 @@ export default function Form({
                   }}
                 />
                 <Input
-                  classNames={{ inputWrapper: "!bg-light" }}
+                  classNames={{ inputWrapper: "!bg-light shadow-none border" }}
                   name="issued_at"
                   label="Data zawarcia"
                   placeholder="24.01.2024"

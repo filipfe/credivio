@@ -73,7 +73,7 @@ export default function RecurringPaymentForm() {
           className="flex flex-col md:grid grid-cols-2 gap-4"
         >
           <Input
-            classNames={{ inputWrapper: "!bg-light" }}
+            classNames={{ inputWrapper: "!bg-light shadow-none border" }}
             name="title"
             label="Tytuł"
             placeholder="Rachunki"
@@ -85,7 +85,7 @@ export default function RecurringPaymentForm() {
             }
           />
           <Input
-            classNames={{ inputWrapper: "!bg-light" }}
+            classNames={{ inputWrapper: "!bg-light shadow-none border" }}
             name="amount"
             label="Kwota"
             placeholder="0.00"
@@ -147,7 +147,7 @@ export default function RecurringPaymentForm() {
           className="grid grid-cols-[88px_1fr] md:grid-cols-[88px_1fr_1fr] gap-4"
         >
           <Input
-            classNames={{ inputWrapper: "!bg-light" }}
+            classNames={{ inputWrapper: "!bg-light shadow-none border" }}
             name="interval_amount"
             label="Wartość"
             placeholder="1"
@@ -185,7 +185,7 @@ export default function RecurringPaymentForm() {
           />
           <DateInput
             className="col-span-2 md:col-span-1"
-            classNames={{ inputWrapper: "!bg-light" }}
+            classNames={{ inputWrapper: "!bg-light shadow-none border" }}
             name="start_date"
             isRequired
             isInvalid={isStartTimeInvalid || undefined}

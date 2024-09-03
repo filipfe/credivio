@@ -52,6 +52,7 @@ export default function OperationsByMonth({ type }: Props) {
           data={results}
           currency={currency}
           type={type}
+          minHeight={280}
           {...periodContext}
         />
       ) : (

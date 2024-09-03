@@ -25,7 +25,7 @@ type Option<T> = { name: string; value: T };
 
 type SearchParams = {
   sort?: string;
-  page?: string;
+  page?: number;
   search?: string;
   label?: string; //expense
   transaction?: "buy" | "sell";

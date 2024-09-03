@@ -2,6 +2,7 @@
 
 import numberFormat from "@/utils/formatters/currency";
 import {
+  Chip,
   cn,
   Pagination,
   ScrollShadow,
@@ -50,15 +51,28 @@ export default function Table({ payments }: Props) {
           );
         case "amount":
           return (
-            <span
+            <Chip
+              size="sm"
+              variant="flat"
+              color={item.type === "income" ? "success" : "danger"}
+              classNames={{ content: "text-sm" }}
+              className={cn(
+                "border",
+                item.type === "income"
+                  ? "bg-success/10 border-success/20"
+                  : "bg-danger/10 border-danger/20"
+              )}
+            >
+              {/* <span
               className={cn(
                 "font-semibold whitespace-nowrap",
                 item.type === "income" ? "text-success" : "text-danger"
               )}
-            >
+            > */}
               {item.type === "income" ? "+" : "-"}{" "}
               {numberFormat(item.currency, item[columnKey])}
-            </span>
+              {/* </span> */}
+            </Chip>
           );
         case "actions":
           return (
@@ -98,7 +112,7 @@ export default function Table({ payments }: Props) {
         orientation="horizontal"
         className="max-w-[calc(100vw-48px)] sm:max-h-[calc(100vh-558px)]"
       >
-        <Tbl hideHeader removeWrapper isStriped>
+        <Tbl hideHeader removeWrapper>
           <TableHeader
             columns={[
               // { key: "type", label: "" },
