@@ -10,13 +10,14 @@ export default function CurrencySelect({ onChange, value }: State) {
       placeholder="PLN"
       label="Waluta"
       size="sm"
+      radius="md"
       selectedKeys={[value]}
       onSelectionChange={(keys) => {
         const selectedKey = Array.from(keys)[0]?.toString();
         onChange(selectedKey === "all" ? "" : selectedKey);
       }}
       classNames={{
-        trigger: "!bg-light",
+        trigger: "bg-light shadow-none ",
       }}
       disallowEmptySelection
       className="w-full"

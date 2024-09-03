@@ -10,7 +10,7 @@ export default function UniversalSelect(props: Props) {
   return (
     <Select
       classNames={{
-        trigger: "!bg-light",
+        trigger: "bg-light shadow-none border",
       }}
       disallowEmptySelection
       {...props}

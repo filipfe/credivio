@@ -2,15 +2,20 @@
 
 import useClientQuery from "@/hooks/useClientQuery";
 import { getLabels } from "@/lib/operations/actions";
-import { Autocomplete, AutocompleteItem, Tooltip } from "@nextui-org/react";
+import { Autocomplete, AutocompleteItem, cn, Tooltip } from "@nextui-org/react";
 import { HelpCircleIcon } from "lucide-react";
 
 type Props = {
+  className?: string;
   defaultValue?: string | null;
   isDisabled?: boolean;
 };
 
-export default function LabelInput({ defaultValue, isDisabled }: Props) {
+export default function LabelInput({
+  defaultValue,
+  isDisabled,
+  className,
+}: Props) {
   const { results: labels, isLoading } = useClientQuery({
     deps: [isDisabled],
     query: getLabels(),
@@ -32,7 +37,7 @@ export default function LabelInput({ defaultValue, isDisabled }: Props) {
         defaultSelectedKey={defaultValue ? defaultValue : undefined}
         inputProps={{
           classNames: {
-            inputWrapper: "!bg-light",
+            inputWrapper: cn("!bg-light", className),
           },
         }}
         maxLength={48}

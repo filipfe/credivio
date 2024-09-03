@@ -54,6 +54,7 @@ export default function PeriodSelect() {
             <Button
               isIconOnly
               disableRipple
+              className="border"
               onClick={() => setIsOpen((prev) => !prev)}
             >
               <CalendarDaysIcon size={16} />

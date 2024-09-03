@@ -53,7 +53,7 @@ export default function GoalForm({
         className="grid grid-cols-2 gap-4"
       >
         <Input
-          classNames={{ inputWrapper: "!bg-light" }}
+          classNames={{ inputWrapper: "!bg-light shadow-none border" }}
           name="title"
           label="Tytuł"
           placeholder="Mieszkanie"
@@ -64,7 +64,7 @@ export default function GoalForm({
           }
         />
         <Input
-          classNames={{ inputWrapper: "!bg-light" }}
+          classNames={{ inputWrapper: "!bg-light shadow-none border" }}
           name="amount"
           label="Kwota"
           placeholder="0.00"
@@ -98,7 +98,7 @@ export default function GoalForm({
           }}
         />
         <Input
-          classNames={{ inputWrapper: "!bg-light" }}
+          classNames={{ inputWrapper: "!bg-light shadow-none border" }}
           name="deadline"
           label="Termin ostateczny"
           placeholder="24.01.2024"
@@ -113,7 +113,7 @@ export default function GoalForm({
         />
         <Textarea
           className="col-span-2"
-          classNames={{ inputWrapper: "!bg-light" }}
+          classNames={{ inputWrapper: "!bg-light shadow-none border" }}
           name="description"
           label="Opis"
           placeholder="Miejsce zamieszkania"
@@ -145,7 +145,7 @@ export default function GoalForm({
   /* <div className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col">
           <h2 className="text-lg">Grupuj</h2>
           <Input
-            classNames={{ inputWrapper: "!bg-light" }}
+            classNames={{ inputWrapper: "!bg-light shadow-none border" }}
             name="label"
             label="Etykieta"
             placeholder="Rozrywka"

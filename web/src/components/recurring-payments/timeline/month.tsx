@@ -1,11 +1,9 @@
 import PaymentRef from "./ref";
-import numberFormat from "@/utils/formatters/currency";
 
 export default function Month({
   month,
   year,
   payments,
-  total_amounts,
 }: Month & { year: number }) {
   const monthDate = new Date();
   monthDate.setMonth(month - 1);
@@ -21,7 +19,7 @@ export default function Month({
           </h2>
           <small className="text-white/80">{year}</small>
         </div>
-        <small className="text-white text-right">
+        {/* <small className="text-white text-right">
           Łącznie:{" "}
           <span className="font-medium">
             {Object.entries(total_amounts)
@@ -30,7 +28,7 @@ export default function Month({
               )
               .join(", ")}
           </span>
-        </small>
+        </small> */}
       </div>
       <div className="py-4 flex flex-col justify-between">
         {payments.map((payment) => (

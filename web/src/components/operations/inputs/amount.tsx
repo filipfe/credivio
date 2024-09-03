@@ -11,7 +11,7 @@ export default function AmountInput({ defaultValue }: Props) {
 
   return (
     <Input
-      classNames={{ inputWrapper: "!bg-light" }}
+      classNames={{ inputWrapper: "!bg-light shadow-none border" }}
       name="amount"
       label="Kwota"
       placeholder="0.00"

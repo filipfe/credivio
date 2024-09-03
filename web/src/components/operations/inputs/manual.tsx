@@ -28,7 +28,7 @@ export default function Manual({
     <form {...props}>
       <div className="grid grid-cols-2 gap-4">
         <Input
-          classNames={{ inputWrapper: "!bg-light" }}
+          classNames={{ inputWrapper: "!bg-light border shadow-none" }}
           name="title"
           label="Tytuł"
           placeholder="Wynagrodzenie"
@@ -46,7 +46,7 @@ export default function Manual({
           defaultSelectedKeys={currency ? [currency] : []}
         />
         <Input
-          classNames={{ inputWrapper: "!bg-light" }}
+          classNames={{ inputWrapper: "!bg-light border shadow-none" }}
           name="issued_at"
           label="Data uiszczenia"
           placeholder="24.01.2024"
@@ -57,7 +57,7 @@ export default function Manual({
         />
         <Textarea
           className="col-span-2"
-          classNames={{ inputWrapper: "!bg-light" }}
+          classNames={{ inputWrapper: "!bg-light border shadow-none" }}
           name="description"
           label="Opis"
           placeholder="Wynagrodzenie za luty"
@@ -65,7 +65,10 @@ export default function Manual({
         />
         {type === "expense" && withLabel && (
           <div className="w-full col-span-2">
-            <LabelInput defaultValue={initialValue?.label} />
+            <LabelInput
+              className="border shadow-none"
+              defaultValue={initialValue?.label}
+            />
           </div>
         )}
       </div>
