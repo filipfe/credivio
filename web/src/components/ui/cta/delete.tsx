@@ -10,7 +10,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { Trash2Icon } from "lucide-react";
-import { Fragment, useTransition } from "react";
+import { useTransition } from "react";
 import toast from "react-hot-toast";
 import Toast from "../toast";
 
@@ -63,7 +63,10 @@ export default function Delete({ items, type, viewOnly, callback }: Props) {
                   <form
                     action={(formData) =>
                       startTransition(async () => {
-                        const { error } = await deleteRows({ formData });
+                        const { error } = await deleteRows(
+                          JSON.parse(formData.get("data")!.toString()),
+                          formData.get("type")!.toString()
+                        );
                         if (error) {
                           toast.custom((t) => (
                             <Toast {...t} type="error" message={error} />

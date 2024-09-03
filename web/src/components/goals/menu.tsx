@@ -44,9 +44,7 @@ export default function Menu({ goal, onAdd }: Props) {
         onClose();
         break;
       case "delete":
-        const { error: deleteError } = await deleteRows({
-          body: { type: "goal", data: goal.id },
-        });
+        const { error: deleteError } = await deleteRows([goal.id], "goal");
         deleteError &&
           toast.custom((t) => (
             <Toast {...t} type="error" message={deleteError} />
