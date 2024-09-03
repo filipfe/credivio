@@ -9,7 +9,7 @@ export default function PaymentRef({
   type,
 }: Payment) {
   return (
-    <div className="flex justify-end items-stretch md:gap-8 even:bg-primary/5 rounded-md relative h-max group">
+    <div className="flex justify-end items-stretch md:gap-8 even:bg-light rounded-md relative h-max group">
       <div className="flex-1 ml-4 my-3 flex items-center">
         <div>
           <IssuedAt issued_at={issued_at} />

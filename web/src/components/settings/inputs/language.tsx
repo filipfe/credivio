@@ -34,8 +34,9 @@ export default function LanguageSelect({ defaultValue }: Props) {
   return (
     <form action={onSubmit} ref={formRef}>
       <UniversalSelect
-        size="sm"
+        // size="sm"
         name="language"
+        // radius="md"
         aria-label="Language select"
         label="Język"
         selectedKeys={[selected]}

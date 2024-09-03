@@ -11,12 +11,17 @@ export default async function Upcoming() {
     <Block title="Nadchodzące">
       {payments.length > 0 ? (
         <HorizontalScroll>
-          {payments.map((payment) => (
-            <OperationRef
-              payment={{ ...payment, issued_at: payment.payment_date }}
-              key={payment.id}
-            />
-          ))}
+          {payments
+            .filter(
+              ({ payment_date }) =>
+                new Date(payment_date).getTime() > new Date().getTime()
+            )
+            .map((payment) => (
+              <OperationRef
+                payment={{ ...payment, issued_at: payment.payment_date }}
+                key={payment.id}
+              />
+            ))}
         </HorizontalScroll>
       ) : (
         <Empty

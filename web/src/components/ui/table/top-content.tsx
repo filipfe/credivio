@@ -35,8 +35,9 @@ export default function TopContent({
         isClearable
         size="sm"
         className="max-w-[24rem]"
+        radius="md"
         classNames={{
-          inputWrapper: "!h-9",
+          inputWrapper: "!h-9 shadow-none",
         }}
         placeholder="Wyszukaj"
         startContent={<SearchIcon size={16} className="mx-1" />}

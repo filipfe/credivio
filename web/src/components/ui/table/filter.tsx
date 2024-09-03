@@ -41,6 +41,7 @@ export default function Filter({
             <Button
               isIconOnly
               disableRipple
+              className="border"
               onClick={() => setIsOpen((prev) => !prev)}
             >
               <ListFilterIcon size={16} />

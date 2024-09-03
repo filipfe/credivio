@@ -25,28 +25,6 @@ export async function getRecurringPayments(): Promise<
   };
 }
 
-export async function getPastRecurringPayments(): Promise<
-  SupabaseResponse<Year>
-> {
-  const supabase = createClient();
-  const { data, error } = await supabase
-    .rpc("get_recurring_payments_timeline_data", {
-      p_offset: 0,
-    })
-    .returns<Year[]>();
-
-  if (error) {
-    return {
-      results: [],
-      error: error.message,
-    };
-  }
-
-  return {
-    results: data,
-  };
-}
-
 export async function getUpcomingRecurringPayments(): Promise<
   SupabaseResponse<UpcomingRecurringPayment>
 > {

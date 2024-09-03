@@ -27,5 +27,4 @@ type TotalAmount = {
 type Month = {
   month: number;
   payments: Payment[];
-  total_amounts: TotalAmount;
 };

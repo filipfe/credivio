@@ -25,7 +25,7 @@ export default function LabelSelect({ value, onChange }: State) {
         onChange(selectedKey === "all" ? "" : selectedKey);
       }}
       classNames={{
-        trigger: "!bg-light",
+        trigger: "bg-light",
       }}
     >
       {

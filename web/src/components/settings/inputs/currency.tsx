@@ -30,7 +30,6 @@ export default function CurrencySelect({ defaultValue }: Props) {
   return (
     <form action={onSubmit} ref={formRef}>
       <UniversalSelect
-        size="sm"
         name="currency"
         aria-label="Currency select"
         label="Waluta"
