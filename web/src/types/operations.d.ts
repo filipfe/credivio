@@ -26,6 +26,7 @@ type Label = {
 type ChartLabel = {
   name: string;
   total_amount: number;
+  currency?: string;
 };
 
 type DailyAmount = {

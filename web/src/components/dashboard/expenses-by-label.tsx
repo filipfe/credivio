@@ -29,6 +29,8 @@ export default function ExpensesByLabel({
         <UniversalSelect
           className="w-20"
           name="currency"
+          size="sm"
+          radius="md"
           aria-label="Waluta"
           defaultSelectedKeys={[currency]}
           elements={CURRENCIES}

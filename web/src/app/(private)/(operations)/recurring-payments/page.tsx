@@ -4,7 +4,11 @@ import Timeline from "@/components/recurring-payments/timeline/timeline";
 import Loader from "@/components/stocks/loader";
 import { Suspense } from "react";
 
-export default function Page() {
+export default function Page({
+  searchParams,
+}: {
+  searchParams: { page?: string };
+}) {
   return (
     <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full xl:grid grid-cols-2 grid-rows-[max-content_1fr] gap-6">
       <Suspense fallback={<Loader />}>
