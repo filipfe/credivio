@@ -181,8 +181,9 @@ select
   floor(random() * 7 + 3),
   ( 
     case
-      when random() < 0.5 then 'day'
-      when random() < 0.8 then 'month'
+      when random() < 0.4 then 'day'
+      when random() < 0.7 then 'month'
+      when random() < 0.9 then 'week'
       else 'year'
     end
   )::interval_unit_type,

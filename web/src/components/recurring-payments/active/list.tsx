@@ -12,6 +12,7 @@ export default async function ActiveRecurringPaymentsList({
   page?: string;
 }) {
   const { results: payments } = await getRecurringPayments();
+
   return (
     <Block title="Aktywne" cta={cta}>
       {payments.length > 0 ? (

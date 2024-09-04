@@ -60,7 +60,10 @@ export default function DeleteModal({ deleted, type, onClose }: Props) {
               <form
                 action={(formData) =>
                   startTransition(async () => {
-                    const { error } = await deleteRows({ formData });
+                    const { error } = await deleteRows(
+                      JSON.parse(formData.get("data")!.toString()),
+                      formData.get("type")!.toString()
+                    );
                     if (error) {
                       toast.custom((t) => (
                         <Toast {...t} type="error" message={error} />
