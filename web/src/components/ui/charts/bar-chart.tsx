@@ -71,7 +71,6 @@ export default function BarChart({ data, currency }: Props) {
           shared={false}
           labelFormatter={(label) => label}
           content={(props) => {
-            console.log({ props });
             return (
               <ChartTooltip
                 {...props}
