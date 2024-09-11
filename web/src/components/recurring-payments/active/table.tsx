@@ -13,10 +13,11 @@ import {
   TableRow,
   Table as Tbl,
 } from "@nextui-org/react";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Menu from "./menu";
 import { formatDuration } from "date-fns";
 import { pl } from "date-fns/locale";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const columns = [
   {
@@ -27,11 +28,18 @@ const columns = [
   { key: "interval", label: "Interwał" },
 ];
 
-type Props = {
-  payments: WithId<RecurringPayment>[];
-};
+export default function Table({
+  results: payments,
+  count,
+}: SupabaseResponse<WithId<RecurringPayment>>) {
+  const { push } = useRouter();
+  const searchParams = useSearchParams();
+  const [isLoading, setIsLoading] = useState(true);
+  const initialPage = searchParams.get("page");
+  const [page, setPage] = useState(
+    initialPage && !isNaN(parseInt(initialPage)) ? parseInt(initialPage) : 1
+  );
 
-export default function Table({ payments }: Props) {
   const renderCell = useCallback(
     (
       item: WithId<RecurringPayment>,
@@ -105,6 +113,16 @@ export default function Table({ payments }: Props) {
     []
   );
 
+  // useEffect(() => {
+  //   const params = new URLSearchParams();
+  //   const query = { ...searchQuery, ...(options?.period || {}) };
+  //   Object.keys(query).forEach((key) => {
+  //     const value = query[key as keyof typeof searchQuery];
+  //     value && params.set(key, String(value));
+  //   });
+  //   router.push(`${pathname}?${params.toString()}`, { scroll: false });
+  // }, [page]);
+
   return (
     <div className="flex flex-col justify-between gap-2.5 flex-1">
       <ScrollShadow
@@ -126,7 +144,7 @@ export default function Table({ payments }: Props) {
               </TableColumn>
             )}
           </TableHeader>
-          <TableBody items={payments}>
+          <TableBody items={payments} isLoading={isLoading}>
             {(payment) => (
               <TableRow className="[&:hover>td]:bg-light">
                 {(columnKey) => (
@@ -157,10 +175,14 @@ export default function Table({ payments }: Props) {
         classNames={{
           wrapper: "!shadow-none border ml-auto",
         }}
-        page={1}
-        // isDisabled={isLoading}
-        total={2}
-        onChange={(page) => {}}
+        page={page}
+        isDisabled={isLoading}
+        total={count ? Math.ceil(count / 8) : 1}
+        onChange={(p) => {
+          setIsLoading(true);
+          setPage(p);
+          push(`/recurring-payments?page=${p}`);
+        }}
       />
     </div>
   );

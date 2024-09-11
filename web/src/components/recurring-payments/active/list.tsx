@@ -6,17 +6,15 @@ import Link from "next/link";
 import { Button } from "@nextui-org/react";
 import { Plus } from "lucide-react";
 
-export default async function ActiveRecurringPaymentsList({
-  page,
-}: {
-  page?: string;
-}) {
-  const { results: payments } = await getRecurringPayments();
+export default async function ActiveRecurringPaymentsList(
+  searchParams: SearchParams
+) {
+  const data = await getRecurringPayments(searchParams);
 
   return (
     <Block title="Aktywne" cta={cta}>
-      {payments.length > 0 ? (
-        <Table payments={payments} />
+      {data.count! > 0 ? (
+        <Table {...data} />
       ) : (
         <Empty
           title="Nie masz aktywnych płatności cyklicznych!"
