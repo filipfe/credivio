@@ -13,7 +13,7 @@ export default function ServiceRef({
   isSelected,
   changeSelectedService,
 }: Props) {
-  const { id, title, description, created_at, href, is_active } = service;
+  const { name, title, description, created_at, href, is_active } = service;
   const link = LINKS.find((item) => item.href === href);
   const Icon = link ? link.icon : <></>;
   const daysDiff = Math.round(
@@ -22,7 +22,7 @@ export default function ServiceRef({
   );
   return (
     <button
-      onClick={() => changeSelectedService(id)}
+      onClick={() => changeSelectedService(name)}
       className={`rounded-md border p-6 max-h-max flex flex-col items-center gap-2 relative ${
         isSelected ? "border-primary text-primary bg-primary/5" : ""
       }`}
