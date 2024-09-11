@@ -17,6 +17,7 @@ import { useCallback } from "react";
 import Menu from "./menu";
 import { formatDuration } from "date-fns";
 import { pl } from "date-fns/locale";
+import { usePathname, useRouter } from "next/navigation";
 
 const columns = [
   {
@@ -29,9 +30,13 @@ const columns = [
 
 type Props = {
   payments: WithId<RecurringPayment>[];
+  count: number;
 };
 
-export default function Table({ payments }: Props) {
+export default function Table({ payments, count }: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const renderCell = useCallback(
     (
       item: WithId<RecurringPayment>,
@@ -159,8 +164,10 @@ export default function Table({ payments }: Props) {
         }}
         page={1}
         // isDisabled={isLoading}
-        total={2}
-        onChange={(page) => {}}
+        total={Math.ceil(count / 10)}
+        onChange={(page) =>
+          router.push(`${pathname}?page=${page}`, { scroll: false })
+        }
       />
     </div>
   );
