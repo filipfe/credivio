@@ -138,7 +138,7 @@ export default function LineChart({
               }
               payloadName={
                 type === "balance"
-                  ? "Budżet"
+                  ? "Balans"
                   : type === "income"
                   ? "Przychody"
                   : "Wydatki"
