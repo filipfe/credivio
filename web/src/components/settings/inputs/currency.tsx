@@ -24,6 +24,10 @@ export default function CurrencySelect({ defaultValue }: Props) {
     const res = await updatePreferences(formData);
     if (res?.error) {
       toast.custom((t) => <Toast {...t} message={res.error} type="error" />);
+    } else {
+      toast.custom((t) => (
+        <Toast {...t} type="success" message="Pomyślnie zmieniono dane!" />
+      ));
     }
   };
 

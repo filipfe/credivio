@@ -3,8 +3,10 @@ import ActiveService from "./subscription/active";
 import ServiceList from "./subscription/list";
 import { useServices } from "@/lib/settings/queries";
 
-export default function Subscription() {
-  const [selectedService, setSelectedService] = useState<string | null>(null);
+export default function Subscription({ selected }: { selected?: string }) {
+  const [selectedService, setSelectedService] = useState<string | null>(
+    selected ?? null
+  );
   const { data: services, isLoading } = useServices();
 
   if (isLoading) {
@@ -21,10 +23,12 @@ export default function Subscription() {
       <ServiceList
         services={services || []}
         selectedService={selectedService}
-        changeSelectedService={(id) => setSelectedService(id)}
+        changeSelectedService={(name) =>
+          setSelectedService(name === selectedService ? null : name)
+        }
       />
       <ActiveService
-        service={services?.find(({ id }) => id === selectedService)}
+        service={services?.find(({ name }) => name === selectedService)}
       />
       {/* </ServiceProvider> */}
     </div>
