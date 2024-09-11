@@ -4,14 +4,14 @@ import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
 
 export async function getChartLabels(
-  currency: string,
+  currency: string
 ): Promise<SupabaseResponse<ChartLabel>> {
   const supabase = createClient();
   const { data: results, error } = await supabase.rpc(
     "get_dashboard_chart_labels",
     {
       p_currency: currency,
-    },
+    }
   );
 
   if (error) {
@@ -28,14 +28,14 @@ export async function getChartLabels(
 
 export async function getDailyTotalAmounts(
   type: string,
-  currency?: string,
+  currency?: string
 ): Promise<DailyAmount[]> {
   const supabase = createClient();
 
-  const { data, error } = await supabase.rpc(
-    "get_general_daily_total_amount",
-    { p_currency: currency, p_type: type },
-  );
+  const { data, error } = await supabase.rpc("get_general_daily_total_amount", {
+    p_currency: currency,
+    p_type: type,
+  });
 
   if (error) {
     console.error(error);
@@ -47,14 +47,14 @@ export async function getDailyTotalAmounts(
 
 async function getOperationsAmountsHistory(
   type: "income" | "expense",
-  params: SearchParams,
+  params: SearchParams
 ): Promise<DailyAmount[]> {
   const supabase = createClient();
 
-  const { data, error } = await supabase.rpc(
-    "get_operations_daily_totals",
-    { p_type: type, p_currency: params.currency },
-  );
+  const { data, error } = await supabase.rpc("get_operations_daily_totals", {
+    p_type: type,
+    p_currency: params.currency,
+  });
 
   if (error) {
     console.error(error);
@@ -66,20 +66,20 @@ async function getOperationsAmountsHistory(
 
 export const useOperationsAmountsHistory = (
   type: "income" | "expense",
-  params: SearchParams,
+  params: SearchParams
 ) =>
-  useSWR(
-    ["history", type, params],
-    ([_, type, params]) => getOperationsAmountsHistory(type, params),
+  useSWR(["history", type, params], ([_, type, params]) =>
+    getOperationsAmountsHistory(type, params)
   );
 
 async function getBalanceHistory(params: SearchParams) {
   const supabase = createClient();
 
-  const { data, error } = await supabase.rpc(
-    "get_dashboard_monthly_totals",
-    { p_currency: params.currency, p_month: params.month, p_year: params.year },
-  );
+  const { data, error } = await supabase.rpc("get_dashboard_monthly_totals", {
+    p_currency: params.currency,
+    p_month: params.month,
+    p_year: params.year,
+  });
 
   if (error) {
     console.error(error);
@@ -90,7 +90,6 @@ async function getBalanceHistory(params: SearchParams) {
 }
 
 export const useBalanceHistory = (params: SearchParams) =>
-  useSWR(
-    ["balance-history", params],
-    ([_, params]) => getBalanceHistory(params),
+  useSWR(["balance-history", params], ([_, params]) =>
+    getBalanceHistory(params)
   );
