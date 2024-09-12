@@ -56,6 +56,7 @@ Deno.serve(async (req) => {
     "get_expenses_limits",
     {
       p_currency: currency,
+      p_user_id: user_id,
     },
   ).returns<Limit[]>();
 
