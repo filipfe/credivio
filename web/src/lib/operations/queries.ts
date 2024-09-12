@@ -68,7 +68,9 @@ export const useOperationsAmountsHistory = (
     ([_, type, params]) => getOperationsAmountsHistory(type, params),
   );
 
-async function getBalanceHistory(params: SearchParams) {
+async function getBalanceHistory(
+  params: SearchParams,
+): Promise<{ date: string; total_amount: number }[]> {
   const supabase = createClient();
 
   const { data, error } = await supabase.rpc("get_dashboard_monthly_totals", {
