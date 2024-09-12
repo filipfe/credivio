@@ -22,7 +22,6 @@ export default function LabelSelect({ value, onChange }: State) {
       selectedKeys={[value || "all"]}
       onSelectionChange={(keys) => {
         const selectedKey = Array.from(keys)[0]?.toString();
-        console.log(selectedKey);
         onChange(selectedKey === "all" ? "" : selectedKey);
       }}
       classNames={{
