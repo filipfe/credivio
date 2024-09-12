@@ -63,7 +63,7 @@ export default function LimitRef({ amount, total, currency }: Limit) {
             {Math.round(percentage * 100)}%
           </h4>
           <h5 className="text-sm font-medium text-center">
-            {numberFormat(currency, 240)} / {numberFormat(currency, amount)}
+            {numberFormat(currency, total)} / {numberFormat(currency, amount)}
           </h5>
         </div>
       </div>
