@@ -50,16 +50,14 @@ export default async function Page({
       </div>
       <Providers>
         <div className="col-start-1 col-end-3 row-start-2 row-end-3 flex flex-col order-last">
-          <Suspense fallback={<LineChartLoader />}>
-            <OperationsByMonth type="expense" />
-          </Suspense>
+          <OperationsByMonth type="expense" />
         </div>
         <Suspense fallback={<Loader className="row-span-3 col-span-2" />}>
           <Expenses searchParams={searchParams} />
         </Suspense>
       </Providers>
       <Suspense>
-        <Limits />
+        <Limits defaultCurrency={defaultCurrency} />
       </Suspense>
     </div>
   );

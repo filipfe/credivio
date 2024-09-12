@@ -18,13 +18,31 @@ export default function ChartLoader({ className, hideTitle }: Props) {
         <Skeleton className="h-px" />
         <Skeleton className="h-px" />
         <Skeleton className="h-px" />
-        <div className="absolute inset-0 w-full h-full flex items-end justify-evenly">
-          <Skeleton className="rounded-t-full w-1/12 h-3/4" />
-          <Skeleton className="rounded-t-full w-1/12 h-full" />
-          <Skeleton className="rounded-t-full w-1/12 h-3/5" />
-          <Skeleton className="rounded-t-full w-1/12 h-3/4" />
-          <Skeleton className="rounded-t-full w-1/12 h-full" />
-          <Skeleton className="rounded-t-full w-1/12 h-3/5" />
+        <div className="absolute inset-y-0 inset-x-6 h-full flex items-end justify-evenly gap-2">
+          <Skeleton className="flex-1 h-0" />
+          <Skeleton className="flex-1 h-5/6" />
+          <Skeleton className="flex-1 h-3/5" />
+          <Skeleton className="flex-1 h-3/4" />
+          <Skeleton className="flex-1 h-0" />
+          <Skeleton className="flex-1 h-0" />
+          <Skeleton className="flex-1 h-3/4" />
+          <Skeleton className="flex-1 h-5/6" />
+          <Skeleton className="flex-1 h-0" />
+          <Skeleton className="flex-1 h-3/4" />
+          <Skeleton className="flex-1 h-5/6" />
+          <Skeleton className="flex-1 h-3/5" />
+          <Skeleton className="flex-1 h-1/4" />
+          <Skeleton className="flex-1 h-5/6" />
+          <Skeleton className="flex-1 h-0" />
+          <Skeleton className="flex-1 h-3/4" />
+          <Skeleton className="flex-1 h-0" />
+          <Skeleton className="flex-1 h-0" />
+          <Skeleton className="flex-1 h-0" />
+          <Skeleton className="flex-1 h-5/6" />
+          <Skeleton className="flex-1 h-3/5" />
+          <Skeleton className="flex-1 h-3/4" />
+          <Skeleton className="flex-1 h-0" />
+          <Skeleton className="flex-1 h-0" />
         </div>
       </div>
     </Block>

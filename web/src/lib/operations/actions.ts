@@ -169,27 +169,3 @@ export async function updateOperation(formData: FormData) {
     };
   }
 }
-
-export async function addLimit(formData: FormData) {
-  const amount = formData.get("amount")?.toString();
-  const currency = formData.get("currency")?.toString();
-  const period = formData.get("period")?.toString();
-
-  const supabase = createClient();
-
-  const { error } = await supabase.from("limits").insert({
-    amount,
-    currency,
-    period,
-  });
-
-  if (error) {
-    console.error(error);
-    return {
-      error: error.message,
-    };
-  }
-
-  revalidatePath("/expenses");
-  redirect("/expenses");
-}

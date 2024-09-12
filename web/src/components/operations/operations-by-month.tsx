@@ -41,7 +41,7 @@ export default function OperationsByMonth({ type }: Props) {
     preferences?.currency
   );
   const { data: results, isLoading } = useOperationsAmountsHistory(type, {
-    currency: preferences?.currency,
+    currency,
   });
   const { width, tickFormatter } = useYAxisWidth(currency);
 
@@ -89,7 +89,7 @@ export default function OperationsByMonth({ type }: Props) {
               tick={{ fontSize: 12 }}
               tickFormatter={(label) => {
                 const [year, month, day] = label.split("-");
-                return new Intl.DateTimeFormat("pl-PL", {
+                return new Intl.DateTimeFormat(preferences?.language.code, {
                   day: "2-digit",
                   month: "short",
                 }).format(new Date(year, parseInt(month) - 1, day));
@@ -106,18 +106,22 @@ export default function OperationsByMonth({ type }: Props) {
               className="stroke-content4"
             />
             <Tooltip
+              cursor={{ fill: "#177981", fillOpacity: 0.1 }}
               isAnimationActive={false}
               labelFormatter={(label) => label}
-              content={(props) => {
-                return (
-                  <ChartTooltip
-                    {...props}
-                    payloadName="Wydatki"
-                    currency={currency}
-                    label={undefined}
-                  />
-                );
-              }}
+              content={(props) => (
+                <ChartTooltip
+                  {...props}
+                  payloadName="Wydatki"
+                  currency={currency}
+                  label={undefined}
+                  labelFormatter={(label) =>
+                    new Intl.DateTimeFormat(preferences?.language.code, {
+                      dateStyle: "full",
+                    }).format(new Date(label))
+                  }
+                />
+              )}
             />
             <Bar dataKey="total_amount" fill="#177981" />
           </BarChart>

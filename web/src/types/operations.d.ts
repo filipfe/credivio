@@ -22,6 +22,7 @@ type Limit = {
   amount: number;
   currency: string;
   period: "daily" | "weekly" | "monthly";
+  total: number;
 };
 
 type Label = {
@@ -58,3 +59,9 @@ type Budget = {
   difference: number;
   difference_indicator: "positive" | "negative" | "no_change";
 };
+
+interface NewLimit {
+  amount: string;
+  period: string;
+  currency: string;
+}
