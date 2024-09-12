@@ -81,9 +81,13 @@ export default function PeriodSelect() {
             bottomContent={
               <div className="grid grid-cols-1 pb-2 px-2">
                 <Button
+                  disabled={period.from === "" || period.to === ""}
                   disableRipple
                   size="sm"
-                  onClick={() => setPeriod({ from: "", to: "" })}
+                  onClick={() => {
+                    setIsOpen(false);
+                    setPeriod({ from: "", to: "" });
+                  }}
                 >
                   <ListRestartIcon size={15} strokeWidth={2} /> Resetuj
                 </Button>
