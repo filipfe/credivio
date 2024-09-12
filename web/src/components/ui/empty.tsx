@@ -8,6 +8,7 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
   cta?: {
     title: string;
     href: string;
+    onClick?: () => void;
   };
 }
 
@@ -20,21 +21,34 @@ export default function Empty({ cta, title, className }: Props) {
       )}
     >
       {title && <p className="text-sm text-font/80">{title}</p>}
-      {cta && (
-        <Link href={cta.href}>
+      {cta &&
+        (cta.onClick ? (
           <Button
-            as="div"
             variant="flat"
             radius="md"
             size="sm"
             disableRipple
             startContent={<PlusIcon size={14} />}
             className="bg-light border"
+            onPress={cta.onClick}
           >
             {cta.title}
           </Button>
-        </Link>
-      )}
+        ) : (
+          <Link href={cta.href}>
+            <Button
+              as="div"
+              variant="flat"
+              radius="md"
+              size="sm"
+              disableRipple
+              startContent={<PlusIcon size={14} />}
+              className="bg-light border"
+            >
+              {cta.title}
+            </Button>
+          </Link>
+        ))}
     </div>
   );
 }

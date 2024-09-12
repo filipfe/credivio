@@ -1,9 +1,13 @@
 "use client";
 
 import { CURRENCIES } from "@/const";
-import { Select, SelectItem } from "@nextui-org/react";
+import { Select, SelectItem, SelectProps } from "@nextui-org/react";
 
-export default function CurrencySelect({ onChange, value }: State) {
+export default function CurrencySelect({
+  onChange,
+  value,
+  ...props
+}: Pick<SelectProps, "labelPlacement"> & State) {
   return (
     <Select
       name="currency"
@@ -21,6 +25,7 @@ export default function CurrencySelect({ onChange, value }: State) {
       }}
       disallowEmptySelection
       className="w-full"
+      {...props}
     >
       {
         (

@@ -21,7 +21,6 @@ export default function YearInput({ value, onChange }: Props) {
         trigger: "!bg-light shadow-none border",
       }}
       disallowEmptySelection
-      className="w-36"
     >
       {Array.from(Array(year - 2024 + 1)).map((_, k) => (
         <SelectItem

@@ -7,26 +7,26 @@ import BalanceByMonth from "@/components/dashboard/balance-by-month";
 import LatestOperations from "@/components/dashboard/latest-operations";
 import { OperationLoader } from "@/components/operations/ref";
 import Block from "@/components/ui/block";
-import { getDefaultCurrency } from "@/lib/settings/actions";
+import { getPreferences } from "@/lib/settings/actions";
 
 export default async function Dashboard() {
-  const { result: defaultCurrency, error } = await getDefaultCurrency();
+  const { result: preferences, error } = await getPreferences();
 
-  if (!defaultCurrency) {
-    console.error("Couldn't retrieve default currency: ", error);
+  if (!preferences) {
+    console.error("Couldn't retrieve preferences: ", error);
     throw new Error(error);
   }
 
   return (
     <div className="sm:px-10 py-4 sm:py-8 flex flex-col xl:grid grid-cols-6 gap-4 sm:gap-6">
       <Suspense fallback={statsFallback}>
-        <StatsList defaultCurrency={defaultCurrency} />
+        <StatsList defaultCurrency={preferences.currency} />
       </Suspense>
       <Suspense fallback={latestOperationsFallback}>
         <LatestOperations />
       </Suspense>
-      <ExpensesByLabel defaultCurrency={defaultCurrency} />
-      <BalanceByMonth />
+      <ExpensesByLabel defaultCurrency={preferences.currency} />
+      <BalanceByMonth preferences={preferences} />
       {/* <Suspense fallback={latestOperationsFallback}>
         <PortfolioStructure />
       </Suspense> */}

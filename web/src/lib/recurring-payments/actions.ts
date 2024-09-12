@@ -4,27 +4,28 @@ import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function getRecurringPayments(searchParams: {
-  page?: string;
-}): Promise<SupabaseResponse<WithId<RecurringPayment>>> {
+export async function getRecurringPayments(searchParams: SearchParams): Promise<
+  SupabaseResponse<WithId<RecurringPayment>>
+> {
   const supabase = createClient();
   const { data, error } = await supabase.rpc(
     "get_recurring_payments_active_payments",
     {
-      p_page: searchParams.page,
-    }
+      p_page: searchParams.page || 1,
+    },
   );
 
   if (error) {
     return {
       results: [],
       error: error.message,
+      count: 0,
     };
   }
 
   return {
     results: data.results,
-    count: data.count,
+    count: data.count || 0,
   };
 }
 
@@ -33,7 +34,7 @@ export async function getUpcomingRecurringPayments(): Promise<
 > {
   const supabase = createClient();
   const { data, error } = await supabase.rpc(
-    "get_recurring_payments_upcoming_payments"
+    "get_recurring_payments_upcoming_payments",
   );
 
   if (error) {
