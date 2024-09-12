@@ -31,6 +31,7 @@ export default function AddForm({
 }) {
   const [isPending, startTransition] = useTransition();
   const [records, setRecords] = useState<Operation[]>([]);
+  const [label, setLabel] = useState<string | null>(null);
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -46,10 +47,6 @@ export default function AddForm({
       currency: formData.get("currency")?.toString() || "",
       doc_path: null,
     };
-
-    if (type === "expense") {
-      operation.label = formData.get("label")?.toString() || null;
-    }
 
     setRecords((prev) => [...prev, operation]);
   };

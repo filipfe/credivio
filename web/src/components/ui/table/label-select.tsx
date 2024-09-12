@@ -19,7 +19,7 @@ export default function LabelSelect({ value, onChange }: State) {
       aria-label="Label filter"
       label="Etykieta"
       size="sm"
-      selectedKeys={[value || "Wszystkie"]}
+      selectedKeys={[value || "all"]}
       onSelectionChange={(keys) => {
         const selectedKey = Array.from(keys)[0]?.toString();
         onChange(selectedKey === "all" ? "" : selectedKey);
@@ -35,7 +35,7 @@ export default function LabelSelect({ value, onChange }: State) {
             className={`${
               value === "" ? "!bg-light" : "!bg-white hover:!bg-light"
             }`}
-            key="Wszystkie"
+            key="all"
           >
             Wszystkie
           </SelectItem>

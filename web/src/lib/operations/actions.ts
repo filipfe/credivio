@@ -8,6 +8,7 @@ export async function addOperations(
   formData: FormData,
 ): Promise<SupabaseResponse<Operation>> {
   const type = formData.get("type")!.toString() as OperationType;
+  const label = formData.get("label")?.toString() || null;
   const data: Operation[] = JSON.parse(formData.get("data")!.toString());
 
   const supabase = createClient();
@@ -28,6 +29,7 @@ export async function addOperations(
     p_operations: data,
     p_user_id: user.id,
     p_type: type,
+    p_label: label,
   });
 
   if (error) {

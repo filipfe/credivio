@@ -13,7 +13,11 @@ import TabTitle from "../ui/tab-title";
 import Subscription from "./subscription";
 import Notifications from "./notifications";
 
-export default function SettingsTabs() {
+export default function SettingsTabs({
+  searchParams,
+}: {
+  searchParams?: { selected?: string };
+}) {
   return (
     <Tabs
       radius="lg"
@@ -23,7 +27,7 @@ export default function SettingsTabs() {
         tabList: "py-0 border-b",
         panel: "flex-1 relative",
       }}
-      defaultSelectedKey="account"
+      defaultSelectedKey={searchParams?.selected ? "subscription" : "account"}
     >
       <Tab key="account" title={<TabTitle title="Konto" Icon={UserCogIcon} />}>
         <Account />
@@ -38,7 +42,7 @@ export default function SettingsTabs() {
         key="subscription"
         title={<TabTitle title="Subskrypcje i usługi" Icon={LayersIcon} />}
       >
-        <Subscription />
+        <Subscription selected={searchParams?.selected} />
       </Tab>
       <Tab
         key="notifications"

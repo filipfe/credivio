@@ -17,8 +17,8 @@ export default function ServiceList({
         <ServiceRef
           service={service}
           changeSelectedService={changeSelectedService}
-          isSelected={service.id === selectedService}
-          key={service.id}
+          isSelected={service.name === selectedService}
+          key={service.name}
         />
       ))}
     </div>

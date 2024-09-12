@@ -36,7 +36,7 @@ export default async function Page({
         </strong>
         <p className="text-sm opacity-60">{description}</p>
 
-        <Link href={`/settings/subscription?selected=${name}`}>
+        <Link href={`/settings?selected=${name}`}>
           <Button disableRipple color="primary" as="div">
             Odblokuj
           </Button>
