@@ -97,6 +97,7 @@ export default function EditModal({ type, edited, onEdit, setEdited }: Props) {
             isDisabled={isPending}
             disabled={isPending}
             onClick={onClose}
+            className="border"
           >
             Anuluj
           </Button>

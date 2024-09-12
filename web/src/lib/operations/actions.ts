@@ -5,9 +5,10 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function addOperations(
-  formData: FormData
+  formData: FormData,
 ): Promise<SupabaseResponse<Operation>> {
   const type = formData.get("type")!.toString() as OperationType;
+  const label = formData.get("label")?.toString() || null;
   const data: Operation[] = JSON.parse(formData.get("data")!.toString());
 
   const supabase = createClient();
@@ -28,6 +29,7 @@ export async function addOperations(
     p_operations: data,
     p_user_id: user.id,
     p_type: type,
+    p_label: label,
   });
 
   if (error) {
@@ -46,7 +48,7 @@ export async function addOperations(
 }
 
 export async function getLatestOperations(
-  from?: string
+  from?: string,
 ): Promise<SupabaseResponse<Payment>> {
   const supabase = createClient();
   let query = supabase
@@ -76,7 +78,7 @@ export async function getLatestOperations(
 
 export async function getOperationsStats(
   currency: string,
-  type: string
+  type: string,
 ): Promise<SupabaseSingleRowResponse<OperationsStats>> {
   const supabase = createClient();
 
@@ -116,7 +118,7 @@ export async function getLabels(): Promise<SupabaseResponse<Label>> {
 export async function getPortfolioBudgets(): Promise<SupabaseResponse<Budget>> {
   const supabase = createClient();
   const { data: results, error } = await supabase.rpc(
-    "get_dashboard_portfolio_budgets"
+    "get_dashboard_portfolio_budgets",
   );
 
   if (error) {

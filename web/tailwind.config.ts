@@ -67,9 +67,12 @@ const config: Config = {
               "100": "#FAFAFA",
               "200": "#F8F8F8",
             },
-            success: "#32a852",
+            success: {
+              DEFAULT: "#32a852",
+              foreground: "#FFF",
+            },
             danger: {
-              DEFAULT: "#B33939",
+              DEFAULT: "#f53636",
               foreground: "#FFF",
             },
           },

@@ -49,9 +49,7 @@ export default async function Page({
       </div>
       <Providers>
         <div className="col-[1/3] row-[2/3] flex flex-col order-last">
-          <Suspense fallback={<LineChartLoader />}>
-            <OperationsByMonth type="income" />
-          </Suspense>
+          <OperationsByMonth type="income" />
         </div>
         <Suspense fallback={<Loader className="row-span-2 col-span-2" />}>
           <Incomes searchParams={searchParams} />

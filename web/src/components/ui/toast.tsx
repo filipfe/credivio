@@ -15,7 +15,7 @@ export default function Toast({ id, type, message, visible }: ToastProps) {
           initial={{ transform: `translateX(-50%)`, opacity: 0 }}
           animate={{ transform: `translateX(0%)`, opacity: 1 }}
           exit={{ transform: `translateX(50%)`, opacity: 0 }}
-          className={`rounded-md max-w-sm border py-4 px-6 flex items-center gap-8 bg-white shadow-xl shadow-font/[.03] border-primary/10 ${
+          className={`rounded-md max-w-sm border py-4 px-6 flex items-center gap-8 bg-white shadow-xl shadow-font/[.03]  ${
             visible ? "animate-enter" : "animate-exit"
           }`}
           key="toast"

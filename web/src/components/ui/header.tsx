@@ -36,7 +36,7 @@ export default function Header() {
           <AlignJustifyIcon size={20} />
         </Button>
       </header>
-      <header className="flex items-center gap-4 justify-between px-4 sm:px-10 h-16 sm:h-20 fixed sm:sticky top-0 left-0 bg-white z-50 w-full sm:w-auto">
+      <header className="flex items-center border-b gap-4 justify-between px-4 sm:px-10 h-16 sm:h-20 fixed sm:sticky top-0 left-0 bg-white z-50 w-full sm:w-auto">
         <Breadcrumbs
           maxItems={3}
           itemsAfterCollapse={1}
@@ -61,10 +61,10 @@ export default function Header() {
           ))}
         </Breadcrumbs>
         <form action={signOut} className="hidden sm:block">
-          <button className="py-3 px-6 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-light bg-white">
+          <Button variant="light" size="sm" disableRipple>
             <LogOutIcon size={16} />
             Wyloguj
-          </button>
+          </Button>
         </form>
         <Button
           onPress={() =>

@@ -4,12 +4,12 @@ import { Button, Input, Spinner, Textarea } from "@nextui-org/react";
 import formatAmount from "@/utils/operations/format-amount";
 import { useState, useTransition } from "react";
 import { CheckIcon } from "lucide-react";
-import { insertRows } from "@/lib/general/actions";
 import toast from "react-hot-toast";
 import UniversalSelect from "../ui/universal-select";
 import { CURRENCIES } from "@/const";
 import Block from "../ui/block";
 import Toast from "../ui/toast";
+import { addGoal } from "@/lib/goals/actions";
 
 interface NewGoal extends Omit<Goal, "id" | "saved" | "price" | "payments"> {
   price: string;
@@ -38,7 +38,7 @@ export default function GoalForm({
       <form
         action={(formData) =>
           startTransition(async () => {
-            const { error } = await insertRows({ formData });
+            const { error } = await addGoal(formData);
             if (error) {
               toast.custom((t) => (
                 <Toast
@@ -53,7 +53,7 @@ export default function GoalForm({
         className="grid grid-cols-2 gap-4"
       >
         <Input
-          classNames={{ inputWrapper: "!bg-light" }}
+          classNames={{ inputWrapper: "!bg-light shadow-none border" }}
           name="title"
           label="Tytuł"
           placeholder="Mieszkanie"
@@ -64,7 +64,7 @@ export default function GoalForm({
           }
         />
         <Input
-          classNames={{ inputWrapper: "!bg-light" }}
+          classNames={{ inputWrapper: "!bg-light shadow-none border" }}
           name="amount"
           label="Kwota"
           placeholder="0.00"
@@ -98,7 +98,7 @@ export default function GoalForm({
           }}
         />
         <Input
-          classNames={{ inputWrapper: "!bg-light" }}
+          classNames={{ inputWrapper: "!bg-light shadow-none border" }}
           name="deadline"
           label="Termin ostateczny"
           placeholder="24.01.2024"
@@ -113,7 +113,7 @@ export default function GoalForm({
         />
         <Textarea
           className="col-span-2"
-          classNames={{ inputWrapper: "!bg-light" }}
+          classNames={{ inputWrapper: "!bg-light shadow-none border" }}
           name="description"
           label="Opis"
           placeholder="Miejsce zamieszkania"
@@ -145,7 +145,7 @@ export default function GoalForm({
   /* <div className="bg-white rounded-lg px-10 py-8 gap-4 flex flex-col">
           <h2 className="text-lg">Grupuj</h2>
           <Input
-            classNames={{ inputWrapper: "!bg-light" }}
+            classNames={{ inputWrapper: "!bg-light shadow-none border" }}
             name="label"
             label="Etykieta"
             placeholder="Rozrywka"

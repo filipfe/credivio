@@ -10,18 +10,11 @@ export default function UniversalSelect(props: Props) {
   return (
     <Select
       classNames={{
-        trigger: "!bg-light",
+        trigger: "bg-light shadow-none border",
       }}
       disallowEmptySelection
       {...props}
     >
-      {
-        (
-          <SelectItem value="Wszystkie" key="Wszystkie">
-            Wszystkie
-          </SelectItem>
-        ) as any
-      }
       {props.elements.map((element) => (
         <SelectItem
           value={typeof element === "string" ? element : element.value}

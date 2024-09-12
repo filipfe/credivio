@@ -12,6 +12,7 @@
     "@internationalized/date": "^3.5.4",
     "@nextui-org/react": "^2.4.1",
     "@nivo/radial-bar": "^0.87.0",
+    "@react-aria/i18n": "^3.12.2",
     "@supabase/ssr": "^0.4.0",
     "@supabase/supabase-js": "^2.39.7",
     "axios": "^1.6.7",

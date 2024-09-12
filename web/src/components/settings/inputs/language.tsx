@@ -28,14 +28,19 @@ export default function LanguageSelect({ defaultValue }: Props) {
     const res = await updatePreferences(formData);
     if (res?.error) {
       toast.custom((t) => <Toast {...t} message={res.error} type="error" />);
+    } else {
+      toast.custom((t) => (
+        <Toast {...t} type="success" message="Pomyślnie zmieniono dane!" />
+      ));
     }
   };
 
   return (
     <form action={onSubmit} ref={formRef}>
       <UniversalSelect
-        size="sm"
+        // size="sm"
         name="language"
+        // radius="md"
         aria-label="Language select"
         label="Język"
         selectedKeys={[selected]}

@@ -11,7 +11,7 @@ export default function PasswordInput() {
         <p className="text-sm text-font/60">Zmień hasło do swojego konta</p>
       </div>
       <Input
-        classNames={{ inputWrapper: "!bg-light" }}
+        classNames={{ inputWrapper: "!bg-light shadow-none border" }}
         name="password"
         type="password"
         label="Nowe hasło"
@@ -20,7 +20,7 @@ export default function PasswordInput() {
         onValueChange={(value) => setPassword(value)}
       />
       <Input
-        classNames={{ inputWrapper: "!bg-light" }}
+        classNames={{ inputWrapper: "!bg-light shadow-none border" }}
         name="password"
         type="password"
         label="Potwierdź nowe hasło"

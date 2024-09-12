@@ -16,7 +16,7 @@ export default function GoalsList({ goals }: { goals: Goal[] }) {
             variant="light"
             disableRipple
             startContent={<PlusIcon size={14} />}
-            className="h-8 bg-light border border-primary/10"
+            className="h-8 bg-light border"
             size="sm"
             radius="md"
           >

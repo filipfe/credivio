@@ -14,7 +14,7 @@ export default function EmailInput() {
         </p>
       </div>
       <Input
-        classNames={{ inputWrapper: "!bg-light" }}
+        classNames={{ inputWrapper: "!bg-light shadow-none border" }}
         name="email"
         label={"Email"}
         placeholder="example@mail.com"

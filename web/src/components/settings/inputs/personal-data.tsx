@@ -37,7 +37,7 @@ export default function PersonalDataInput() {
         </p>
       </div>
       <Input
-        classNames={{ inputWrapper: "!bg-light" }}
+        classNames={{ inputWrapper: "!bg-light shadow-none border" }}
         name="first_name"
         label={"Imię"}
         placeholder="Imię"
@@ -46,7 +46,7 @@ export default function PersonalDataInput() {
         className="max-w-xl"
       />
       <Input
-        classNames={{ inputWrapper: "!bg-light" }}
+        classNames={{ inputWrapper: "!bg-light shadow-none border" }}
         label={"Nazwisko"}
         name="last_name"
         placeholder="Nazwisko"

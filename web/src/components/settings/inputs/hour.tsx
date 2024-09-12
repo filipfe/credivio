@@ -31,8 +31,21 @@ export default function HourInput() {
     return;
   }
 
+  const graphTime: string = data.graph_time;
+
+  const [time, offset] = graphTime.includes("+")
+    ? graphTime.split("+")
+    : graphTime.split("-");
+  const [hours] = time.split(":").map(Number);
   const defaultDate = new Date();
-  defaultDate.setUTCHours(parseInt(data.graph_time.split(":")[0]), 0, 0, 0);
+  defaultDate.setUTCHours(
+    graphTime.includes("+")
+      ? hours - parseInt(offset)
+      : hours + parseInt(offset),
+    0,
+    0,
+    0
+  );
 
   return (
     <div className="flex flex-col gap-4">
