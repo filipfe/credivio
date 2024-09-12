@@ -31,7 +31,7 @@ export default async function Page({
   const { last_month, last_day } = result;
 
   return (
-    <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 xl:grid grid-cols-4 xl:grid-rows-[max-content_max-content_1fr]">
+    <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 xl:grid grid-cols-2 2xl:grid-cols-4 2xl:grid-rows-[max-content_1fr_max-content]">
       <div className="col-[1/2]">
         <Stat
           title="Dzisiaj"
@@ -48,17 +48,17 @@ export default async function Page({
           stat={last_month}
         />
       </div>
-      <Limits />
       <Providers>
-        <div className="col-[1/3] row-[3/4] flex flex-col order-last">
-          <Suspense fallback={<LineChartLoader />}>
-            <OperationsByMonth type="expense" />
-          </Suspense>
+        <div className="col-start-1 col-end-3 row-start-2 row-end-3 flex flex-col order-last">
+          <OperationsByMonth type="expense" />
         </div>
         <Suspense fallback={<Loader className="row-span-3 col-span-2" />}>
           <Expenses searchParams={searchParams} />
         </Suspense>
       </Providers>
+      <Suspense>
+        <Limits defaultCurrency={defaultCurrency} />
+      </Suspense>
     </div>
   );
 }
@@ -78,7 +78,7 @@ async function Expenses({ searchParams }: { searchParams: SearchParams }) {
   });
 
   return (
-    <div className="row-span-3 col-span-2 flex items-stretch">
+    <div className="row-span-2 col-span-2 flex items-stretch">
       <OperationTable
         title="Wydatki"
         type="expense"

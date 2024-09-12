@@ -18,19 +18,28 @@ interface Operation extends Payment {
   description?: string;
 }
 
+type Limit = {
+  amount: number;
+  currency: string;
+  period: "daily" | "weekly" | "monthly";
+  total: number;
+};
+
 type Label = {
   name: string;
   count: number;
 };
 
 type ChartLabel = {
-  name: string;
+  name?: string;
+  date?: string;
   total_amount: number;
+  currency?: string;
 };
 
 type DailyAmount = {
   date: string;
-  total_amounts: { currency: string; amount: number }[];
+  total_amount: number;
 };
 
 type Stat = {
@@ -50,3 +59,9 @@ type Budget = {
   difference: number;
   difference_indicator: "positive" | "negative" | "no_change";
 };
+
+interface NewLimit {
+  amount: string;
+  period: string;
+  currency: string;
+}

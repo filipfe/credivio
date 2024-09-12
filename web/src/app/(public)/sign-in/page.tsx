@@ -8,7 +8,9 @@ export default function Page() {
         <Form>
           <div className="flex flex-col gap-6">
             <div className="flex flex-col items-center text-center gap-2 mb-4">
-              <div className="bg-light rounded-md h-16 w-16 mb-4 border"></div>
+              <div className="bg-light rounded-md h-16 w-16 mb-4 border grid place-content-center">
+                <p className="font-bold text-primary text-3xl">C</p>
+              </div>
               <h1 className="text-2xl font-medium">Witaj z powrotem!</h1>
               <p className="text-sm">Zaloguj się, aby kontynuować</p>
             </div>
