@@ -42,6 +42,7 @@ export default function Form({
             color="primary"
             isDisabled={isPending}
             isLoading={isPending}
+            disableRipple
             type="submit"
             className="text-white font-medium w-full"
           >

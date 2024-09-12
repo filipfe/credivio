@@ -28,7 +28,7 @@ export default function BarChart({ data, currency }: Props) {
     () =>
       data.map((item, k) => ({
         ...item,
-        color: COLORS[k % COLORS.length],
+        color: k % 2 === 0 ? "#177981" : "#fdbb2d",
       })),
     [data]
   );

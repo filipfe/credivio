@@ -49,42 +49,10 @@ export default function LineChart({
       new Date(data[data.length - 1].date).getTime()
     : false;
 
-  const { currencies, dates } = useMemo(() => {
-    const currencies: string[] = [];
-    const dates = data.map(
-      ({ date, total_amounts }) =>
-        ({
-          date,
-          ...total_amounts.reduce((prev, { amount, currency }) => {
-            !currencies.includes(currency) && currencies.push(currency);
-            return {
-              ...prev,
-              [currency]: (prev[currency] || 0) + amount,
-            };
-          }, {} as Record<string, number>),
-        } as { date: string } & Record<string, number>)
-    );
-    return {
-      currencies,
-      dates,
-    };
-  }, [data]);
-
   return (
     <ResponsiveContainer width="100%" height="100%" minHeight={minHeight}>
       <Chart
-        data={dates.map((day) => {
-          const notIncluded = currencies
-            .filter((curr) => !Object.keys(day).includes(curr))
-            .reduce(
-              (prev, curr) => ({ ...prev, [curr]: 0 }),
-              {} as Record<string, number>
-            );
-          return {
-            ...day,
-            ...notIncluded,
-          };
-        })}
+        data={data}
         margin={{ top: 16, right: 20 }}
         onClick={({ activeLabel }) =>
           activeLabel &&
@@ -100,6 +68,7 @@ export default function LineChart({
           tickLine={false}
           tickFormatter={tickFormatter}
           type="number"
+          dataKey="total_amount"
         />
         <XAxis
           tickMargin={8}
@@ -146,17 +115,13 @@ export default function LineChart({
             />
           )}
         />
-        {currencies.map((currency, k) => (
-          <Line
-            isAnimationActive={false}
-            dataKey={currency}
-            stroke={COLORS[k % COLORS.length]}
-            strokeWidth={2}
-            dot={false}
-            key={`line-${currency}`}
-          />
-        ))}
-
+        <Line
+          isAnimationActive={false}
+          stroke="#177981"
+          strokeWidth={2}
+          dot={false}
+          dataKey="total_amount"
+        />
         {period &&
           period.from &&
           period.to &&

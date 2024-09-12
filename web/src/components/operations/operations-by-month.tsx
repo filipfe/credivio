@@ -1,15 +1,26 @@
 "use client";
 
-import { PeriodContext } from "@/app/(private)/(operations)/providers";
 import Block from "@/components/ui/block";
-import LineChart from "@/components/ui/charts/line-chart";
 import LineChartLoader from "@/components/ui/charts/line-loader";
 import Empty from "@/components/ui/empty";
 import { useOperationsAmountsHistory } from "@/lib/operations/queries";
-import { useContext, useState } from "react";
+import { useEffect, useState } from "react";
+import CurrencySelect from "../ui/table/currency-select";
 import UniversalSelect from "../ui/universal-select";
 import { CURRENCIES } from "@/const";
-import CurrencySelect from "../ui/table/currency-select";
+import usePreferences from "@/hooks/usePreferences";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import ChartLoader from "../ui/charts/loader";
+import useYAxisWidth from "@/hooks/useYAxisWidth";
+import ChartTooltip from "../ui/charts/tooltip";
 
 const getTitle = (type: "income" | "expense") => {
   switch (type) {
@@ -25,36 +36,92 @@ type Props = {
 };
 
 export default function OperationsByMonth({ type }: Props) {
-  const periodContext = useContext(PeriodContext);
-  const [currency, setCurrency] = useState<string>();
+  const { data: preferences } = usePreferences();
+  const [currency, setCurrency] = useState<string | undefined>(
+    preferences?.currency
+  );
   const { data: results, isLoading } = useOperationsAmountsHistory(type, {
-    currency,
+    currency: preferences?.currency,
   });
+  const { width, tickFormatter } = useYAxisWidth(currency);
+
+  useEffect(() => {
+    if (!preferences?.currency) return;
+    setCurrency(preferences.currency);
+  }, [preferences?.currency]);
+
   return (
     <Block
       className="xl:col-span-3 flex-1"
       title={`${getTitle(type)}`}
       cta={
-        <div className="flex-1">
-          <div className="w-full max-w-32 ml-auto">
-            <CurrencySelect
-              value={currency || ""}
-              onChange={(value) => setCurrency(value || undefined)}
-            />
-          </div>
-        </div>
+        <UniversalSelect
+          className="w-20"
+          name="currency"
+          size="sm"
+          radius="md"
+          aria-label="Waluta"
+          isLoading={isLoading}
+          isDisabled={isLoading}
+          selectedKeys={currency ? [currency] : []}
+          elements={CURRENCIES}
+          onChange={(e) => setCurrency(e.target.value)}
+        />
       }
     >
       {isLoading ? (
-        <LineChartLoader className="!p-0" hideTitle />
+        <ChartLoader className="!p-0" hideTitle />
       ) : results && results.length > 0 ? (
-        <LineChart
-          data={results}
-          currency={currency}
-          type={type}
-          minHeight={280}
-          {...periodContext}
-        />
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={results}>
+            <CartesianGrid vertical={false} opacity={0.5} />
+            <YAxis
+              width={width}
+              tick={{ fontSize: 12 }}
+              dataKey="total_amount"
+              axisLine={false}
+              tickLine={false}
+              tickFormatter={tickFormatter}
+            />
+            <XAxis
+              tickMargin={8}
+              dataKey="date"
+              tick={{ fontSize: 12 }}
+              tickFormatter={(label) => {
+                const [year, month, day] = label.split("-");
+                return new Intl.DateTimeFormat("pl-PL", {
+                  day: "2-digit",
+                  month: "short",
+                }).format(new Date(year, parseInt(month) - 1, day));
+              }}
+              minTickGap={32}
+              axisLine={false}
+              tickLine={false}
+              type="category"
+            />
+            <CartesianGrid
+              opacity={0.6}
+              strokeWidth={1}
+              vertical={false}
+              className="stroke-content4"
+            />
+            <Tooltip
+              isAnimationActive={false}
+              labelFormatter={(label) => label}
+              content={(props) => {
+                return (
+                  <ChartTooltip
+                    {...props}
+                    payloadName="Wydatki"
+                    currency={currency}
+                    label={undefined}
+                  />
+                );
+              }}
+            />
+            <Bar dataKey="total_amount" fill="#177981" />
+          </BarChart>
+        </ResponsiveContainer>
       ) : (
         <Empty
           title="Brak danych do wyświetlenia!"
