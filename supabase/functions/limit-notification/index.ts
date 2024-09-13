@@ -86,24 +86,31 @@ Deno.serve(async (req) => {
         },
       });
     }
-    await Promise.all(
-      limits.reduce((prev, limit) => {
-        const paidPercentage = (limit.total / limit.amount) * 100;
-        const noCurrentPaidPercentage =
-          ((limit.total - amount) / limit.amount) /
-          100;
-        const exceededBreakpoint = breakpoints.find((breakpoint) =>
-          paidPercentage >= breakpoint.value &&
-          noCurrentPaidPercentage < breakpoint.value
-        );
+    const exceededLimit = limits.find((limit) => {
+      const paidPercentage = (limit.total / limit.amount) * 100;
+      const noCurrentPaidPercentage = ((limit.total - amount) / limit.amount) /
+        100;
+      return breakpoints.some((breakpoint) =>
+        paidPercentage >= breakpoint.value &&
+        noCurrentPaidPercentage < breakpoint.value
+      );
+    });
 
-        if (!exceededBreakpoint) {
-          return prev;
-        }
-
-        return [...prev, sendNotification(profile, limit, exceededBreakpoint)];
-      }, [] as Promise<void>[]),
-    );
+    if (exceededLimit) {
+      const grossPercentage = (exceededLimit.total / exceededLimit.amount) *
+        100;
+      const netPercentage =
+        ((exceededLimit.total - amount) / exceededLimit.amount) /
+        100;
+      const exceededBreakpoint = breakpoints.find((breakpoint) =>
+        grossPercentage >= breakpoint.value &&
+        netPercentage < breakpoint.value
+      )!;
+      await bot.api.sendMessage(
+        profile.telegram_id,
+        exceededBreakpoint.messages[profile.language.code](exceededLimit),
+      );
+    }
   }
 
   return new Response("ok", { status: 200 });
