@@ -133,3 +133,16 @@ export async function addLimit(limit: NewLimit) {
 
   return {};
 }
+
+async function getLabels(): Promise<Label[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("get_general_own_labels");
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export const useLabels = () => useSWR("labels", () => getLabels());

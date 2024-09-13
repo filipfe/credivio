@@ -61,7 +61,6 @@ export default function OperationsByMonth({ type }: Props) {
           size="sm"
           radius="md"
           aria-label="Waluta"
-          isLoading={isLoading}
           isDisabled={isLoading}
           selectedKeys={currency ? [currency] : []}
           elements={CURRENCIES}

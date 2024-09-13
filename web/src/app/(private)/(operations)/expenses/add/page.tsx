@@ -10,7 +10,7 @@ export default async function Page() {
   }
 
   return (
-    <div className="sm:px-10 pt-4 pb-16 sm:py-8 flex flex-col h-full">
+    <div className="sm:px-10 py-4 sm:py-8 h-full flex items-center justify-center">
       <AddForm type="expense" defaultCurrency={defaultCurrency} />
     </div>
   );

@@ -15,7 +15,7 @@ import {
 } from "@nextui-org/react";
 import useTableQuery from "@/hooks/useTableQuery";
 import useSelection from "@/hooks/useSelection";
-import { PaperclipIcon } from "lucide-react";
+import { ChevronLeft, PaperclipIcon } from "lucide-react";
 import Block from "./block";
 import TopContent from "./table/top-content";
 import DocModal from "../operations/modals/doc-modal";
@@ -60,17 +60,13 @@ const renderCell = (
         </span>
       );
     case "title":
-      return (
-        <span className="line-clamp-1 break-all xl:max-w-[5vw]">
-          {cellValue}
-        </span>
-      );
+      return <span className="line-clamp-1 break-all">{cellValue}</span>;
     case "transaction_type":
       const transactionType = TRANSACTION_TYPES.find(
         (type) => type.value === cellValue
       )?.name;
       return (
-        <span className="line-clamp-1 break-all xl:max-w-[5vw]">
+        <span className="line-clamp-1 break-all">
           {transactionType || cellValue}
         </span>
       );
@@ -166,31 +162,30 @@ export default function PreviewTable({
 
   return (
     <Block
-      title={"Podgląd"}
-      className="w-screen sm:w-full"
-      hideTitleMobile
-      cta={
-        <TopContent
-          type={type}
-          selected={selectedKeys}
-          handleSearch={handleSearch}
-          deletionCallback={() => setSelectedKeys([])}
-          search={search}
-          state={{
-            currency: {
-              value: searchQuery.currency,
-              onChange: handleCurrencyChange,
-            },
-            ...(type === "stock" && {
-              transaction: {
-                value: searchQuery.transaction,
-                onChange: handleTransactionChange,
-              },
-            }),
-          }}
-          viewOnly
-        />
-      }
+      title="Podgląd"
+      className="max-w-3xl w-full mx-auto"
+      // cta={
+      //   <TopContent
+      //     type={type}
+      //     selected={selectedKeys}
+      //     handleSearch={handleSearch}
+      //     deletionCallback={() => setSelectedKeys([])}
+      //     search={search}
+      //     state={{
+      //       currency: {
+      //         value: searchQuery.currency,
+      //         onChange: handleCurrencyChange,
+      //       },
+      //       ...(type === "stock" && {
+      //         transaction: {
+      //           value: searchQuery.transaction,
+      //           onChange: handleTransactionChange,
+      //         },
+      //       }),
+      //     }}
+      //     viewOnly
+      //   />
+      // }
     >
       <DocModal docPath={docPath} setDocPath={setDocPath} />
       <ScrollShadow orientation="horizontal" hideScrollBar>
@@ -252,7 +247,7 @@ export default function PreviewTable({
           </TableBody>
         </Table>
       </ScrollShadow>
-      {count > 0 && (
+      {count > 0 && pages > 1 && (
         <div className="mt-2 flex-1 flex items-end justify-end">
           <Pagination
             size="sm"
