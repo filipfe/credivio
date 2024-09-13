@@ -6,19 +6,24 @@ import { Button, ButtonProps, cn } from "@nextui-org/react";
 import { Check, type LucideIcon } from "lucide-react";
 
 interface Props extends FormHTMLAttributes<HTMLFormElement> {
-  mutation: (formData: FormData) => Promise<SupabaseResponse<any> | undefined>;
+  mutation?: (formData: FormData) => Promise<SupabaseResponse<any> | undefined>;
   buttonProps?: ButtonProps & {
     icon?: LucideIcon;
   };
   callback?: () => void;
+  onClose?: () => void;
   successMessage?: string;
+  buttonWrapperClassName?: string;
 }
 
 export default function Form({
   children,
   mutation,
   callback,
+  id,
+  onClose,
   className,
+  buttonWrapperClassName,
   successMessage,
   buttonProps: {
     children: buttonChildren,
@@ -32,32 +37,54 @@ export default function Form({
 
   const action = (formData: FormData) =>
     startTransition(async () => {
-      const res = await mutation(formData);
+      const res = await mutation!(formData);
       if (res?.error) {
         toast({
           type: "error",
           message: res.error,
         });
-      } else if (callback) {
-        callback();
-      } else if (successMessage) {
-        toast({
-          type: "success",
-          message: successMessage,
-        });
+      } else {
+        callback && callback();
+        successMessage &&
+          toast({
+            type: "success",
+            message: successMessage,
+          });
       }
     });
 
   return (
-    <form action={action} className={className} {...props}>
+    <form
+      id={id}
+      action={mutation ? action : undefined}
+      className={className}
+      {...props}
+    >
       {children}
-      <div className="max-w-max ml-auto">
+      <div
+        className={cn(
+          "max-w-max ml-auto flex items-center gap-3 mt-6",
+          buttonWrapperClassName
+        )}
+      >
+        {onClose && (
+          <Button
+            disableRipple
+            isDisabled={isPending}
+            disabled={isPending}
+            onPress={onClose}
+            className="border"
+          >
+            Anuluj
+          </Button>
+        )}
         <Button
           type="submit"
           disableRipple
           color="primary"
+          form={id}
           isDisabled={isPending || buttonProps.disabled}
-          className={cn("mt-6", buttonClassName)}
+          className={cn(buttonClassName)}
           {...buttonProps}
         >
           {isPending ? (

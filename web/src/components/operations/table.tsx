@@ -130,7 +130,7 @@ export default function OperationTable({
           return <span className="line-clamp-1 break-all">{cellValue}</span>;
       }
     },
-    [selectedKeys]
+    [selectedKeys, props.type, onRowAction]
   );
 
   return (

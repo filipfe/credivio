@@ -87,7 +87,7 @@ export default function AddForm({
           title={
             <div className="flex items-center gap-2">
               <ScanTextIcon size={16} opacity={0.8} />
-              <span>Skan dokumentu</span>
+              <span>Skan zdjęcia</span>
             </div>
           }
         >

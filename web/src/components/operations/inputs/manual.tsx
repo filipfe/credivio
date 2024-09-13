@@ -51,8 +51,6 @@ export default function Manual({
           label="Data uiszczenia"
           placeholder="24.01.2024"
           type="date"
-          required
-          isRequired
           defaultValue={initialValue?.issued_at || format(now, "yyyy-MM-dd")}
         />
         <Textarea
