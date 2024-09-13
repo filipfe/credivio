@@ -101,7 +101,10 @@ Deno.serve(async (req) => {
           return prev;
         }
 
-        return [...prev, sendNotification(profile, limit, exceededBreakpoint)];
+        return [
+          ...prev,
+          sendNotification(profile, { ...limit, currency }, exceededBreakpoint),
+        ];
       }, [] as Promise<void>[]),
     );
   }
