@@ -5,12 +5,12 @@ import Block from "../ui/block";
 import Empty from "../ui/empty";
 import numberFormat from "@/utils/formatters/currency";
 
-export default function Priority({ goal }: { goal: Goal }) {
+export default function Priority({ goal }: { goal?: Goal }) {
   const sum = goal
     ? goal.payments.reduce((prev, { amount }) => prev + amount, 0)
     : 0;
 
-  const percentage = Math.min(Math.max(sum / goal.price, 0), 1); // clamp percentage between 0 and 1
+  const percentage = Math.min(Math.max(sum / (goal?.price || sum), 0), 1); // clamp percentage between 0 and 1
   // Arc properties
   const radius = 45; // radius of the semicircle
   const circumference = Math.PI * radius; // circumference of the full semicircle
@@ -58,7 +58,7 @@ export default function Priority({ goal }: { goal: Goal }) {
           {/* Text in the middle of the semicircle */}
           <div
             className={cn(
-              "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-2 flex flex-col items-center gap-1",
+              "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-2 flex flex-col items-center gap-3",
               percentage >= 0.9 && "text-danger"
             )}
           >
