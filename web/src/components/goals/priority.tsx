@@ -19,43 +19,30 @@ export default function Priority({ goal }: { goal?: Goal }) {
   return (
     <Block title="Priorytet">
       {goal ? (
-        <div className="relative w-full pb-[50%] overflow-visible">
-          <svg
-            viewBox="-5 -5 110 60" /* Expand viewBox to add padding around the edges */
+        <div className="relative w-full pb-[50%] overflow-visible bg-light border rounded-md flex-1">
+          {/* <svg
+            viewBox="-5 -5 110 60" 
             className="absolute top-0 left-0 w-full h-full"
             xmlns="http://www.w3.org/2000/svg"
           >
-            {/* <path
-            d="M 5,50 A 45,45 0 0 1 95,50 L 95,50 Q 50,50 5,50 Z"
-            className={
-              percentage >= 0.5
-                ? percentage >= 0.9
-                  ? "fill-danger/10"
-                  : "fill-warning/10"
-                : "fill-primary/10"
-            }
-          /> */}
-            {/* Background Circle (incomplete circle) */}
             <path
-              d="M 5,50 A 45,45 0 0 1 95,50" /* Slightly adjust start and end points */
+              d="M 5,50 A 45,45 0 0 1 95,50"
               fill="none"
-              stroke="#e5e7eb"
-              strokeWidth="8" /* Decrease stroke width */
-              strokeLinecap="round" /* Make the background circle's edges rounded */
+              stroke="white"
+              strokeWidth="6" 
+              strokeLinecap="round" 
             />
-            {/* Progress Circle */}
             <path
-              d="M 5,50 A 45,45 0 0 1 95,50" /* Slightly adjust start and end points */
+              d="M 5,50 A 45,45 0 0 1 95,50"
               fill="none"
               stroke="#177981"
-              strokeWidth="8" /* Decrease stroke width */
-              strokeLinecap="round" /* Make the progress circle's edges rounded */
+              strokeWidth="6"
+              strokeLinecap="round" 
               strokeDasharray={circumference}
               strokeDashoffset={offset}
               className="transition-[stroke-dashoffset] duration-300"
             />
           </svg>
-          {/* Text in the middle of the semicircle */}
           <div
             className={cn(
               "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-2 flex flex-col items-center gap-3",
@@ -70,7 +57,7 @@ export default function Priority({ goal }: { goal?: Goal }) {
             <h4 className="text-2xl font-bold">
               {Math.round(percentage * 100)}%
             </h4>
-          </div>
+          </div> */}
         </div>
       ) : (
         <Empty title="Brak priorytetu" />
