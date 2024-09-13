@@ -3,6 +3,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  useDisclosure,
 } from "@nextui-org/react";
 import {
   MoreVerticalIcon,
@@ -29,6 +30,7 @@ export default function ActionsDropdown({
   onSelect,
   onDelete,
 }: Props) {
+  const disclosure = useDisclosure();
   const [edited, setEdited] = useState<Operation | null>(null);
   const [deleted, setDeleted] = useState<Operation | null>(null);
 
@@ -39,6 +41,7 @@ export default function ActionsDropdown({
         return;
       case "edit":
         setEdited(operation);
+        disclosure.onOpen();
         return;
       case "delete":
         setDeleted(operation);
@@ -95,6 +98,7 @@ export default function ActionsDropdown({
         setEdited={setEdited}
         type={type}
         onEdit={onEdit}
+        {...disclosure}
       />
       {!onDelete && (
         <DeleteModal

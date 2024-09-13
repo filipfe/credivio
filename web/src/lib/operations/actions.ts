@@ -9,7 +9,7 @@ export async function addOperations(
 ): Promise<SupabaseResponse<Operation>> {
   const type = formData.get("type")!.toString() as OperationType;
   const label = formData.get("label")?.toString() || null;
-  const data: Operation[] = JSON.parse(formData.get("data")!.toString());
+  const data = formData.get("data")?.toString();
 
   const supabase = createClient();
 
@@ -25,12 +25,47 @@ export async function addOperations(
     };
   }
 
-  const { error } = await supabase.rpc("actions_insert_operations", {
-    p_operations: data,
-    p_user_id: user.id,
-    p_type: type,
-    p_label: label,
-  });
+  let error = null;
+
+  if (data) {
+    try {
+      const operations = JSON.parse(data);
+      const { error: insertError } = await supabase.rpc(
+        "actions_insert_operations",
+        {
+          p_operations: operations,
+          p_user_id: user.id,
+          p_type: type,
+          p_label: label,
+        },
+      );
+
+      error = insertError;
+    } catch (err) {
+      console.warn("Couldn't parse operations: ", err);
+      return {
+        results: [],
+        error: "Wystąpił błąd przy dodawaniu operacji, spróbuj ponownie!",
+      };
+    }
+  } else {
+    const title = formData.get("title")?.toString();
+    const amount = formData.get("amount")?.toString();
+    const currency = formData.get("currency")?.toString();
+    const issued_at = formData.get("issued_at")?.toString();
+    const description = formData.get("description")?.toString();
+
+    const { error: insertError } = await supabase.from(`${type}s`).insert({
+      title,
+      amount,
+      currency,
+      issued_at,
+      description,
+      ...(type === "expense" ? { label } : {}),
+    });
+
+    error = insertError;
+  }
 
   if (error) {
     console.error("Couldn't add operation: ", error);
@@ -96,22 +131,6 @@ export async function getOperationsStats(
 
   return {
     result,
-  };
-}
-
-export async function getLabels(): Promise<SupabaseResponse<Label>> {
-  const supabase = createClient();
-  const { data: results, error } = await supabase.rpc("get_general_own_labels");
-
-  if (error) {
-    return {
-      results: [],
-      error: error.message,
-    };
-  }
-
-  return {
-    results,
   };
 }
 

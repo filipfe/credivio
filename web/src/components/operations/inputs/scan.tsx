@@ -1,27 +1,30 @@
 "use client";
 
+import Dropzone from "@/components/ui/dropzone";
 import { createClient } from "@/utils/supabase/client";
+import toast from "@/utils/toast";
 import { ScanLineIcon } from "lucide-react";
-import { Dispatch, SetStateAction, useCallback, useState } from "react";
+import {
+  Dispatch,
+  DragEvent,
+  SetStateAction,
+  useCallback,
+  useState,
+} from "react";
 import { v4 } from "uuid";
-import { hatch } from "ldrs";
-import dynamic from "next/dynamic";
-
-const Dropzone = dynamic(() => import("react-dropzone"), { ssr: false });
-
-hatch.register();
 
 type Props = {
+  type: OperationType;
   setRecords: Dispatch<SetStateAction<Operation[]>>;
 };
 
-export default function Scan({ setRecords }: Props) {
+export default function Scan({ type, setRecords }: Props) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+  const onChange = async (files: File[]) => {
     setIsLoading(true);
     const formData = new FormData();
-    acceptedFiles.forEach((file) => {
+    files.forEach((file) => {
       formData.append(v4(), file);
     });
     const supabase = createClient();
@@ -35,35 +38,22 @@ export default function Scan({ setRecords }: Props) {
     console.log({ operations });
     data && setRecords((prev) => [...prev, ...operations]);
     setIsLoading(false);
-  }, []);
+  };
 
   return (
     <Dropzone
-      onDrop={onDrop}
-      disabled={isLoading}
-      accept={{
-        "image/png": [".png"],
-        "image/jpeg": [".jpeg"],
-        //   "application/pdf": [".pdf"],
-      }}
+      id="scan-input"
+      allowedTypes={["image/png", "image/jpeg"]}
+      onChange={onChange}
+      className={type === "expense" ? "h-[382px]" : "h-[310px]"}
     >
-      {({ getRootProps, getInputProps }) => (
-        <div
-          {...getRootProps({
-            className:
-              "border border-dashed border-primary/60 py-8 rounded-md flex flex-col gap-4 items-center justify-center",
-          })}
-        >
-          <input {...getInputProps()} />
-          {isLoading ? (
-            <l-hatch size="28" stroke="4" speed="3.5" color="black"></l-hatch>
-          ) : (
-            <>
-              <ScanLineIcon size={28} />
-              <p className="text-sm">Dodaj lub upuść pliki</p>
-            </>
-          )}
-        </div>
+      {isLoading ? (
+        <l-hatch size="28" stroke="4" speed="3.5" color="black"></l-hatch>
+      ) : (
+        <>
+          <ScanLineIcon size={28} />
+          <p className="text-sm">Dodaj lub upuść pliki</p>
+        </>
       )}
     </Dropzone>
   );

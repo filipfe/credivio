@@ -1,12 +1,11 @@
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
 import { Input, Textarea } from "@nextui-org/react";
-import { FormHTMLAttributes } from "react";
 import LabelInput from "./label";
 import AmountInput from "./amount";
 import { format } from "date-fns";
 
-interface Props extends FormHTMLAttributes<HTMLFormElement> {
+interface Props {
   type: OperationType;
   initialValue?: Operation;
   defaultCurrency?: string;
@@ -20,14 +19,14 @@ export default function Manual({
   initialValue,
   defaultCurrency,
   withLabel,
-  ...props
 }: Props) {
   const currency = initialValue?.currency || defaultCurrency;
 
   return (
-    <form {...props}>
+    <>
       <div className="grid grid-cols-2 gap-4">
         <Input
+          className="col-span-2 md:col-span-1"
           classNames={{ inputWrapper: "!bg-light border shadow-none" }}
           name="title"
           label="Tytuł"
@@ -46,13 +45,12 @@ export default function Manual({
           defaultSelectedKeys={currency ? [currency] : []}
         />
         <Input
+          className="col-span-2 md:col-span-1"
           classNames={{ inputWrapper: "!bg-light border shadow-none" }}
           name="issued_at"
           label="Data uiszczenia"
           placeholder="24.01.2024"
           type="date"
-          required
-          isRequired
           defaultValue={initialValue?.issued_at || format(now, "yyyy-MM-dd")}
         />
         <Textarea
@@ -73,7 +71,9 @@ export default function Manual({
         )}
       </div>
       <input type="hidden" name="type" value={type} />
-      <input type="hidden" name="id" value={initialValue?.id} />
-    </form>
+      {initialValue && (
+        <input type="hidden" name="id" value={initialValue.id} />
+      )}
+    </>
   );
 }

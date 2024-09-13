@@ -83,16 +83,10 @@ export default function OperationTable({
 
       switch (columnKey) {
         case "title":
-          return (
-            <span className="line-clamp-1 break-all xl:max-w-[5vw]">
-              {cellValue}
-            </span>
-          );
+          return <span className="line-clamp-1 break-all">{cellValue}</span>;
         case "label":
           return (
-            <span className="line-clamp-1 break-all xl:max-w-[10vw]f">
-              {cellValue || "-"}
-            </span>
+            <span className="line-clamp-1 break-all">{cellValue || "-"}</span>
           );
         case "issued_at":
           return (
@@ -136,7 +130,7 @@ export default function OperationTable({
           return <span className="line-clamp-1 break-all">{cellValue}</span>;
       }
     },
-    [selectedKeys]
+    [selectedKeys, props.type, onRowAction]
   );
 
   return (

@@ -37,7 +37,7 @@ export default function TopContent({
         className="max-w-[24rem]"
         radius="md"
         classNames={{
-          inputWrapper: "!h-9 shadow-none",
+          inputWrapper: "!h-9 shadow-none border",
         }}
         placeholder="Wyszukaj"
         startContent={<SearchIcon size={16} className="mx-1" />}
