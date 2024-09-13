@@ -1,58 +1,25 @@
 "use client";
 
-import useClientQuery from "@/hooks/useClientQuery";
 import Empty from "../ui/empty";
-import { useEffect, useLayoutEffect, useRef } from "react";
-import { createClient } from "@/utils/supabase/client";
+import { useLayoutEffect, useRef } from "react";
 import OperationRef from "../operations/ref";
 import { ScrollShadow } from "@nextui-org/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { getLatestOperations } from "@/lib/operations/actions";
+import useSWR from "swr";
+import { getLatestOperations } from "@/lib/operations/queries";
 
 export default function LatestOperations() {
   const scrollAreaRef = useRef<HTMLElement | null>(null);
-  const { isLoading, results, setResults } = useClientQuery({
-    query: getLatestOperations("telegram"),
-  });
-
-  useEffect(() => {
-    const supabase = createClient();
-    supabase
-      .channel("table_db_changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "incomes",
-        },
-        (payload) => {
-          const operation = payload.new as Payment;
-          if (!operation.from_telegram) return;
-          setResults((prev) => [...prev, { ...operation, type: "income" }]);
-        }
-      )
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "expenses",
-        },
-        (payload) => {
-          const operation = payload.new as Payment;
-          if (!operation.from_telegram) return;
-          setResults((prev) => [...prev, { ...operation, type: "expense" }]);
-        }
-      )
-      .subscribe();
-  }, []);
-
+  const { isLoading, data: results } = useSWR(
+    ["latest_operations", "telegram"],
+    ([_k, from]) => getLatestOperations(from)
+  );
   useLayoutEffect(() => {
     if (!scrollAreaRef.current) return;
     scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
   }, [results]);
-  const reversedResults = [...results].reverse();
+
+  const reversedResults = results ? [...results].reverse() : [];
   return (
     <div className="flex flex-col gap-4 flex-1">
       <h3 className="text-sm sm:text-base">Ostatnie operacje</h3>
@@ -64,7 +31,7 @@ export default function LatestOperations() {
         >
           {isLoading ? (
             <div className="flex flex-col"></div>
-          ) : results.length > 0 ? (
+          ) : results && results.length > 0 ? (
             <div className="flex flex-col gap-4">
               <AnimatePresence>
                 {reversedResults.map((operation, k) => (
