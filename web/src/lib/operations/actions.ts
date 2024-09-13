@@ -82,35 +82,6 @@ export async function addOperations(
   redirect(path);
 }
 
-export async function getLatestOperations(
-  from?: string,
-): Promise<SupabaseResponse<Payment>> {
-  const supabase = createClient();
-  let query = supabase
-    .from("operations")
-    .select("id, title, amount, currency, type, issued_at")
-    .order("issued_at", { ascending: false })
-    .order("created_at", { ascending: false })
-    .order("id")
-    .limit(20);
-
-  if (from) {
-    query = query.eq(`from_${from}`, true);
-  }
-
-  const { data: results, error } = await query;
-
-  if (error) {
-    return {
-      results: [],
-      error: error.message,
-    };
-  }
-  return {
-    results,
-  };
-}
-
 export async function getOperationsStats(
   currency: string,
   type: string,

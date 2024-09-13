@@ -26,6 +26,7 @@ export async function insertOperations(
   const { data, error } = await supabase.rpc("actions_insert_operations", {
     p_operations: operations,
     p_user_id: user.id,
+    p_from_telegram: true,
   });
   if (!error) {
     console.log("Inserted operations: ", data);
