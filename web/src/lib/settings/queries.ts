@@ -3,23 +3,18 @@
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
 
-export async function getLanguages(): Promise<SupabaseResponse<Language>> {
+export async function getLanguages(): Promise<Language[]> {
   const supabase = createClient();
 
-  const { data: results, error } = await supabase.from("languages").select(
+  const { data, error } = await supabase.from("languages").select(
     "code, name",
   );
 
   if (error) {
-    return {
-      results: [],
-      error: error.message,
-    };
+    throw new Error(error.message);
   }
 
-  return {
-    results,
-  };
+  return data;
 }
 
 export async function getAccount(): Promise<Account> {
@@ -70,7 +65,7 @@ export async function getServices(): Promise<Service[]> {
   return services;
 }
 
-export const useServices = () => useSWR("services", getServices);
+export const useServices = () => useSWR("services", () => getServices());
 
 export async function updateAccount(account: Partial<Account>) {
   const supabase = createClient();

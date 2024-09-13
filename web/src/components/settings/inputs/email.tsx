@@ -24,7 +24,7 @@ export default function EmailInput() {
         onValueChange={(value) => setEmail(value)}
       />
       <Button
-        isDisabled={email === account.email || !email}
+        isDisabled={email === account?.email || !email}
         size="sm"
         radius="md"
         color="primary"

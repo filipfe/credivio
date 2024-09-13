@@ -18,15 +18,6 @@ export default function LocationInput() {
       <LanguageSelect
         defaultValue={preferences ? preferences["language"].name : ""}
       />
-      <Button
-        size="sm"
-        radius="md"
-        color="primary"
-        disableRipple
-        className="max-w-max self-end"
-      >
-        Zapisz
-      </Button>
     </div>
   );
 }
