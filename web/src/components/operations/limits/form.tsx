@@ -134,8 +134,6 @@ export default function LimitForm({
                   />
                   <UniversalSelect
                     name="currency"
-                    isLoading={isLoading}
-                    isDisabled={isLoading}
                     label="Waluta"
                     required
                     isRequired
