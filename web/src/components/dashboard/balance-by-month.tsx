@@ -129,7 +129,7 @@ export default function BalanceByMonth({
               content={(props) => (
                 <ChartTooltip
                   {...props}
-                  payloadName="Wydatki"
+                  payloadName="Bilans"
                   currency={preferences?.currency}
                   label={undefined}
                   labelFormatter={(label) =>

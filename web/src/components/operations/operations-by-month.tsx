@@ -71,7 +71,7 @@ export default function OperationsByMonth({ type }: Props) {
       {isLoading ? (
         <ChartLoader className="!p-0" hideTitle />
       ) : results && results.length > 0 ? (
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" minHeight={240}>
           <BarChart data={results}>
             <CartesianGrid vertical={false} opacity={0.5} />
             <YAxis
@@ -111,7 +111,7 @@ export default function OperationsByMonth({ type }: Props) {
               content={(props) => (
                 <ChartTooltip
                   {...props}
-                  payloadName="Wydatki"
+                  payloadName={type === "income" ? "Przychody" : "Wydatki"}
                   currency={currency}
                   label={undefined}
                   labelFormatter={(label) =>

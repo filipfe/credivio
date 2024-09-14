@@ -1,75 +1,92 @@
 "use client";
 
-import { cn } from "@nextui-org/react";
+import { Progress, ScrollShadow } from "@nextui-org/react";
 import Block from "../ui/block";
 import Empty from "../ui/empty";
 import numberFormat from "@/utils/formatters/currency";
+import usePreferences from "@/hooks/usePreferences";
 
 export default function Priority({ goal }: { goal?: Goal }) {
   const sum = goal
     ? goal.payments.reduce((prev, { amount }) => prev + amount, 0)
     : 0;
 
-  const percentage = Math.min(Math.max(sum / (goal?.price || sum), 0), 1); // clamp percentage between 0 and 1
-  // Arc properties
-  const radius = 45; // radius of the semicircle
-  const circumference = Math.PI * radius; // circumference of the full semicircle
-  const offset = circumference * (1 - percentage);
+  const percentage = goal ? (sum / goal.price) * 100 : 0;
 
   return (
-    <Block title="Priorytet">
+    <Block>
       {goal ? (
-        <div className="relative w-full pb-[50%] overflow-visible">
-          <svg
-            viewBox="-5 -5 110 60" /* Expand viewBox to add padding around the edges */
-            className="absolute top-0 left-0 w-full h-full"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            {/* <path
-            d="M 5,50 A 45,45 0 0 1 95,50 L 95,50 Q 50,50 5,50 Z"
-            className={
-              percentage >= 0.5
-                ? percentage >= 0.9
-                  ? "fill-danger/10"
-                  : "fill-warning/10"
-                : "fill-primary/10"
-            }
-          /> */}
-            {/* Background Circle (incomplete circle) */}
-            <path
-              d="M 5,50 A 45,45 0 0 1 95,50" /* Slightly adjust start and end points */
-              fill="none"
-              stroke="#e5e7eb"
-              strokeWidth="8" /* Decrease stroke width */
-              strokeLinecap="round" /* Make the background circle's edges rounded */
+        <div className="grid gap-6">
+          {/* <h3 className="text-3xl font-bold text-center">{goal.title}</h3> */}
+          <div className="grid gap-3">
+            <div className="flex items-start gap-4 justify-between relative pt-8">
+              <div className="grid gap-1">
+                <div className="flex items-center gap-2">
+                  <div className="bg-primary rounded-full h-2.5 w-2.5" />
+                  <span className="text-sm font-medium">Zebrano</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold">
+                    {numberFormat(goal.currency, sum)}
+                  </span>
+                  <span className="text-font/80">{`(${percentage.toFixed(
+                    2
+                  )}%)`}</span>
+                </div>
+              </div>
+              <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 text-center flex flex-col items-center">
+                <h2 className="text-font/80">Priorytet</h2>
+                <h3 className="font-bold text-lg">{goal.title}</h3>
+              </div>
+              <div className="flex items-end flex-col gap-1">
+                <div className="flex items-center gap-2">
+                  <div className="bg-light border rounded-full h-2.5 w-2.5" />
+                  <span className="text-sm font-medium">Pozostało</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold">
+                    {numberFormat(goal.currency, goal.price - sum)}
+                  </span>
+                  <span className="text-font/80">{`(${(
+                    100 - percentage
+                  ).toFixed(2)}%)`}</span>
+                </div>
+              </div>
+            </div>
+            <Progress
+              classNames={{
+                track: "border bg-light",
+              }}
+              value={percentage}
+              // valueLabel={percentage.toFixed(2) + "%"}
+              // showValueLabel
+              // label="Zebrano"
             />
-            {/* Progress Circle */}
-            <path
-              d="M 5,50 A 45,45 0 0 1 95,50" /* Slightly adjust start and end points */
-              fill="none"
-              stroke="#177981"
-              strokeWidth="8" /* Decrease stroke width */
-              strokeLinecap="round" /* Make the progress circle's edges rounded */
-              strokeDasharray={circumference}
-              strokeDashoffset={offset}
-              className="transition-[stroke-dashoffset] duration-300"
-            />
-          </svg>
-          {/* Text in the middle of the semicircle */}
-          <div
-            className={cn(
-              "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-2 flex flex-col items-center gap-3",
-              percentage >= 0.9 && "text-danger"
-            )}
-          >
-            <h3 className="text-2xl font-bold">{goal.title}</h3>
-            <h5 className="text-sm font-medium text-center">
-              {numberFormat(goal.currency, sum)} /{" "}
-              {numberFormat(goal.currency, goal.price)}
-            </h5>
-            <h4 className="text-2xl font-bold">
-              {Math.round(percentage * 100)}%
-            </h4>
+          </div>
+          <div>
+            <div className="flex items-center justify-between gap-2 pb-2">
+              <span className="text-sm font-medium uppercase">Data</span>
+              <span className="text-sm font-bold uppercase">Wpłaty</span>
+              <span className="text-sm font-medium uppercase">Kwota</span>
+            </div>
+            <ScrollShadow className="max-h-[calc(100vh-684px)]" hideScrollBar>
+              <ul>
+                {[...goal.payments].reverse().map((payment) => (
+                  <PaymentRef
+                    {...payment}
+                    currency={goal.currency}
+                    key={`${goal.id}-payment-${payment.date}`}
+                  />
+                ))}
+                {[...goal.payments].reverse().map((payment) => (
+                  <PaymentRef
+                    {...payment}
+                    currency={goal.currency}
+                    key={`${goal.id}-payment-${payment.date}`}
+                  />
+                ))}
+              </ul>
+            </ScrollShadow>
           </div>
         </div>
       ) : (
@@ -78,3 +95,23 @@ export default function Priority({ goal }: { goal?: Goal }) {
     </Block>
   );
 }
+
+const PaymentRef = ({
+  date,
+  amount,
+  currency,
+}: GoalPayment & Pick<Goal, "currency">) => {
+  const { data: preferences } = usePreferences();
+  return (
+    <li className="py-2 first:pt-0 border-b last:border-b-0 flex items-center justify-between gap-2">
+      <span className="text-sm text-font/80">
+        {new Intl.DateTimeFormat(preferences?.language.code, {
+          dateStyle: "full",
+        }).format(new Date(date))}
+      </span>
+      <span className="text-sm text-font/80">
+        {numberFormat(currency, amount)}
+      </span>
+    </li>
+  );
+};

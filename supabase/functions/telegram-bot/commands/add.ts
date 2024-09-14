@@ -24,7 +24,7 @@ export async function insertOperations(
   user: Profile,
 ): Promise<ProcessReturn> {
   const { data, error } = await supabase.rpc("actions_insert_operations", {
-    p_operations: operations,
+    p_operations: operations.map((op) => ({ ...op, from_telegram: true })),
     p_user_id: user.id,
   });
   if (!error) {

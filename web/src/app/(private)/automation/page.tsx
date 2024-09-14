@@ -14,8 +14,9 @@ export default async function Page() {
   const isRegistered = !!data?.telegram_id;
 
   return (
-    <div className="sm:px-10 pt-4 pb-16 sm:py-8 h-full flex flex-col 2xl:grid grid-cols-2 gap-6">
+    <div className="sm:px-10 py-4 sm:py-8 h-full flex md:items-center justify-center">
       <Block
+        className="max-w-4xl"
         title={
           <div className="flex items-center gap-4">
             <Image

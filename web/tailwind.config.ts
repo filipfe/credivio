@@ -20,7 +20,7 @@ const config: Config = {
         light: "#FAFAFA",
         background: "#FFFFFF",
         "success-light": "#EFFCEE",
-        danger: "#B33939",
+        danger: "#c43333",
         "danger-light": "#FCEEEE",
       },
       keyframes: {

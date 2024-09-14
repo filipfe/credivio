@@ -65,15 +65,15 @@ export default function Table({
           return (
             <Chip
               size="sm"
-              variant="flat"
-              color={item.type === "income" ? "success" : "danger"}
-              classNames={{ content: "text-sm" }}
-              className={cn(
-                "border",
-                item.type === "income"
-                  ? "bg-success/10 border-success/20"
-                  : "bg-danger/10 border-danger/20"
-              )}
+              variant="light"
+              color={item.type === "income" ? "primary" : "danger"}
+              classNames={{ content: "text-sm font-medium" }}
+              className={
+                cn()
+                // item.type === "income"
+                //   ? "text-primary border-primary/60 shadow-[inset_0px_0px_9px_rgba(23,121,129,0.25)]"
+                //   : "text-danger border-danger/60 shadow-[inset_0px_0px_9px_rgba(179,57,57,0.25)]"
+              }
             >
               {/* <span
               className={cn(
@@ -81,7 +81,7 @@ export default function Table({
                 item.type === "income" ? "text-success" : "text-danger"
               )}
             > */}
-              {item.type === "income" ? "+" : "-"}{" "}
+              {item.type === "income" ? "+" : "-"}
               {numberFormat(item.currency, item[columnKey])}
               {/* </span> */}
             </Chip>
