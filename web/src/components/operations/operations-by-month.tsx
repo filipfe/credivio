@@ -111,7 +111,7 @@ export default function OperationsByMonth({ type }: Props) {
               content={(props) => (
                 <ChartTooltip
                   {...props}
-                  payloadName="Wydatki"
+                  payloadName={type === "income" ? "Przychody" : "Wydatki"}
                   currency={currency}
                   label={undefined}
                   labelFormatter={(label) =>

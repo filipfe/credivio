@@ -32,13 +32,15 @@ export default async function StatsList({
         cta={
           <Link href="/incomes/add">
             <Button
-              isIconOnly
-              variant="flat"
-              size="sm"
               as="div"
-              className="h-7 min-w-7 w-7"
+              variant="light"
+              disableRipple
+              startContent={<PlusIcon size={14} />}
+              className="h-8 bg-light border"
+              size="sm"
+              radius="md"
             >
-              <PlusIcon size={16} />
+              Dodaj
             </Button>
           </Link>
         }
@@ -51,13 +53,15 @@ export default async function StatsList({
         cta={
           <Link href="/expenses/add">
             <Button
-              isIconOnly
-              variant="flat"
-              size="sm"
               as="div"
-              className="h-7 min-w-7 w-7"
+              variant="light"
+              disableRipple
+              startContent={<PlusIcon size={14} />}
+              className="h-8 bg-light border"
+              size="sm"
+              radius="md"
             >
-              <PlusIcon size={16} />
+              Dodaj
             </Button>
           </Link>
         }
