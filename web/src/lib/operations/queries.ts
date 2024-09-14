@@ -118,7 +118,7 @@ export async function addLimit(limit: NewLimit) {
 
   const supabase = createClient();
 
-  const { error } = await supabase.from("limits").insert({
+  const { error } = await supabase.from("limits").upsert({
     amount,
     currency,
     period,

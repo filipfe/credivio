@@ -56,9 +56,7 @@ export default async function Page({
           <Expenses searchParams={searchParams} />
         </Suspense>
       </Providers>
-      <Suspense>
-        <Limits defaultCurrency={defaultCurrency} />
-      </Suspense>
+      <Limits defaultCurrency={defaultCurrency} />
     </div>
   );
 }
