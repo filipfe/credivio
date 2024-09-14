@@ -31,7 +31,8 @@ export default async function Page({
   const { last_month, last_day } = result;
 
   return (
-    <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 xl:grid grid-cols-2 2xl:grid-cols-4 2xl:grid-rows-[max-content_1fr_max-content]">
+    <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 xl:grid grid-cols-2 2xl:grid-cols-4 2xl:grid-rows-[max-content_max-content_1fr]">
+      <Limits defaultCurrency={defaultCurrency} />
       <div className="col-[1/2]">
         <Stat
           title="Dzisiaj"
@@ -49,14 +50,13 @@ export default async function Page({
         />
       </div>
       <Providers>
-        <div className="col-start-1 col-end-3 row-start-2 row-end-3 flex flex-col order-last">
+        <div className="col-start-1 col-end-3 row-start-3 row-end-3 flex flex-col order-last">
           <OperationsByMonth type="expense" />
         </div>
         <Suspense fallback={<Loader className="row-span-3 col-span-2" />}>
           <Expenses searchParams={searchParams} />
         </Suspense>
       </Providers>
-      <Limits defaultCurrency={defaultCurrency} />
     </div>
   );
 }
