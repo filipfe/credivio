@@ -1,3 +1,4 @@
+import Form from "@/components/ui/form";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
 import { addLimit, useLimits } from "@/lib/operations/queries";
@@ -33,32 +34,27 @@ const periods = [
   },
 ];
 
+interface Props
+  extends Pick<
+    ReturnType<typeof useDisclosure>,
+    "onOpenChange" | "isOpen" | "onClose"
+  > {
+  defaultLimit: NewLimit;
+}
+
 export default function LimitForm({
   isOpen,
   onOpenChange,
-  period,
-  currency,
+  defaultLimit,
   onClose,
-}: Pick<
-  ReturnType<typeof useDisclosure>,
-  "onOpenChange" | "isOpen" | "onClose"
-> &
-  Pick<NewLimit, "period" | "currency">) {
-  const { mutate } = useLimits(currency);
+}: Props) {
+  const [singleRecord, setSingleRecord] = useState<NewLimit>(defaultLimit);
+  const { mutate } = useLimits(singleRecord.currency);
   const [isLoading, setIsLoading] = useState(false);
-  const [singleRecord, setSingleRecord] = useState<NewLimit>({
-    amount: "",
-    currency,
-    period,
-  });
 
   useLayoutEffect(() => {
-    setSingleRecord((prev) => ({ ...prev, period }));
-  }, [period]);
-
-  useLayoutEffect(() => {
-    setSingleRecord((prev) => ({ ...prev, currency }));
-  }, [currency]);
+    setSingleRecord(defaultLimit);
+  }, [defaultLimit]);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -76,13 +72,22 @@ export default function LimitForm({
     setIsLoading(false);
   };
 
+  const isEdit = !!defaultLimit.amount;
+
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
         {(onClose) => (
           <>
-            <ModalHeader className="font-normal">Nowy limit</ModalHeader>
-            <form onSubmit={onSubmit}>
+            <ModalHeader className="font-normal">
+              {isEdit ? "Edytuj" : "Nowy"} limit
+            </ModalHeader>
+            <Form
+              onSubmit={onSubmit}
+              buttonWrapperClassName="pb-4 px-6 mt-4"
+              onClose={onClose}
+              isLoading={isLoading}
+            >
               <ModalBody>
                 <div className="grid grid-cols-[1fr_128px] gap-4">
                   <Select
@@ -90,6 +95,7 @@ export default function LimitForm({
                     label="Okres"
                     required
                     name="period"
+                    isDisabled={isEdit}
                     selectedKeys={
                       singleRecord.period ? [singleRecord.period] : []
                     }
@@ -137,6 +143,7 @@ export default function LimitForm({
                     label="Waluta"
                     required
                     isRequired
+                    isDisabled={isEdit}
                     selectedKeys={
                       singleRecord.currency ? [singleRecord.currency] : []
                     }
@@ -152,30 +159,7 @@ export default function LimitForm({
                   />
                 </div>
               </ModalBody>
-              <ModalFooter>
-                <Button
-                  disableRipple
-                  isDisabled={isLoading}
-                  disabled={isLoading}
-                  onClick={onClose}
-                  className="border"
-                >
-                  Anuluj
-                </Button>
-                <div className={isLoading ? "opacity-60" : "opacity-100"}>
-                  <Button
-                    color="primary"
-                    disableRipple
-                    type="submit"
-                    disabled={isLoading}
-                    isLoading={isLoading}
-                  >
-                    {!isLoading && <SaveIcon size={16} />}
-                    Zapisz
-                  </Button>
-                </div>
-              </ModalFooter>
-            </form>
+            </Form>
           </>
         )}
       </ModalContent>

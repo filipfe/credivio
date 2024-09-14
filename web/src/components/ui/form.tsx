@@ -14,6 +14,7 @@ interface Props extends FormHTMLAttributes<HTMLFormElement> {
   onClose?: () => void;
   successMessage?: string;
   buttonWrapperClassName?: string;
+  isLoading?: boolean;
 }
 
 export default function Form({
@@ -24,6 +25,7 @@ export default function Form({
   onClose,
   className,
   buttonWrapperClassName,
+  isLoading,
   successMessage,
   buttonProps: {
     children: buttonChildren,
@@ -83,12 +85,14 @@ export default function Form({
           disableRipple
           color="primary"
           form={id}
-          isDisabled={isPending || buttonProps.disabled}
+          isDisabled={isLoading || isPending || buttonProps.disabled}
           className={cn(buttonClassName)}
           {...buttonProps}
         >
-          {isPending ? (
-            <l-hatch size={14} color="#FFF" stroke={2} />
+          {isLoading || isPending ? (
+            <div className="w-4 grid place-content-center">
+              <l-hatch size={14} color="#FFF" stroke={2} />
+            </div>
           ) : ButtonIcon ? (
             <ButtonIcon size={16} />
           ) : (
