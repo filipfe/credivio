@@ -30,7 +30,7 @@ export default async function Page({
   const { last_month, last_day } = result;
 
   return (
-    <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 sm:grid grid-cols-2 xl:grid-cols-4 lg:grid-rows-[max-content_1fr]">
+    <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 sm:grid grid-cols-2 2xl:grid-cols-4 2xl:grid-rows-[max-content_1fr]">
       <div className="col-[1/2]">
         <Stat
           title="Dzisiaj"
