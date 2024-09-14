@@ -8,6 +8,8 @@ import LatestOperations from "@/components/dashboard/latest-operations";
 import { OperationLoader } from "@/components/operations/ref";
 import Block from "@/components/ui/block";
 import { getPreferences } from "@/lib/settings/actions";
+import Priority from "@/components/goals/priority";
+import { createClient } from "@/utils/supabase/server";
 
 export default async function Dashboard() {
   const { result: preferences, error } = await getPreferences();
@@ -30,6 +32,26 @@ export default async function Dashboard() {
       {/* <Suspense fallback={latestOperationsFallback}>
         <PortfolioStructure />
       </Suspense> */}
+      <Suspense>
+        <GoalPriority />
+      </Suspense>
+    </div>
+  );
+}
+
+async function GoalPriority() {
+  const supabase = createClient();
+  const { data: goal } = await supabase
+    .from("goals")
+    .select("title, price, currency, payments:goals_payments(date, amount)")
+    .eq("is_priority", true)
+    .single();
+
+  if (!goal) return <></>;
+
+  return (
+    <div className="col-span-2">
+      <Priority goal={goal} />
     </div>
   );
 }
