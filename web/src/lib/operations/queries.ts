@@ -68,7 +68,9 @@ export const useOperationsAmountsHistory = (
     ([_, type, params]) => getOperationsAmountsHistory(type, params),
   );
 
-async function getBalanceHistory(params: SearchParams) {
+async function getBalanceHistory(
+  params: SearchParams,
+): Promise<{ date: string; total_amount: number }[]> {
   const supabase = createClient();
 
   const { data, error } = await supabase.rpc("get_dashboard_monthly_totals", {
@@ -130,4 +132,43 @@ export async function addLimit(limit: NewLimit) {
   }
 
   return {};
+}
+
+async function getLabels(): Promise<Label[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("get_general_own_labels");
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export const useLabels = () => useSWR("labels", () => getLabels());
+
+export async function getLatestOperations(
+  from?: string,
+): Promise<Payment[]> {
+  const supabase = createClient();
+  let query = supabase
+    .from("operations")
+    .select("id, title, amount, currency, type, issued_at")
+    .order("issued_at", { ascending: false })
+    .order("created_at", { ascending: false })
+    .order("id")
+    .limit(20);
+
+  if (from) {
+    query = query.eq(`from_${from}`, true);
+  }
+
+  const { data, error } = await query;
+
+  console.log(data);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
 }

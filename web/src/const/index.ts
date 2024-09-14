@@ -108,16 +108,16 @@ export const PAGES: Page[] = [
           },
         ],
       },
-      {
-        title: "Obligacje",
-        href: "/bonds",
-        icon: ScrollTextIcon,
-      },
-      {
-        title: "Nieruchomości",
-        href: "/immovables",
-        icon: Building2Icon,
-      },
+      // {
+      //   title: "Obligacje",
+      //   href: "/bonds",
+      //   icon: ScrollTextIcon,
+      // },
+      // {
+      //   title: "Nieruchomości",
+      //   href: "/immovables",
+      //   icon: Building2Icon,
+      // },
     ],
   },
   // {
@@ -137,16 +137,16 @@ export const PAGES: Page[] = [
   //     },
   //   ],
   // },
-  {
-    title: "Asystent AI",
-    href: "/ai-actions",
-    icon: BrainIcon,
-  },
-  {
-    title: "Aktualności",
-    href: "/news",
-    icon: NewspaperIcon,
-  },
+  // {
+  //   title: "Asystent AI",
+  //   href: "/ai-actions",
+  //   icon: BrainIcon,
+  // },
+  // {
+  //   title: "Aktualności",
+  //   href: "/news",
+  //   icon: NewspaperIcon,
+  // },
 ];
 
 export const SETTINGS_PAGES: Page[] = [

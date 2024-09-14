@@ -1,6 +1,7 @@
+import Dropzone from "@/components/ui/dropzone";
 import parseCSV from "@/utils/operations/parse-csv";
 import { Button } from "@nextui-org/react";
-import { PaperclipIcon } from "lucide-react";
+import { FileSpreadsheet, PaperclipIcon } from "lucide-react";
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 
 type Props<T> = {
@@ -10,40 +11,42 @@ type Props<T> = {
 };
 
 export default function CSVInput<T>({ type, formatter, setRecords }: Props<T>) {
-  const [fileName, setFileName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const onFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.item(0);
-    if (!file) return;
-    setFileName(file.name);
-    await parseCSV(
-      file,
-      (results) => setRecords((prev) => [...prev, ...formatter(results)]),
-      {
-        type,
-      }
+  const onChange = async (files: File[]) => {
+    setIsLoading(true);
+    await Promise.all(
+      files.map((file) => async () => {
+        await parseCSV(
+          file,
+          (results) => setRecords((prev) => [...prev, ...formatter(results)]),
+          {
+            type,
+          }
+        );
+      })
     );
+    setIsLoading(false);
   };
 
   return (
-    <Button
-      as="label"
-      variant="light"
-      className="bg-light"
-      disableRipple
-      fullWidth
-      htmlFor="csv-file"
+    <Dropzone
+      id="csv-input"
+      allowedTypes={[
+        ".csv",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/vnd.ms-excel",
+      ]}
+      onChange={onChange}
     >
-      <PaperclipIcon className="mt-0.5" size={16} />
-      {fileName || "Dodaj plik"}
-      <input
-        type="file"
-        id="csv-file"
-        required
-        className="sr-only"
-        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-        onChange={onFileChange}
-      />
-    </Button>
+      {isLoading ? (
+        <l-hatch size="28" stroke="4" speed="3.5" color="black"></l-hatch>
+      ) : (
+        <>
+          <FileSpreadsheet size={28} />
+          <p className="text-sm">Dodaj lub upuść pliki</p>
+        </>
+      )}
+    </Dropzone>
   );
 }

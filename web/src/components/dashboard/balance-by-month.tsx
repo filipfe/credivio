@@ -13,6 +13,7 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -24,6 +25,22 @@ import UniversalSelect from "../ui/universal-select";
 import { CURRENCIES } from "@/const";
 
 const now = new Date();
+
+const generateTicks = (min: number, max: number, tickCount: number) => {
+  const ticks = [];
+  const step = (max - min) / (tickCount - 1); // Step size between ticks
+  for (let i = 0; i < tickCount; i++) {
+    const tick = min + i * step;
+    ticks.push(Math.round(tick));
+  }
+
+  // Ensure 0 is included in ticks, even if it's not part of the calculated step
+  if (!ticks.includes(0)) {
+    ticks.push(0);
+  }
+
+  return ticks.sort((a, b) => a - b); // Sort the ticks in ascending order
+};
 
 export default function BalanceByMonth({
   preferences,
@@ -104,6 +121,7 @@ export default function BalanceByMonth({
               vertical={false}
               className="stroke-content4"
             />
+            <ReferenceLine y={0} stroke="#177981" />
             <Tooltip
               cursor={{ fill: "#177981", fillOpacity: 0.1 }}
               isAnimationActive={false}
@@ -111,7 +129,7 @@ export default function BalanceByMonth({
               content={(props) => (
                 <ChartTooltip
                   {...props}
-                  payloadName="Wydatki"
+                  payloadName="Bilans"
                   currency={preferences?.currency}
                   label={undefined}
                   labelFormatter={(label) =>

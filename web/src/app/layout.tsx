@@ -5,6 +5,7 @@ import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "react-hot-toast";
 import Script from "next/script";
 import Providers from "./providers";
+import type {} from "ldrs";
 
 export const metadata: Metadata = {
   title: "Create Next App",

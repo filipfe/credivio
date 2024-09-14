@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      // screens: {
+      //   xs: "540px",
+      // },
       colors: {
         primary: "#177981",
         secondary: "#fdbb2d",
@@ -17,7 +20,7 @@ const config: Config = {
         light: "#FAFAFA",
         background: "#FFFFFF",
         "success-light": "#EFFCEE",
-        danger: "#B33939",
+        danger: "#c43333",
         "danger-light": "#FCEEEE",
       },
       keyframes: {

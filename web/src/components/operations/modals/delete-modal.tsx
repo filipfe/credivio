@@ -1,5 +1,6 @@
 import Toast from "@/components/ui/toast";
 import { deleteRows } from "@/lib/general/actions";
+import { useLimits } from "@/lib/operations/queries";
 import {
   Button,
   Modal,
@@ -12,6 +13,7 @@ import {
 import { Trash2Icon } from "lucide-react";
 import { Fragment, useEffect, useTransition } from "react";
 import toast from "react-hot-toast";
+import { useSWRConfig } from "swr";
 
 type Props = {
   deleted: Operation[];
@@ -20,6 +22,7 @@ type Props = {
 };
 
 export default function DeleteModal({ deleted, type, onClose }: Props) {
+  const { mutate } = useSWRConfig();
   const [isPending, startTransition] = useTransition();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -69,6 +72,9 @@ export default function DeleteModal({ deleted, type, onClose }: Props) {
                         <Toast {...t} type="error" message={error} />
                       ));
                     } else {
+                      await Promise.all(
+                        deleted.map((op) => mutate(["limits", op.currency]))
+                      );
                       onClose();
                       toast.custom((t) => (
                         <Toast

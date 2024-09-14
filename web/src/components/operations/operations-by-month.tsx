@@ -61,7 +61,6 @@ export default function OperationsByMonth({ type }: Props) {
           size="sm"
           radius="md"
           aria-label="Waluta"
-          isLoading={isLoading}
           isDisabled={isLoading}
           selectedKeys={currency ? [currency] : []}
           elements={CURRENCIES}
@@ -112,7 +111,7 @@ export default function OperationsByMonth({ type }: Props) {
               content={(props) => (
                 <ChartTooltip
                   {...props}
-                  payloadName="Wydatki"
+                  payloadName={type === "income" ? "Przychody" : "Wydatki"}
                   currency={currency}
                   label={undefined}
                   labelFormatter={(label) =>
