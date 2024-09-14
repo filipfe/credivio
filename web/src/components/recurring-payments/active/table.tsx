@@ -40,6 +40,10 @@ export default function Table({
     initialPage && !isNaN(parseInt(initialPage)) ? parseInt(initialPage) : 1
   );
 
+  useEffect(() => {
+    setIsLoading(false);
+  }, [payments]);
+
   const renderCell = useCallback(
     (
       item: WithId<RecurringPayment>,
