@@ -26,49 +26,49 @@ export const PAGES: Page[] = [
     href: "/",
     icon: LayoutDashboardIcon,
   },
+  // {
+  //   title: "Operacje",
+  //   href: "/operations",
+  //   icon: RepeatIcon,
+  //   links: [
   {
-    title: "Operacje",
-    href: "/operations",
-    icon: RepeatIcon,
+    title: "Przychody",
+    href: "/incomes",
+    icon: Wallet2Icon,
     links: [
       {
-        title: "Przychody",
-        href: "/incomes",
-        icon: Wallet2Icon,
-        links: [
-          {
-            title: "Dodaj",
-            icon: PlusIcon,
-            href: "/incomes/add",
-          },
-        ],
-      },
-      {
-        title: "Wydatki",
-        href: "/expenses",
-        icon: CoinsIcon,
-        links: [
-          {
-            title: "Dodaj",
-            icon: PlusIcon,
-            href: "/expenses/add",
-          },
-        ],
-      },
-      {
-        title: "Płatności cykliczne",
-        href: "/recurring-payments",
-        icon: RepeatIcon,
-        links: [
-          {
-            title: "Dodaj",
-            icon: PlusIcon,
-            href: "/recurring-payments/add",
-          },
-        ],
+        title: "Dodaj",
+        icon: PlusIcon,
+        href: "/incomes/add",
       },
     ],
   },
+  {
+    title: "Wydatki",
+    href: "/expenses",
+    icon: CoinsIcon,
+    links: [
+      {
+        title: "Dodaj",
+        icon: PlusIcon,
+        href: "/expenses/add",
+      },
+    ],
+  },
+  {
+    title: "Płatności cykliczne",
+    href: "/recurring-payments",
+    icon: RepeatIcon,
+    links: [
+      {
+        title: "Dodaj",
+        icon: PlusIcon,
+        href: "/recurring-payments/add",
+      },
+    ],
+  },
+  // ],
+  // },
   {
     title: "Automatyzacja",
     href: "/automation",
