@@ -2,7 +2,7 @@ import { Fragment, useContext } from "react";
 import { signOut } from "@/lib/auth/actions";
 import { BreadcrumbItem, Breadcrumbs, Button } from "@nextui-org/react";
 import { AlignJustifyIcon, LogOutIcon, SettingsIcon } from "lucide-react";
-import { LINKS, SETTINGS_PAGES } from "@/const";
+import { LINKS, PAGES, SETTINGS_PAGES } from "@/const";
 import { usePathname } from "next/navigation";
 import { MenuContext } from "@/app/(private)/providers";
 
@@ -18,7 +18,7 @@ export default function Header() {
   const pathname = usePathname();
   const flatten = (arr: Page[]): Page[] =>
     arr.flatMap(({ links, ...page }) => [page, ...flatten(links || [])]);
-  const links = flatten([...LINKS, settingsPage]).filter(({ href }) =>
+  const links = flatten([...PAGES, settingsPage]).filter(({ href }) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href)
   );
   return (
