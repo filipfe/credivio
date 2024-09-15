@@ -90,8 +90,7 @@ Deno.serve(async (req) => {
       limits.reduce((prev, limit) => {
         const paidPercentage = (limit.total / limit.amount) * 100;
         const noCurrentPaidPercentage =
-          ((limit.total - amount) / limit.amount) /
-          100;
+          ((limit.total - amount) / limit.amount) * 100;
         const exceededBreakpoint = breakpoints.find((breakpoint) =>
           paidPercentage >= breakpoint.value &&
           noCurrentPaidPercentage < breakpoint.value
