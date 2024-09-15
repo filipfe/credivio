@@ -16,8 +16,8 @@ import EditModal from "./modals/edit-modal";
 import DeleteModal from "./modals/delete-modal";
 
 type Props = {
-  operation: Operation | null;
-  onSelect: () => void;
+  operation: Operation;
+  // onSelect?: () => void;
   onEdit?: (updated: Operation) => void;
   onDelete?: (id: string) => void;
   type: OperationType;
@@ -27,7 +27,7 @@ export default function ActionsDropdown({
   operation,
   type,
   onEdit,
-  onSelect,
+  // onSelect,
   onDelete,
 }: Props) {
   const disclosure = useDisclosure();
@@ -36,15 +36,15 @@ export default function ActionsDropdown({
 
   const onAction = (key: Key) => {
     switch (key) {
-      case "select":
-        onSelect();
-        return;
+      // case "select":
+      //   onSelect && onSelect();
+      //   return;
       case "edit":
         setEdited(operation);
         disclosure.onOpen();
         return;
       case "delete":
-        setDeleted(operation);
+        onDelete ? onDelete(operation.id) : setDeleted(operation);
         return;
       default:
         return;
@@ -65,13 +65,13 @@ export default function ActionsDropdown({
           aria-label="Dropdown menu with description"
           onAction={onAction}
         >
-          <DropdownItem
+          {/* <DropdownItem
             key="select"
             description="Zaznacz operację"
             startContent={<MousePointerSquareIcon size={16} />}
           >
             Zaznacz
-          </DropdownItem>
+          </DropdownItem> */}
           <DropdownItem
             key="edit"
             description="Modyfikuj operację"

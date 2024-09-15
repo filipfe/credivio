@@ -6,7 +6,6 @@ import {
   ReactNode,
   SetStateAction,
   useCallback,
-  useEffect,
   useState,
 } from "react";
 import {
@@ -22,10 +21,8 @@ import {
   Button,
 } from "@nextui-org/react";
 import useTableQuery from "@/hooks/useTableQuery";
-import useSelection from "@/hooks/useSelection";
-import { ChevronLeft, PaperclipIcon } from "lucide-react";
+import { PaperclipIcon } from "lucide-react";
 import Block from "./block";
-import TopContent from "./table/top-content";
 import DocModal from "../operations/modals/doc-modal";
 import Empty from "./empty";
 import { TRANSACTION_TYPES } from "@/const";
@@ -60,6 +57,7 @@ type Props<T> = {
   type: OperationType;
   rows: T[];
   topContent?: ReactNode;
+  setRows: Dispatch<SetStateAction<T[]>>;
 };
 
 export default function PreviewTable({
@@ -67,6 +65,7 @@ export default function PreviewTable({
   children,
   type,
   rows,
+  setRows,
 }: Props<Operation | StockTransaction>) {
   const [docPath, setDocPath] = useState<string | null>(null);
   const pages = Math.ceil(count / 10);
@@ -82,8 +81,8 @@ export default function PreviewTable({
     // handleTransactionChange,
   } = useTableQuery(rows, { viewOnly: true });
   const { page } = searchQuery;
-  const { selectionMode, selectedKeys, onSelectionChange, onRowAction } =
-    useSelection(items.map((item) => item.id));
+  // const { selectionMode, selectedKeys, onSelectionChange, onRowAction } =
+  //   useSelection(items.map((item) => item.id));
 
   const renderCell = useCallback(
     (item: any, columnKey: any) => {
@@ -136,10 +135,12 @@ export default function PreviewTable({
             <ActionsDropdown
               type={type}
               operation={item}
-              onSelect={() => onRowAction(item.id)}
-              onDelete={(id) =>
-                setItems((prev) => prev.filter((r) => r.id !== id))
-              }
+              // onSelect={() => onRowAction(item.id)}
+              onDelete={(id) => {
+                console.log(items);
+                setItems((prev) => prev.filter((r) => r.id !== id));
+                items.length === 0 && setRows([]);
+              }}
               onEdit={(updated) =>
                 setItems((prev) => {
                   const newArr = [...prev];
@@ -156,7 +157,10 @@ export default function PreviewTable({
           return <span className="line-clamp-1 break-all">{cellValue}</span>;
       }
     },
-    [onRowAction, setDocPath]
+    [
+      // onRowAction,
+      setDocPath,
+    ]
   );
 
   return (
@@ -196,13 +200,13 @@ export default function PreviewTable({
           bottomContentPlacement="outside"
           aria-label="operations-table"
           className="max-w-full w-full flex-1"
-          selectionMode={selectionMode}
-          selectedKeys={
-            items.every((item) => selectedKeys.includes(item.id))
-              ? "all"
-              : new Set(selectedKeys)
-          }
-          onSelectionChange={onSelectionChange}
+          // selectionMode={selectionMode}
+          // selectedKeys={
+          //   items.every((item) => selectedKeys.includes(item.id))
+          //     ? "all"
+          //     : new Set(selectedKeys)
+          // }
+          // onSelectionChange={onSelectionChange}
           classNames={{
             tr: "data-[selected=true]:[&>td]:before:bg-[#f2f2f2] [&_label[data-selected=true]>span::after]:bg-[#dadada]",
             td: "[&_span:last-child]:before:!border-neutral-200",
@@ -215,7 +219,14 @@ export default function PreviewTable({
                 (item) => type !== "stock" && (item as Operation).doc_path
               )
             ).map((column) => (
-              <TableColumn key={column.key}>{column.label}</TableColumn>
+              <TableColumn
+                allowsSorting={
+                  column.key !== "actions" && column.key !== "doc_path"
+                }
+                key={column.key}
+              >
+                {column.label}
+              </TableColumn>
             ))}
           </TableHeader>
           <TableBody

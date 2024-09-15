@@ -18,13 +18,11 @@ import {
   Pagination,
   ScrollShadow,
   Button,
-  cn,
 } from "@nextui-org/react";
 import useTableQuery from "@/hooks/useTableQuery";
 import TopContent from "../ui/table/top-content";
 import Block from "../ui/block";
 import Empty from "../ui/empty";
-import useSelection from "@/hooks/useSelection";
 import { PaperclipIcon } from "lucide-react";
 import DocModal from "./modals/doc-modal";
 import ActionsDropdown from "./actions-dropdown";
@@ -51,13 +49,13 @@ export default function OperationTable({
     handleLabelChange,
     handleCurrencyChange,
   } = useTableQuery(rows, { viewOnly: !!viewOnly, period });
-  const {
-    selectionMode,
-    selectedKeys,
-    onSelectionChange,
-    onRowAction,
-    setSelectedKeys,
-  } = useSelection(items.map((item) => item.id));
+  // const {
+  //   selectionMode,
+  //   selectedKeys,
+  //   onSelectionChange,
+  //   onRowAction,
+  //   setSelectedKeys,
+  // } = useSelection((viewOnly ? items : rows).map((item) => item.id));
   const { page, sort, search, label: _label } = searchQuery;
 
   useEffect(() => {
@@ -116,21 +114,27 @@ export default function OperationTable({
           ) : (
             <></>
           );
+        // case "actions":
+        //   return selectedKeys.length === 0 ? (
+        //     <ActionsDropdown
+        //       type={props.type}
+        //       operation={item}
+        //       onSelect={() => onRowAction(item.id)}
+        //     />
+        //   ) : (
+        //     <></>
+        //   );
         case "actions":
-          return selectedKeys.length === 0 ? (
-            <ActionsDropdown
-              type={props.type}
-              operation={item}
-              onSelect={() => onRowAction(item.id)}
-            />
-          ) : (
-            <></>
-          );
+          return <ActionsDropdown type={props.type} operation={item} />;
         default:
           return <span className="line-clamp-1 break-all">{cellValue}</span>;
       }
     },
-    [selectedKeys, props.type, onRowAction]
+    [
+      // selectedKeys,
+      props.type,
+      //  onRowAction
+    ]
   );
 
   return (
@@ -142,9 +146,9 @@ export default function OperationTable({
         <TopContent
           {...props}
           viewOnly={false}
-          selected={selectedKeys}
+          // selected={selectedKeys}
           handleSearch={handleSearch}
-          deletionCallback={() => setSelectedKeys([])}
+          // deletionCallback={() => setSelectedKeys([])}
           search={search}
           addHref={`/${props.type}s/add`}
           state={{
@@ -178,19 +182,7 @@ export default function OperationTable({
           bottomContentPlacement="outside"
           aria-label="operations-table"
           className="max-w-full w-full flex-1"
-          selectionMode={selectionMode}
-          selectedKeys={
-            rows.every((item) => selectedKeys.includes(item.id))
-              ? "all"
-              : new Set(selectedKeys)
-          }
-          onSelectionChange={onSelectionChange}
           classNames={{
-            // tr: "cursor-pointer data-[selected=true]:[&>td]:before:bg-[#f2f2f2] [&_label[data-selected=true]>span::after]:bg-[#dadada]",
-            tr: cn(
-              selectedKeys.length > 0 ? "cursor-pointer" : "cursor-auto",
-              "data-[selected=true]:[&>td]:font-medium"
-            ),
             td: "[&_span:last-child]:before:!border-neutral-200",
           }}
         >
@@ -201,7 +193,9 @@ export default function OperationTable({
             ).map((column) => (
               <TableColumn
                 key={column.key}
-                allowsSorting={count > 0 ? true : undefined}
+                allowsSorting={
+                  column.key !== "actions" && column.key !== "doc_path"
+                }
               >
                 {column.label}
               </TableColumn>
