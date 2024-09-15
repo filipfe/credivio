@@ -39,10 +39,10 @@ export default function GoalRef(goal: Goal) {
         </h3>
         <div className="h-10 flex items-end">
           <strong className="text-3xl font-bold text-white">
-            {numberFormat(currency, sum)}
+            {numberFormat(currency, sum, "compact")}
           </strong>
           <sub className="mb-2 ml-1.5 text-white text-sm">
-            / {numberFormat(currency, price)}
+            / {numberFormat(currency, price, "compact")}
           </sub>
         </div>
         <Progress
