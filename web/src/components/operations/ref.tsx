@@ -32,7 +32,7 @@ export default function OperationRef({
         <div className="h-10">
           <strong className="text-3xl font-bold text-white">
             {type === "income" ? "+" : type === "expense" ? "-" : ""}
-            {numberFormat(currency, amount)}
+            {numberFormat(currency, amount, "compact")}
           </strong>
         </div>
       </div>

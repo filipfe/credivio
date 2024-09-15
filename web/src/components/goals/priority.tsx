@@ -23,7 +23,7 @@ export default function Priority({ goal }: { goal?: Goal }) {
               <div className="grid gap-1">
                 <div className="flex items-center gap-2">
                   <div className="bg-primary rounded-full h-2.5 w-2.5" />
-                  <span className="text-sm font-medium">Zebrano</span>
+                  <span className="text-sm">Zebrano</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="font-bold">
@@ -41,7 +41,7 @@ export default function Priority({ goal }: { goal?: Goal }) {
               <div className="flex items-end flex-col gap-1">
                 <div className="flex items-center gap-2">
                   <div className="bg-light border rounded-full h-2.5 w-2.5" />
-                  <span className="text-sm font-medium">Pozostało</span>
+                  <span className="text-sm">Pozostało</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="font-bold">
@@ -66,19 +66,12 @@ export default function Priority({ goal }: { goal?: Goal }) {
           <div>
             <div className="flex items-center justify-between gap-2 pb-2">
               <span className="text-sm font-medium uppercase">Data</span>
-              <span className="text-sm font-bold uppercase">Wpłaty</span>
+              <span className="text-sm font-bold">Wpłaty</span>
               <span className="text-sm font-medium uppercase">Kwota</span>
             </div>
             <ScrollShadow className="max-h-[calc(100vh-684px)]" hideScrollBar>
               <ul>
-                {[...goal.payments].reverse().map((payment) => (
-                  <PaymentRef
-                    {...payment}
-                    currency={goal.currency}
-                    key={`${goal.id}-payment-${payment.date}`}
-                  />
-                ))}
-                {[...goal.payments].reverse().map((payment) => (
+                {goal.payments.map((payment) => (
                   <PaymentRef
                     {...payment}
                     currency={goal.currency}

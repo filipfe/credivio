@@ -280,7 +280,12 @@ export default function Form({
           </Tabs>
         </Block>
       </form>
-      <PreviewTable rows={records} type="stock" count={records.length}>
+      <PreviewTable
+        rows={records}
+        type="stock"
+        count={records.length}
+        setRows={setRecords as any}
+      >
         <div className="flex-1 flex items-end justify-end">
           <form
             className="flex flex-col"

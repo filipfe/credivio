@@ -26,49 +26,49 @@ export const PAGES: Page[] = [
     href: "/",
     icon: LayoutDashboardIcon,
   },
+  // {
+  //   title: "Operacje",
+  //   href: "/operations",
+  //   icon: RepeatIcon,
+  //   links: [
   {
-    title: "Operacje",
-    href: "/operations",
-    icon: RepeatIcon,
+    title: "Przychody",
+    href: "/incomes",
+    icon: Wallet2Icon,
     links: [
       {
-        title: "Przychody",
-        href: "/incomes",
-        icon: Wallet2Icon,
-        links: [
-          {
-            title: "Dodaj",
-            icon: PlusIcon,
-            href: "/incomes/add",
-          },
-        ],
-      },
-      {
-        title: "Wydatki",
-        href: "/expenses",
-        icon: CoinsIcon,
-        links: [
-          {
-            title: "Dodaj",
-            icon: PlusIcon,
-            href: "/expenses/add",
-          },
-        ],
-      },
-      {
-        title: "Płatności cykliczne",
-        href: "/recurring-payments",
-        icon: RepeatIcon,
-        links: [
-          {
-            title: "Dodaj",
-            icon: PlusIcon,
-            href: "/recurring-payments/add",
-          },
-        ],
+        title: "Dodaj",
+        icon: PlusIcon,
+        href: "/incomes/add",
       },
     ],
   },
+  {
+    title: "Wydatki",
+    href: "/expenses",
+    icon: CoinsIcon,
+    links: [
+      {
+        title: "Dodaj",
+        icon: PlusIcon,
+        href: "/expenses/add",
+      },
+    ],
+  },
+  {
+    title: "Płatności cykliczne",
+    href: "/recurring-payments",
+    icon: RepeatIcon,
+    links: [
+      {
+        title: "Dodaj",
+        icon: PlusIcon,
+        href: "/recurring-payments/add",
+      },
+    ],
+  },
+  // ],
+  // },
   {
     title: "Automatyzacja",
     href: "/automation",
@@ -79,47 +79,47 @@ export const PAGES: Page[] = [
     href: "/goals",
     icon: CheckCircleIcon,
   },
-  {
-    title: "Inwestycje",
-    href: "/investments",
-    icon: BarChart4Icon,
-    links: [
-      {
-        title: "Akcje",
-        href: "/stocks",
-        icon: AlignHorizontalDistributeCenterIcon,
-        links: [
-          {
-            title: "Transakcje",
-            icon: ArrowRightLeftIcon,
-            href: "/stocks/transactions",
-            links: [
-              {
-                title: "Dodaj",
-                icon: PlusIcon,
-                href: "/stocks/transactions/add",
-              },
-            ],
-          },
-          {
-            title: "Dywidendy",
-            icon: PieChartIcon,
-            href: "/stocks/dividends",
-          },
-        ],
-      },
-      // {
-      //   title: "Obligacje",
-      //   href: "/bonds",
-      //   icon: ScrollTextIcon,
-      // },
-      // {
-      //   title: "Nieruchomości",
-      //   href: "/immovables",
-      //   icon: Building2Icon,
-      // },
-    ],
-  },
+  // {
+  //   title: "Inwestycje",
+  //   href: "/investments",
+  //   icon: BarChart4Icon,
+  //   links: [
+  //     {
+  //       title: "Akcje",
+  //       href: "/stocks",
+  //       icon: AlignHorizontalDistributeCenterIcon,
+  //       links: [
+  //         {
+  //           title: "Transakcje",
+  //           icon: ArrowRightLeftIcon,
+  //           href: "/stocks/transactions",
+  //           links: [
+  //             {
+  //               title: "Dodaj",
+  //               icon: PlusIcon,
+  //               href: "/stocks/transactions/add",
+  //             },
+  //           ],
+  //         },
+  //         {
+  //           title: "Dywidendy",
+  //           icon: PieChartIcon,
+  //           href: "/stocks/dividends",
+  //         },
+  //       ],
+  //     },
+  // {
+  //   title: "Obligacje",
+  //   href: "/bonds",
+  //   icon: ScrollTextIcon,
+  // },
+  // {
+  //   title: "Nieruchomości",
+  //   href: "/immovables",
+  //   icon: Building2Icon,
+  // },
+  //   ],
+  // },
   // {
   //   title: "Obligacje",
   //   href: "/bonds",

@@ -10,6 +10,7 @@ import Block from "@/components/ui/block";
 import { getPreferences } from "@/lib/settings/actions";
 import Priority from "@/components/goals/priority";
 import { createClient } from "@/utils/supabase/server";
+import Limits from "@/components/operations/limits";
 
 export default async function Dashboard() {
   const { result: preferences, error } = await getPreferences();
@@ -27,6 +28,7 @@ export default async function Dashboard() {
       <Suspense fallback={latestOperationsFallback}>
         <LatestOperations />
       </Suspense>
+      <Limits defaultCurrency={preferences.currency} />
       <ExpensesByLabel defaultCurrency={preferences.currency} />
       <BalanceByMonth preferences={preferences} />
       {/* <Suspense fallback={latestOperationsFallback}>
@@ -45,6 +47,7 @@ async function GoalPriority() {
     .from("goals")
     .select("title, price, currency, payments:goals_payments(date, amount)")
     .eq("is_priority", true)
+    .order("date", { referencedTable: "goals_payments", ascending: false })
     .single();
 
   if (!goal) return <></>;

@@ -22,8 +22,8 @@ type Props = {
 };
 
 export default function Delete({ items, type, viewOnly, callback }: Props) {
-  const [isPending, startTransition] = useTransition();
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  // const [isPending, startTransition] = useTransition();
+  // const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
     <div>
@@ -32,7 +32,7 @@ export default function Delete({ items, type, viewOnly, callback }: Props) {
           <Button
             isIconOnly
             disableRipple
-            onClick={onOpen}
+            // onClick={onOpen}
             color="danger"
             variant="flat"
           >
@@ -40,7 +40,7 @@ export default function Delete({ items, type, viewOnly, callback }: Props) {
           </Button>
         </Badge>
       </div>
-      {!viewOnly && (
+      {/* {!viewOnly && (
         <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
           <ModalContent>
             {(onClose) => (
@@ -108,7 +108,7 @@ export default function Delete({ items, type, viewOnly, callback }: Props) {
             )}
           </ModalContent>
         </Modal>
-      )}
+      )} */}
     </div>
   );
 }

@@ -21,7 +21,12 @@ export default function AddForm({
   const [records, setRecords] = useState<Operation[]>([]);
 
   return records.length > 0 ? (
-    <PreviewTable type={type} rows={records} count={records.length}>
+    <PreviewTable
+      type={type}
+      rows={records}
+      count={records.length}
+      setRows={setRecords as any}
+    >
       <Form
         mutation={addOperations}
         successMessage="Pomyślnie dodano operacje!"

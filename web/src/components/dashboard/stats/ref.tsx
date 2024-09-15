@@ -31,17 +31,17 @@ export default function StatBox({
         </h4>
         {stat &&
           (stat.difference_indicator === "no_change" ? (
-            <div className="bg-default text-default-dark flex items-center gap-1 rounded-full px-1 py-0.5 font-medium text-sm">
-              <Minus size={16} />
+            <div className="bg-default text-default-dark flex items-center gap-1 rounded-full px-1 py-0.5 font-medium text-xs">
+              <Minus size={14} />
             </div>
           ) : stat.difference_indicator === "positive" ? (
-            <div className="bg-success-light text-success flex items-center gap-1 rounded-full px-1 py-0.5 font-medium text-sm">
-              <ArrowUpIcon size={16} />
+            <div className="bg-default text-default-dark flex items-center gap-1 rounded-full px-1 py-0.5 font-medium text-xs">
+              <ArrowUpIcon size={14} />
               {stat.difference}%
             </div>
           ) : (
-            <div className="bg-danger-light text-danger flex items-center gap-1 rounded-full px-1 py-0.5 font-medium text-sm">
-              <ArrowDownIcon size={16} />
+            <div className="bg-default text-default-dark flex items-center gap-1 rounded-full px-1 py-0.5 font-medium text-xs">
+              <ArrowDownIcon size={14} />
               {stat.difference}%
             </div>
           ))}

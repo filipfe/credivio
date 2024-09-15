@@ -4,15 +4,15 @@ import Add from "../cta/add";
 
 import Filter from "./filter";
 import { DebouncedState } from "use-debounce";
-import Delete from "../cta/delete";
 import PeriodSelect from "./period-select";
+import Delete from "../cta/delete";
 
 type Props = FilterProps & {
   search?: string;
   handleSearch: DebouncedState<(search?: string) => void>;
   type: OperationType;
   deletionCallback?: () => void;
-  selected: string[];
+  selected?: string[];
   addHref?: string;
   showPeriodFilter?: boolean;
   viewOnly?: boolean;
@@ -27,8 +27,8 @@ export default function TopContent({
   deletionCallback,
   handleSearch,
   showPeriodFilter,
-  viewOnly,
-}: Props) {
+}: // viewOnly,
+Props) {
   return (
     <div className="flex-1 flex items-center justify-between gap-4 sm:gap-8">
       <Input
@@ -45,12 +45,11 @@ export default function TopContent({
         onValueChange={handleSearch}
       />
       <div className="items-center gap-3 flex">
-        {selected.length > 0 && (
+        {selected && selected.length > 0 && (
           <Delete
             callback={deletionCallback}
             items={selected}
             type={type as OperationType}
-            viewOnly={viewOnly}
           />
         )}
         {showPeriodFilter && <PeriodSelect />}

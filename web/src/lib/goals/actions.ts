@@ -9,9 +9,10 @@ export async function getGoals(): Promise<SupabaseResponse<Goal>> {
   const { data: results, error } = await supabase
     .from("goals")
     .select(
-      "id, title, description, price, currency, deadline, is_priority, payments:goals_payments(amount, date)"
+      "id, title, description, price, currency, deadline, is_priority, payments:goals_payments(amount, date)",
     )
     .order("deadline")
+    .order("date", { referencedTable: "goals_payments", ascending: false })
     .order("created_at");
 
   if (error) {
@@ -27,7 +28,7 @@ export async function getGoals(): Promise<SupabaseResponse<Goal>> {
 }
 
 export async function addGoal(
-  formData: FormData
+  formData: FormData,
 ): Promise<Pick<SupabaseResponse, "error">> {
   const data = JSON.parse(formData.get("data")!.toString());
   const supabase = createClient();
@@ -58,7 +59,7 @@ export async function addGoal(
 }
 
 export async function addGoalPayment(
-  formData: FormData
+  formData: FormData,
 ): Promise<Pick<SupabaseResponse, "error">> {
   const amount = formData.get("amount")?.toString();
   const goal_id = formData.get("goal_id")?.toString();
