@@ -22,18 +22,14 @@ import { useExpensesByLabel } from "@/lib/operations/queries";
 
 const colors = ["#177981", "#fdbb2d", "#448dc9", "#fb923c"];
 
-export default function ExpensesByLabelChart({
-  defaultCurrency,
-}: {
-  defaultCurrency: string;
-}) {
-  const [currency, setCurrency] = useState<string>(defaultCurrency);
+export default function ExpensesByLabelChart({ preferences }: PageProps) {
+  const [currency, setCurrency] = useState<string>(preferences.currency);
   const { width, tickFormatter } = useYAxisWidth(currency);
   const { isLoading, data: results } = useExpensesByLabel(currency);
   return (
     <Block
       className="xl:col-span-3"
-      title="Wydatki wg Etykiety"
+      title="Wydatki według etykiet"
       cta={
         <UniversalSelect
           className="w-20"

@@ -36,7 +36,7 @@ export default function NavLink({
     <div className="my-0.5">
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="px-3 sm:px-4 font-medium w-full text-font/70 flex items-center gap-1 justify-between"
+        className="px-3 sm:px-4 py-1 font-medium w-full text-font/70 flex items-center gap-1 justify-between"
       >
         <span style={{ fontSize: 13 }}>{title}</span>
         <ChevronDown
@@ -63,25 +63,21 @@ export default function NavLink({
       </div>
     </div>
   ) : (
-    <Link href={href}>
-      <div
-        className={`px-3 sm:px-4 rounded-lg flex items-center justify-between ${
-          isActive ? "bg-light border" : "hover:bg-light bg-white text-font/70"
+    <Link
+      href={href}
+      className={`px-3 sm:px-4 rounded-lg text-sm font-medium flex justify-center items-center gap-3 sm:gap-3.5 ${
+        isActive ? "bg-light border" : "hover:bg-light bg-white text-font/70"
+      }`}
+      style={{ fontSize: 13, height: 34 }}
+    >
+      <Icon size={15} />
+      <span
+        className={`flex-1 mt-px ${
+          isMenuHidden.desktop ? "sm:opacity-0 sm:absolute" : "opacity-100"
         }`}
-        style={{ fontSize: 13, height: 34 }}
       >
-        <div className="text-sm font-medium flex justify-center items-center gap-3 sm:gap-3.5">
-          <Icon size={15} />
-          <span
-            className={`flex-1 mt-px ${
-              isMenuHidden.desktop ? "sm:opacity-0 sm:absolute" : "opacity-100"
-            }`}
-          >
-            {title}
-          </span>
-        </div>
-        {endContent}
-      </div>
+        {title}
+      </span>
     </Link>
   );
 }

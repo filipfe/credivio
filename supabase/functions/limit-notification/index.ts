@@ -29,7 +29,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
 
 type Body = {
   record: Payment;
-  type: "income" | "expense";
+  operation_type: "income" | "expense";
 };
 
 type Limit = {
@@ -51,10 +51,13 @@ const sendNotification = async (
 };
 
 Deno.serve(async (req) => {
-  const { record: { currency, title, recurring, amount, user_id }, type } =
-    await req
-      .json() as Body;
-
+  const body = await req
+    .json() as Body;
+  console.log(req, { body });
+  const {
+    record: { currency, title, recurring, amount, user_id },
+    operation_type,
+  } = body;
   const { data: profile, error: profileError } = await supabase.from(
     "profiles",
   ).select("telegram_id, language:languages(code)").eq("id", user_id).returns<
@@ -73,7 +76,7 @@ Deno.serve(async (req) => {
   }
 
   if (!profile.telegram_id) {
-    console.warn("User is not Telegram registered");
+    console.warn("User is not registered through Telegram");
     return new Response("ok", { status: 200 });
   }
 
@@ -81,8 +84,8 @@ Deno.serve(async (req) => {
     await bot.api.sendMessage(
       profile.telegram_id,
       `Dodano ${
-        type === "income" ? "przychód" : "wydatek"
-      } cykliczny ${title} w kwocie ${
+        operation_type === "income" ? "przychód" : "wydatek"
+      } cykliczny ${title} na kwotę ${
         new Intl.NumberFormat(profile.language.code, {
           style: "currency",
           currency,
@@ -91,7 +94,7 @@ Deno.serve(async (req) => {
     );
   }
 
-  if (type === "income") {
+  if (operation_type === "income") {
     return new Response("ok", { status: 200 });
   }
 
