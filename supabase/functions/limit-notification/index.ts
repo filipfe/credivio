@@ -51,13 +51,14 @@ const sendNotification = async (
 };
 
 Deno.serve(async (req) => {
-  const body = await req
-    .json() as Body;
-  console.log(req, { body });
   const {
     record: { currency, title, recurring, amount, user_id },
-    operation_type,
-  } = body;
+  } = await req
+    .json() as Body;
+
+  const { searchParams } = new URL(req.url);
+  const operation_type = searchParams.get("operation_type");
+
   const { data: profile, error: profileError } = await supabase.from(
     "profiles",
   ).select("telegram_id, language:languages(code)").eq("id", user_id).returns<
