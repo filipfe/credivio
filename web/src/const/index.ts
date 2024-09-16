@@ -1,4 +1,5 @@
 import {
+  BarChart3,
   CheckCircleIcon,
   CoinsIcon,
   LayersIcon,
@@ -17,49 +18,54 @@ export const PAGES: Page[] = [
     href: "/",
     icon: LayoutDashboardIcon,
   },
-  // {
-  //   title: "Operacje",
-  //   href: "/operations",
-  //   icon: RepeatIcon,
-  //   links: [
   {
-    title: "Przychody",
-    href: "/incomes",
-    icon: Wallet2Icon,
-    links: [
-      {
-        title: "Dodaj",
-        icon: PlusIcon,
-        href: "/incomes/add",
-      },
-    ],
+    title: "Statystyki",
+    href: "/stats",
+    icon: BarChart3,
   },
   {
-    title: "Wydatki",
-    href: "/expenses",
-    icon: CoinsIcon,
-    links: [
-      {
-        title: "Dodaj",
-        icon: PlusIcon,
-        href: "/expenses/add",
-      },
-    ],
-  },
-  {
-    title: "Płatności cykliczne",
-    href: "/recurring-payments",
+    title: "Operacje",
+    href: "/operations",
     icon: RepeatIcon,
     links: [
       {
-        title: "Dodaj",
-        icon: PlusIcon,
-        href: "/recurring-payments/add",
+        title: "Przychody",
+        href: "/incomes",
+        icon: Wallet2Icon,
+        links: [
+          {
+            title: "Dodaj",
+            icon: PlusIcon,
+            href: "/incomes/add",
+          },
+        ],
+      },
+      {
+        title: "Wydatki",
+        href: "/expenses",
+        icon: CoinsIcon,
+        links: [
+          {
+            title: "Dodaj",
+            icon: PlusIcon,
+            href: "/expenses/add",
+          },
+        ],
+      },
+      {
+        title: "Płatności cykliczne",
+        href: "/recurring-payments",
+        icon: RepeatIcon,
+        links: [
+          {
+            title: "Dodaj",
+            icon: PlusIcon,
+            href: "/recurring-payments/add",
+          },
+        ],
       },
     ],
   },
-  // ],
-  // },
 
   {
     title: "Cele",

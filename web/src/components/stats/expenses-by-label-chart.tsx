@@ -20,18 +20,16 @@ import {
 import ChartTooltip from "../ui/charts/tooltip";
 import { useExpensesByLabel } from "@/lib/operations/queries";
 
-export default function ExpensesByLabelChart({
-  defaultCurrency,
-}: {
-  defaultCurrency: string;
-}) {
-  const [currency, setCurrency] = useState<string>(defaultCurrency);
+const colors = ["#177981", "#fdbb2d", "#448dc9", "#fb923c"];
+
+export default function ExpensesByLabelChart({ preferences }: PageProps) {
+  const [currency, setCurrency] = useState<string>(preferences.currency);
   const { width, tickFormatter } = useYAxisWidth(currency);
   const { isLoading, data: results } = useExpensesByLabel(currency);
   return (
     <Block
       className="xl:col-span-3"
-      title="Wydatki wg Etykiety"
+      title="Wydatki według etykiet"
       cta={
         <UniversalSelect
           className="w-20"
@@ -80,7 +78,7 @@ export default function ExpensesByLabelChart({
                 {results.map((item, k) => (
                   <Cell
                     className="transition-opacity opacity-100 hover:opacity-80"
-                    fill={k % 2 === 0 ? "#177981" : "#fdbb2d"}
+                    fill={colors[k]}
                     key={item.name}
                   />
                 ))}

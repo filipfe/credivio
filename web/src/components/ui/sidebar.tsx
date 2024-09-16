@@ -6,10 +6,23 @@ import Nav from "./nav";
 import { useContext, useEffect, useRef } from "react";
 import { MenuContext } from "@/app/(private)/providers";
 import useOutsideObserver from "@/hooks/useOutsideObserver";
+// import useSWR from "swr";
+// import { createClient } from "@/utils/supabase/client";
+
+// async function getTelegramToken() {
+//   const supabase = createClient();
+//   const { data } = await supabase
+//     .from("profiles")
+//     .select("telegram_id")
+//     .single();
+//   return data?.telegram_id;
+// }
 
 export default function Sidebar() {
   const aside = useRef<HTMLElement | null>(null);
   const { isMenuHidden, setIsMenuHidden } = useContext(MenuContext);
+  // const { data, isLoading } = useSWR("telegram_id", () => getTelegramToken());
+
   useOutsideObserver(aside, () =>
     setIsMenuHidden((prev) => ({ ...prev, mobile: true }))
   );
@@ -42,7 +55,28 @@ export default function Sidebar() {
       >
         <Nav />
         <div className="flex flex-col gap-2">
-          <NavLink title="Automatyzacja" href="/automation" icon={BotIcon} />
+          <NavLink
+            title="Automatyzacja"
+            href="/automation"
+            icon={BotIcon}
+            // endContent={
+            //   isLoading ? (
+            //     <></>
+            //   ) : (
+            //     <div
+            //       className={`${
+            //         !!data?.telegram_id ? "bg-success/20" : "bg-danger/20"
+            //       } h-3.5 w-3.5 rounded-full grid place-content-center`}
+            //     >
+            //       <div
+            //         className={`${
+            //           !!data?.telegram_id ? "bg-success" : "bg-danger"
+            //         } h-2 w-2 rounded-full`}
+            //       />
+            //     </div>
+            //   )
+            // }
+          />
           <NavLink title="Ustawienia" href="/settings" icon={SettingsIcon} />
         </div>
       </aside>

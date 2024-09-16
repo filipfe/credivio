@@ -26,27 +26,7 @@ import { CURRENCIES } from "@/const";
 
 const now = new Date();
 
-const generateTicks = (min: number, max: number, tickCount: number) => {
-  const ticks = [];
-  const step = (max - min) / (tickCount - 1); // Step size between ticks
-  for (let i = 0; i < tickCount; i++) {
-    const tick = min + i * step;
-    ticks.push(Math.round(tick));
-  }
-
-  // Ensure 0 is included in ticks, even if it's not part of the calculated step
-  if (!ticks.includes(0)) {
-    ticks.push(0);
-  }
-
-  return ticks.sort((a, b) => a - b); // Sort the ticks in ascending order
-};
-
-export default function BalanceByMonth({
-  preferences,
-}: {
-  preferences: Preferences;
-}) {
+export default function BalanceByMonth({ preferences }: PageProps) {
   const [month, setMonth] = useState(now.getMonth());
   const [year, setYear] = useState(now.getFullYear());
   const [currency, setCurrency] = useState<string>(preferences.currency);
@@ -60,7 +40,7 @@ export default function BalanceByMonth({
   return (
     <Block
       className="xl:col-span-3 flex-1"
-      title="Bilans"
+      title="Bilans operacji"
       cta={
         <div className="grid grid-cols-[80px_1fr_112px] gap-2 flex-1 max-w-sm">
           <UniversalSelect
