@@ -14,12 +14,7 @@ import Limits from "@/components/operations/limits";
 import ExpensesByLabel from "@/components/operations/expenses-by-label";
 
 export default async function Dashboard() {
-  const { result: preferences, error } = await getPreferences();
-
-  if (!preferences) {
-    console.error("Couldn't retrieve preferences: ", error);
-    throw new Error(error);
-  }
+  const preferences = await getPreferences();
 
   return (
     <div className="sm:px-10 py-4 sm:py-8 flex flex-col xl:grid grid-cols-6 gap-4 sm:gap-6">

@@ -1,22 +1,13 @@
 import {
-  AlignHorizontalDistributeCenterIcon,
-  ArrowRightLeftIcon,
-  BarChart4Icon,
-  BotIcon,
-  BrainIcon,
-  Building2Icon,
   CheckCircleIcon,
   CoinsIcon,
   LayersIcon,
   LayoutDashboardIcon,
-  NewspaperIcon,
-  PieChartIcon,
+  Newspaper,
   PlusIcon,
   RepeatIcon,
-  ScrollTextIcon,
   SlidersIcon,
   UserCogIcon,
-  VariableIcon,
   Wallet2Icon,
 } from "lucide-react";
 
@@ -74,6 +65,11 @@ export const PAGES: Page[] = [
     title: "Cele",
     href: "/goals",
     icon: CheckCircleIcon,
+  },
+  {
+    title: "Wiadomości",
+    href: "/news",
+    icon: Newspaper,
   },
   // {
   //   title: "Inwestycje",

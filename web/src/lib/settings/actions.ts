@@ -26,9 +26,7 @@ export async function getAccount(): Promise<
   };
 }
 
-export async function getPreferences(): Promise<
-  SupabaseSingleRowResponse<Preferences>
-> {
+export async function getPreferences(): Promise<Preferences> {
   const supabase = createClient();
 
   const { data, error: error } = await supabase
@@ -37,15 +35,9 @@ export async function getPreferences(): Promise<
     .single();
 
   if (!data || error) {
-    return {
-      result: null,
-      error: "Błąd autoryzacji, spróbuj zalogować się ponownie!",
-    };
+    throw new Error(error || "Couldn't retrieve preferences");
   }
-
-  return {
-    result: data as unknown as Preferences,
-  };
+  return data;
 }
 
 export async function activateService(
