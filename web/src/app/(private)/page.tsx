@@ -1,7 +1,7 @@
 // import PortfolioStructure from "@/components/dashboard/portfolio-structure/grid";
 import { Fragment, Suspense } from "react";
 import StatsList from "@/components/dashboard/stats/list";
-import ExpensesByLabel from "@/components/dashboard/expenses-by-label";
+import ExpensesByLabelChart from "@/components/dashboard/expenses-by-label-chart";
 import { StatLoader } from "@/components/dashboard/stats/ref";
 import BalanceByMonth from "@/components/dashboard/balance-by-month";
 import LatestOperations from "@/components/dashboard/latest-operations";
@@ -11,6 +11,7 @@ import { getPreferences } from "@/lib/settings/actions";
 import Priority from "@/components/goals/priority";
 import { createClient } from "@/utils/supabase/server";
 import Limits from "@/components/operations/limits";
+import ExpensesByLabel from "@/components/operations/expenses-by-label";
 
 export default async function Dashboard() {
   const { result: preferences, error } = await getPreferences();
@@ -29,14 +30,12 @@ export default async function Dashboard() {
         <LatestOperations />
       </Suspense>
       <Limits defaultCurrency={preferences.currency} />
-      <ExpensesByLabel defaultCurrency={preferences.currency} />
+      <ExpensesByLabelChart defaultCurrency={preferences.currency} />
       <BalanceByMonth preferences={preferences} />
-      {/* <Suspense fallback={latestOperationsFallback}>
-        <PortfolioStructure />
-      </Suspense> */}
       <Suspense>
         <GoalPriority />
       </Suspense>
+      <ExpensesByLabel className="col-span-4" preferences={preferences} />
     </div>
   );
 }

@@ -3,7 +3,13 @@
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
 
-export async function getChartLabels(
+export const useExpensesByLabel = (currency: string) =>
+  useSWR(
+    ["expenses_by_label", currency],
+    ([_k, curr]) => getChartLabels(curr),
+  );
+
+async function getChartLabels(
   currency: string,
 ): Promise<ChartLabel[]> {
   const supabase = createClient();

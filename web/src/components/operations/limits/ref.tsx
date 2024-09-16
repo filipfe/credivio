@@ -66,12 +66,12 @@ export default function LimitRef({ period, defaultCurrency, onAdd }: Props) {
               }}
             />
             <div className="grid">
+              <span className="text-sm text-font/60">
+                {getPeriodTitle(period)}
+              </span>
               <span className="text-sm font-medium">
                 {numberFormat(currency, limit.total)} /{" "}
                 {numberFormat(currency, limit.amount)}
-              </span>
-              <span className="text-sm text-font/60">
-                {getPeriodTitle(period)}
               </span>
             </div>
           </div>

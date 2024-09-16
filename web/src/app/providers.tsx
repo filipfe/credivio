@@ -7,16 +7,16 @@ import { SWRConfig } from "swr";
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SWRConfig
-      value={{
-        onError: () =>
-          toast.custom((t) => (
-            <Toast
-              {...t}
-              type="error"
-              message="Wystąpił błąd, przy przetwarzaniu zapytania!"
-            />
-          )),
-      }}
+    // value={{
+    //   onError: () =>
+    //     toast.custom((t) => (
+    //       <Toast
+    //         {...t}
+    //         type="error"
+    //         message="Wystąpił błąd, przy przetwarzaniu zapytania!"
+    //       />
+    //     )),
+    // }}
     >
       {children}
     </SWRConfig>

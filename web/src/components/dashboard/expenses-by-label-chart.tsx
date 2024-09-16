@@ -6,7 +6,6 @@ import Empty from "@/components/ui/empty";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
-import { getChartLabels } from "@/lib/operations/queries";
 import { useState } from "react";
 import {
   Bar,
@@ -19,19 +18,16 @@ import {
   YAxis,
 } from "recharts";
 import ChartTooltip from "../ui/charts/tooltip";
-import useSWR from "swr";
+import { useExpensesByLabel } from "@/lib/operations/queries";
 
-export default function ExpensesByLabel({
+export default function ExpensesByLabelChart({
   defaultCurrency,
 }: {
   defaultCurrency: string;
 }) {
   const [currency, setCurrency] = useState<string>(defaultCurrency);
   const { width, tickFormatter } = useYAxisWidth(currency);
-  const { isLoading, data: results } = useSWR(
-    ["expenses_by_label", currency],
-    ([_k, curr]) => getChartLabels(curr)
-  );
+  const { isLoading, data: results } = useExpensesByLabel(currency);
   return (
     <Block
       className="xl:col-span-3"

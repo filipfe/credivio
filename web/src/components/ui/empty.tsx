@@ -1,10 +1,11 @@
 import { Button, cn } from "@nextui-org/react";
-import { PlusIcon } from "lucide-react";
+import { LucideIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { HTMLAttributes } from "react";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   title?: string;
+  icon?: LucideIcon;
   cta?: {
     title: string;
     href: string;
@@ -12,7 +13,7 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
   };
 }
 
-export default function Empty({ cta, title, className }: Props) {
+export default function Empty({ cta, icon: Icon, title, className }: Props) {
   return (
     <div
       className={cn(
@@ -20,6 +21,7 @@ export default function Empty({ cta, title, className }: Props) {
         className
       )}
     >
+      {Icon && <Icon size={20} className="text-font/60" />}
       {title && <p className="text-sm text-font/80">{title}</p>}
       {cta &&
         (cta.onClick ? (
