@@ -8,7 +8,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import useSWR from "swr";
 import { getLatestOperations } from "@/lib/operations/queries";
 
-export default function LatestOperations() {
+export default function LatestOperations({
+  preferences,
+}: {
+  preferences: Preferences;
+}) {
   const scrollAreaRef = useRef<HTMLElement | null>(null);
   const { isLoading, data: results } = useSWR(
     ["latest_operations", "telegram"],
@@ -57,7 +61,11 @@ export default function LatestOperations() {
                     }
                     key={`wrapper-${operation.id}`}
                   >
-                    <OperationRef payment={operation} key={operation.id} />
+                    <OperationRef
+                      payment={operation}
+                      preferences={preferences}
+                      key={operation.id}
+                    />
                   </motion.div>
                 ))}
               </AnimatePresence>

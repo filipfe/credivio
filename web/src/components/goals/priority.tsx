@@ -69,7 +69,10 @@ export default function Priority({ goal }: { goal?: Goal }) {
               <span className="text-sm font-bold">Wpłaty</span>
               <span className="text-sm font-medium uppercase">Kwota</span>
             </div>
-            <ScrollShadow className="max-h-[calc(100vh-684px)]" hideScrollBar>
+            <ScrollShadow
+              className="max-h-48 sm:max-h-[calc(100vh-684px)]"
+              hideScrollBar
+            >
               <ul>
                 {goal.payments.map((payment) => (
                   <PaymentRef

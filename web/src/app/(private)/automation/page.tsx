@@ -1,17 +1,13 @@
 import LatestOperations from "@/components/automation/latest-operations";
 import TokenInput from "@/components/automation/token-input";
 import Block from "@/components/ui/block";
-import { createClient } from "@/utils/supabase/server";
+import { getPreferences } from "@/lib/settings/actions";
 import Image from "next/image";
 
 export default async function Page() {
-  const supabase = createClient();
-  const { data } = await supabase
-    .from("profiles")
-    .select("telegram_id, telegram_token")
-    .single();
+  const preferences = await getPreferences({ withTelegramData: true });
 
-  const isRegistered = !!data?.telegram_id;
+  const isRegistered = !!preferences.telegram_id;
 
   return (
     <div className="sm:px-10 py-4 sm:py-8 h-full flex md:items-center justify-center">
@@ -58,9 +54,9 @@ export default async function Page() {
               Oto twój klucz Telegram. Wyślij go do bota, aby połączyć swoje
               konto:
             </p>
-            <TokenInput token={data?.telegram_token} />
+            <TokenInput token={preferences.telegram_token} />
           </div>
-          <LatestOperations />
+          <LatestOperations preferences={preferences} />
         </div>
       </Block>
     </div>

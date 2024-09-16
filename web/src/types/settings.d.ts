@@ -6,6 +6,8 @@ type Language = {
 type Preferences = {
   currency: string;
   language: Language;
+  telegram_id: number;
+  telegram_token: string;
 };
 
 type Account = {

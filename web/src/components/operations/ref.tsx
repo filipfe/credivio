@@ -1,16 +1,19 @@
 import numberFormat from "@/utils/formatters/currency";
 import { Skeleton, cn } from "@nextui-org/react";
 import { formatDistance } from "date-fns";
-import { pl } from "date-fns/locale";
+import * as locales from "date-fns/locale";
 import { Coins, Wallet2 } from "lucide-react";
 
 type Props = {
   payment: Payment;
+  preferences: Preferences;
 };
 
 export default function OperationRef({
   payment: { title, issued_at, type, currency, amount },
+  preferences,
 }: Props) {
+  const [language, country] = preferences.language.code.split("-");
   return (
     <div className="rounded-md bg-primary max-w-max">
       <div className="border shadow-[inset_0px_2px_9px_rgba(255,255,255,0.4)] border-white/10 bg-gradient-to-b from-white/5 to-white/[0.01] p-4 rounded-md backdrop-blur-lg flex flex-col gap-2 min-w-64">
@@ -24,7 +27,12 @@ export default function OperationRef({
           <small className="text-white/80">
             {formatDistance(issued_at, new Date(), {
               addSuffix: true,
-              locale: pl,
+              locale:
+                locales[
+                  (language.toLowerCase() === country.toLowerCase()
+                    ? language
+                    : `${language}${country}`) as keyof typeof locales
+                ],
               includeSeconds: false,
             })}
           </small>
