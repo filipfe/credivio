@@ -4,7 +4,7 @@ import Empty from "@/components/ui/empty";
 import HorizontalScroll from "@/components/ui/horizontal-scroll";
 import { getUpcomingRecurringPayments } from "@/lib/recurring-payments/actions";
 
-export default async function Upcoming() {
+export default async function Upcoming({ preferences }: PageProps) {
   const { results: payments } = await getUpcomingRecurringPayments();
 
   return (
@@ -18,6 +18,7 @@ export default async function Upcoming() {
             )
             .map((payment) => (
               <OperationRef
+                preferences={preferences}
                 payment={{ ...payment, issued_at: payment.payment_date }}
                 key={payment.id}
               />

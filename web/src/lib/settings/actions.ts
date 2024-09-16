@@ -26,12 +26,18 @@ export async function getAccount(): Promise<
   };
 }
 
-export async function getPreferences(): Promise<Preferences> {
+export async function getPreferences(
+  options?: { withTelegramData?: boolean },
+): Promise<Preferences> {
   const supabase = createClient();
 
   const { data, error: error } = await supabase
     .from("profiles")
-    .select("currency, language:languages(code, name)")
+    .select(
+      options?.withTelegramData
+        ? "currency, language:languages(code, name), telegram_token, telegram_id"
+        : "currency, language:languages(code, name)",
+    )
     .single();
 
   if (!data || error) {

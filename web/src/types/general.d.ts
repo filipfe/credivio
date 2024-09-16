@@ -87,3 +87,7 @@ type Period = {
 };
 
 type WithId<T> = T & { id: string };
+
+type PageProps = {
+  preferences: Preferences;
+};

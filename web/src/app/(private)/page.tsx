@@ -22,15 +22,15 @@ export default async function Dashboard() {
         <StatsList defaultCurrency={preferences.currency} />
       </Suspense>
       <Suspense fallback={latestOperationsFallback}>
-        <LatestOperations />
+        <LatestOperations preferences={preferences} />
       </Suspense>
-      <Limits defaultCurrency={preferences.currency} />
-      <ExpensesByLabelChart defaultCurrency={preferences.currency} />
-      <BalanceByMonth preferences={preferences} />
       <Suspense>
         <GoalPriority />
       </Suspense>
-      <ExpensesByLabel className="col-span-4" preferences={preferences} />
+      <ExpensesByLabel className="col-span-3" preferences={preferences} />
+      <Limits defaultCurrency={preferences.currency} />
+      <ExpensesByLabelChart defaultCurrency={preferences.currency} />
+      <BalanceByMonth preferences={preferences} />
     </div>
   );
 }
@@ -47,7 +47,7 @@ async function GoalPriority() {
   if (!goal) return <></>;
 
   return (
-    <div className="col-span-2">
+    <div className="col-span-3">
       <Priority goal={goal} />
     </div>
   );

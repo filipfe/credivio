@@ -3,7 +3,11 @@ import { getLatestOperations } from "@/lib/operations/actions";
 import OperationRef from "../operations/ref";
 import Block from "@/components/ui/block";
 
-export default async function LatestOperations() {
+export default async function LatestOperations({
+  preferences,
+}: {
+  preferences: Preferences;
+}) {
   const { results: operations } = await getLatestOperations();
   if (operations.length === 0) return;
   return (
@@ -11,7 +15,11 @@ export default async function LatestOperations() {
       <div className="-mx-[25px] sm:mx-0">
         <HorizontalScroll fullWidth innerClassName="px-6 sm:px-0">
           {operations.map((operation) => (
-            <OperationRef payment={operation} key={operation.id} />
+            <OperationRef
+              preferences={preferences}
+              payment={operation}
+              key={operation.id}
+            />
           ))}
         </HorizontalScroll>
       </div>

@@ -16,10 +16,10 @@ export default function NewsRef({
   return (
     <article className="border bg-white rounded-md p-6 sm:p-4 flex flex-col gap-2">
       {thumbnail && thumbnail.length > 0 && (
-        <figure className="h-56 rounded-md border bg-light relative overflow-hidden max-w-96 aspect-square">
+        <figure className="h-72 rounded-md border bg-light relative overflow-hidden max-w-96">
           <Image
             width={384}
-            height={192}
+            height={288}
             className="w-full h-full object-contain"
             src={thumbnail[0].replace("http://", "https://")}
             alt=""
