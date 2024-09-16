@@ -6,6 +6,7 @@ interface Payment {
   amount: number;
   type: "income" | "expense";
   user_id: string;
+  recurring: boolean;
   label?: string;
 }
 

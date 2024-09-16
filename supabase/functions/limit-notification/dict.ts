@@ -17,9 +17,8 @@ export const breakpoints: Breakpoint[] = [
       "pl-PL": (limit) => {
         switch (limit.period) {
           case "daily":
-            return `Przekroczono limit dzienny w kwocie ${
-              currencyFormat("pl-PL", limit.amount, limit.currency)
-            } o ${
+            return `Osięgnięto limit dzienny ${limit.currency}!
+Kwota przekroczenia limitu: ${
               currencyFormat(
                 "pl-PL",
                 limit.total - limit.amount,
@@ -27,9 +26,8 @@ export const breakpoints: Breakpoint[] = [
               )
             }`;
           case "weekly":
-            return `Przekroczono limit tygodniowy w kwocie ${
-              currencyFormat("pl-PL", limit.amount, limit.currency)
-            } o ${
+            return `Osięgnięto limit tygodniowy ${limit.currency}!
+Kwota przekroczenia limitu: ${
               currencyFormat(
                 "pl-PL",
                 limit.total - limit.amount,
@@ -37,9 +35,8 @@ export const breakpoints: Breakpoint[] = [
               )
             }`;
           case "monthly":
-            return `Przekroczono limit miesięczny w kwocie ${
-              currencyFormat("pl-PL", limit.amount, limit.currency)
-            } o ${
+            return `Osięgnięto limit miesięczny ${limit.currency}!
+Kwota przekroczenia limitu:  ${
               currencyFormat(
                 "pl-PL",
                 limit.total - limit.amount,
