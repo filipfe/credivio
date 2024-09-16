@@ -16,7 +16,7 @@ export default async function Page() {
   return (
     <div className="sm:px-10 py-4 sm:py-8 h-full flex md:items-center justify-center">
       <Block
-        className="max-w-4xl"
+        className="max-w-3xl"
         title={
           <div className="flex items-center gap-4">
             <Image

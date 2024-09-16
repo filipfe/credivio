@@ -11,6 +11,7 @@ type Props = {
   isMenuHidden?: boolean;
   isGroup?: boolean;
   matchPath?: boolean;
+  endContent?: React.ReactNode;
 };
 
 export default function NavLink({
@@ -20,6 +21,7 @@ export default function NavLink({
   links,
   isGroup,
   matchPath,
+  endContent,
 }: Page & Props) {
   const [isOpen, setIsOpen] = useState(true);
   const { isMenuHidden } = useContext(MenuContext);
@@ -61,21 +63,25 @@ export default function NavLink({
       </div>
     </div>
   ) : (
-    <Link
-      className={`px-3 sm:px-4 rounded-lg text-sm font-medium flex justify-center items-center gap-3 sm:gap-3.5 ${
-        isActive ? "bg-light border" : "hover:bg-light bg-white text-font/70"
-      }`}
-      href={href}
-      style={{ fontSize: 13, height: 34 }}
-    >
-      <Icon size={15} />
-      <span
-        className={`flex-1 mt-px ${
-          isMenuHidden.desktop ? "sm:opacity-0 sm:absolute" : "opacity-100"
+    <Link href={href}>
+      <div
+        className={`px-3 sm:px-4 rounded-lg flex items-center justify-between ${
+          isActive ? "bg-light border" : "hover:bg-light bg-white text-font/70"
         }`}
+        style={{ fontSize: 13, height: 34 }}
       >
-        {title}
-      </span>
+        <div className="text-sm font-medium flex justify-center items-center gap-3 sm:gap-3.5">
+          <Icon size={15} />
+          <span
+            className={`flex-1 mt-px ${
+              isMenuHidden.desktop ? "sm:opacity-0 sm:absolute" : "opacity-100"
+            }`}
+          >
+            {title}
+          </span>
+        </div>
+        {endContent}
+      </div>
     </Link>
   );
 }

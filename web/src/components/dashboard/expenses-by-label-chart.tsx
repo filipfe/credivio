@@ -20,6 +20,8 @@ import {
 import ChartTooltip from "../ui/charts/tooltip";
 import { useExpensesByLabel } from "@/lib/operations/queries";
 
+const colors = ["#177981", "#fdbb2d", "#448dc9", "#fb923c"];
+
 export default function ExpensesByLabelChart({
   defaultCurrency,
 }: {
@@ -80,7 +82,7 @@ export default function ExpensesByLabelChart({
                 {results.map((item, k) => (
                   <Cell
                     className="transition-opacity opacity-100 hover:opacity-80"
-                    fill={k % 2 === 0 ? "#177981" : "#fdbb2d"}
+                    fill={colors[k]}
                     key={item.name}
                   />
                 ))}

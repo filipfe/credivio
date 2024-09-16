@@ -72,6 +72,11 @@ Deno.serve(async (req) => {
     });
   }
 
+  if (!profile.telegram_id) {
+    console.warn("User is not Telegram registered");
+    return new Response("ok", { status: 200 });
+  }
+
   if (recurring) {
     await bot.api.sendMessage(
       profile.telegram_id,
