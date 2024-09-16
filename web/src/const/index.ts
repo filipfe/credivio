@@ -69,11 +69,7 @@ export const PAGES: Page[] = [
   },
   // ],
   // },
-  {
-    title: "Automatyzacja",
-    href: "/automation",
-    icon: BotIcon,
-  },
+
   {
     title: "Cele",
     href: "/goals",

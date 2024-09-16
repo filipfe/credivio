@@ -1,7 +1,7 @@
 "use client";
 
 import NavLink from "./nav-link";
-import { SettingsIcon } from "lucide-react";
+import { BotIcon, SettingsIcon } from "lucide-react";
 import Nav from "./nav";
 import { useContext, useEffect, useRef } from "react";
 import { MenuContext } from "@/app/(private)/providers";
@@ -41,7 +41,10 @@ export default function Sidebar() {
         }`}
       >
         <Nav />
-        <NavLink title="Ustawienia" href="/settings" icon={SettingsIcon} />
+        <div className="flex flex-col gap-2">
+          <NavLink title="Automatyzacja" href="/automation" icon={BotIcon} />
+          <NavLink title="Ustawienia" href="/settings" icon={SettingsIcon} />
+        </div>
       </aside>
       <div
         className={`fixed bg-font/20 backdrop-blur-sm z-40 inset-0 w-screen h-screen sm:hidden ${

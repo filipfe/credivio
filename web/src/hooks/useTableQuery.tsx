@@ -1,5 +1,5 @@
 import { SortDescriptor } from "@nextui-org/react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -11,13 +11,14 @@ type Options = {
 export default function useTableQuery<T>(rows: T[], options?: Options) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [items, setItems] = useState<T[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState({
     page: 1,
     sort: "",
     search: "",
-    label: "",
+    label: searchParams.get("label") || "",
     currency: "",
     transaction: "",
   });
