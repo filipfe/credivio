@@ -1,7 +1,12 @@
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 
-const PUBLIC_ROUTES = ["/sign-in", "/sign-up", "/auth/confirm"];
+const PUBLIC_ROUTES = [
+  "/sign-in",
+  "/sign-up",
+  "/auth/confirm",
+  "/forgot-password",
+];
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({
