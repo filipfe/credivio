@@ -29,6 +29,7 @@ export async function resetPassword(
   formData: FormData,
 ): Promise<SupabaseResponse<any>> {
   const password = formData.get("password")?.toString();
+  const shouldRedirect = formData.get("redirect")?.toString() === "true";
 
   const supabase = createClient();
 
@@ -43,7 +44,13 @@ export async function resetPassword(
     };
   }
 
-  redirect("/");
+  if (shouldRedirect) {
+    redirect("/");
+  } else {
+    return {
+      results: [],
+    };
+  }
 }
 
 export async function signUp(formData: FormData) {
