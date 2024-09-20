@@ -44,6 +44,7 @@ export default function Page() {
               required
             />
           </div>
+          <input type="hidden" name="redirect" value="true" />
         </Form>
       </div>
     </div>

@@ -1,3 +1,5 @@
+import Form from "@/components/ui/form";
+import { resetPassword } from "@/lib/auth/actions";
 import { Button, Input } from "@nextui-org/react";
 import { useState } from "react";
 
@@ -10,34 +12,32 @@ export default function PasswordInput() {
         <h3>Hasło</h3>
         <p className="text-sm text-font/60">Zmień hasło do swojego konta</p>
       </div>
-      <Input
-        classNames={{ inputWrapper: "!bg-light shadow-none border" }}
-        name="password"
-        type="password"
-        label="Nowe hasło"
-        placeholder="*********"
-        value={password}
-        onValueChange={(value) => setPassword(value)}
-      />
-      <Input
-        classNames={{ inputWrapper: "!bg-light shadow-none border" }}
-        name="password"
-        type="password"
-        label="Potwierdź nowe hasło"
-        placeholder="*********"
-        value={confirmPassword}
-        onValueChange={(value) => setConfirmPassword(value)}
-      />
-      <Button
-        isDisabled={!password || !confirmPassword}
-        size="sm"
-        radius="md"
-        color="primary"
-        disableRipple
-        className="max-w-max self-end"
+      <Form
+        mutation={resetPassword}
+        buttonProps={{ size: "sm", radius: "md", children: "Zmień hasło" }}
+        successMessage="Hasło zostało pomyślnie zmienione"
       >
-        Zapisz
-      </Button>
+        <div className="flex flex-col gap-4">
+          <Input
+            classNames={{ inputWrapper: "!bg-light shadow-none border" }}
+            name="password"
+            type="password"
+            label="Nowe hasło"
+            placeholder="*********"
+            value={password}
+            onValueChange={(value) => setPassword(value)}
+          />
+          <Input
+            classNames={{ inputWrapper: "!bg-light shadow-none border" }}
+            name="password"
+            type="password"
+            label="Potwierdź nowe hasło"
+            placeholder="*********"
+            value={confirmPassword}
+            onValueChange={(value) => setConfirmPassword(value)}
+          />
+        </div>
+      </Form>
     </div>
   );
 }
