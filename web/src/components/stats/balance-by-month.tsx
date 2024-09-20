@@ -37,6 +37,21 @@ export default function BalanceByMonth({ preferences }: PageProps) {
     currency,
   });
 
+  const maxValue = results
+    ? Math.max(...results.map((item) => Math.abs(item.total_amount)))
+    : 0;
+
+  const buffer = Math.ceil(maxValue * 0.1);
+  const yAxisMaxValue = maxValue + buffer;
+
+  const ticks = [
+    -yAxisMaxValue,
+    -yAxisMaxValue / 2,
+    0,
+    yAxisMaxValue / 2,
+    yAxisMaxValue,
+  ];
+
   return (
     <Block
       className="xl:col-span-3 flex-1"
@@ -78,6 +93,8 @@ export default function BalanceByMonth({ preferences }: PageProps) {
               axisLine={false}
               tickLine={false}
               tickFormatter={tickFormatter}
+              domain={[-yAxisMaxValue, yAxisMaxValue]}
+              ticks={ticks}
             />
             <XAxis
               tickMargin={8}
