@@ -79,7 +79,7 @@ export default function ExpensesByLabel({ preferences, className }: Props) {
       ) : results && results.length ? (
         <div className="grid grid-cols-2 gap-4">
           {results.map((label, k) => (
-            <Link href={`/expenses?label=${label.name}`}>
+            <Link href={`/expenses?currency=${currency}&label=${label.name}`}>
               <div className="rounded-md border px-4 py-3 flex flex-col gap-1 relative">
                 <div className="flex items-center gap-2">
                   <div

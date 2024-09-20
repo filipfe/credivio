@@ -19,7 +19,7 @@ export default function useTableQuery<T>(rows: T[], options?: Options) {
     sort: "",
     search: "",
     label: searchParams.get("label") || "",
-    currency: "",
+    currency: searchParams.get("currency") || "",
     transaction: "",
   });
 
