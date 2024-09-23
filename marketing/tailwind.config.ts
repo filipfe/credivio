@@ -1,7 +1,14 @@
 import type { Config } from "tailwindcss";
+import { createPreset } from "fumadocs-ui/tailwind-plugin";
 
 const config: Config = {
-  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
+  content: [
+    "./components/**/*.{ts,tsx,md,mdx}",
+    "./app/**/*.{ts,tsx,md,mdx}",
+    "./content/**/*.{ts,tsx,md,mdx}",
+    "./mdx-components.{ts,tsx,md,mdx}",
+    "../node_modules/fumadocs-ui/dist/**/*.js",
+  ],
   theme: {
     extend: {
       colors: {
@@ -18,6 +25,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  darkMode: "class",
+  presets: [createPreset()],
 };
 export default config;

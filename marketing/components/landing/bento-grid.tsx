@@ -9,7 +9,7 @@ export default function BentoGrid() {
   return (
     <section className="py-24 bg-primary-dark px-6 flex flex-col gap-8 overflow-hidden relative">
       <div className="max-w-7xl w-full mx-auto mb-2">
-        <h2 className="text-5xl text-white font-bold">
+        <h2 className="text-5xl text-white font-black">
           Usługi z <TextBeam>przeznaczeniem</TextBeam>
         </h2>
       </div>

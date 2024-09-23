@@ -9,10 +9,10 @@ export default function Hero() {
   return (
     <section className="bg-primary-dark px-6 flex flex-col items-center gap-8 overflow-hidden relative pb-4">
       <div className="relative max-w-7xl mx-auto z-10 flex flex-col gap-4 items-center py-8 lg:py-16 w-full rounded-lg border border-white/10 bg-gradient-to-br from-[rgba(255,255,255,0.05)] to-[rgba(255,255,255,0)]">
-        <h2 className="text-secondary text-center font-medium text-xl sm:text-2xl">
+        <h2 className="text-secondary text-center font-bold text-xl sm:text-2xl">
           Zadbaj o swój interes
         </h2>
-        <h1 className="text-4xl lg:text-6xl text-white text-center font-bold max-w-3xl">
+        <h1 className="text-4xl lg:text-6xl text-white text-center font-black max-w-3xl">
           Zarządzaj wszelkimi finansami z łatwością
         </h1>
         <p className="text-white/80 lg:text-lg my-4 text-center">

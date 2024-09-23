@@ -1,10 +1,10 @@
-import nextMDX from "@next/mdx";
+import { createMDX } from 'fumadocs-mdx/next';
 
-const withMDX = nextMDX();
+const withMDX = createMDX();
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
+const config = {
+  reactStrictMode: true,
 };
 
-export default withMDX(nextConfig);
+export default withMDX(config);

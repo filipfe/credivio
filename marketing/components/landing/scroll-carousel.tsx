@@ -22,10 +22,9 @@ export default function ScrollCarousel({
   return (
     <div
       style={{
-        willChange: "transform",
         transform: `translateX(${offset / 4}px)`,
       }}
-      className="flex items-center min-w-max gap-2"
+      className="flex items-center min-w-max gap-2 will-change-transform transform-gpu"
     >
       {children}
     </div>
