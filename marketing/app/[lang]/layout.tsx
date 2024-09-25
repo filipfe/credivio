@@ -24,7 +24,7 @@ export default function Layout({
         <I18nProvider locale={params.lang}>
           <RootProvider>
             <Header />
-            <main>{children}</main>
+            {children}
             <Banner />
             <Footer />
           </RootProvider>

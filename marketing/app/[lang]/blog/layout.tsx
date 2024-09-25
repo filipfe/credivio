@@ -13,6 +13,9 @@ export default function Layout({
     <DocsLayout
       tree={source.pageTree[params.lang]}
       sidebar={{ enabled: false }}
+      containerProps={{
+        className: "w-full",
+      }}
     >
       {children}
     </DocsLayout>
