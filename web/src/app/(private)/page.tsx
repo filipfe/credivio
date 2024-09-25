@@ -1,9 +1,6 @@
 // import PortfolioStructure from "@/components/dashboard/portfolio-structure/grid";
 import { Fragment, Suspense } from "react";
 import StatsList from "@/components/dashboard/stats/list";
-import ExpensesByLabelChart from "@/components/stats/expenses-by-label-chart";
-import { StatLoader } from "@/components/dashboard/stats/ref";
-import BalanceByMonth from "@/components/stats/balance-by-month";
 import LatestOperations from "@/components/dashboard/latest-operations";
 import { OperationLoader } from "@/components/operations/ref";
 import Block from "@/components/ui/block";
@@ -12,6 +9,7 @@ import Priority from "@/components/goals/priority";
 import { createClient } from "@/utils/supabase/server";
 import Limits from "@/components/operations/limits";
 import ExpensesByLabel from "@/components/operations/expenses-by-label";
+import { StatLoader } from "@/components/ui/stat-ref";
 
 export default async function Dashboard() {
   const preferences = await getPreferences();

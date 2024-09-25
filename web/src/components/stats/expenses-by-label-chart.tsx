@@ -3,10 +3,8 @@
 import Block from "@/components/ui/block";
 import ChartLoader from "@/components/ui/charts/loader";
 import Empty from "@/components/ui/empty";
-import UniversalSelect from "@/components/ui/universal-select";
-import { CURRENCIES } from "@/const";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
-import { useState } from "react";
+import { useContext } from "react";
 import {
   Bar,
   BarChart,
@@ -19,29 +17,19 @@ import {
 } from "recharts";
 import ChartTooltip from "../ui/charts/tooltip";
 import { useExpensesByLabel } from "@/lib/operations/queries";
+import { StatsFilterContext } from "@/app/(private)/stats/providers";
 
 const colors = ["#177981", "#fdbb2d", "#448dc9", "#fb923c"];
 
-export default function ExpensesByLabelChart({ preferences }: PageProps) {
-  const [currency, setCurrency] = useState<string>(preferences.currency);
+export default function ExpensesByLabelChart() {
+  const { month, setMonth, year, setYear, currency, setCurrency } =
+    useContext(StatsFilterContext);
   const { width, tickFormatter } = useYAxisWidth(currency);
   const { isLoading, data: results } = useExpensesByLabel(currency);
   return (
     <Block
-      className="xl:col-span-3"
+      className="xl:col-span-3 max-h-[500px]"
       title="Wydatki według etykiet"
-      cta={
-        <UniversalSelect
-          className="w-20"
-          name="currency"
-          size="sm"
-          radius="md"
-          aria-label="Waluta"
-          defaultSelectedKeys={[currency]}
-          elements={CURRENCIES}
-          onChange={(e) => setCurrency(e.target.value)}
-        />
-      }
     >
       <div className="h-96 flex flex-col">
         {isLoading ? (

@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import Stat from "./ref";
+import Stat from "../../ui/stat-ref";
 import { Button } from "@nextui-org/react";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";

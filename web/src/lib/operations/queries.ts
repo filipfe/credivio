@@ -4,21 +4,13 @@ import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
 
 export const useExpensesByLabel = (currency: string) =>
-  useSWR(
-    ["expenses_by_label", currency],
-    ([_k, curr]) => getChartLabels(curr),
-  );
+  useSWR(["expenses_by_label", currency], ([_k, curr]) => getChartLabels(curr));
 
-async function getChartLabels(
-  currency: string,
-): Promise<ChartLabel[]> {
+async function getChartLabels(currency: string): Promise<ChartLabel[]> {
   const supabase = createClient();
-  const { data, error } = await supabase.rpc(
-    "get_dashboard_chart_labels",
-    {
-      p_currency: currency,
-    },
-  );
+  const { data, error } = await supabase.rpc("get_dashboard_chart_labels", {
+    p_currency: currency,
+  });
 
   if (error) {
     throw new Error(error.message);
@@ -29,7 +21,7 @@ async function getChartLabels(
 
 export async function getDailyTotalAmounts(
   type: string,
-  currency?: string,
+  currency?: string
 ): Promise<DailyAmount[]> {
   const supabase = createClient();
 
@@ -48,7 +40,7 @@ export async function getDailyTotalAmounts(
 
 async function getOperationsAmountsHistory(
   type: "income" | "expense",
-  params: SearchParams,
+  params: SearchParams
 ): Promise<DailyAmount[]> {
   const supabase = createClient();
 
@@ -67,15 +59,14 @@ async function getOperationsAmountsHistory(
 
 export const useOperationsAmountsHistory = (
   type: "income" | "expense",
-  params: SearchParams,
+  params: SearchParams
 ) =>
-  useSWR(
-    ["history", type, params],
-    ([_, type, params]) => getOperationsAmountsHistory(type, params),
+  useSWR(["history", type, params], ([_, type, params]) =>
+    getOperationsAmountsHistory(type, params)
   );
 
 async function getBalanceHistory(
-  params: SearchParams,
+  params: SearchParams
 ): Promise<{ date: string; total_amount: number }[]> {
   const supabase = createClient();
 
@@ -94,9 +85,8 @@ async function getBalanceHistory(
 }
 
 export const useBalanceHistory = (params: SearchParams) =>
-  useSWR(
-    ["balance-history", params],
-    ([_, params]) => getBalanceHistory(params),
+  useSWR(["balance-history", params], ([_, params]) =>
+    getBalanceHistory(params)
   );
 
 async function getLimits(currency: string): Promise<Limit[]> {
@@ -114,10 +104,7 @@ async function getLimits(currency: string): Promise<Limit[]> {
 }
 
 export const useLimits = (currency: string) =>
-  useSWR(
-    ["limits", currency],
-    ([_k, curr]) => getLimits(curr),
-  );
+  useSWR(["limits", currency], ([_k, curr]) => getLimits(curr));
 
 export async function addLimit(limit: NewLimit) {
   const { amount, currency, period } = limit;
@@ -153,9 +140,7 @@ async function getLabels(): Promise<Label[]> {
 
 export const useLabels = () => useSWR("labels", () => getLabels());
 
-export async function getLatestOperations(
-  from?: string,
-): Promise<Payment[]> {
+export async function getLatestOperations(from?: string): Promise<Payment[]> {
   const supabase = createClient();
   let query = supabase
     .from("operations")
@@ -170,8 +155,6 @@ export async function getLatestOperations(
   }
 
   const { data, error } = await query;
-
-  console.log(data);
 
   if (error) {
     throw new Error(error.message);
