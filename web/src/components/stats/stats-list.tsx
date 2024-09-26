@@ -6,11 +6,10 @@ import { useStats } from "@/lib/stats/queries";
 import { StatsFilterContext } from "@/app/(private)/stats/providers";
 
 export default function StatsList() {
-  const { currency } = useContext(StatsFilterContext);
+  const { currency, month, year } = useContext(StatsFilterContext);
+  const { data: result, isLoading } = useStats(currency, month + 1, year);
 
-  const { data: result, isLoading } = useStats(currency);
-
-  if (isLoading) {
+  if (isLoading || !result) {
     return null;
   }
 
@@ -18,24 +17,9 @@ export default function StatsList() {
 
   return (
     <Fragment>
-      <Stat
-        title="Przychody"
-        currency={currency}
-        description=""
-        amount={incomes}
-      />
-      <Stat
-        title="Wydatki"
-        currency={currency}
-        description=""
-        amount={expenses}
-      />
-      <Stat
-        title="Bilans"
-        currency={currency}
-        description=""
-        amount={balance}
-      />
+      <Stat title="Przychody" currency={currency} amount={incomes} />
+      <Stat title="Wydatki" currency={currency} amount={expenses} />
+      <Stat title="Bilans" currency={currency} amount={balance} />
     </Fragment>
   );
 }

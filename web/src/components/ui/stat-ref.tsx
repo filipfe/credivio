@@ -4,7 +4,7 @@ import { ArrowDownIcon, ArrowUpIcon, Minus } from "lucide-react";
 
 type Props = {
   title: string;
-  description: string;
+  description?: string;
   currency: string;
   amount?: number;
   stat?: Stat;
@@ -13,7 +13,7 @@ type Props = {
 
 export default function StatBox({
   title,
-  description,
+  description = "",
   currency,
   amount,
   cta,

@@ -4,7 +4,6 @@ import Block from "@/components/ui/block";
 import LineChart from "@/components/ui/charts/line-chart";
 import LineChartLoader from "@/components/ui/charts/line-loader";
 import Empty from "@/components/ui/empty";
-import { useBalanceHistory } from "@/lib/operations/queries";
 import { useContext, useState } from "react";
 import MonthInput from "../ui/inputs/month";
 import YearInput from "../ui/inputs/year";
@@ -22,6 +21,7 @@ import {
 import ChartTooltip from "../ui/charts/tooltip";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
 import { StatsFilterContext } from "@/app/(private)/stats/providers";
+import { useBalanceHistory } from "@/lib/stats/queries";
 
 export default function BalanceByMonth({
   languageCode,
@@ -31,11 +31,11 @@ export default function BalanceByMonth({
   const { month, year, currency } = useContext(StatsFilterContext);
   const { width, tickFormatter } = useYAxisWidth(currency);
 
-  const { data: results, isLoading } = useBalanceHistory({
-    month: month + 1,
-    year,
+  const { data: results, isLoading } = useBalanceHistory(
     currency,
-  });
+    month + 1,
+    year
+  );
 
   const maxValue = results
     ? Math.max(...results.map((item) => Math.abs(item.total_amount)))

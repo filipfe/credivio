@@ -1,6 +1,5 @@
 "use client";
 
-import { useExpensesByLabel } from "@/lib/operations/queries";
 import { useState } from "react";
 import Block from "../ui/block";
 import numberFormat from "@/utils/formatters/currency";
@@ -10,6 +9,7 @@ import Link from "next/link";
 import UniversalSelect from "../ui/universal-select";
 import { CURRENCIES } from "@/const";
 import Empty from "../ui/empty";
+import { useExpensesByLabel } from "@/lib/general/queries";
 
 type Props = {
   preferences: Preferences;

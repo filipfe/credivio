@@ -16,16 +16,20 @@ import {
   YAxis,
 } from "recharts";
 import ChartTooltip from "../ui/charts/tooltip";
-import { useExpensesByLabel } from "@/lib/operations/queries";
 import { StatsFilterContext } from "@/app/(private)/stats/providers";
+import { useExpensesByLabel } from "@/lib/general/queries";
 
 const colors = ["#177981", "#fdbb2d", "#448dc9", "#fb923c"];
 
 export default function ExpensesByLabelChart() {
-  const { month, setMonth, year, setYear, currency, setCurrency } =
-    useContext(StatsFilterContext);
+  const { month, year, currency } = useContext(StatsFilterContext);
   const { width, tickFormatter } = useYAxisWidth(currency);
-  const { isLoading, data: results } = useExpensesByLabel(currency);
+  const { isLoading, data: results } = useExpensesByLabel(
+    currency,
+    month + 1,
+    year
+  );
+
   return (
     <Block
       className="xl:col-span-3 max-h-[500px]"

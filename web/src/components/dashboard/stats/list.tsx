@@ -11,7 +11,7 @@ export default async function StatsList({
   defaultCurrency: string;
 }) {
   const supabase = createClient();
-  const { data: result, error } = await supabase.rpc("get_dashboard_stats", {
+  const { data: result, error } = await supabase.rpc("get_general_stats", {
     p_currency: defaultCurrency,
   });
 
@@ -27,7 +27,6 @@ export default async function StatsList({
       <Stat
         title="Przychody"
         currency={defaultCurrency}
-        description=""
         amount={incomes}
         cta={
           <Link href="/incomes/add">
@@ -48,7 +47,6 @@ export default async function StatsList({
       <Stat
         title="Wydatki"
         currency={defaultCurrency}
-        description=""
         amount={expenses}
         cta={
           <Link href="/expenses/add">
@@ -66,12 +64,7 @@ export default async function StatsList({
           </Link>
         }
       />
-      <Stat
-        title="Bilans"
-        currency={defaultCurrency}
-        description=""
-        amount={balance}
-      />
+      <Stat title="Bilans" currency={defaultCurrency} amount={balance} />
     </Fragment>
   );
 }

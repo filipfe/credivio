@@ -17,7 +17,6 @@ export default function ChartTooltip({
   payloadName?: string;
   currency?: string;
 }) {
-  console.log(payload);
   if (!active || !payload || payload.length === 0) return;
   return (
     <div className="flex flex-col gap-2">
