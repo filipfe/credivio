@@ -29,3 +29,20 @@ async function getChartLabels(
 
   return data;
 }
+
+async function getLimits(currency: string): Promise<Limit[]> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.rpc("get_expenses_limits", {
+    p_currency: currency,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+}
+
+export const useLimits = (currency: string) =>
+  useSWR(["limits", currency], ([_k, currency]) => getLimits(currency));

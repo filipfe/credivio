@@ -3,7 +3,7 @@
 import Block from "@/components/ui/block";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
-import { useLimits } from "@/lib/operations/queries";
+import { useLimits } from "@/lib/general/queries";
 import numberFormat from "@/utils/formatters/currency";
 import { Button, CircularProgress, cn, Skeleton } from "@nextui-org/react";
 import { Plus, SquarePen } from "lucide-react";

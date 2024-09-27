@@ -47,23 +47,6 @@ export const useOperationsAmountsHistory = (
     getOperationsAmountsHistory(type, params)
   );
 
-async function getLimits(currency: string): Promise<Limit[]> {
-  const supabase = createClient();
-
-  const { data, error } = await supabase.rpc("get_expenses_limits", {
-    p_currency: currency,
-  });
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data;
-}
-
-export const useLimits = (currency: string) =>
-  useSWR(["limits", currency], ([_k, curr]) => getLimits(curr));
-
 export async function addLimit(limit: NewLimit) {
   const { amount, currency, period } = limit;
 

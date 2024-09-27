@@ -76,8 +76,8 @@ begin
   return query
   with cte1 as (
     select generate_series(
-      date_trunc('month', make_date($3, $2, 1)),
-      (date_trunc('month', make_date($3, $2, 1)) + interval '1 month - 1 day')::date,
+      date_trunc('month', make_date(p_year, p_month, 1)),
+      (date_trunc('month', make_date(p_year, p_month, 1)) + interval '1 month - 1 day')::date,
       interval '1 day'
     )::date as date
   )
