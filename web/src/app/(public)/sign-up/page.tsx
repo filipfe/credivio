@@ -32,6 +32,8 @@ export default function Page() {
                 name="last-name"
                 label="Nazwisko"
                 type="text"
+                isRequired
+                required
                 placeholder="Kowalski"
                 autoComplete="off"
               />

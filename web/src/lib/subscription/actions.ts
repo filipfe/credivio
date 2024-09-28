@@ -69,13 +69,13 @@ export async function createSubscriptionPaymentIntent(): Promise<
   }
 
   try {
-    let subscription: Stripe.Subscription | null = null;
+    let client_secret: string | null = null;
 
     const { data: subscriptions } = await stripe.subscriptions.list({
       customer: user.id,
     });
     if (!subscriptions || subscriptions.length === 0) {
-      subscription = await stripe.subscriptions.create({
+      const subscription = await stripe.subscriptions.create({
         "customer": user.id,
         items: [
           {
@@ -86,13 +86,21 @@ export async function createSubscriptionPaymentIntent(): Promise<
         payment_settings: { save_default_payment_method: "on_subscription" },
         expand: ["latest_invoice.payment_intent"],
       });
+      client_secret = ((subscription.latest_invoice as Stripe.Invoice)
+        .payment_intent as Stripe.PaymentIntent).client_secret;
     } else {
-      subscription = subscriptions[0];
-    }
+      const { payment_intent } = await stripe.invoices.retrieve(
+        subscriptions[0].latest_invoice as string,
+      );
 
+      const paymentIntent = await stripe.paymentIntents.retrieve(
+        payment_intent as string,
+      );
+
+      client_secret = paymentIntent.client_secret;
+    }
     return {
-      result: ((subscription.latest_invoice as Stripe.Invoice)
-        .payment_intent as Stripe.PaymentIntent).client_secret,
+      result: client_secret,
     };
   } catch (err) {
     console.log(err);
