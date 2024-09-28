@@ -5,7 +5,12 @@ import { getPreferences } from "@/lib/settings/actions";
 import Image from "next/image";
 
 export default async function Page() {
-  const preferences = await getPreferences({ withTelegramData: true });
+  const { result: preferences, error } = await getPreferences();
+
+  if (!preferences) {
+    console.error(error);
+    throw new Error("Couldn't retrieve preferences");
+  }
 
   const isRegistered = !!preferences.telegram_id;
 

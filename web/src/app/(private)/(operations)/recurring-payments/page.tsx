@@ -10,7 +10,13 @@ export default async function Page({
 }: {
   searchParams: SearchParams;
 }) {
-  const preferences = await getPreferences();
+  const { result: preferences, error } = await getPreferences();
+
+  if (!preferences) {
+    console.error(error);
+    throw new Error("Couldn't retrieve preferences");
+  }
+
   return (
     <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full xl:grid grid-cols-2 grid-rows-[max-content_1fr] gap-6">
       <Suspense fallback={<Loader />}>

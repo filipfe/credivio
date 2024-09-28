@@ -1,3 +1,5 @@
+"use client";
+
 import Form from "@/components/ui/form";
 import { resetPassword } from "@/lib/auth/actions";
 import { Button, Input } from "@nextui-org/react";
@@ -6,9 +8,10 @@ import { useState } from "react";
 export default function PasswordInput() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 mb-2">
         <h3>Hasło</h3>
         <p className="text-sm text-font/60">Zmień hasło do swojego konta</p>
       </div>

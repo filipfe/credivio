@@ -1,5 +1,7 @@
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
+import stripe from "../stripe/server";
+import Stripe from "stripe";
 
 const PUBLIC_ROUTES = [
   "/sign-in",
@@ -9,10 +11,8 @@ const PUBLIC_ROUTES = [
 ];
 
 export async function updateSession(request: NextRequest) {
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
+  let supabaseResponse = NextResponse.next({
+    request,
   });
 
   const supabase = createServerClient(
@@ -20,52 +20,33 @@ export async function updateSession(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value;
+        getAll() {
+          return request.cookies.getAll();
         },
-        set(name: string, value: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value,
-            ...options,
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) =>
+            request.cookies.set(name, value)
+          );
+          supabaseResponse = NextResponse.next({
+            request,
           });
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-          response.cookies.set({
-            name,
-            value,
-            ...options,
-          });
-        },
-        remove(name: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value: "",
-            ...options,
-          });
-          response = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          });
-          response.cookies.set({
-            name,
-            value: "",
-            ...options,
-          });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          );
         },
       },
     },
   );
 
-  const { pathname, origin } = request.nextUrl;
+  // IMPORTANT: Avoid writing any logic between createServerClient and
+  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
+  // issues with users being randomly logged out.
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  const { pathname, origin } = request.nextUrl;
 
   if (!user && !PUBLIC_ROUTES.includes(pathname)) {
     return NextResponse.redirect(new URL(`${origin}/sign-in`));
@@ -75,23 +56,50 @@ export async function updateSession(request: NextRequest) {
     if (PUBLIC_ROUTES.includes(pathname)) {
       return NextResponse.redirect(new URL(`${origin}/`));
     }
-    const { data: services } = await supabase
-      .from("services")
-      .select("id, href, name");
-    const service = (services as Service[])?.find(({ href }) =>
-      pathname.startsWith(href)
-    );
-    if (service) {
-      const { data } = await supabase
-        .from("user_services")
-        .select("is_trial")
-        .match({ service_id: service.id, user_id: user.id })
-        .single();
-      return data
-        ? response
-        : NextResponse.redirect(`${origin}/unlock?name=${service.name}`);
+
+    if (pathname === "/settings/subscription") return supabaseResponse;
+
+    const { data: subscription, error } = await supabase.schema("stripe")
+      .from("subscriptions")
+      .select("status")
+      .eq("customer", user.id)
+      .returns<Stripe.Subscription[]>()
+      .maybeSingle();
+
+    if (error) {
+      return {
+        result: null,
+        error: "Could not retrieve subscription",
+      };
+    }
+
+    const isActive = subscription &&
+      (subscription.status === "active" ||
+        subscription.status === "trialing");
+
+    if (!isActive) {
+      return NextResponse.redirect(
+        new URL(`${origin}/settings/subscription`),
+      );
     }
   }
 
-  return response;
+  return supabaseResponse;
 }
+
+// const { data: services } = await supabase
+// .from("services")
+// .select("id, href, name");
+// const service = (services as Service[])?.find(({ href }) =>
+// pathname.startsWith(href)
+// );
+// if (service) {
+// const { data } = await supabase
+//   .from("user_services")
+//   .select("is_trial")
+//   .match({ service_id: service.id, user_id: user.id })
+//   .single();
+// return data
+//   ? response
+//   : NextResponse.redirect(`${origin}/unlock?name=${service.name}`);
+// }

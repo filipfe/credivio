@@ -11,7 +11,7 @@ export async function getAccount(): Promise<
 
   const { data, error: authError } = await supabase
     .from("profiles")
-    .select("first_name, last_name, email")
+    .select("first_name, last_name, language_code, email")
     .single();
 
   if (authError) {
@@ -26,24 +26,28 @@ export async function getAccount(): Promise<
   };
 }
 
-export async function getPreferences(
-  options?: { withTelegramData?: boolean },
-): Promise<Preferences> {
+export async function getPreferences(): Promise<
+  SupabaseSingleRowResponse<Preferences>
+> {
   const supabase = createClient();
 
-  const { data, error: error } = await supabase
+  const { data, error } = await supabase
     .from("profiles")
     .select(
-      options?.withTelegramData
-        ? "currency, language:languages(code, name), telegram_token, telegram_id"
-        : "currency, language:languages(code, name)",
-    )
+      "currency, language:languages(code, name), telegram_token, telegram_id",
+    ).returns<Preferences>()
     .single();
 
-  if (!data || error) {
-    throw new Error(error || "Couldn't retrieve preferences");
+  if (error) {
+    return {
+      error: error.message,
+      result: null,
+    };
   }
-  return data;
+
+  return {
+    result: data,
+  };
 }
 
 export async function activateService(

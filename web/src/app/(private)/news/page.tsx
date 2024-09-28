@@ -7,7 +7,12 @@ export default async function Page({
 }: {
   searchParams: { page?: string };
 }) {
-  const preferences = await getPreferences();
+  const { result: preferences, error } = await getPreferences();
+
+  if (!preferences) {
+    console.error(error);
+    throw new Error("Couldn't retrieve preferences");
+  }
 
   const { articles } = await getNews(
     preferences.language.code,

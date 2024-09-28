@@ -9,6 +9,7 @@ const config: Config = {
         // primary: "#0064FF",
         "primary-dark": "#115b61",
         // "primary-dark": "#272C7D",
+        font: "#000",
         secondary: "#fdbb2d",
         foreground: "#041617",
         light: "#FAFAFA",
