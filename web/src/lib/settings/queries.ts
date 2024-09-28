@@ -42,8 +42,8 @@ export async function getPreferences(): Promise<Preferences> {
     data,
     error: authError,
   } = await supabase.from("profiles").select(
-    "currency, language:languages(code, name)",
-  ).single();
+    "currency, language:languages(code, name), telegram_id, telegram_token",
+  ).returns<Preferences[]>().single();
 
   if (!data || authError) {
     throw new Error("Błąd autoryzacji, spróbuj zalogować się ponownie!");
@@ -109,7 +109,7 @@ export async function updateSettings(key: string, value: any) {
     "telegram_id, ...settings(*)",
   ).single();
   if (error || selectError) {
-    throw new Error(error ? error.message : selectError.message);
+    throw new Error(error ? error.message : selectError?.message);
   }
 
   return data;

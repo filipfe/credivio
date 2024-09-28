@@ -14,7 +14,11 @@ import Limits from "@/components/operations/limits";
 import ExpensesByLabel from "@/components/operations/expenses-by-label";
 
 export default async function Dashboard() {
-  const preferences = await getPreferences();
+  const { result: preferences, error } = await getPreferences();
+
+  if (error || !preferences) {
+    throw new Error(error || "Preferences could not be retrieved");
+  }
 
   return (
     <div className="sm:px-10 py-4 sm:py-8 flex flex-col xl:grid grid-cols-6 gap-4 sm:gap-6">
@@ -42,6 +46,7 @@ async function GoalPriority() {
     .select("title, price, currency, payments:goals_payments(date, amount)")
     .eq("is_priority", true)
     .order("date", { referencedTable: "goals_payments", ascending: false })
+    .returns<Goal[]>()
     .single();
 
   if (!goal) return <></>;

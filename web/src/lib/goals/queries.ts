@@ -10,7 +10,7 @@ export async function getGoals(): Promise<Goal[]> {
       "id, title, description, price, currency, deadline, is_priority, payments:goals_payments(amount)",
     )
     .order("deadline")
-    .order("created_at");
+    .order("created_at").returns<Goal[]>();
 
   if (error) {
     throw new Error(error.message);
@@ -46,10 +46,8 @@ export async function addGoalPayment(
     .from("goals_payments")
     .upsert(
       { date, goal_id, amount },
-      { onConflict: ["date", "goal_id"] },
     ).select();
 
-  console.log(data);
   if (error) {
     return {
       error: error.message,

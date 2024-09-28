@@ -34,7 +34,7 @@ export const MenuContext = createContext<MenuContextType>({
 });
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-  const { push } = useRouter();
+  const router = useRouter();
   const pathname = usePathname();
   const [isMenuHidden, setIsMenuHidden] = useState<IsMenuHidden>({
     mobile: true,
@@ -48,7 +48,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   }, [pathname]);
 
   return (
-    <NextUIProvider navigate={push} locale={preferences?.language.code}>
+    <NextUIProvider navigate={router.push} locale={preferences?.language.code}>
       <MenuContext.Provider value={{ isMenuHidden, setIsMenuHidden }}>
         <div
           className={`min-h-screen max-w-screen grid grid-rows-[64px_1fr] sm:grid-rows-[80px_1fr] ${

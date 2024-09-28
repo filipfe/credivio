@@ -8,7 +8,7 @@ import ExpensesCard from "./cards/expenses";
 export default function Hero() {
   return (
     <section className="bg-primary-dark px-6 flex flex-col items-center gap-8 overflow-hidden relative pb-4">
-      <div className="relative max-w-7xl mx-auto z-10 flex flex-col gap-4 items-center py-8 lg:py-16 w-full rounded-lg border border-white/10 bg-gradient-to-br from-[rgba(255,255,255,0.05)] to-[rgba(255,255,255,0)]">
+      <div className="relative max-w-7xl mx-auto z-10 flex flex-col gap-4 items-center py-12 lg:py-24 w-full rounded-lg border border-white/10 bg-gradient-to-br from-[rgba(255,255,255,0.05)] to-[rgba(255,255,255,0)]">
         <h2 className="text-secondary text-center font-medium text-xl sm:text-2xl">
           Zadbaj o swój interes
         </h2>
@@ -30,7 +30,7 @@ export default function Hero() {
             </button>
           </div>
         </div>
-        <div className="w-full overflow-hidden flex justify-center mt-8">
+        <div className="w-full overflow-hidden flex justify-center mt-12 lg:mt-16">
           <ScrollCarousel>
             <GoalCard />
             <IncomeCard />
