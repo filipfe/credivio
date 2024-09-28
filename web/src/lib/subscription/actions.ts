@@ -24,6 +24,7 @@ export async function createPaymentIntent(): Promise<
       amount: 9500,
       currency: "pln",
       customer: user.id,
+
       automatic_payment_methods: {
         enabled: true,
       },
