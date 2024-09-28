@@ -1,8 +1,8 @@
 "use client";
 
-import stripe from "@/utils/stripe/client";
 import { Elements } from "@stripe/react-stripe-js";
 import Checkout from "./checkout";
+import getStripe from "@/utils/stripe/client";
 
 interface Props {
   clientSecret: string;
@@ -10,7 +10,7 @@ interface Props {
 
 export default function Form({ clientSecret }: Props) {
   return (
-    <Elements options={{ clientSecret }} stripe={stripe}>
+    <Elements options={{ clientSecret }} stripe={getStripe()}>
       <Checkout />
     </Elements>
   );

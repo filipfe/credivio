@@ -1,8 +1,11 @@
 import Form from "@/components/settings/subscription/form";
-import { createPaymentIntent } from "@/lib/subscription/actions";
-import { Button } from "@nextui-org/react";
+import {
+  createPaymentIntent,
+  getSubscription,
+} from "@/lib/subscription/actions";
 
 export default async function Subscription() {
+  const { result: subscription } = await getSubscription();
   const { result: clientSecret, error } = await createPaymentIntent();
 
   if (!clientSecret) {
@@ -13,6 +16,7 @@ export default async function Subscription() {
       </div>
     );
   }
+
   return (
     <div className="flex-1 flex flex-col lg:grid grid-cols-2 gap-6">
       <div className="border bg-light rounded-md p-12"></div>

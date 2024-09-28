@@ -2,6 +2,37 @@
 
 import stripe from "@/utils/stripe/server";
 import { createClient } from "@/utils/supabase/server";
+import Stripe from "stripe";
+
+export async function getSubscription(): Promise<
+  SupabaseSingleRowResponse<Stripe.Subscription>
+> {
+  const supabase = createClient();
+
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+  if (authError) {
+    console.error(authError);
+    return {
+      result: null,
+      error: "Authorization error",
+    };
+  }
+
+  try {
+    const { data: subscriptions } = await stripe.subscriptions.list({
+      customer: user?.id,
+    });
+    return {
+      result: subscriptions[0],
+    };
+  } catch (err) {
+    return {
+      result: null,
+      error: "Could not retrieve subscription information",
+    };
+  }
+}
 
 export async function createPaymentIntent(): Promise<
   SupabaseSingleRowResponse<string>

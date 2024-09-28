@@ -59,7 +59,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         >
           <Header />
           <Sidebar />
-          <main className="bg-light">{children}</main>
+          {children}
         </div>
       </MenuContext.Provider>
     </NextUIProvider>
