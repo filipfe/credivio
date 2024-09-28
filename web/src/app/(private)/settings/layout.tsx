@@ -11,7 +11,7 @@ export default function SettingsLayout({
       <Block
         title="Ustawienia"
         description="Zarządzaj swoimi danymi osobowymi, preferencjami i subskrypcją"
-        className="flex-1 sm:max-h-[calc(var(--vh)*100-144px)]"
+        className="flex-1"
       >
         <SettingsTabs />
         {children}

@@ -18,8 +18,8 @@ export default function SettingsTabs() {
       radius="lg"
       variant="underlined"
       classNames={{
-        tab: "h-10",
-        tabList: "py-0 border-b",
+        tab: "h-10 max-sm:px-0 max-sm:justify-start",
+        tabList: "py-0 sm:border-b max-sm:flex-col max-sm:items-start",
         panel: "flex-1 relative",
         base: "mb-4",
       }}
