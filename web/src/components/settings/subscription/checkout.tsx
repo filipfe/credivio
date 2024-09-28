@@ -28,7 +28,7 @@ export default function Checkout() {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: "http://localhost:3000",
+        return_url: process.env.NEXT_PUBLIC_SITE_URL!,
       },
     });
 
@@ -64,6 +64,7 @@ export default function Checkout() {
         disabled={isLoading || !stripe || !elements}
         id="submit"
         className="w-full mt-6 font-medium"
+        disableRipple
       >
         {isLoading && <l-hatch stroke={1.5} size={14} color="white" />}
         Zapłać teraz
