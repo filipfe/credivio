@@ -1,7 +1,7 @@
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
-import stripe from "../stripe/server";
 import Stripe from "stripe";
+import { createClient } from "@supabase/supabase-js";
 
 const PUBLIC_ROUTES = [
   "/sign-in",
@@ -10,14 +10,18 @@ const PUBLIC_ROUTES = [
   "/forgot-password",
 ];
 
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   });
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    SUPABASE_URL!,
+    SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll() {
@@ -46,41 +50,57 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { pathname, origin } = request.nextUrl;
-
-  if (!user && !PUBLIC_ROUTES.includes(pathname)) {
-    return NextResponse.redirect(new URL(`${origin}/sign-in`));
+  if (!user && !PUBLIC_ROUTES.includes(request.nextUrl.pathname)) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/sign-in";
+    return NextResponse.redirect(url);
   }
 
   if (user) {
-    if (PUBLIC_ROUTES.includes(pathname)) {
-      return NextResponse.redirect(new URL(`${origin}/`));
+    if (PUBLIC_ROUTES.includes(request.nextUrl.pathname)) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/";
+      return NextResponse.redirect(url);
     }
 
-    if (pathname === "/settings/subscription") return supabaseResponse;
+    if (request.nextUrl.pathname === "/settings/subscription") {
+      return supabaseResponse;
+    }
 
-    const { data: subscription, error } = await supabase.schema("stripe")
+    const supabaseServiceRole = createClient(
+      SUPABASE_URL!,
+      SUPABASE_SERVICE_ROLE_KEY!,
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false,
+        },
+      },
+    );
+
+    const { data: subscription, error } = await supabaseServiceRole.schema(
+      "stripe",
+    )
       .from("subscriptions")
-      .select("status")
+      .select("attrs")
       .eq("customer", user.id)
-      .returns<Stripe.Subscription[]>()
       .maybeSingle();
 
     if (error) {
-      return {
-        result: null,
-        error: "Could not retrieve subscription",
-      };
+      const url = request.nextUrl.clone();
+      url.pathname = "/settings/subscription";
+      return NextResponse.redirect(url);
     }
 
     const isActive = subscription &&
-      (subscription.status === "active" ||
-        subscription.status === "trialing");
+      (subscription.attrs.status === "active" ||
+        subscription.attrs.status === "trialing");
 
     if (!isActive) {
-      return NextResponse.redirect(
-        new URL(`${origin}/settings/subscription`),
-      );
+      const url = request.nextUrl.clone();
+      url.pathname = "/settings/subscription";
+      return NextResponse.redirect(url);
     }
   }
 
