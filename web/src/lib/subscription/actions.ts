@@ -11,7 +11,7 @@ export async function getSubscription(): Promise<
 
   const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-  if (authError) {
+  if (!user) {
     console.error(authError);
     return {
       result: null,
@@ -19,19 +19,23 @@ export async function getSubscription(): Promise<
     };
   }
 
-  try {
-    const { data: subscriptions } = await stripe.subscriptions.list({
-      customer: user?.id,
-    });
-    return {
-      result: subscriptions[0],
-    };
-  } catch (err) {
+  const { data: subscription, error } = await supabase.schema("stripe").from(
+    "subscriptions",
+  ).select("status")
+    .eq("customer", user.id)
+    .returns<Stripe.Subscription>()
+    .maybeSingle();
+
+  if (error) {
     return {
       result: null,
-      error: "Could not retrieve subscription information",
+      error: "Could not retrieve subscription",
     };
   }
+
+  return {
+    result: subscription,
+  };
 }
 
 export async function createPaymentIntent(): Promise<

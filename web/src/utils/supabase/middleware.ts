@@ -1,6 +1,7 @@
 import { type CookieOptions, createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
 import stripe from "../stripe/server";
+import Stripe from "stripe";
 
 const PUBLIC_ROUTES = [
   "/sign-in",
@@ -55,21 +56,31 @@ export async function updateSession(request: NextRequest) {
     if (PUBLIC_ROUTES.includes(pathname)) {
       return NextResponse.redirect(new URL(`${origin}/`));
     }
+
     if (pathname === "/settings/subscription") return supabaseResponse;
-    try {
-      const { data: subscription } = await stripe.subscriptions.list({
-        customer: user.id,
-      });
-      const isActive = subscription.some((item) =>
-        item.status === "active" || item.status === "trialing"
+
+    const { data: subscription, error } = await supabase.schema("stripe")
+      .from("subscriptions")
+      .select("status")
+      .eq("customer", user.id)
+      .returns<Stripe.Subscription[]>()
+      .maybeSingle();
+
+    if (error) {
+      return {
+        result: null,
+        error: "Could not retrieve subscription",
+      };
+    }
+
+    const isActive = subscription &&
+      (subscription.status === "active" ||
+        subscription.status === "trialing");
+
+    if (!isActive) {
+      return NextResponse.redirect(
+        new URL(`${origin}/settings/subscription`),
       );
-      if (!isActive) {
-        return NextResponse.redirect(
-          new URL(`${origin}/settings/subscription`),
-        );
-      }
-    } catch (err) {
-      return NextResponse.redirect(new URL(`${origin}/settings/subscription`));
     }
   }
 
