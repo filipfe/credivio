@@ -1,28 +1,31 @@
-import Form from "@/components/settings/subscription/form";
-import {
-  createPaymentIntent,
-  getSubscription,
-} from "@/lib/subscription/actions";
+import Active from "@/components/settings/subscription/active";
+import Start from "@/components/settings/subscription/start";
+import { getSubscription } from "@/lib/subscription/actions";
+import { Suspense } from "react";
 
 export default async function Subscription() {
   const { result: subscription } = await getSubscription();
-  const { result: clientSecret, error } = await createPaymentIntent();
 
-  if (!clientSecret) {
-    console.error(error);
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center gap-4">
-        <p className="text-sm text-danger">Could not create payment intent</p>
-      </div>
-    );
-  }
+  const isActive =
+    subscription &&
+    (subscription.status === "active" || subscription.status === "trialing");
 
   return (
-    <div className="flex-1 flex flex-col lg:grid grid-cols-2 gap-6">
+    <div className="flex-1 flex flex-col lg:grid grid-cols-2 gap-6 sm:gap-10">
       <div className="border bg-light rounded-md p-12"></div>
-      <div className="px-12">
-        <Form clientSecret={clientSecret} />
-      </div>
+      {isActive ? (
+        <Active {...subscription} />
+      ) : (
+        <Suspense
+          fallback={
+            <div className="py-12 grid place-content-center">
+              <l-hatch size={32} />
+            </div>
+          }
+        >
+          <Start />
+        </Suspense>
+      )}
     </div>
   );
 }
