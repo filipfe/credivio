@@ -156,7 +156,7 @@ export const SETTINGS_PAGES: Page[] = [
       "Kliknij tutaj, aby zarządzać ustawieniami wyświetlania, powiadomień i innymi.",
   },
   {
-    title: "Subskrypcje i usługi",
+    title: "Subskrypcja",
     href: "/settings/subscription",
     icon: LayersIcon,
     description:
