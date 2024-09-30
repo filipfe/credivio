@@ -2,7 +2,7 @@
 
 import { useContext } from "react";
 import { StatsFilterContext } from "@/app/(private)/stats/providers";
-import LimitRef from "./limits-ref";
+import LimitRef from "./limit-ref";
 import { useLimits } from "@/lib/general/queries";
 
 export default function Limits() {

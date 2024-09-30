@@ -36,9 +36,12 @@ export default function BalanceByMonth({
     month + 1,
     year
   );
-
+  console.log(results);
   const maxValue = results
-    ? Math.max(...results.map((item) => Math.abs(item.total_amount)))
+    ? Math.max(
+        ...results.map((item) => Math.abs(item.total_expenses)),
+        ...results.map((item) => Math.abs(item.total_incomes))
+      )
     : 0;
 
   const buffer = Math.ceil(maxValue * 0.1);
@@ -61,12 +64,11 @@ export default function BalanceByMonth({
         <LineChartLoader className="!p-0" hideTitle />
       ) : results && results.length > 0 ? (
         <ResponsiveContainer width="100%" height="100%" minHeight={240}>
-          <BarChart data={results}>
+          <BarChart data={results} stackOffset="sign">
             <CartesianGrid vertical={false} opacity={0.5} />
             <YAxis
               width={width}
               tick={{ fontSize: 12 }}
-              dataKey="total_amount"
               axisLine={false}
               tickLine={false}
               tickFormatter={tickFormatter}
@@ -114,7 +116,13 @@ export default function BalanceByMonth({
                 />
               )}
             />
-            <Bar dataKey="total_amount" fill="#177981" />
+            <Bar dataKey="total_incomes" stackId="a" fill="#177981" />
+            <Bar
+              dataKey="total_expenses"
+              stackId="a"
+              opacity={0.5}
+              fill="#177981"
+            />
           </BarChart>
         </ResponsiveContainer>
       ) : (

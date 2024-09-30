@@ -31,7 +31,7 @@ async function getBalanceHistory(
   currency: string,
   month?: number,
   year?: number
-): Promise<{ date: string; total_amount: number }[]> {
+): Promise<{ date: string; total_expenses: number; total_incomes: number }[]> {
   const supabase = createClient();
 
   const { data, error } = await supabase.rpc("get_stats_balance_history", {
