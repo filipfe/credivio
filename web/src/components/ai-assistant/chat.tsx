@@ -7,8 +7,6 @@ import { Button, Input } from "@nextui-org/react";
 import { Send } from "lucide-react";
 import { FormEvent, useState } from "react";
 
-const supabase = createClient();
-
 export default function Chat() {
   const { limit, goal } = useAIAssistant();
   const [input, setInput] = useState("");
@@ -18,6 +16,7 @@ export default function Chat() {
     e?.preventDefault();
     if (!input) return;
     setIsLoading(true);
+    const supabase = createClient();
     const { data, error } = await supabase.functions.invoke("ai-assistant", {
       body: {
         input,
