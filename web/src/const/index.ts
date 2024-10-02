@@ -1,5 +1,6 @@
 import {
   BarChart3,
+  BrainIcon,
   CheckCircleIcon,
   CoinsIcon,
   LayersIcon,
@@ -135,11 +136,11 @@ export const PAGES: Page[] = [
   //     },
   //   ],
   // },
-  // {
-  //   title: "Asystent AI",
-  //   href: "/ai-actions",
-  //   icon: BrainIcon,
-  // },
+  {
+    title: "Asystent AI",
+    href: "/ai-assistant",
+    icon: BrainIcon,
+  },
   // {
   //   title: "Aktualności",
   //   href: "/news",

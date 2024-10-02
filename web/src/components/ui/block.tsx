@@ -62,17 +62,23 @@ export default function Block({
   );
 }
 
-interface SectionProps extends HTMLAttributes<HTMLDivElement> {}
+interface SectionProps extends HTMLAttributes<HTMLDivElement> {
+  wrapperClassName?: string;
+}
 
 export function Section({
   title,
   className,
   children,
+  wrapperClassName,
   ...props
 }: SectionProps) {
   return (
     <div
-      className="first:border-t-0 first:pt-0 border-t pt-4 pb-8 last:pb-4 flex flex-col gap-4"
+      className={cn(
+        "first:border-t-0 first:pt-0 border-t py-4 flex flex-col gap-4",
+        wrapperClassName
+      )}
       {...props}
     >
       {title && <h4 className="text-sm">{title}</h4>}

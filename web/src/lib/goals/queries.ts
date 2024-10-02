@@ -1,8 +1,9 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
+import useSWR from "swr";
 
-export async function getGoals(): Promise<Goal[]> {
+async function getGoals(): Promise<Goal[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("goals")
@@ -18,6 +19,8 @@ export async function getGoals(): Promise<Goal[]> {
 
   return data;
 }
+
+export const useGoals = () => useSWR("goals", () => getGoals());
 
 export async function getGoalsPayments(): Promise<GoalPayment[]> {
   const supabase = createClient();
