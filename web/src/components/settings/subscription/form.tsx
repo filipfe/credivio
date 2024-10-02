@@ -4,14 +4,37 @@ import { Elements } from "@stripe/react-stripe-js";
 import Checkout from "./checkout";
 import getStripe from "@/utils/stripe/client";
 
-interface Props {
-  clientSecret: string;
-}
-
-export default function Form({ clientSecret }: Props) {
+export default function Form({
+  client_secret: clientSecret,
+  ...subscription
+}: Subscription) {
   return (
-    <Elements options={{ clientSecret }} stripe={getStripe()}>
-      <Checkout />
-    </Elements>
+    <div className="px-10 py-8 border bg-light rounded-md">
+      <Elements
+        options={{
+          clientSecret,
+          appearance: {
+            variables: {
+              colorPrimary: "#177981",
+            },
+          },
+        }}
+        stripe={getStripe()}
+      >
+        <div className="flex flex-col gap-6">
+          <h4 className="">Subskrypcja Credivio</h4>
+          <p className="inline-flex items-end">
+            <strong className="text-2xl sm:text-3xl lg:text-4xl">
+              {new Intl.NumberFormat("pl-PL", {
+                style: "currency",
+                currency: subscription.plan.currency,
+              }).format(subscription.plan.amount / 100)}
+            </strong>
+            <sub className="text-sm mb-1 ml-2 opacity-80">/ miesiąc</sub>
+          </p>
+          <Checkout />
+        </div>
+      </Elements>
+    </div>
   );
 }

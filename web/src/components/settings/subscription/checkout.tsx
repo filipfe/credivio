@@ -28,7 +28,8 @@ export default function Checkout() {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: process.env.NEXT_PUBLIC_SITE_URL!,
+        return_url: `${process.env
+          .NEXT_PUBLIC_SITE_URL!}/settings/subscription/status`,
       },
     });
 
