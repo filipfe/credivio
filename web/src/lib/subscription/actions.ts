@@ -5,18 +5,20 @@ import { createClient } from "@/utils/supabase/server";
 import Stripe from "stripe";
 import { createClient as createDefaultClient } from "@supabase/supabase-js";
 
-export async function getSubscription(): Promise<
-  SupabaseSingleRowResponse<Stripe.Subscription>
+export async function getOrCreateSubscription(): Promise<
+  SupabaseSingleRowResponse<Subscription>
 > {
   const supabase = createClient();
 
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  const { data: user, error: authError } = await supabase.from("profiles")
+    .select(
+      "id",
+    ).single();
 
-  if (!user) {
-    console.error(authError);
+  if (authError) {
     return {
+      error: authError.message,
       result: null,
-      error: "Authorization error",
     };
   }
 
@@ -32,7 +34,7 @@ export async function getSubscription(): Promise<
     },
   );
 
-  const { data: subscription, error } = await supabaseServiceRole.schema(
+  const { data: pastSubscription, error } = await supabaseServiceRole.schema(
     "stripe",
   ).from(
     "subscriptions",
@@ -47,35 +49,14 @@ export async function getSubscription(): Promise<
     };
   }
 
-  return {
-    result: subscription?.attrs as Stripe.Subscription,
-  };
-}
-
-export async function createSubscriptionPaymentIntent(): Promise<
-  SupabaseSingleRowResponse<string>
-> {
-  const supabase = createClient();
-
-  const { data: user, error } = await supabase.from("profiles").select(
-    "id",
-  ).single();
-
-  if (error) {
-    return {
-      error: error.message,
-      result: null,
-    };
-  }
-
   try {
     let client_secret: string | null = null;
 
-    const { data: subscriptions } = await stripe.subscriptions.list({
-      customer: user.id,
-    });
-    if (!subscriptions || subscriptions.length === 0) {
-      const subscription = await stripe.subscriptions.create({
+    let subscription: Omit<Subscription, "plan" | "client_secret"> | null =
+      pastSubscription?.attrs;
+
+    if (!pastSubscription) {
+      const newSubscription = await stripe.subscriptions.create({
         "customer": user.id,
         items: [
           {
@@ -86,11 +67,12 @@ export async function createSubscriptionPaymentIntent(): Promise<
         payment_settings: { save_default_payment_method: "on_subscription" },
         expand: ["latest_invoice.payment_intent"],
       });
-      client_secret = ((subscription.latest_invoice as Stripe.Invoice)
+      subscription = newSubscription;
+      client_secret = ((newSubscription.latest_invoice as Stripe.Invoice)
         .payment_intent as Stripe.PaymentIntent).client_secret;
     } else {
       const { payment_intent } = await stripe.invoices.retrieve(
-        subscriptions[0].latest_invoice as string,
+        pastSubscription.attrs.latest_invoice as string,
       );
 
       const paymentIntent = await stripe.paymentIntents.retrieve(
@@ -100,7 +82,10 @@ export async function createSubscriptionPaymentIntent(): Promise<
       client_secret = paymentIntent.client_secret;
     }
     return {
-      result: client_secret,
+      result: {
+        ...subscription as Subscription,
+        client_secret: client_secret as string,
+      },
     };
   } catch (err) {
     console.log(err);
