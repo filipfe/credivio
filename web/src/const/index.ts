@@ -73,11 +73,11 @@ export const PAGES: Page[] = [
     href: "/goals",
     icon: CheckCircleIcon,
   },
-  {
-    title: "Wiadomości",
-    href: "/news",
-    icon: Newspaper,
-  },
+  // {
+  //   title: "Wiadomości",
+  //   href: "/news",
+  //   icon: Newspaper,
+  // },
   // {
   //   title: "Inwestycje",
   //   href: "/investments",

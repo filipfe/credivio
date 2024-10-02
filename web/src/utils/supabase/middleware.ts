@@ -63,7 +63,10 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    if (request.nextUrl.pathname === "/settings/subscription") {
+    if (
+      request.nextUrl.pathname === "/settings/subscription" ||
+      process.env.NODE_ENV !== "production"
+    ) {
       return supabaseResponse;
     }
 

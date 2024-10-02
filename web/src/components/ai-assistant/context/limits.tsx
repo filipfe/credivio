@@ -1,23 +1,19 @@
 "use client";
 
 import { Section } from "@/components/ui/block";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useState } from "react";
 import Option from "./option";
 import { useLimits } from "@/lib/operations/queries";
 import { CURRENCIES } from "@/const";
 import { cn, Skeleton } from "@nextui-org/react";
 import numberFormat from "@/utils/formatters/currency";
+import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
+import Empty from "@/components/ui/empty";
 
 export default function LimitsContext() {
+  const { setLimit } = useAIAssistant();
   const [currency, setCurrency] = useState<string>();
   const { data: limits, isLoading, error } = useLimits(currency);
-  const [selected, setSelected] = useState<Limit["period"]>();
-
-  console.log(limits);
-
-  useEffect(() => {
-    setSelected(undefined);
-  }, [currency]);
 
   return (
     <Section title="Limity wydatków">
@@ -28,10 +24,11 @@ export default function LimitsContext() {
             // highlight="outline"
             id={`context-limit-${curr}`}
             isActive={currency === curr}
-            onActiveChange={(checked) =>
-              setCurrency(checked ? curr : undefined)
-            }
-            key={curr}
+            onActiveChange={(checked) => {
+              setLimit(undefined);
+              setCurrency(checked ? curr : undefined);
+            }}
+            key={`limits-${curr}`}
           >
             {curr}
           </Option>
@@ -57,27 +54,17 @@ export default function LimitsContext() {
                   <Skeleton className="h-[62px] rounded-md" />
                   <Skeleton className="h-[62px] rounded-md" />
                 </>
-              ) : (
+              ) : limits && limits.length > 0 ? (
                 <>
-                  <LimitRef
-                    period="daily"
-                    currency={currency}
-                    selected={selected}
-                    setSelected={setSelected}
-                  />
-                  <LimitRef
-                    period="weekly"
-                    currency={currency}
-                    selected={selected}
-                    setSelected={setSelected}
-                  />
-                  <LimitRef
-                    period="monthly"
-                    currency={currency}
-                    selected={selected}
-                    setSelected={setSelected}
-                  />
+                  <LimitRef period="daily" currency={currency} />
+                  <LimitRef period="weekly" currency={currency} />
+                  <LimitRef period="monthly" currency={currency} />
                 </>
+              ) : (
+                <Empty
+                  title="Brak limitów dla podanej waluty"
+                  className="pt-4 pb-2 col-span-full"
+                />
               )}
             </div>
           </div>
@@ -90,24 +77,29 @@ export default function LimitsContext() {
 const LimitRef = ({
   period,
   currency,
-  selected,
-  setSelected,
 }: {
   period: Limit["period"];
   currency?: string;
-  selected: Limit["period"] | undefined;
-  setSelected: Dispatch<SetStateAction<Limit["period"] | undefined>>;
 }) => {
+  const { limit: selectedLimit, setLimit } = useAIAssistant();
   const { data: limits } = useLimits(currency);
   const limit = currency
     ? limits?.find((limit) => limit.period === period)
     : null;
+  console.log({ limits });
+
   if (!limit) return <></>;
+
+  const isActive = selectedLimit
+    ? selectedLimit.period === limit.period &&
+      selectedLimit.currency === limit.currency
+    : false;
+
   return (
     <Option
       id={`context-limit-${period}`}
-      isActive={selected === period}
-      onActiveChange={(checked) => setSelected(checked ? period : undefined)}
+      isActive={isActive}
+      onActiveChange={(checked) => setLimit(checked ? limit : undefined)}
     >
       <h5 className="text-xs font-medium opacity-80 select-none">
         {numberFormat(currency!, limit.total)} /{" "}
