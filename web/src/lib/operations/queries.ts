@@ -113,9 +113,9 @@ async function getLimits(currency: string): Promise<Limit[]> {
   return data;
 }
 
-export const useLimits = (currency: string) =>
+export const useLimits = (currency?: string) =>
   useSWR(
-    ["limits", currency],
+    currency ? ["limits", currency] : null,
     ([_k, curr]) => getLimits(curr),
   );
 

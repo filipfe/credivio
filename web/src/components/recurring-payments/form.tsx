@@ -71,6 +71,7 @@ export default function RecurringPaymentForm() {
         <Section
           title="Dane"
           className="flex flex-col md:grid grid-cols-2 gap-4"
+          wrapperClassName="pb-8"
         >
           <Input
             classNames={{ inputWrapper: "!bg-light shadow-none border" }}
