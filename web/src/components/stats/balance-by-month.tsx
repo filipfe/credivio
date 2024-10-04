@@ -36,7 +36,7 @@ export default function BalanceByMonth({
     month + 1,
     year
   );
-  console.log(results);
+
   const maxValue = results
     ? Math.max(
         ...results.map((item) => Math.abs(item.total_expenses)),
@@ -62,7 +62,7 @@ export default function BalanceByMonth({
     >
       {isLoading ? (
         <LineChartLoader className="!p-0" hideTitle />
-      ) : results && results.length > 0 ? (
+      ) : maxValue !== 0 ? (
         <ResponsiveContainer width="100%" height="100%" minHeight={240}>
           <BarChart data={results} stackOffset="sign">
             <CartesianGrid vertical={false} opacity={0.5} />
@@ -97,7 +97,7 @@ export default function BalanceByMonth({
               vertical={false}
               className="stroke-content4"
             />
-            <ReferenceLine y={0} stroke="#177981" />
+            <ReferenceLine y={0} stroke="#177981" opacity={0.5} />
             <Tooltip
               cursor={{ fill: "#177981", fillOpacity: 0.1 }}
               isAnimationActive={false}
@@ -126,10 +126,7 @@ export default function BalanceByMonth({
           </BarChart>
         </ResponsiveContainer>
       ) : (
-        <Empty
-          title="Brak danych do wyświetlenia!"
-          cta={{ title: "Dodaj wydatek", href: "/expenses/add" }}
-        />
+        <Empty title="Brak danych do wyświetlenia!" />
       )}
     </Block>
   );

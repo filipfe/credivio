@@ -29,8 +29,8 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const fetchPreferences = async () => {
-      const preferences = await getPreferences();
-      setCurrency(preferences.currency);
+      const { result: preferences } = await getPreferences();
+      setCurrency(preferences!.currency);
     };
 
     fetchPreferences();

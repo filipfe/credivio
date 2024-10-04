@@ -8,11 +8,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { getPastRecurringPayments } from "@/lib/recurring-payments/queries";
 import useSWRInfinite from "swr/infinite";
 import parsePastRecurringPayments from "@/utils/operations/parse-past-recurring-payments";
-import MonthInput from "@/components/ui/inputs/month";
-import YearInput from "@/components/ui/inputs/year";
 import Loader from "@/components/stocks/loader";
-
-const now = new Date();
 
 export default function Timeline() {
   const ref = useRef<HTMLElement | null>(null);

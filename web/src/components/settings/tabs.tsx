@@ -1,55 +1,50 @@
 "use client";
 
 import { Tab, Tabs } from "@nextui-org/react";
-import Account from "./account";
 import {
   BellRingIcon,
   LayersIcon,
   SlidersIcon,
   UserCogIcon,
 } from "lucide-react";
-import Preferences from "./preferences";
 import TabTitle from "../ui/tab-title";
-import Subscription from "./subscription";
-import Notifications from "./notifications";
+import { usePathname } from "next/navigation";
+import React from "react";
 
-export default function SettingsTabs({
-  searchParams,
-}: {
-  searchParams?: { selected?: string };
-}) {
+export default function SettingsTabs() {
+  const pathname = usePathname();
   return (
     <Tabs
       radius="lg"
       variant="underlined"
       classNames={{
-        tab: "h-10",
-        tabList: "py-0 border-b",
+        tab: "h-10 max-sm:px-0 max-sm:justify-start",
+        tabList: "py-0 sm:border-b max-sm:flex-col max-sm:items-start",
         panel: "flex-1 relative",
+        base: "mb-4",
       }}
-      defaultSelectedKey={searchParams?.selected ? "subscription" : "account"}
+      selectedKey={pathname.split("/").pop()}
     >
-      <Tab key="account" title={<TabTitle title="Konto" Icon={UserCogIcon} />}>
-        <Account />
-      </Tab>
+      <Tab
+        key="account"
+        href="/settings/account"
+        title={<TabTitle title="Konto" Icon={UserCogIcon} />}
+      />
       <Tab
         key="preferences"
+        href="/settings/preferences"
         title={<TabTitle title="Preferencje" Icon={SlidersIcon} />}
-      >
-        <Preferences />
-      </Tab>
+      />
       <Tab
         key="subscription"
-        title={<TabTitle title="Subskrypcje i usługi" Icon={LayersIcon} />}
-      >
-        <Subscription selected={searchParams?.selected} />
-      </Tab>
+        href="/settings/subscription"
+        title={<TabTitle title="Subskrypcja" Icon={LayersIcon} />}
+      />
       <Tab
         key="notifications"
+        href="/settings/notifications"
         title={<TabTitle title="Powiadomienia" Icon={BellRingIcon} />}
-      >
-        <Notifications />
-      </Tab>
+      />
     </Tabs>
   );
 }

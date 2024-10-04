@@ -77,7 +77,11 @@ export default function Sidebar() {
             //   )
             // }
           />
-          <NavLink title="Ustawienia" href="/settings" icon={SettingsIcon} />
+          <NavLink
+            title="Ustawienia"
+            href="/settings/account"
+            icon={SettingsIcon}
+          />
         </div>
       </aside>
       <div

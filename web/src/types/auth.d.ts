@@ -1,3 +1,7 @@
+declare namespace Stripe {
+  type Subscription = import("stripe").Stripe.Subscription;
+}
+
 type Service = {
   id: string;
   name: string;
@@ -15,3 +19,11 @@ type Settings = {
   email_notifications: boolean;
   telegram_notifications: boolean;
 };
+
+interface Subscription extends Stripe.Subscription {
+  client_secret: string;
+  plan: {
+    amount: number;
+    currency: string;
+  };
+}

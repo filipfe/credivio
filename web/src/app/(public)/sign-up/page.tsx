@@ -9,7 +9,7 @@ export default function Page() {
           <div className="flex flex-col gap-6">
             <div className="flex flex-col items-center text-center gap-2 mb-4">
               <div className="bg-light rounded-md h-16 w-16 mb-4 border"></div>
-              <h1 className="text-2xl font-medium">Witaj w Tipplet!</h1>
+              <h1 className="text-2xl font-medium">Witaj w Credivio!</h1>
               <p className="text-sm">Zarejestruj się, aby kontynuować</p>
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -32,6 +32,8 @@ export default function Page() {
                 name="last-name"
                 label="Nazwisko"
                 type="text"
+                isRequired
+                required
                 placeholder="Kowalski"
                 autoComplete="off"
               />

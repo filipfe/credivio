@@ -90,10 +90,7 @@ export default function ExpensesByLabelChart() {
             </BarChart>
           </ResponsiveContainer>
         ) : (
-          <Empty
-            title="Brak wydatków z etykietą!"
-            cta={{ title: "Dodaj wydatek", href: "/expenses/add" }}
-          />
+          <Empty title="Brak wydatków z etykietą!" />
         )}
       </div>
     </Block>

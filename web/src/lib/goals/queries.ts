@@ -1,8 +1,9 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
+import useSWR from "swr";
 
-export async function getGoals(): Promise<Goal[]> {
+async function getGoals(): Promise<Goal[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("goals")
@@ -10,7 +11,7 @@ export async function getGoals(): Promise<Goal[]> {
       "id, title, description, price, currency, deadline, is_priority, payments:goals_payments(amount)",
     )
     .order("deadline")
-    .order("created_at");
+    .order("created_at").returns<Goal[]>();
 
   if (error) {
     throw new Error(error.message);
@@ -18,6 +19,8 @@ export async function getGoals(): Promise<Goal[]> {
 
   return data;
 }
+
+export const useGoals = () => useSWR("goals", () => getGoals());
 
 export async function getGoalsPayments(): Promise<GoalPayment[]> {
   const supabase = createClient();
@@ -46,10 +49,8 @@ export async function addGoalPayment(
     .from("goals_payments")
     .upsert(
       { date, goal_id, amount },
-      { onConflict: ["date", "goal_id"] },
     ).select();
 
-  console.log(data);
   if (error) {
     return {
       error: error.message,

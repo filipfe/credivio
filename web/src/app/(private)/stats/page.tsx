@@ -10,7 +10,7 @@ import Limits from "@/components/stats/limits";
 import { Skeleton } from "@nextui-org/react";
 
 export default async function Page() {
-  const preferences = await getPreferences();
+  const { result: preferences } = await getPreferences();
 
   return (
     <div className="sm:px-10 py-4 sm:py-8 flex flex-col xl:grid grid-cols-6 gap-4 sm:gap-6">
@@ -21,7 +21,7 @@ export default async function Page() {
         </Suspense>
         {/* <Limits /> */}
         <ExpensesByLabelChart />
-        <BalanceByMonth languageCode={preferences.language.code} />
+        <BalanceByMonth languageCode={preferences!.language.code} />
       </Providers>
     </div>
   );

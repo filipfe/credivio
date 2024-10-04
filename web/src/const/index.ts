@@ -1,5 +1,6 @@
 import {
   BarChart3,
+  BrainIcon,
   CheckCircleIcon,
   CoinsIcon,
   LayersIcon,
@@ -72,11 +73,11 @@ export const PAGES: Page[] = [
     href: "/goals",
     icon: CheckCircleIcon,
   },
-  {
-    title: "Wiadomości",
-    href: "/news",
-    icon: Newspaper,
-  },
+  // {
+  //   title: "Wiadomości",
+  //   href: "/news",
+  //   icon: Newspaper,
+  // },
   // {
   //   title: "Inwestycje",
   //   href: "/investments",
@@ -135,11 +136,11 @@ export const PAGES: Page[] = [
   //     },
   //   ],
   // },
-  // {
-  //   title: "Asystent AI",
-  //   href: "/ai-actions",
-  //   icon: BrainIcon,
-  // },
+  {
+    title: "Asystent AI",
+    href: "/ai-assistant",
+    icon: BrainIcon,
+  },
   // {
   //   title: "Aktualności",
   //   href: "/news",
@@ -156,7 +157,7 @@ export const SETTINGS_PAGES: Page[] = [
       "Kliknij tutaj, aby zarządzać ustawieniami wyświetlania, powiadomień i innymi.",
   },
   {
-    title: "Subskrypcje i usługi",
+    title: "Subskrypcja",
     href: "/settings/subscription",
     icon: LayersIcon,
     description:

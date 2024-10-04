@@ -63,7 +63,10 @@ export default function Form({
             <span className="text-tiny text-font/40">LUB</span>
           </div>
         </div>
-        <Button variant="faded" className="border">
+        <button
+          type="button"
+          className="border bg-light rounded-md text-sm flex items-center gap-2 justify-center h-10"
+        >
           <Image
             className="max-w-5"
             width={240}
@@ -72,7 +75,7 @@ export default function Form({
             alt="Google Logo"
           />
           <span className="mb-0.5">Zaloguj się z Google</span>
-        </Button>
+        </button>
       </div>
     </form>
   );

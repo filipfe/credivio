@@ -30,6 +30,7 @@ export default function ActionsDropdown({
   // onSelect,
   onDelete,
 }: Props) {
+  const { isOpen, onClose, onOpenChange } = useDisclosure();
   const disclosure = useDisclosure();
   const [edited, setEdited] = useState<Operation | null>(null);
   const [deleted, setDeleted] = useState<Operation | null>(null);
@@ -41,10 +42,12 @@ export default function ActionsDropdown({
       //   return;
       case "edit":
         setEdited(operation);
+        onClose();
         disclosure.onOpen();
         return;
       case "delete":
         onDelete ? onDelete(operation.id) : setDeleted(operation);
+        onClose();
         return;
       default:
         return;
@@ -53,7 +56,12 @@ export default function ActionsDropdown({
 
   return (
     <Fragment>
-      <Dropdown shadow="sm" placement="left">
+      <Dropdown
+        shadow="sm"
+        placement="left"
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+      >
         <DropdownTrigger>
           <button className="h-6 w-6 -my-2 rounded-full grid place-content-center">
             <MoreVerticalIcon size={20} />
