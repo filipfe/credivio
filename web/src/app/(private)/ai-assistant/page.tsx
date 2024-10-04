@@ -8,12 +8,13 @@ import { ScrollShadow } from "@nextui-org/react";
 
 export default function Page() {
   return (
-    <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 xl:grid grid-cols-2">
+    <div className="sm:px-10 flex flex-col h-full gap-4 sm:gap-10 xl:grid grid-cols-2">
       <AIAssistantProvider>
         <Chat />
         <Block
           title="Zbuduj kontekst"
           description="Wybierz informacje, które mają być przetworzone przez asystenta"
+          className="my-4 sm:my-8"
         >
           <ScrollShadow className="max-h-[calc(100vh-298px)]" hideScrollBar>
             <div>

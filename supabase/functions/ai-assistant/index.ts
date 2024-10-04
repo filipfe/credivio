@@ -32,8 +32,6 @@ Deno.serve(async (req) => {
     ],
   });
 
-  console.log(completion.choices[0].message.content);
-
   return new Response(
     // JSON.stringify({ message: "" }),
     JSON.stringify({ message: completion.choices[0].message.content }),
