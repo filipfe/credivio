@@ -17,7 +17,7 @@ export default function GoalsContext() {
           <p className="text-danger text-sm text-center">Wystąpił błąd</p>
         </div>
       ) : (
-        <div className="grid grid-cols-3 gap-3">
+        <div className="flex flex-col sm:grid grid-cols-3 gap-3">
           {isLoading ? (
             <>
               <Skeleton className="h-[62px] rounded-md" />

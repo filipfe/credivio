@@ -17,7 +17,7 @@ export default function LimitsContext() {
 
   return (
     <Section title="Limity wydatków">
-      <div className="flex items-center gap-3 col-span-full">
+      <div className="flex flex-wrap items-center gap-3 col-span-full">
         {CURRENCIES.map((curr) => (
           <Option
             className="text-sm font-medium py-2"
@@ -47,7 +47,7 @@ export default function LimitsContext() {
           )}
         >
           <div className="overflow-hidden">
-            <div className="grid grid-cols-3 gap-3 pt-3">
+            <div className="flex flex-col sm:grid grid-cols-3 gap-3 pt-3">
               {isLoading ? (
                 <>
                   <Skeleton className="h-[62px] rounded-md" />
@@ -94,7 +94,6 @@ const LimitRef = ({
     ? selectedLimit.period === limit.period &&
       selectedLimit.currency === limit.currency
     : false;
-
   return (
     <Option
       id={`context-limit-${period}`}

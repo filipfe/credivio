@@ -10,7 +10,7 @@ export default function OperationsContext() {
 
   return (
     <Section title="Operacje">
-      <div className="grid grid-cols-3 gap-3">
+      <div className="flex flex-col sm:grid grid-cols-3 gap-3">
         <Option
           id="context-operations-incomes"
           className="flex items-center gap-2 font-medium text-sm select-none"

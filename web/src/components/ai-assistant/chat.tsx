@@ -3,19 +3,25 @@
 import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
 import { createClient } from "@/utils/supabase/client";
 import toast from "@/utils/toast";
-import { Button, Input } from "@nextui-org/react";
+import { Button, Input, ScrollShadow } from "@nextui-org/react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Send } from "lucide-react";
 import { FormEvent, useState } from "react";
+import MessageRef from "./chat/message";
 
 export default function Chat() {
   const { limit, goal } = useAIAssistant();
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
 
   const onSubmit = async (e?: FormEvent) => {
     e?.preventDefault();
     if (!input) return;
+    console.log(limit);
+    setMessages((prev) => [...prev, { from: "user", content: input }]);
     setIsLoading(true);
+    setInput("");
     const supabase = createClient();
     const { data, error } = await supabase.functions.invoke("ai-assistant", {
       body: {
@@ -30,22 +36,38 @@ export default function Chat() {
         message: "Wystąpił błąd przy przetwarzaniu zapytania",
       });
     } else {
-      console.log(data);
+      setMessages((prev) => [
+        ...prev,
+        { from: "assistant", content: data.message },
+      ]);
     }
     setIsLoading(false);
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col px-6 sm:px-0 mb-4 sm:mb-8">
       <div className="flex-1 flex flex-col justify-center">
-        <div className="grid grid-cols-3 gap-4 mx-6">
-          <RecommendationRef title="Wygeneruj prasówkę" />
-          <RecommendationRef title="Example" />
-          <RecommendationRef title="Example" />
-          <RecommendationRef title="Example" />
-          <RecommendationRef title="Example" />
-          <RecommendationRef title="Example" />
-        </div>
+        {messages.length === 0 ? (
+          <div className="grid grid-cols-3 gap-4 mx-6">
+            <RecommendationRef title="Wygeneruj prasówkę" />
+            <RecommendationRef title="Example" />
+            <RecommendationRef title="Example" />
+            <RecommendationRef title="Example" />
+            <RecommendationRef title="Example" />
+            <RecommendationRef title="Example" />
+          </div>
+        ) : (
+          <ScrollShadow
+            className="h-full max-h-[calc(100vh-160px)] pt-4 sm:pt-8 pb-6"
+            hideScrollBar
+          >
+            <div className="flex flex-col gap-4 min-h-max">
+              {messages.map((message, k) => (
+                <MessageRef {...message} key={message.from + k} />
+              ))}
+            </div>
+          </ScrollShadow>
+        )}
       </div>
       <form onSubmit={onSubmit}>
         <Input
