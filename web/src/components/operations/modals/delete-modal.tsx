@@ -1,6 +1,5 @@
 import Toast from "@/components/ui/toast";
 import { deleteRows } from "@/lib/general/actions";
-import { useLimits } from "@/lib/operations/queries";
 import {
   Button,
   Modal,

@@ -3,12 +3,13 @@
 import { Section } from "@/components/ui/block";
 import { useState } from "react";
 import Option from "./option";
-import { useLimits } from "@/lib/operations/queries";
+// import { useLimits } from "@/lib/operations/queries";
 import { CURRENCIES } from "@/const";
 import { cn, Skeleton } from "@nextui-org/react";
 import numberFormat from "@/utils/formatters/currency";
 import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
 import Empty from "@/components/ui/empty";
+import { useLimits } from "@/lib/general/queries";
 
 export default function LimitsContext() {
   const { setLimit } = useAIAssistant();

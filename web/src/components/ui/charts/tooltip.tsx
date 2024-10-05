@@ -18,12 +18,11 @@ export default function ChartTooltip({
   currency?: string;
 }) {
   if (!active || !payload || payload.length === 0) return;
+
   return (
     <div className="flex flex-col gap-2">
       {label && (
-        <div
-          className={`rounded-md bg-white text-font border-font/10 border min-w-44 shadow-lg shadow-font/5`}
-        >
+        <div className="rounded-md bg-white text-font border-font/10 border min-w-44 shadow-lg shadow-font/5">
           <div className="py-2 px-4">
             <p className="text-sm font-medium">{label}</p>
           </div>
@@ -64,9 +63,7 @@ const BoxRef = ({
   const title = payload.date || payload.name || name;
   const amount = value ? parseFloat(value.toString()) : 0;
   return (
-    <div
-      className={`rounded-md bg-white text-font border-font/10 border min-w-44 shadow-lg shadow-font/5`}
-    >
+    <div className="rounded-md bg-white text-font border-font/10 border min-w-44 shadow-lg shadow-font/5">
       <div className="py-2 px-4 border-b border-font/10">
         <p className="text-sm">
           {labelFormatter ? labelFormatter(title, payload) : title}

@@ -1,13 +1,9 @@
 "use client";
 
 import Block from "@/components/ui/block";
-import LineChart from "@/components/ui/charts/line-chart";
 import LineChartLoader from "@/components/ui/charts/line-loader";
 import Empty from "@/components/ui/empty";
-import { useContext, useState } from "react";
-import MonthInput from "../ui/inputs/month";
-import YearInput from "../ui/inputs/year";
-import getDisabledMonths from "@/utils/operations/get-disabled-months";
+import { ReactNode, useContext } from "react";
 import {
   Bar,
   BarChart,
@@ -15,13 +11,72 @@ import {
   ReferenceLine,
   ResponsiveContainer,
   Tooltip,
+  TooltipProps,
   XAxis,
   YAxis,
 } from "recharts";
-import ChartTooltip from "../ui/charts/tooltip";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
 import { StatsFilterContext } from "@/app/(private)/stats/providers";
 import { useBalanceHistory } from "@/lib/stats/queries";
+import {
+  NameType,
+  Payload,
+  ValueType,
+} from "recharts/types/component/DefaultTooltipContent";
+import numberFormat from "@/utils/formatters/currency";
+
+const CustomTooltip = ({
+  active,
+  payload,
+  labelFormatter,
+  currency,
+}: TooltipProps<ValueType, NameType> & {
+  labelFormatter: (
+    label: any,
+    payload: Payload<ValueType, NameType>[]
+  ) => ReactNode;
+  currency: string;
+}) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="rounded-md bg-white text-font border-font/10 border min-w-44 shadow-lg shadow-font/5">
+        <div className="py-2 px-4 border-b border-font/10">
+          <p className="text-sm">
+            {labelFormatter(payload[0].payload.date, payload[0].payload)}
+          </p>
+        </div>
+        {payload.map((record, k) => (
+          <div className="py-2 px-4 flex items-center justify-between gap-6">
+            <div className="flex items-center gap-2">
+              {record.color && (
+                <div className="w-3 h-3 bg-white rounded-full flex items-center justify-center shadow">
+                  <div
+                    style={{
+                      backgroundColor: record.color,
+                      opacity: k === 0 ? 1 : 0.5,
+                    }}
+                    className="w-2 h-2 rounded-full"
+                  />
+                </div>
+              )}
+              <span className="text-sm">
+                {record.dataKey === "total_expenses" ? "Wydatki" : "Przychody"}
+              </span>
+            </div>
+            <strong className="font-medium text-sm">
+              {numberFormat(
+                currency,
+                record.value ? parseFloat(record.value.toString()) : 0
+              )}
+            </strong>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  return null;
+};
 
 export default function BalanceByMonth({
   languageCode,
@@ -101,18 +156,15 @@ export default function BalanceByMonth({
             <Tooltip
               cursor={{ fill: "#177981", fillOpacity: 0.1 }}
               isAnimationActive={false}
-              labelFormatter={(label) => label}
               content={(props) => (
-                <ChartTooltip
+                <CustomTooltip
                   {...props}
-                  payloadName="Bilans"
-                  currency={currency}
-                  label={undefined}
                   labelFormatter={(label) =>
                     new Intl.DateTimeFormat(languageCode, {
                       dateStyle: "full",
                     }).format(new Date(label))
                   }
+                  currency={currency}
                 />
               )}
             />
