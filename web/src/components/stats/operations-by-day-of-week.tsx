@@ -24,7 +24,7 @@ export default function OperationsByDayOfWeek() {
     month + 1,
     year
   );
-  console.log(results);
+
   const formatter = new Intl.DateTimeFormat(languageCode, { weekday: "short" });
 
   return (
@@ -48,8 +48,9 @@ export default function OperationsByDayOfWeek() {
               />
               <PolarRadiusAxis
                 angle={65}
-                tickFormatter={(value) => (value >= 0 ? value : "")}
                 domain={[-1, "auto"]}
+                tick={false}
+                axisLine={false}
               />
               <Radar
                 name="Przychody"
@@ -74,8 +75,9 @@ export default function OperationsByDayOfWeek() {
               />
               <PolarRadiusAxis
                 angle={65}
-                tickFormatter={(value) => (value >= 0 ? value : "")}
                 domain={[-1, "auto"]}
+                tick={false}
+                axisLine={false}
               />
               <Radar
                 name="Wydatki"

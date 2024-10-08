@@ -40,11 +40,11 @@ export default function StatBox({ data, type, amount }: Props) {
         >
           <defs>
             <linearGradient id="incomes" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#177981" stopOpacity={0.8} />
+              <stop offset="5%" stopColor="#177981" stopOpacity={0.6} />
               <stop offset="95%" stopColor="#177981" stopOpacity={0} />
             </linearGradient>
             <linearGradient id="expenses" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#fdbb2d" stopOpacity={0.8} />
+              <stop offset="5%" stopColor="#fdbb2d" stopOpacity={0.6} />
               <stop offset="95%" stopColor="#fdbb2d" stopOpacity={0} />
             </linearGradient>
           </defs>
@@ -58,6 +58,7 @@ export default function StatBox({ data, type, amount }: Props) {
             baseValue={maxValue > 0 ? -(maxValue / 2) : -100}
             stroke={type === "incomes" ? "#177981" : "#fdbb2d"}
             fill={`url(#${type})`}
+            strokeWidth={2}
             // fill={type === "incomes" ? "#177981" : "#fdbb2d"}
           />
         </AreaChart>

@@ -16,22 +16,12 @@ export default async function Page() {
       <Providers preferences={preferences!}>
         <Filters />
         <div className="xl:col-span-6 flex flex-col xl:grid grid-cols-2 gap-4 sm:gap-6">
+          <StatsList />
           <BalanceByMonth />
-          <Suspense fallback={statsFallback}>
-            <StatsList />
-          </Suspense>
         </div>
-        <ExpensesByLabel />
         <OperationsByDayOfWeek />
+        <ExpensesByLabel />
       </Providers>
     </div>
   );
 }
-
-const statsFallback = (
-  <Fragment>
-    <StatLoader className="xl:col-span-2" />
-    <StatLoader className="xl:col-span-2" />
-    <StatLoader className="xl:col-span-2" />
-  </Fragment>
-);
