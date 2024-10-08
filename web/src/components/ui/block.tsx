@@ -23,7 +23,7 @@ export default function Block({
   hideTitleMobile,
 }: Props) {
   return (
-    <article
+    <div
       className={cn(
         "bg-white px-6 sm:px-10 gap-4 flex flex-col",
         className,
@@ -58,7 +58,7 @@ export default function Block({
         <p className="-mt-3 text-sm text-font/60 mb-1 sm:mb-2">{description}</p>
       )}
       {children}
-    </article>
+    </div>
   );
 }
 

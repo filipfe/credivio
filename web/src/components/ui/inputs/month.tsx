@@ -21,7 +21,7 @@ export default function MonthInput({ value, onChange, disabledKeys }: Props) {
       selectedKeys={[value.toString()]}
       onChange={(e) => onChange(parseInt(e.target.value))}
       classNames={{
-        trigger: "!bg-light shadow-none border",
+        trigger: "!bg-light shadow-none border min-w-32 sm:min-w-40",
       }}
       disallowEmptySelection
       disabledKeys={disabledKeys}

@@ -18,7 +18,7 @@ export default function YearInput({ value, onChange }: Props) {
       selectedKeys={value ? [value.toString()] : []}
       onChange={(e) => onChange(parseInt(e.target.value))}
       classNames={{
-        trigger: "!bg-light shadow-none border",
+        trigger: "!bg-light shadow-none border min-w-20 sm:min-w-24",
       }}
       disallowEmptySelection
     >

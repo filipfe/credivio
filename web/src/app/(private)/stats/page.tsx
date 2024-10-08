@@ -11,14 +11,16 @@ import OperationsByDayOfWeek from "@/components/stats/operations-by-day-of-week"
 export default async function Page() {
   const { result: preferences } = await getPreferences();
 
+  if (!preferences) {
+    throw new Error("Couldn't retrieve preferences");
+  }
+
   return (
-    <div className="sm:px-10 py-4 sm:py-8 flex flex-col xl:grid grid-cols-6 gap-4 sm:gap-6">
-      <Providers preferences={preferences!}>
+    <div className="sm:px-10 py-4 sm:py-8 flex flex-col lg:grid grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
+      <Providers preferences={preferences}>
         <Filters />
-        <div className="xl:col-span-6 flex flex-col xl:grid grid-cols-2 gap-4 sm:gap-6">
-          <StatsList />
-          <BalanceByMonth />
-        </div>
+        <StatsList />
+        <BalanceByMonth />
         <OperationsByDayOfWeek />
         <ExpensesByLabel />
       </Providers>
