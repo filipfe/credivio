@@ -17,13 +17,13 @@ import {
 } from "recharts";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
 import { StatsFilterContext } from "@/app/(private)/stats/providers";
-import { useBalanceHistory } from "@/lib/stats/queries";
 import {
   NameType,
   Payload,
   ValueType,
 } from "recharts/types/component/DefaultTooltipContent";
 import numberFormat from "@/utils/formatters/currency";
+import { useBalanceHistory } from "@/lib/stats/queries";
 
 const CustomTooltip = ({
   active,
@@ -78,19 +78,15 @@ const CustomTooltip = ({
   return null;
 };
 
-export default function BalanceByMonth({
-  languageCode,
-}: {
-  languageCode: string;
-}) {
-  const { month, year, currency } = useContext(StatsFilterContext);
-  const { width, tickFormatter } = useYAxisWidth(currency);
-
+export default function BalanceByMonth() {
+  const { month, year, currency, languageCode } =
+    useContext(StatsFilterContext);
   const { data: results, isLoading } = useBalanceHistory(
     currency,
     month + 1,
     year
   );
+  const { width, tickFormatter } = useYAxisWidth(currency);
 
   const maxValue = results
     ? Math.max(
@@ -112,13 +108,13 @@ export default function BalanceByMonth({
 
   return (
     <Block
-      className="xl:col-span-3 flex-1 max-h-[500px]"
+      className="xl:col-span-1 max-h-[479px] h-[479px]"
       title="Bilans operacji"
     >
       {isLoading ? (
         <LineChartLoader className="!p-0" hideTitle />
       ) : maxValue !== 0 ? (
-        <ResponsiveContainer width="100%" height="100%" minHeight={240}>
+        <ResponsiveContainer width="100%" height="100%" minHeight={361}>
           <BarChart data={results} stackOffset="sign">
             <CartesianGrid vertical={false} opacity={0.5} />
             <YAxis
@@ -152,7 +148,7 @@ export default function BalanceByMonth({
               vertical={false}
               className="stroke-content4"
             />
-            <ReferenceLine y={0} stroke="#177981" opacity={0.5} />
+            <ReferenceLine y={0} stroke="#737373" opacity={0.5} />
             <Tooltip
               cursor={{ fill: "#177981", fillOpacity: 0.1 }}
               isAnimationActive={false}
@@ -169,12 +165,7 @@ export default function BalanceByMonth({
               )}
             />
             <Bar dataKey="total_incomes" stackId="a" fill="#177981" />
-            <Bar
-              dataKey="total_expenses"
-              stackId="a"
-              opacity={0.5}
-              fill="#177981"
-            />
+            <Bar dataKey="total_expenses" stackId="a" fill="#fdbb2d" />
           </BarChart>
         </ResponsiveContainer>
       ) : (

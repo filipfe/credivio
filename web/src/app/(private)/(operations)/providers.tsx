@@ -9,11 +9,14 @@ type PeriodContextType = {
 
 export const PeriodContext = createContext<PeriodContextType>(null!);
 
-export default function Providers({ children }: { children: React.ReactNode }) {
-  const [period, setPeriod] = useState({
-    from: "",
-    to: "",
-  });
+export default function Providers({
+  children,
+  defaultPeriod,
+}: {
+  children: React.ReactNode;
+  defaultPeriod: Period;
+}) {
+  const [period, setPeriod] = useState(defaultPeriod || { from: "", to: "" });
 
   return (
     <PeriodContext.Provider

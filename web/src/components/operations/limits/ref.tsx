@@ -62,14 +62,16 @@ export default function LimitRef({ period, defaultCurrency, onAdd }: Props) {
               showValueLabel
               classNames={{
                 svg: "w-16 h-16",
-                value: cn("font-bold text-[80%]"),
+                value: cn("font-bold text-[80%] text-primary"),
               }}
             />
             <div className="grid">
-              <span className="text-sm text-font/60">
+              <span
+              // className="text-sm text-font/60"
+              >
                 {getPeriodTitle(period)}
               </span>
-              <span className="text-sm font-medium">
+              <span className="text-sm font-medium text-primary">
                 {numberFormat(currency, limit.total)} /{" "}
                 {numberFormat(currency, limit.amount)}
               </span>

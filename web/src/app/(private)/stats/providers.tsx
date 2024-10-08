@@ -1,13 +1,6 @@
 "use client";
 
-import { getPreferences } from "@/lib/settings/actions";
-import {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, Dispatch, SetStateAction, useState } from "react";
 
 type StatsFilterContextType = {
   month: number;
@@ -16,25 +9,24 @@ type StatsFilterContextType = {
   setYear: Dispatch<SetStateAction<number>>;
   currency: string;
   setCurrency: Dispatch<SetStateAction<string>>;
+  languageCode: string;
 };
 
 export const StatsFilterContext = createContext<StatsFilterContextType>(null!);
 
 const now = new Date();
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+export default function Providers({
+  children,
+  preferences,
+}: {
+  children: React.ReactNode;
+  preferences: Preferences;
+}) {
   const [month, setMonth] = useState(now.getMonth());
   const [year, setYear] = useState(now.getFullYear());
-  const [currency, setCurrency] = useState<string>("");
-
-  useEffect(() => {
-    const fetchPreferences = async () => {
-      const { result: preferences } = await getPreferences();
-      setCurrency(preferences!.currency);
-    };
-
-    fetchPreferences();
-  }, []);
+  const [currency, setCurrency] = useState<string>(preferences.currency);
+  const languageCode = preferences.language.code;
 
   return (
     <StatsFilterContext.Provider
@@ -45,6 +37,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         setYear,
         currency,
         setCurrency,
+        languageCode,
       }}
     >
       {children}

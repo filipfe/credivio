@@ -9,7 +9,6 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  useDisclosure,
 } from "@nextui-org/react";
 import { useSearchParams } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";

@@ -47,7 +47,12 @@ export default async function Page({
           stat={last_month}
         />
       </div>
-      <Providers>
+      <Providers
+        defaultPeriod={{
+          from: searchParams.from || "",
+          to: searchParams.to || "",
+        }}
+      >
         <div className="col-[1/3] row-[2/3] flex flex-col order-last">
           <OperationsByMonth type="income" />
         </div>

@@ -1,6 +1,4 @@
-// import PortfolioStructure from "@/components/dashboard/portfolio-structure/grid";
-import { Fragment, Suspense } from "react";
-import StatsList from "@/components/dashboard/stats/list";
+import { Suspense } from "react";
 import LatestOperations from "@/components/dashboard/latest-operations";
 import { OperationLoader } from "@/components/operations/ref";
 import Block from "@/components/ui/block";
@@ -8,8 +6,6 @@ import { getPreferences } from "@/lib/settings/actions";
 import Priority from "@/components/goals/priority";
 import { createClient } from "@/utils/supabase/server";
 import Limits from "@/components/operations/limits";
-import ExpensesByLabel from "@/components/operations/expenses-by-label";
-import { StatLoader } from "@/components/ui/stat-ref";
 
 export default async function Dashboard() {
   const { result: preferences, error } = await getPreferences();
@@ -20,9 +16,6 @@ export default async function Dashboard() {
 
   return (
     <div className="sm:px-10 py-4 sm:py-8 flex flex-col xl:grid grid-cols-6 gap-4 sm:gap-6">
-      <Suspense fallback={statsFallback}>
-        <StatsList defaultCurrency={preferences.currency} />
-      </Suspense>
       <Suspense fallback={latestOperationsFallback}>
         <LatestOperations preferences={preferences} />
       </Suspense>
@@ -30,9 +23,6 @@ export default async function Dashboard() {
       <Suspense>
         <GoalPriority />
       </Suspense>
-      <ExpensesByLabel className="col-span-3" preferences={preferences} />
-      {/* <ExpensesByLabelChart defaultCurrency={preferences.currency} />
-      <BalanceByMonth preferences={preferences} /> */}
     </div>
   );
 }
@@ -67,12 +57,4 @@ const latestOperationsFallback = (
       <OperationLoader />
     </div>
   </Block>
-);
-
-const statsFallback = (
-  <Fragment>
-    <StatLoader className="xl:col-span-2" />
-    <StatLoader className="xl:col-span-2" />
-    <StatLoader className="xl:col-span-2" />
-  </Fragment>
 );
