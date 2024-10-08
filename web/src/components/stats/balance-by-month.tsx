@@ -1,14 +1,9 @@
 "use client";
 
 import Block from "@/components/ui/block";
-import LineChart from "@/components/ui/charts/line-chart";
 import LineChartLoader from "@/components/ui/charts/line-loader";
 import Empty from "@/components/ui/empty";
-import { useBalanceHistory } from "@/lib/operations/queries";
-import { useState } from "react";
-import MonthInput from "../ui/inputs/month";
-import YearInput from "../ui/inputs/year";
-import getDisabledMonths from "@/utils/operations/get-disabled-months";
+import { ReactNode, useContext } from "react";
 import {
   Bar,
   BarChart,
@@ -16,29 +11,88 @@ import {
   ReferenceLine,
   ResponsiveContainer,
   Tooltip,
+  TooltipProps,
   XAxis,
   YAxis,
 } from "recharts";
-import ChartTooltip from "../ui/charts/tooltip";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
-import UniversalSelect from "../ui/universal-select";
-import { CURRENCIES } from "@/const";
+import { StatsFilterContext } from "@/app/(private)/stats/providers";
+import {
+  NameType,
+  Payload,
+  ValueType,
+} from "recharts/types/component/DefaultTooltipContent";
+import numberFormat from "@/utils/formatters/currency";
+import { useBalanceHistory } from "@/lib/stats/queries";
 
-const now = new Date();
+const CustomTooltip = ({
+  active,
+  payload,
+  labelFormatter,
+  currency,
+}: TooltipProps<ValueType, NameType> & {
+  labelFormatter: (
+    label: any,
+    payload: Payload<ValueType, NameType>[]
+  ) => ReactNode;
+  currency: string;
+}) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="rounded-md bg-white text-font border-font/10 border min-w-44 shadow-lg shadow-font/5">
+        <div className="py-2 px-4 border-b border-font/10">
+          <p className="text-sm">
+            {labelFormatter(payload[0].payload.date, payload[0].payload)}
+          </p>
+        </div>
+        {payload.map((record, k) => (
+          <div className="py-2 px-4 flex items-center justify-between gap-6">
+            <div className="flex items-center gap-2">
+              {record.color && (
+                <div className="w-3 h-3 bg-white rounded-full flex items-center justify-center shadow">
+                  <div
+                    style={{
+                      backgroundColor: record.color,
+                      opacity: k === 0 ? 1 : 0.5,
+                    }}
+                    className="w-2 h-2 rounded-full"
+                  />
+                </div>
+              )}
+              <span className="text-sm">
+                {record.dataKey === "total_expenses" ? "Wydatki" : "Przychody"}
+              </span>
+            </div>
+            <strong className="font-medium text-sm">
+              {numberFormat(
+                currency,
+                record.value ? parseFloat(record.value.toString()) : 0
+              )}
+            </strong>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
-export default function BalanceByMonth({ preferences }: PageProps) {
-  const [month, setMonth] = useState(now.getMonth());
-  const [year, setYear] = useState(now.getFullYear());
-  const [currency, setCurrency] = useState<string>(preferences.currency);
-  const { width, tickFormatter } = useYAxisWidth(currency);
-  const { data: results, isLoading } = useBalanceHistory({
-    month: month + 1,
-    year,
+  return null;
+};
+
+export default function BalanceByMonth() {
+  const { month, year, currency, languageCode } =
+    useContext(StatsFilterContext);
+  const { data: results, isLoading } = useBalanceHistory(
     currency,
-  });
+    month + 1,
+    year
+  );
+  const { width, tickFormatter } = useYAxisWidth(currency);
 
   const maxValue = results
-    ? Math.max(...results.map((item) => Math.abs(item.total_amount)))
+    ? Math.max(
+        ...results.map((item) => Math.abs(item.total_expenses)),
+        ...results.map((item) => Math.abs(item.total_incomes))
+      )
     : 0;
 
   const buffer = Math.ceil(maxValue * 0.1);
@@ -54,42 +108,18 @@ export default function BalanceByMonth({ preferences }: PageProps) {
 
   return (
     <Block
-      className="xl:col-span-3 flex-1"
+      className="xl:col-span-1 max-h-[479px] h-[479px]"
       title="Bilans operacji"
-      cta={
-        <div className="grid grid-cols-[80px_1fr_112px] gap-2 flex-1 max-w-sm">
-          <UniversalSelect
-            name="currency"
-            size="sm"
-            radius="md"
-            aria-label="Waluta"
-            defaultSelectedKeys={[currency]}
-            elements={CURRENCIES}
-            onChange={(e) => setCurrency(e.target.value)}
-          />
-          <MonthInput
-            value={month}
-            disabledKeys={
-              year === now.getFullYear()
-                ? getDisabledMonths(now.getMonth())
-                : []
-            }
-            onChange={(value) => setMonth(value)}
-          />
-          <YearInput value={year} onChange={(value) => setYear(value)} />
-        </div>
-      }
     >
       {isLoading ? (
         <LineChartLoader className="!p-0" hideTitle />
-      ) : results && results.length > 0 ? (
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={results}>
+      ) : maxValue !== 0 ? (
+        <ResponsiveContainer width="100%" height="100%" minHeight={361}>
+          <BarChart data={results} stackOffset="sign">
             <CartesianGrid vertical={false} opacity={0.5} />
             <YAxis
               width={width}
               tick={{ fontSize: 12 }}
-              dataKey="total_amount"
               axisLine={false}
               tickLine={false}
               tickFormatter={tickFormatter}
@@ -102,7 +132,7 @@ export default function BalanceByMonth({ preferences }: PageProps) {
               tick={{ fontSize: 12 }}
               tickFormatter={(label) => {
                 const [year, month, day] = label.split("-");
-                return new Intl.DateTimeFormat(preferences.language.code, {
+                return new Intl.DateTimeFormat(languageCode, {
                   day: "2-digit",
                   month: "short",
                 }).format(new Date(year, parseInt(month) - 1, day));
@@ -118,33 +148,28 @@ export default function BalanceByMonth({ preferences }: PageProps) {
               vertical={false}
               className="stroke-content4"
             />
-            <ReferenceLine y={0} stroke="#177981" />
+            <ReferenceLine y={0} stroke="#737373" opacity={0.5} />
             <Tooltip
               cursor={{ fill: "#177981", fillOpacity: 0.1 }}
               isAnimationActive={false}
-              labelFormatter={(label) => label}
               content={(props) => (
-                <ChartTooltip
+                <CustomTooltip
                   {...props}
-                  payloadName="Bilans"
-                  currency={preferences?.currency}
-                  label={undefined}
                   labelFormatter={(label) =>
-                    new Intl.DateTimeFormat(preferences?.language.code, {
+                    new Intl.DateTimeFormat(languageCode, {
                       dateStyle: "full",
                     }).format(new Date(label))
                   }
+                  currency={currency}
                 />
               )}
             />
-            <Bar dataKey="total_amount" fill="#177981" />
+            <Bar dataKey="total_incomes" stackId="a" fill="#177981" />
+            <Bar dataKey="total_expenses" stackId="a" fill="#fdbb2d" />
           </BarChart>
         </ResponsiveContainer>
       ) : (
-        <Empty
-          title="Brak danych do wyświetlenia!"
-          cta={{ title: "Dodaj wydatek", href: "/expenses/add" }}
-        />
+        <Empty title="Brak danych do wyświetlenia!" />
       )}
     </Block>
   );

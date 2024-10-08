@@ -3,7 +3,7 @@
 import Block from "@/components/ui/block";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
-import { useLimits } from "@/lib/operations/queries";
+import { useLimits } from "@/lib/general/queries";
 import numberFormat from "@/utils/formatters/currency";
 import { Button, CircularProgress, cn, Skeleton } from "@nextui-org/react";
 import { Plus, SquarePen } from "lucide-react";
@@ -62,14 +62,16 @@ export default function LimitRef({ period, defaultCurrency, onAdd }: Props) {
               showValueLabel
               classNames={{
                 svg: "w-16 h-16",
-                value: cn("font-bold text-[80%]"),
+                value: cn("font-bold text-[80%] text-primary"),
               }}
             />
             <div className="grid">
-              <span className="text-sm text-font/60">
+              <span
+              // className="text-sm text-font/60"
+              >
                 {getPeriodTitle(period)}
               </span>
-              <span className="text-sm font-medium">
+              <span className="text-sm font-medium text-primary">
                 {numberFormat(currency, limit.total)} /{" "}
                 {numberFormat(currency, limit.amount)}
               </span>

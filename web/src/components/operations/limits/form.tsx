@@ -1,7 +1,8 @@
 import Form from "@/components/ui/form";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
-import { addLimit, useLimits } from "@/lib/operations/queries";
+import { useLimits } from "@/lib/general/queries";
+import { addLimit } from "@/lib/operations/queries";
 import formatAmount from "@/utils/operations/format-amount";
 import toast from "@/utils/toast";
 import {
