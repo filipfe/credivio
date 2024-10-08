@@ -62,55 +62,51 @@ export default function Filters() {
   };
 
   return (
-    <Block className="xl:col-span-6 flex-1" title="">
-      <div className="flex flex-col gap-2 w-full items-center">
-        <UniversalSelect
-          className="w-32"
-          name="currency"
-          size="sm"
-          radius="md"
-          aria-label="Waluta"
-          selectedKeys={[currency]}
-          elements={CURRENCIES}
-          onChange={(e) => setCurrency(e.target.value)}
-        />
-        <div className="flex gap-1 w-1/4">
-          <button
-            className="border h-8 min-w-8 rounded-md bg-[#fafafa]"
-            onClick={handlePreviousMonth}
-            disabled={isPreviousMonthDisabled()}
-          >
-            <ChevronLeft
-              size={12}
-              className={`self-center w-full ${
-                isPreviousMonthDisabled() && "text-[#e5e5e7]"
-              }`}
-            />
-          </button>
-          <MonthInput
-            value={month}
-            disabledKeys={
-              year === now.getFullYear()
-                ? getDisabledMonths(now.getMonth())
-                : []
-            }
-            onChange={setMonth}
+    <div className="sticky top-20 sm:top-24 col-span-full xl:col-start-2 xl:col-end-4 border bg-white py-2 px-4 flex items-center gap-3 rounded-md justify-between z-10">
+      <UniversalSelect
+        className="w-20 sm:w-28"
+        name="currency"
+        size="sm"
+        radius="md"
+        aria-label="Waluta"
+        selectedKeys={[currency]}
+        elements={CURRENCIES}
+        onChange={(e) => setCurrency(e.target.value)}
+      />
+      <div className="flex gap-1">
+        <button
+          className="border h-8 min-w-8 rounded-md bg-[#fafafa]"
+          onClick={handlePreviousMonth}
+          disabled={isPreviousMonthDisabled()}
+        >
+          <ChevronLeft
+            size={12}
+            className={`self-center w-full ${
+              isPreviousMonthDisabled() && "text-[#e5e5e7]"
+            }`}
           />
-          <YearInput value={year} onChange={handleYearChange} />
-          <button
-            className="border h-8 min-w-8 rounded-md bg-[#fafafa]"
-            onClick={handleNextMonth}
-            disabled={isNextMonthDisabled()}
-          >
-            <ChevronRight
-              size={12}
-              className={`self-center w-full ${
-                isNextMonthDisabled() && "text-[#e5e5e7]"
-              }`}
-            />
-          </button>
-        </div>
+        </button>
+        <MonthInput
+          value={month}
+          disabledKeys={
+            year === now.getFullYear() ? getDisabledMonths(now.getMonth()) : []
+          }
+          onChange={setMonth}
+        />
+        <YearInput value={year} onChange={handleYearChange} />
+        <button
+          className="border h-8 min-w-8 rounded-md bg-[#fafafa]"
+          onClick={handleNextMonth}
+          disabled={isNextMonthDisabled()}
+        >
+          <ChevronRight
+            size={12}
+            className={`self-center w-full ${
+              isNextMonthDisabled() && "text-[#e5e5e7]"
+            }`}
+          />
+        </button>
       </div>
-    </Block>
+    </div>
   );
 }

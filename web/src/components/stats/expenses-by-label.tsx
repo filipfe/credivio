@@ -27,7 +27,7 @@ export default function ExpensesByLabel() {
   const today = new Date();
 
   return (
-    <Block className="gap-6 xl:col-span-3 max-h-[479px] h-[479px]">
+    <Block className="gap-6 col-span-2">
       <div>
         {isLoading ? (
           <div className="grid gap-3 flex-1">

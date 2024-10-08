@@ -29,26 +29,23 @@ export default function StatsList() {
   const maxExpense = lastResult.total_expenses;
 
   return (
-    <div className="xl:col-span-1 grid grid-rows-2 gap-4 sm:gap-6 h-[479px] order-first xl:order-none">
-      <div className="xl:row-span-1 grid grid-cols-2 gap-4 sm:gap-6">
-        <Stat
-          type="incomes"
-          amount={maxIncome}
-          data={results.map((item) => ({ total: item.total_incomes }))}
-        />
-        <Stat
-          type="expenses"
-          amount={maxExpense}
-          data={results.map((item) => ({ total: item.total_expenses }))}
-        />
-      </div>
+    <>
+      <Stat
+        type="incomes"
+        amount={maxIncome}
+        data={results.map((item) => ({ total: item.total_incomes }))}
+      />
+      <Stat
+        type="expenses"
+        amount={maxExpense}
+        data={results.map((item) => ({ total: item.total_expenses }))}
+      />
       <Comprasion
         incomes={maxIncome}
         expenses={maxExpense}
         balance={maxIncome - maxExpense}
         currency={currency}
       />
-      {/* <Incomes /> */}
-    </div>
+    </>
   );
 }

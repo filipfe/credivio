@@ -108,66 +108,68 @@ export default function BalanceByMonth() {
 
   return (
     <Block
-      className="xl:col-span-1 max-h-[479px] h-[479px]"
+      className="xl:row-start-2 xl:row-end-4 col-span-2"
       title="Bilans operacji"
     >
       {isLoading ? (
         <LineChartLoader className="!p-0" hideTitle />
       ) : maxValue !== 0 ? (
-        <ResponsiveContainer width="100%" height="100%" minHeight={361}>
-          <BarChart data={results} stackOffset="sign">
-            <CartesianGrid vertical={false} opacity={0.5} />
-            <YAxis
-              width={width}
-              tick={{ fontSize: 12 }}
-              axisLine={false}
-              tickLine={false}
-              tickFormatter={tickFormatter}
-              domain={[-yAxisMaxValue, yAxisMaxValue]}
-              ticks={ticks}
-            />
-            <XAxis
-              tickMargin={8}
-              dataKey="date"
-              tick={{ fontSize: 12 }}
-              tickFormatter={(label) => {
-                const [year, month, day] = label.split("-");
-                return new Intl.DateTimeFormat(languageCode, {
-                  day: "2-digit",
-                  month: "short",
-                }).format(new Date(year, parseInt(month) - 1, day));
-              }}
-              minTickGap={32}
-              axisLine={false}
-              tickLine={false}
-              type="category"
-            />
-            <CartesianGrid
-              opacity={0.6}
-              strokeWidth={1}
-              vertical={false}
-              className="stroke-content4"
-            />
-            <ReferenceLine y={0} stroke="#737373" opacity={0.5} />
-            <Tooltip
-              cursor={{ fill: "#177981", fillOpacity: 0.1 }}
-              isAnimationActive={false}
-              content={(props) => (
-                <CustomTooltip
-                  {...props}
-                  labelFormatter={(label) =>
-                    new Intl.DateTimeFormat(languageCode, {
-                      dateStyle: "full",
-                    }).format(new Date(label))
-                  }
-                  currency={currency}
-                />
-              )}
-            />
-            <Bar dataKey="total_incomes" stackId="a" fill="#177981" />
-            <Bar dataKey="total_expenses" stackId="a" fill="#fdbb2d" />
-          </BarChart>
-        </ResponsiveContainer>
+        <div className="flex-1 grid">
+          <ResponsiveContainer width="100%" height="100%" maxHeight={361}>
+            <BarChart data={results} stackOffset="sign">
+              <CartesianGrid vertical={false} opacity={0.5} />
+              <YAxis
+                width={width}
+                tick={{ fontSize: 12 }}
+                axisLine={false}
+                tickLine={false}
+                tickFormatter={tickFormatter}
+                domain={[-yAxisMaxValue, yAxisMaxValue]}
+                ticks={ticks}
+              />
+              <XAxis
+                tickMargin={8}
+                dataKey="date"
+                tick={{ fontSize: 12 }}
+                tickFormatter={(label) => {
+                  const [year, month, day] = label.split("-");
+                  return new Intl.DateTimeFormat(languageCode, {
+                    day: "2-digit",
+                    month: "short",
+                  }).format(new Date(year, parseInt(month) - 1, day));
+                }}
+                minTickGap={32}
+                axisLine={false}
+                tickLine={false}
+                type="category"
+              />
+              <CartesianGrid
+                opacity={0.6}
+                strokeWidth={1}
+                vertical={false}
+                className="stroke-content4"
+              />
+              <ReferenceLine y={0} stroke="#737373" opacity={0.5} />
+              <Tooltip
+                cursor={{ fill: "#177981", fillOpacity: 0.1 }}
+                isAnimationActive={false}
+                content={(props) => (
+                  <CustomTooltip
+                    {...props}
+                    labelFormatter={(label) =>
+                      new Intl.DateTimeFormat(languageCode, {
+                        dateStyle: "full",
+                      }).format(new Date(label))
+                    }
+                    currency={currency}
+                  />
+                )}
+              />
+              <Bar dataKey="total_incomes" stackId="a" fill="#177981" />
+              <Bar dataKey="total_expenses" stackId="a" fill="#fdbb2d" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       ) : (
         <Empty title="Brak danych do wyświetlenia!" />
       )}
