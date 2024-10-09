@@ -24,6 +24,7 @@ import {
 } from "recharts/types/component/DefaultTooltipContent";
 import numberFormat from "@/utils/formatters/currency";
 import { useBalanceHistory } from "@/lib/stats/queries";
+import ChartLoader from "../ui/charts/loader";
 
 const CustomTooltip = ({
   active,
@@ -108,14 +109,14 @@ export default function BalanceByMonth() {
 
   return (
     <Block
-      className="xl:row-start-2 xl:row-end-4 col-span-2"
+      className="xl:row-start-1 xl:row-end-4 col-start-1 col-end-3 xl:col-start-3 xl:col-end-5"
       title="Bilans operacji"
     >
       {isLoading ? (
-        <LineChartLoader className="!p-0" hideTitle />
+        <ChartLoader className="!p-0" hideTitle />
       ) : maxValue !== 0 ? (
         <div className="flex-1 grid">
-          <ResponsiveContainer width="100%" height="100%" maxHeight={361}>
+          <ResponsiveContainer width="100%" height="100%">
             <BarChart data={results} stackOffset="sign">
               <CartesianGrid vertical={false} opacity={0.5} />
               <YAxis

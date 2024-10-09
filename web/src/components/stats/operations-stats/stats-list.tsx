@@ -17,9 +17,9 @@ export default function StatsList() {
   if (isLoading || !results) {
     return (
       <Fragment>
-        <StatLoader />
-        <StatLoader />
-        <StatLoader />
+        <StatLoader className="col-start-1 col-end-2 min-h-48" />
+        <StatLoader className="col-start-2 col-end-3 min-h-48" />
+        <StatLoader className="col-start-1 col-end-3" />
       </Fragment>
     );
   }

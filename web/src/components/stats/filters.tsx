@@ -62,7 +62,7 @@ export default function Filters() {
   };
 
   return (
-    <div className="sticky top-20 sm:top-24 col-span-full xl:col-start-2 xl:col-end-4 border bg-white py-2 px-4 flex items-center gap-3 rounded-md justify-between z-10">
+    <div className="sticky top-24 xl:static col-start-1 col-end-3 border bg-white py-2 px-4 flex items-center gap-3 rounded-md justify-between z-10">
       <UniversalSelect
         className="w-20 sm:w-28"
         name="currency"
