@@ -15,6 +15,7 @@ interface Props extends FormHTMLAttributes<HTMLFormElement> {
   successMessage?: string;
   buttonWrapperClassName?: string;
   isLoading?: boolean;
+  isPasswordReset?: boolean;
 }
 
 export default function Form({
@@ -24,6 +25,7 @@ export default function Form({
   id,
   onClose,
   className,
+  isPasswordReset,
   buttonWrapperClassName,
   isLoading,
   successMessage,
@@ -37,7 +39,18 @@ export default function Form({
 }: Props) {
   const [isPending, startTransition] = useTransition();
 
-  const action = (formData: FormData) =>
+  const action = (formData: FormData) => {
+    if (
+      isPasswordReset &&
+      formData.get("password")?.toString() !==
+        formData.get("confirm-password")?.toString()
+    ) {
+      toast({
+        type: "error",
+        message: "Hasła nie są takie same",
+      });
+      return;
+    }
     startTransition(async () => {
       const res = await mutation!(formData);
       if (res?.error) {
@@ -54,6 +67,7 @@ export default function Form({
           });
       }
     });
+  };
 
   return (
     <form

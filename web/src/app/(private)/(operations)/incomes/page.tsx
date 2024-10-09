@@ -1,4 +1,3 @@
-import Stat from "@/components/dashboard/stats/ref";
 import IncomeTable from "@/components/operations/table";
 import Loader from "@/components/stocks/loader";
 import LineChartLoader from "@/components/ui/charts/line-loader";
@@ -8,6 +7,7 @@ import { createClient } from "@/utils/supabase/server";
 import { Suspense } from "react";
 import Providers from "../providers";
 import OperationsByMonth from "@/components/operations/operations-by-month";
+import Stat from "@/components/ui/stat-ref";
 
 export default async function Page({
   searchParams,
@@ -47,7 +47,12 @@ export default async function Page({
           stat={last_month}
         />
       </div>
-      <Providers>
+      <Providers
+        defaultPeriod={{
+          from: searchParams.from || "",
+          to: searchParams.to || "",
+        }}
+      >
         <div className="col-[1/3] row-[2/3] flex flex-col order-last">
           <OperationsByMonth type="income" />
         </div>

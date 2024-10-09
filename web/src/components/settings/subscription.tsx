@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ActiveService from "./subscription/active";
+import ActiveService from "./subscription/active-service";
 import ServiceList from "./subscription/list";
 import { useServices } from "@/lib/settings/queries";
 

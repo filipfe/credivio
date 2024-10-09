@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
       `Environment variables missing: ${
         SUPABASE_URL ? "ANON_KEY" : "SUPABASE_URL"
       }`,
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -49,9 +49,9 @@ Deno.serve(async (req) => {
     const files = form.files as Record<string, FormFile>;
 
     const supabase = createClient(SUPABASE_URL, ANON_KEY, {
-      "global": {
-        "headers": {
-          "Authorization": req.headers.get("Authorization") || "",
+      global: {
+        headers: {
+          Authorization: req.headers.get("Authorization") || "",
         },
       },
     });
@@ -59,12 +59,14 @@ Deno.serve(async (req) => {
     let user = form.fields.user_id ? { id: form.fields.user_id } : null;
 
     if (!user) {
-      const { data: { user: supabaseUser }, error } = await supabase.auth
-        .getUser();
+      const {
+        data: { user: supabaseUser },
+        error,
+      } = await supabase.auth.getUser();
       if (error || !supabaseUser) {
         return new Response(
           `Auth error: ${error?.message || "User not found"}`,
-          { status: 422 },
+          { status: 422 }
         );
       }
       user = supabaseUser;
@@ -74,30 +76,23 @@ Deno.serve(async (req) => {
 
     for (const uuid in files) {
       const file = files[uuid];
-      const { data: upload, error: uploadError } = await supabase.storage.from(
-        "docs",
-      )
-        .upload(
-          `${user.id}/${uuid}-${file.filename}`,
-          file.content,
-          {
-            contentType: file.contentType,
-            cacheControl: "3600",
-            upsert: false,
-          },
-        );
+      const { data: upload, error: uploadError } = await supabase.storage
+        .from("docs")
+        .upload(`${user.id}/${uuid}-${file.filename}`, file.content, {
+          contentType: file.contentType,
+          cacheControl: "3600",
+          upsert: false,
+        });
       if (upload) {
-        const { data, error: shareError } = await supabase.storage.from("docs")
-          .createSignedUrl(
-            upload.path,
-            3600,
-          );
+        const { data, error: shareError } = await supabase.storage
+          .from("docs")
+          .createSignedUrl(upload.path, 3600);
         const url = data ? new URL(data.signedUrl) : null;
         const pathname = url ? url.pathname : null;
         const signedUrl = data
-          ? (NGROK_URL
+          ? NGROK_URL
             ? `${NGROK_URL}${pathname}${url?.search || ""}`
-            : data.signedUrl)
+            : data.signedUrl
           : undefined;
         uploadedFiles.push({
           id: uuid,
@@ -133,8 +128,7 @@ Deno.serve(async (req) => {
 
     console.log("Generating completion...", { uploadedFiles });
 
-    const textPrompt =
-      `Extract finance information from the receipts and invoices. Analyze context and classify operation either as 'income' or 'expense'. Generate a list of operations:
+    const textPrompt = `Extract finance information from the receipts and invoices. Analyze context and classify operation either as 'income' or 'expense'. Generate a list of operations:
 
 type Operation = {
   id: string;
@@ -149,10 +143,9 @@ type Operation = {
 Rules:
 - return { operations: Operation[] } in json
 - 'id' and 'doc_path' for each image are available on the image's index in this array:
-  [${
-        uploadedFiles.map(({ id, path }) => `{ id: ${id}, doc_path: ${path} }`)
-          .join(", ")
-      }],
+  [${uploadedFiles
+    .map(({ id, path }) => `{ id: ${id}, doc_path: ${path} }`)
+    .join(", ")}],
 - 'title' should be in the same language as the document
 - 'currency' is always 3-digit code`;
 
@@ -160,14 +153,13 @@ Rules:
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
-      "response_format": { type: "json_object" },
-      messages: [{
-        role: "user",
-        "content": [
-          { type: "text", text: textPrompt },
-          ...content,
-        ],
-      }],
+      response_format: { type: "json_object" },
+      messages: [
+        {
+          role: "user",
+          content: [{ type: "text", text: textPrompt }, ...content],
+        },
+      ],
     });
     const response = completion.choices[0].message.content;
 
@@ -175,15 +167,11 @@ Rules:
 
     console.log("Generated the following response: ", response);
 
-    return new Response(
-      response,
-      { headers: { "Content-Type": "application/json", ...corsHeaders } },
-    );
+    return new Response(response, {
+      headers: { "Content-Type": "application/json", ...corsHeaders },
+    });
   } catch (err) {
     console.log({ err });
-    return new Response(
-      `Internal server error: ${err}`,
-      { status: 500 },
-    );
+    return new Response(`Internal server error: ${err}`, { status: 500 });
   }
 });

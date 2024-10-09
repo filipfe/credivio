@@ -2,7 +2,6 @@
 
 import Toast from "@/components/ui/toast";
 import UniversalSelect from "@/components/ui/universal-select";
-import useClientQuery from "@/hooks/useClientQuery";
 import { updatePreferences } from "@/lib/settings/actions";
 import { getLanguages } from "@/lib/settings/queries";
 import { useEffect, useRef, useState, useTransition } from "react";

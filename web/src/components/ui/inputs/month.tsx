@@ -1,7 +1,7 @@
 import { Select, SelectItem } from "@nextui-org/react";
 
 type Props = {
-  value?: number;
+  value: number;
   onChange: (value: number) => void;
   disabledKeys: string[];
 };
@@ -10,6 +10,7 @@ export default function MonthInput({ value, onChange, disabledKeys }: Props) {
   const formatter = new Intl.DateTimeFormat("pl-PL", {
     month: "long",
   });
+
   return (
     <Select
       name="month"
@@ -17,10 +18,10 @@ export default function MonthInput({ value, onChange, disabledKeys }: Props) {
       aria-label="Month filter"
       size="sm"
       radius="md"
-      selectedKeys={value ? [value.toString()] : []}
+      selectedKeys={[value.toString()]}
       onChange={(e) => onChange(parseInt(e.target.value))}
       classNames={{
-        trigger: "!bg-light shadow-none border",
+        trigger: "!bg-light shadow-none border min-w-32 sm:min-w-40",
       }}
       disallowEmptySelection
       disabledKeys={disabledKeys}

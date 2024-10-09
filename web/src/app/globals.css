@@ -24,6 +24,6 @@ body {
   background-color: #fafafa;
 }
 
-.recharts-yAxis .recharts-cartesian-axis-tick:first-child {
+/* .recharts-yAxis .recharts-cartesian-axis-tick:first-child {
   display: none;
-}
+} */

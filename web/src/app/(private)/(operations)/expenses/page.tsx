@@ -1,8 +1,7 @@
 import OperationTable from "@/components/operations/table";
-import Stat from "@/components/dashboard/stats/ref";
+import Stat from "@/components/ui/stat-ref";
 import { Suspense } from "react";
 import Loader from "@/components/stocks/loader";
-import LineChartLoader from "@/components/ui/charts/line-loader";
 import { getOperationsStats } from "@/lib/operations/actions";
 import { getDefaultCurrency } from "@/lib/settings/actions";
 import { createClient } from "@/utils/supabase/server";
@@ -49,7 +48,12 @@ export default async function Page({
           stat={last_month}
         />
       </div>
-      <Providers>
+      <Providers
+        defaultPeriod={{
+          from: searchParams.from || "",
+          to: searchParams.to || "",
+        }}
+      >
         <div className="col-start-1 col-end-3 row-start-3 row-end-3 flex flex-col order-last">
           <OperationsByMonth type="expense" />
         </div>

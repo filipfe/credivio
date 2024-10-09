@@ -6,6 +6,7 @@ interface Payment {
   amount: number;
   type: "income" | "expense";
   user_id: string;
+  recurring: boolean;
   label?: string;
 }
 
@@ -21,4 +22,13 @@ type Preferences = {
 
 type Settings = {
   telegram_id: string;
+};
+
+type Period = "daily" | "weekly" | "monthly";
+
+type Limit = {
+  amount: number;
+  currency: string;
+  total: number;
+  period: Period;
 };

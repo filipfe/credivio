@@ -11,7 +11,7 @@ export async function getAccount(): Promise<
 
   const { data, error: authError } = await supabase
     .from("profiles")
-    .select("first_name, last_name, email")
+    .select("first_name, last_name, language_code, email")
     .single();
 
   if (authError) {
@@ -31,20 +31,22 @@ export async function getPreferences(): Promise<
 > {
   const supabase = createClient();
 
-  const { data, error: error } = await supabase
+  const { data, error } = await supabase
     .from("profiles")
-    .select("currency, language:languages(code, name)")
+    .select(
+      "currency, language:languages(code, name), telegram_token, telegram_id",
+    ).returns<Preferences>()
     .single();
 
-  if (!data || error) {
+  if (error) {
     return {
+      error: error.message,
       result: null,
-      error: "Błąd autoryzacji, spróbuj zalogować się ponownie!",
     };
   }
 
   return {
-    result: data as unknown as Preferences,
+    result: data,
   };
 }
 

@@ -4,6 +4,55 @@ import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+export async function requestPasswordChange(
+  formData: FormData,
+): Promise<SupabaseResponse<any>> {
+  const email = formData.get("email")?.toString();
+
+  const supabase = createClient();
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email!);
+
+  if (error) {
+    return {
+      results: [],
+      error: error.message,
+    };
+  }
+
+  return {
+    results: [],
+  };
+}
+
+export async function resetPassword(
+  formData: FormData,
+): Promise<SupabaseResponse<any>> {
+  const password = formData.get("password")?.toString();
+  const shouldRedirect = formData.get("redirect")?.toString() === "true";
+
+  const supabase = createClient();
+
+  const { error } = await supabase.auth.updateUser({
+    password,
+  });
+
+  if (error) {
+    return {
+      results: [],
+      error: error.message,
+    };
+  }
+
+  if (shouldRedirect) {
+    redirect("/");
+  } else {
+    return {
+      results: [],
+    };
+  }
+}
+
 export async function signUp(formData: FormData) {
   const first_name = formData.get("first-name")?.toString();
   const last_name = formData.get("last-name")?.toString();

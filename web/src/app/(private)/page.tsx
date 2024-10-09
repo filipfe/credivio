@@ -1,9 +1,4 @@
-// import PortfolioStructure from "@/components/dashboard/portfolio-structure/grid";
-import { Fragment, Suspense } from "react";
-import StatsList from "@/components/dashboard/stats/list";
-import ExpensesByLabel from "@/components/dashboard/expenses-by-label";
-import { StatLoader } from "@/components/dashboard/stats/ref";
-import BalanceByMonth from "@/components/dashboard/balance-by-month";
+import { Suspense } from "react";
 import LatestOperations from "@/components/dashboard/latest-operations";
 import { OperationLoader } from "@/components/operations/ref";
 import Block from "@/components/ui/block";
@@ -15,25 +10,16 @@ import Limits from "@/components/operations/limits";
 export default async function Dashboard() {
   const { result: preferences, error } = await getPreferences();
 
-  if (!preferences) {
-    console.error("Couldn't retrieve preferences: ", error);
-    throw new Error(error);
+  if (error || !preferences) {
+    throw new Error(error || "Preferences could not be retrieved");
   }
 
   return (
     <div className="sm:px-10 py-4 sm:py-8 flex flex-col xl:grid grid-cols-6 gap-4 sm:gap-6">
-      <Suspense fallback={statsFallback}>
-        <StatsList defaultCurrency={preferences.currency} />
-      </Suspense>
       <Suspense fallback={latestOperationsFallback}>
-        <LatestOperations />
+        <LatestOperations preferences={preferences} />
       </Suspense>
       <Limits defaultCurrency={preferences.currency} />
-      <ExpensesByLabel defaultCurrency={preferences.currency} />
-      <BalanceByMonth preferences={preferences} />
-      {/* <Suspense fallback={latestOperationsFallback}>
-        <PortfolioStructure />
-      </Suspense> */}
       <Suspense>
         <GoalPriority />
       </Suspense>
@@ -48,12 +34,13 @@ async function GoalPriority() {
     .select("title, price, currency, payments:goals_payments(date, amount)")
     .eq("is_priority", true)
     .order("date", { referencedTable: "goals_payments", ascending: false })
+    .returns<Goal[]>()
     .single();
 
   if (!goal) return <></>;
 
   return (
-    <div className="col-span-2">
+    <div className="col-span-3">
       <Priority goal={goal} />
     </div>
   );
@@ -70,12 +57,4 @@ const latestOperationsFallback = (
       <OperationLoader />
     </div>
   </Block>
-);
-
-const statsFallback = (
-  <Fragment>
-    <StatLoader className="xl:col-span-2" />
-    <StatLoader className="xl:col-span-2" />
-    <StatLoader className="xl:col-span-2" />
-  </Fragment>
 );

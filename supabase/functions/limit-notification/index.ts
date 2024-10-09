@@ -29,6 +29,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
 
 type Body = {
   record: Payment;
+  operation_type: "income" | "expense";
 };
 
 type Limit = {
@@ -50,7 +51,52 @@ const sendNotification = async (
 };
 
 Deno.serve(async (req) => {
-  const { record: { currency, amount, user_id } } = await req.json() as Body;
+  const body = await req
+    .json() as Body;
+  console.log(req, { body });
+  const {
+    record: { currency, title, recurring, amount, user_id },
+    operation_type,
+  } = body;
+  const { data: profile, error: profileError } = await supabase.from(
+    "profiles",
+  ).select("telegram_id, language:languages(code)").eq("id", user_id).returns<
+    (Preferences & Settings)[]
+  >()
+    .single();
+
+  if (profileError) {
+    console.warn("Couldn't retrieve telegram_id: ", profileError);
+    return new Response(JSON.stringify(profileError), {
+      status: 500,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
+  if (!profile.telegram_id) {
+    console.warn("User is not registered through Telegram");
+    return new Response("ok", { status: 200 });
+  }
+
+  if (recurring) {
+    await bot.api.sendMessage(
+      profile.telegram_id,
+      `Dodano ${
+        operation_type === "income" ? "przychód" : "wydatek"
+      } cykliczny ${title} na kwotę ${
+        new Intl.NumberFormat(profile.language.code, {
+          style: "currency",
+          currency,
+        }).format(amount)
+      }`,
+    );
+  }
+
+  if (operation_type === "income") {
+    return new Response("ok", { status: 200 });
+  }
 
   const { data: limits, error: limitsError } = await supabase.rpc(
     "get_expenses_limits",
@@ -71,21 +117,6 @@ Deno.serve(async (req) => {
   }
 
   if (limits.length > 0) {
-    const { data: profile, error: profileError } = await supabase.from(
-      "profiles",
-    ).select("telegram_id, language:languages(code)").eq("id", user_id).returns<
-      (Preferences & Settings)[]
-    >()
-      .single();
-    if (profileError) {
-      console.warn("Couldn't retrieve telegram_id: ", limitsError);
-      return new Response(JSON.stringify(profileError), {
-        status: 500,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    }
     await Promise.all(
       limits.reduce((prev, limit) => {
         const paidPercentage = (limit.total / limit.amount) * 100;

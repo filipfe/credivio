@@ -7,14 +7,14 @@ import StockCard from "./cards/stock";
 
 export default function BentoGrid() {
   return (
-    <section className="py-24 bg-primary-dark px-6 flex flex-col gap-8 overflow-hidden relative">
-      <div className="max-w-7xl w-full mx-auto mb-2">
-        <h2 className="text-5xl text-white font-bold">
+    <section className="py-12 sm:py-16 lg:py-24 bg-primary-dark sm:px-6 flex flex-col gap-8 overflow-hidden relative">
+      <div className="max-w-7xl w-full mx-auto mb-2 px-6 sm:px-0">
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl text-white font-black tracking-tight">
           Usługi z <TextBeam>przeznaczeniem</TextBeam>
         </h2>
       </div>
       <div className="max-w-7xl mx-auto flex flex-col gap-4 sm:grid grid-cols-3 w-full">
-        <div className="relative z-10 flex flex-col gap-4 px-8 py-12 pb-56 overflow-hidden rounded-lg border border-white/10 bg-gradient-to-br from-[rgba(255,255,255,0.05)] to-[rgba(255,255,255,0)]">
+        <div className="relative z-10 flex flex-col gap-4 px-8 py-12 pb-56 overflow-hidden sm:rounded-lg border border-white/10 bg-gradient-to-br from-[rgba(255,255,255,0.05)] to-[rgba(255,255,255,0)]">
           <h2 className="text-3xl text-white font-bold">
             Zaplanuj swój
             <br /> następny wydatek
@@ -27,7 +27,7 @@ export default function BentoGrid() {
             <GoalCard />
           </div>
         </div>
-        <div className="relative flex flex-col justify-center gap-4 px-8 py-12 overflow-hidden rounded-lg border border-white/10 bg-gradient-to-br from-[rgba(255,255,255,0.05)] to-[rgba(255,255,255,0)] col-span-2">
+        <div className="relative flex flex-col justify-center gap-4 px-8 py-12 overflow-hidden sm:rounded-lg border border-white/10 bg-gradient-to-br from-[rgba(255,255,255,0.05)] to-[rgba(255,255,255,0)] col-span-2">
           <h2 className="text-3xl text-white font-bold">
             Ciesz się nieograniczonymi
             <br /> możliwościami
@@ -43,7 +43,7 @@ export default function BentoGrid() {
             <ExpensesCard />
           </div>
         </div>
-        <div className="relative overflow-hidden flex flex-col gap-4 p-8 rounded-lg border border-white/10 bg-gradient-to-br from-[rgba(255,255,255,0.05)] to-[rgba(255,255,255,0)] col-span-2">
+        <div className="relative overflow-hidden flex flex-col gap-4 p-8 sm:rounded-lg border border-white/10 bg-gradient-to-br from-[rgba(255,255,255,0.05)] to-[rgba(255,255,255,0)] col-span-2">
           <h2 className="text-3xl text-white font-bold">
             Zarządzaj przychodami
             <br /> <TextBeam>cyklicznie</TextBeam>
@@ -52,7 +52,7 @@ export default function BentoGrid() {
             <IncomeCard />
           </div>
         </div>
-        <div className="relative z-10 flex flex-col justify-center gap-4 overflow-hidden items-center rounded-lg border border-white/10 bg-gradient-to-br from-[rgba(255,255,255,0.05)] to-[rgba(255,255,255,0)]">
+        <div className="relative z-10 flex flex-col justify-center gap-4 overflow-hidden items-center sm:rounded-lg border border-white/10 bg-gradient-to-br from-[rgba(255,255,255,0.05)] to-[rgba(255,255,255,0)]">
           <div className="bg-primary/20 rounded-md p-1 w-max  relative z-10">
             <button className="bg-primary py-2.5 text-sm px-5 rounded-md text-white">
               Rozpocznij

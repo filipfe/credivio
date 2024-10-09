@@ -1,3 +1,5 @@
+"use client";
+
 import {
   getNotificationsSettings,
   updateSettings,
@@ -11,16 +13,17 @@ type Props = {
   title: string;
   description: string;
   field: string;
-  isDisabled?: boolean;
 };
 
 export default function NotificationSwitch({
   title,
   description,
   field,
-  isDisabled,
 }: Props) {
-  const { data, mutate } = useSWR(["settings", "notifications"]);
+  const { data, isLoading, error, mutate } = useSWR(
+    ["settings", "notifications"],
+    () => getNotificationsSettings()
+  );
 
   const onValueChange = async (isSelected: boolean) => {
     try {
@@ -38,9 +41,15 @@ export default function NotificationSwitch({
     }
   };
 
+  const isDisabled =
+    field === "telegram_notifications" &&
+    !isLoading &&
+    !error &&
+    !data?.telegram_id;
+
   return (
     <div className="flex items-center justify-between gap-4">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 mb-2">
         <h3>{title}</h3>
         <p className="text-sm text-font/60">{description}</p>
       </div>
@@ -66,12 +75,16 @@ export default function NotificationSwitch({
           }
         >
           <div>
-            <Switch isDisabled={isDisabled} />
+            <Switch isDisabled />
           </div>
         </Tooltip>
       ) : (
         data && (
-          <Switch isSelected={data[field]} onValueChange={onValueChange} />
+          <Switch
+            isDisabled={isLoading}
+            isSelected={data[field as keyof Settings] as boolean}
+            onValueChange={onValueChange}
+          />
         )
       )}
     </div>

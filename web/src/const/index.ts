@@ -1,22 +1,15 @@
 import {
-  AlignHorizontalDistributeCenterIcon,
-  ArrowRightLeftIcon,
-  BarChart4Icon,
-  BotIcon,
+  BarChart3,
   BrainIcon,
-  Building2Icon,
   CheckCircleIcon,
   CoinsIcon,
   LayersIcon,
   LayoutDashboardIcon,
-  NewspaperIcon,
-  PieChartIcon,
+  Newspaper,
   PlusIcon,
   RepeatIcon,
-  ScrollTextIcon,
   SlidersIcon,
   UserCogIcon,
-  VariableIcon,
   Wallet2Icon,
 } from "lucide-react";
 
@@ -26,59 +19,65 @@ export const PAGES: Page[] = [
     href: "/",
     icon: LayoutDashboardIcon,
   },
-  // {
-  //   title: "Operacje",
-  //   href: "/operations",
-  //   icon: RepeatIcon,
-  //   links: [
   {
-    title: "Przychody",
-    href: "/incomes",
-    icon: Wallet2Icon,
-    links: [
-      {
-        title: "Dodaj",
-        icon: PlusIcon,
-        href: "/incomes/add",
-      },
-    ],
+    title: "Statystyki",
+    href: "/stats",
+    icon: BarChart3,
   },
   {
-    title: "Wydatki",
-    href: "/expenses",
-    icon: CoinsIcon,
-    links: [
-      {
-        title: "Dodaj",
-        icon: PlusIcon,
-        href: "/expenses/add",
-      },
-    ],
-  },
-  {
-    title: "Płatności cykliczne",
-    href: "/recurring-payments",
+    title: "Operacje",
+    href: "/operations",
     icon: RepeatIcon,
     links: [
       {
-        title: "Dodaj",
-        icon: PlusIcon,
-        href: "/recurring-payments/add",
+        title: "Przychody",
+        href: "/incomes",
+        icon: Wallet2Icon,
+        links: [
+          {
+            title: "Dodaj",
+            icon: PlusIcon,
+            href: "/incomes/add",
+          },
+        ],
+      },
+      {
+        title: "Wydatki",
+        href: "/expenses",
+        icon: CoinsIcon,
+        links: [
+          {
+            title: "Dodaj",
+            icon: PlusIcon,
+            href: "/expenses/add",
+          },
+        ],
+      },
+      {
+        title: "Płatności cykliczne",
+        href: "/recurring-payments",
+        icon: RepeatIcon,
+        links: [
+          {
+            title: "Dodaj",
+            icon: PlusIcon,
+            href: "/recurring-payments/add",
+          },
+        ],
       },
     ],
   },
-  // ],
-  // },
-  {
-    title: "Automatyzacja",
-    href: "/automation",
-    icon: BotIcon,
-  },
+
   {
     title: "Cele",
     href: "/goals",
     icon: CheckCircleIcon,
   },
+  // {
+  //   title: "Wiadomości",
+  //   href: "/news",
+  //   icon: Newspaper,
+  // },
   // {
   //   title: "Inwestycje",
   //   href: "/investments",
@@ -137,11 +136,11 @@ export const PAGES: Page[] = [
   //     },
   //   ],
   // },
-  // {
-  //   title: "Asystent AI",
-  //   href: "/ai-actions",
-  //   icon: BrainIcon,
-  // },
+  {
+    title: "Asystent AI",
+    href: "/ai-assistant",
+    icon: BrainIcon,
+  },
   // {
   //   title: "Aktualności",
   //   href: "/news",
@@ -158,7 +157,7 @@ export const SETTINGS_PAGES: Page[] = [
       "Kliknij tutaj, aby zarządzać ustawieniami wyświetlania, powiadomień i innymi.",
   },
   {
-    title: "Subskrypcje i usługi",
+    title: "Subskrypcja",
     href: "/settings/subscription",
     icon: LayersIcon,
     description:

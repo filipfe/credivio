@@ -1,5 +1,6 @@
 import Form from "@/components/auth/form";
 import { Input } from "@nextui-org/react";
+import Link from "next/link";
 
 export default function Page() {
   return (
@@ -37,6 +38,15 @@ export default function Page() {
               isRequired
               required
             />
+            <p className="text-sm">
+              Nie pamiętasz hasła?{" "}
+              <Link
+                href="/forgot-password"
+                className="text-primary font-medium hover:text-primary/60 transition-colors"
+              >
+                Zresetuj hasło
+              </Link>
+            </p>
           </div>
         </Form>
       </div>

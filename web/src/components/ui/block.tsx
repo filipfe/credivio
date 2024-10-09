@@ -9,6 +9,7 @@ type Props = {
   mobileRadius?: boolean;
   hideTitleMobile?: boolean;
   description?: string;
+  titleClassName?: string;
 };
 
 export default function Block({
@@ -18,20 +19,27 @@ export default function Block({
   mobileRadius,
   description,
   title,
+  titleClassName,
   hideTitleMobile,
 }: Props) {
   return (
-    <article
+    <div
       className={cn(
-        "bg-white px-6 sm:px-10 pt-5 pb-6 sm:py-8 gap-4 flex flex-col",
+        "bg-white px-6 sm:px-10 gap-4 flex flex-col",
         className,
+        title ? "pt-5 pb-6 sm:py-8" : "py-6 sm:py-8",
         mobileRadius
           ? "rounded-md border"
           : "border-y sm:border-x sm:rounded-md"
       )}
     >
       {title && (
-        <div className="flex items-center gap-4 justify-between mb-1 sm:mb-2 h-8">
+        <div
+          className={cn(
+            "flex items-center gap-4 justify-between mb-1 sm:mb-2 h-8",
+            titleClassName
+          )}
+        >
           {typeof title === "string" ? (
             <h3
               className={`sm:text-lg text-base ${
@@ -50,21 +58,27 @@ export default function Block({
         <p className="-mt-3 text-sm text-font/60 mb-1 sm:mb-2">{description}</p>
       )}
       {children}
-    </article>
+    </div>
   );
 }
 
-interface SectionProps extends HTMLAttributes<HTMLDivElement> {}
+interface SectionProps extends HTMLAttributes<HTMLDivElement> {
+  wrapperClassName?: string;
+}
 
 export function Section({
   title,
   className,
   children,
+  wrapperClassName,
   ...props
 }: SectionProps) {
   return (
     <div
-      className="first:border-t-0 first:pt-0 border-t pt-4 pb-8 last:pb-4 flex flex-col gap-4"
+      className={cn(
+        "first:border-t-0 first:pt-0 border-t py-4 flex flex-col gap-4",
+        wrapperClassName
+      )}
       {...props}
     >
       {title && <h4 className="text-sm">{title}</h4>}

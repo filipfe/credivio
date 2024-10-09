@@ -3,20 +3,26 @@
 import axios from "axios";
 
 type NewsList = {
-  results: News[];
-  nextPage?: string;
+  articles: News[];
   error?: string;
 };
 
-export async function getNews(page?: number): Promise<NewsList> {
+export async function getNews(
+  language_code: string,
+  page: number,
+): Promise<NewsList> {
+  const [language, country] = language_code.split("-");
   try {
-    const { data } = await axios.get(
-      `https://newsdata.io/api/1/news?apikey=${process.env.NEWS_DATA_API_KEY}&country=pl&category=business`
+    const { data } = await axios.post(
+      `https://news.opera-api.com/${country.toLowerCase()}/${language}/v1/news/category/business`,
+      {
+        page,
+      },
     );
     return data;
   } catch (err) {
     return {
-      results: [],
+      articles: [],
       error: "Error, try again later",
     };
   }

@@ -13,7 +13,8 @@ export async function getGoals(): Promise<SupabaseResponse<Goal>> {
     )
     .order("deadline")
     .order("date", { referencedTable: "goals_payments", ascending: false })
-    .order("created_at");
+    .order("created_at")
+    .returns<Goal[]>();
 
   if (error) {
     return {
@@ -68,7 +69,7 @@ export async function addGoalPayment(
 
   const { error } = await supabase
     .from("goals_payments")
-    .upsert({ date, goal_id, amount }, { onConflict: ["date", "goal_id"] });
+    .upsert({ date, goal_id, amount });
 
   if (error) {
     console.error("Couldn't add goal payment: ", error);

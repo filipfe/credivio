@@ -1,4 +1,9 @@
-import { updateSettings } from "@/lib/settings/queries";
+"use client";
+
+import {
+  getNotificationsSettings,
+  updateSettings,
+} from "@/lib/settings/queries";
 import toast from "@/utils/toast";
 import { Time } from "@internationalized/date";
 import { TimeInput, TimeInputValue } from "@nextui-org/react";
@@ -6,7 +11,9 @@ import { ClockIcon } from "lucide-react";
 import useSWR from "swr";
 
 export default function HourInput() {
-  const { data, mutate } = useSWR(["settings", "notifications"]);
+  const { data, mutate } = useSWR(["settings", "notifications"], () =>
+    getNotificationsSettings()
+  );
 
   const onValueChange = async (time: TimeInputValue) => {
     const date = new Date();
@@ -49,7 +56,7 @@ export default function HourInput() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 mb-2">
         <h3>Wykresy podsumowywujące</h3>
         <p className="text-sm text-font/60">
           Powiadomienia o podsumowaniach dnia, tygodnia lub miesiąca
