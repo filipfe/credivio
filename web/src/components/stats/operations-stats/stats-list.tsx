@@ -17,9 +17,9 @@ export default function StatsList() {
   if (isLoading || !results) {
     return (
       <Fragment>
-        <StatLoader className="xl:col-span-2" />
-        <StatLoader className="xl:col-span-2" />
-        <StatLoader className="xl:col-span-2" />
+        <StatLoader />
+        <StatLoader />
+        <StatLoader />
       </Fragment>
     );
   }
