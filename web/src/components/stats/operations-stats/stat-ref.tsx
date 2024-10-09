@@ -49,7 +49,7 @@ export default function StatBox({ data, type, amount }: Props) {
         </button>
       </div>
       <div className="flex-1 grid">
-        <ResponsiveContainer width="100%" height={80}>
+        <ResponsiveContainer width="100%" height={82}>
           <AreaChart
             data={data}
             margin={{
@@ -94,7 +94,7 @@ export function StatLoader({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "bg-white rounded-lg py-6 sm:py-8 px-6 sm:px-10 space-y-4",
+        "bg-white border rounded-lg py-6 sm:py-8 px-6 sm:px-10 space-y-4",
         className
       )}
     >
