@@ -3,9 +3,9 @@ import LatestOperations from "@/components/dashboard/latest-operations";
 import { OperationLoader } from "@/components/operations/ref";
 import Block from "@/components/ui/block";
 import { getPreferences } from "@/lib/settings/actions";
-import Priority from "@/components/goals/priority";
-import { createClient } from "@/utils/supabase/server";
 import Limits from "@/components/operations/limits";
+import GoalPriority from "@/components/dashboard/goal-priority";
+import WeeklyGraph from "@/components/dashboard/weekly-graph";
 
 export default async function Dashboard() {
   const { result: preferences, error } = await getPreferences();
@@ -15,7 +15,7 @@ export default async function Dashboard() {
   }
 
   return (
-    <div className="sm:px-10 py-4 sm:py-8 flex flex-col xl:grid grid-cols-6 gap-4 sm:gap-6">
+    <div className="sm:px-10 h-full py-4 sm:py-8 flex flex-col xl:grid grid-cols-6 xl:grid-rows-[max-content_max-content_1fr] gap-4 sm:gap-6">
       <Suspense fallback={latestOperationsFallback}>
         <LatestOperations preferences={preferences} />
       </Suspense>
@@ -23,25 +23,7 @@ export default async function Dashboard() {
       <Suspense>
         <GoalPriority />
       </Suspense>
-    </div>
-  );
-}
-
-async function GoalPriority() {
-  const supabase = createClient();
-  const { data: goal } = await supabase
-    .from("goals")
-    .select("title, price, currency, payments:goals_payments(date, amount)")
-    .eq("is_priority", true)
-    .order("date", { referencedTable: "goals_payments", ascending: false })
-    .returns<Goal[]>()
-    .single();
-
-  if (!goal) return <></>;
-
-  return (
-    <div className="col-span-3">
-      <Priority goal={goal} />
+      <WeeklyGraph preferences={preferences} />
     </div>
   );
 }

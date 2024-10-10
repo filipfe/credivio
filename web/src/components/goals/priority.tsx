@@ -6,7 +6,13 @@ import Empty from "../ui/empty";
 import numberFormat from "@/utils/formatters/currency";
 import usePreferences from "@/hooks/usePreferences";
 
-export default function Priority({ goal }: { goal?: Goal }) {
+export default function Priority({
+  goal,
+  limitPayments = 10,
+}: {
+  goal?: Goal;
+  limitPayments?: number;
+}) {
   const sum = goal
     ? goal.payments.reduce((prev, { amount }) => prev + amount, 0)
     : 0;
@@ -74,7 +80,7 @@ export default function Priority({ goal }: { goal?: Goal }) {
               hideScrollBar
             >
               <ul>
-                {goal.payments.map((payment) => (
+                {goal.payments.slice(0, limitPayments).map((payment) => (
                   <PaymentRef
                     {...payment}
                     currency={goal.currency}

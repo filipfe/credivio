@@ -8,10 +8,10 @@ interface Payment {
   amount: number;
   type: OperationType;
   from_telegram?: boolean;
+  label?: string | null;
 }
 
 interface Operation extends Payment {
-  label?: string | null;
   doc_path: string | null;
   amount: string;
   type?: OperationType;
