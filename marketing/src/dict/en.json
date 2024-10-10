@@ -1,0 +1,30 @@
+{
+  "landing": {
+    "hero": {
+      "title": "Manage all your finances with ease",
+      "cta": {
+        "primary": "Start now",
+        "secondary": "Learn more"
+      }
+    },
+    "operations": {
+      "category": "Operations",
+      "title": "All categories in one place",
+      "incomes": {
+        "title": "Incomes",
+        "description": "Monitor and analyze your income sources to easily identify trends and make better decisions that will accelerate the growth of your budget."
+      },
+      "expenses": {
+        "title": "Expenses",
+        "description": "Track and control your expenses to better manage your budget, avoid excessive costs, and optimize cash flow."
+      },
+      "recurring-payments": {
+        "title": "Recurring Payments",
+        "description": "Manage your recurring payments to have full control over subscriptions, regular payments, and avoid unexpected charges."
+      }
+    }
+  },
+  "banner": {
+    "title": "Take full control of your personal finances"
+  }
+}
