@@ -11,7 +11,7 @@ export default function FAQ() {
               Frequently asked questions
             </h3>
           </div>
-          <div className="mx-auto my-12 md:max-w-[800px]">
+          <div className="mx-auto my-12 max-w-4xl">
             <div
               className="flex w-full flex-col items-center justify-center space-y-2"
               data-orientation="vertical"
