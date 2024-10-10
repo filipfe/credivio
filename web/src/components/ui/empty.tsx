@@ -31,7 +31,7 @@ export default function Empty({ cta, icon: Icon, title, className }: Props) {
             size="sm"
             disableRipple
             startContent={<PlusIcon size={14} />}
-            className="bg-light border"
+            className="bg-light border text-font"
             onPress={cta.onClick}
           >
             {cta.title}
@@ -45,7 +45,7 @@ export default function Empty({ cta, icon: Icon, title, className }: Props) {
               size="sm"
               disableRipple
               startContent={<PlusIcon size={14} />}
-              className="bg-light border"
+              className="bg-light border text-font"
             >
               {cta.title}
             </Button>

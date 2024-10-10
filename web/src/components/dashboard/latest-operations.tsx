@@ -15,7 +15,7 @@ export default async function LatestOperations({
   return (
     <Block
       title="Ostatnie operacje"
-      className="xl:col-span-6 !px-0"
+      className="xl:col-span-6 !px-0 h-fit"
       titleClassName="px-6 sm:px-10"
     >
       {operations.length > 0 ? (
