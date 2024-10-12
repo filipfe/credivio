@@ -166,8 +166,8 @@ export default function BalanceByMonth() {
                   />
                 )}
               />
-              <Bar dataKey="total_incomes" stackId="a" fill="#177981" />
               <Bar dataKey="total_expenses" stackId="a" fill="#fdbb2d" />
+              <Bar dataKey="total_incomes" stackId="a" fill="#177981" />
             </BarChart>
           </ResponsiveContainer>
         </div>
