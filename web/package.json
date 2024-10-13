@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@formatjs/intl-localematcher": "^0.5.5",
     "@internationalized/date": "^3.5.4",
     "@nextui-org/react": "^2.4.1",
     "@nivo/radial-bar": "^0.87.0",
@@ -24,6 +25,7 @@
     "framer-motion": "^11.0.8",
     "ldrs": "^1.0.2",
     "lucide-react": "^0.343.0",
+    "negotiator": "^0.6.3",
     "next": "^14.2.11",
     "nextjs-toploader": "^1.6.6",
     "papaparse": "^5.4.1",
@@ -32,6 +34,7 @@
     "react-dropzone": "^14.2.3",
     "react-hot-toast": "^2.4.1",
     "react-markdown": "^9.0.1",
+    "react-timezone-select": "^3.2.8",
     "recharts": "^2.12.7",
     "stripe": "^16.12.0",
     "swr": "^2.2.5",

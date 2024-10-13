@@ -1,5 +1,6 @@
 import CurrencySelect from "./currency";
 import LanguageSelect from "./language";
+import TimezoneSelect from "./timezone";
 
 export default function LocationInput({
   currency,
@@ -13,7 +14,8 @@ export default function LocationInput({
         <p className="text-sm text-font/60">Wybierz język i domyślną walutę</p>
       </div>
       <CurrencySelect defaultValue={currency} />
-      {/* <LanguageSelect defaultValue={language.name} /> */}
+      <LanguageSelect defaultValue={language.name} />
+      <TimezoneSelect />
     </div>
   );
 }
