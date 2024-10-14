@@ -16,6 +16,7 @@ import useYAxisWidth from "@/hooks/useYAxisWidth";
 import { Dispatch, SetStateAction, useMemo } from "react";
 import { isToday } from "date-fns";
 import { COLORS } from "@/const";
+import { useSettings } from "@/lib/general/queries";
 
 type Props = {
   data: DailyAmount[];
@@ -26,10 +27,6 @@ type Props = {
   minHeight?: number;
 };
 
-const dateFormatter = new Intl.DateTimeFormat("pl-PL", {
-  dateStyle: "long",
-});
-
 export default function LineChart({
   data,
   currency,
@@ -38,7 +35,12 @@ export default function LineChart({
   setPeriod,
   minHeight = 320,
 }: Props) {
+  const { data: settings } = useSettings();
   const { width, tickFormatter } = useYAxisWidth(currency);
+
+  const dateFormatter = new Intl.DateTimeFormat(settings?.language, {
+    dateStyle: "long",
+  });
 
   const isFromEarlier = period
     ? new Date(period.from).getTime() < new Date(data[0].date).getTime()
@@ -76,7 +78,7 @@ export default function LineChart({
           tick={{ fontSize: 12 }}
           tickFormatter={(label) => {
             const [year, month, day] = label.split("-");
-            return new Intl.DateTimeFormat("pl-PL", {
+            return new Intl.DateTimeFormat(settings?.language, {
               day: "2-digit",
               month: "short",
             }).format(new Date(year, parseInt(month) - 1, day));
@@ -100,7 +102,7 @@ export default function LineChart({
               {...props}
               label={
                 props.label
-                  ? new Intl.DateTimeFormat("pl-PL", {
+                  ? new Intl.DateTimeFormat(settings?.language, {
                       dateStyle: "full",
                     }).format(new Date(props.label))
                   : undefined

@@ -41,6 +41,7 @@ interface Props
     "onOpenChange" | "isOpen" | "onClose"
   > {
   defaultLimit: NewLimit;
+  timezone: string;
 }
 
 export default function LimitForm({
@@ -48,9 +49,10 @@ export default function LimitForm({
   onOpenChange,
   defaultLimit,
   onClose,
+  timezone,
 }: Props) {
   const [singleRecord, setSingleRecord] = useState<NewLimit>(defaultLimit);
-  const { mutate } = useLimits(singleRecord.currency);
+  const { mutate } = useLimits(timezone, singleRecord.currency);
   const [isLoading, setIsLoading] = useState(false);
 
   useLayoutEffect(() => {

@@ -3,8 +3,8 @@
 import { Progress, ScrollShadow } from "@nextui-org/react";
 import Block from "../ui/block";
 import Empty from "../ui/empty";
-import { usePreferences } from "@/lib/settings/queries";
 import NumberFormat from "@/utils/formatters/currency";
+import { useSettings } from "@/lib/general/queries";
 
 export default function Priority({
   goal,
@@ -106,11 +106,11 @@ const PaymentRef = ({
   amount,
   currency,
 }: GoalPayment & Pick<Goal, "currency">) => {
-  const { data: preferences } = usePreferences();
+  const { data: settings } = useSettings();
   return (
     <li className="py-2 first:pt-0 border-b last:border-b-0 flex items-center justify-between gap-2">
       <span className="text-sm text-font/80">
-        {new Intl.DateTimeFormat(preferences?.language.code, {
+        {new Intl.DateTimeFormat(settings?.language, {
           dateStyle: "full",
         }).format(new Date(date))}
       </span>

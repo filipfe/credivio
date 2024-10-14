@@ -27,6 +27,7 @@ import DocModal from "../operations/modals/doc-modal";
 import Empty from "./empty";
 import { TRANSACTION_TYPES } from "@/const";
 import ActionsDropdown from "../operations/actions-dropdown";
+import { useSettings } from "@/lib/general/queries";
 
 const getColumns = (type: OperationType, hasDoc: boolean) => {
   if (type === "stock") {
@@ -67,6 +68,7 @@ export default function PreviewTable({
   rows,
   setRows,
 }: Props<Operation | StockTransaction>) {
+  const { data: settings } = useSettings();
   const [docPath, setDocPath] = useState<string | null>(null);
   const pages = Math.ceil(count / 10);
   const {
@@ -92,7 +94,7 @@ export default function PreviewTable({
         case "issued_at":
           return cellValue ? (
             <span className="line-clamp-1 break-all w-[10ch]">
-              {new Intl.DateTimeFormat("pl-PL", {
+              {new Intl.DateTimeFormat(settings?.language, {
                 dateStyle: "short",
               }).format(new Date(cellValue))}
             </span>

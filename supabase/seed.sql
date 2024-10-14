@@ -73,7 +73,8 @@ insert into auth.users (
     "first_name": "Rory", 
     "last_name": "Zappa", 
     "currency": "PLN", 
-    "language_code": "pl"
+    "language": "pl",
+    "timezone": "Europe/Warsaw"
   }',
   timezone('utc'::text, now()), 
   timezone('utc'::text, now()),
@@ -100,7 +101,7 @@ insert into auth.identities (
     "first_name": "Rory", 
     "last_name": "Zappa", 
     "currency": "PLN", 
-    "language_code": "pl"
+    "timezone": "Europe/Warsaw"
   }', 
   'email', 
   timezone('utc'::text, now()), 

@@ -95,8 +95,15 @@ type PageProps = {
 type Settings = {
   currency: string;
   timezone: string;
-  language: string;
+  language: Locale;
+  telegram_token: string;
+  telegram_id: string;
+  notifications: {
+    telegram: boolean;
+    email: boolean;
+  };
 };
+
 type PageParams = {
   lang: Locale;
 };

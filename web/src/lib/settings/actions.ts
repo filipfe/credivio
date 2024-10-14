@@ -34,8 +34,9 @@ export async function getPreferences(): Promise<
   const { data, error } = await supabase
     .from("profiles")
     .select(
-      "currency, language:languages(code, name), telegram_token, telegram_id",
-    ).returns<Preferences>()
+      "currency, language:languages(code, name), telegram_token, telegram_id"
+    )
+    .returns<Preferences>()
     .single();
 
   if (error) {
@@ -51,7 +52,7 @@ export async function getPreferences(): Promise<
 }
 
 export async function activateService(
-  formData: FormData,
+  formData: FormData
 ): Promise<SupabaseResponse<any>> {
   const service = formData.get("service")!.toString();
   const isActive = formData.get("is-active")!.toString();
@@ -99,29 +100,6 @@ export async function activateService(
 
   return {
     results: [],
-  };
-}
-
-export async function getDefaultCurrency(): Promise<
-  SupabaseSingleRowResponse<string>
-> {
-  const supabase = createClient();
-
-  const { data, error: authError } = await supabase
-    .from("profiles")
-    .select("currency")
-    .single();
-
-  if (!data || authError) {
-    return {
-      result: null,
-      error: authError.message ||
-        "Błąd autoryzacji, spróbuj zalogować się ponownie!",
-    };
-  }
-
-  return {
-    result: data.currency,
   };
 }
 

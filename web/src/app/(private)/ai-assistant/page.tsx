@@ -5,8 +5,15 @@ import OperationsContext from "@/components/ai-assistant/context/operations";
 import Block from "@/components/ui/block";
 import AIAssistantProvider from "./providers";
 import { ScrollShadow } from "@nextui-org/react";
+import { getSettings } from "@/lib/general/actions";
 
-export default function Page() {
+export default async function Page() {
+  const { result: settings } = await getSettings();
+
+  if (!settings) {
+    throw new Error("Couldn't retrieve settings");
+  }
+
   return (
     <div className="sm:px-10 flex flex-col h-full gap-4 sm:gap-10 xl:grid grid-cols-2">
       <AIAssistantProvider>
@@ -19,7 +26,7 @@ export default function Page() {
           <ScrollShadow className="max-h-[calc(100vh-298px)]" hideScrollBar>
             <div>
               <OperationsContext />
-              <LimitsContext />
+              <LimitsContext timezone={settings.timezone} />
               <GoalsContext />
             </div>
           </ScrollShadow>

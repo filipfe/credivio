@@ -5,8 +5,11 @@ import { useMemo, useRef } from "react";
 import useOutsideObserver from "@/hooks/useOutsideObserver";
 import Menu from "./menu";
 import NumberFormat from "@/utils/formatters/currency";
+import { useSettings } from "@/lib/general/queries";
 
 export default function GoalRef(goal: Goal) {
+  const { data: settings } = useSettings();
+
   const { title, price, currency, deadline, payments } = goal;
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -29,7 +32,7 @@ export default function GoalRef(goal: Goal) {
         </div>
         <small className="text-white/60 text-tiny">
           {deadline
-            ? new Intl.DateTimeFormat("pl-PL", {
+            ? new Intl.DateTimeFormat(settings?.language, {
                 dateStyle: "short",
               }).format(new Date(deadline))
             : "Bez terminu"}

@@ -1,10 +1,17 @@
+import { getSettings } from "@/lib/general/actions";
 import PaymentRef from "./ref";
 
-export default function Month({
+export default async function Month({
   month,
   year,
   payments,
 }: Month & { year: number }) {
+  const { result: settings } = await getSettings();
+
+  if (!settings) {
+    throw new Error("Couldn't retrieve settings");
+  }
+
   const monthDate = new Date();
   monthDate.setMonth(month - 1);
 
@@ -13,9 +20,9 @@ export default function Month({
       <div className="bg-primary flex items-center justify-between py-2 px-4 rounded-md sticky top-0 z-10">
         <div className="flex gap-2 items-end">
           <h2 className="font-medium text-white">
-            {new Intl.DateTimeFormat("pl-PL", { month: "long" }).format(
-              monthDate
-            )}
+            {new Intl.DateTimeFormat(settings.language, {
+              month: "long",
+            }).format(monthDate)}
           </h2>
           <small className="text-white/80">{year}</small>
         </div>

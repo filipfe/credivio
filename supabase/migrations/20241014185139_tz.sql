@@ -8,11 +8,31 @@ drop function if exists "public"."get_operations_daily_totals"(p_type operation_
 
 drop function if exists "public"."get_operations_stats"(p_currency currency_type, p_type operation_type);
 
+alter table "public"."profiles" drop constraint "profiles_language_code_fkey";
+
+alter table "public"."profiles" drop column "currency";
+
+alter table "public"."profiles" drop column "language_code";
+
+alter table "public"."settings" drop column "graph_time";
+
 alter table "public"."settings" drop column "created_at";
 
 alter table "public"."settings" add column "timezone" text not null default 'Europe/Warsaw';
 
 alter table "public"."settings" alter column "timezone" drop default;
+
+alter table "public"."settings" add column "currency" currency_type default 'PLN'::currency_type;
+
+alter table "public"."settings" alter column "currency" drop default;
+
+alter table "public"."settings" add column "language" text not null default 'pl';
+
+alter table "public"."settings" alter column "language" drop default;
+
+alter table "public"."settings" add constraint "settings_language_fkey" FOREIGN KEY (language) REFERENCES languages(code) ON UPDATE CASCADE not valid;
+
+alter table "public"."settings" validate constraint "settings_language_fkey";
 
 set check_function_bodies = off;
 
@@ -304,4 +324,29 @@ end;
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+begin
+  insert into profiles (id, email, first_name, last_name)
+  values (
+    new.id,
+    new.email,
+    new.raw_user_meta_data ->> 'first_name',
+    new.raw_user_meta_data ->> 'last_name'
+  );
+  insert into settings (user_id, timezone, currency, language) 
+  values (
+    new.id,
+    new.raw_user_meta_data ->> 'timezone',
+    (new.raw_user_meta_data ->> 'currency')::currency_type,
+    new.raw_user_meta_data ->> 'language'
+  );
 
+  return new;
+end;
+$function$
+;

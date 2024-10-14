@@ -13,7 +13,7 @@ export default function WeeklyGraph({ settings }: { settings: Settings }) {
     settings.currency
   );
   const { data: limits } = useLimits(settings.timezone, settings.currency);
-
+  console.log(days);
   const sum =
     days?.reduce(
       (prev: number, curr: DailyAmount) => prev + curr.total_amount,
@@ -127,8 +127,6 @@ type DayProps = {
 };
 
 const DayRef = ({ language, date, daySum, weekSum }: DayProps) => {
-  const [day, month, year] = date.split("-").map(Number);
-
   return (
     <div className="flex flex-col gap-2 items-center flex-1">
       <div className="bg-light rounded-md border flex flex-col overflow-hidden justify-end w-full flex-1">
@@ -144,7 +142,7 @@ const DayRef = ({ language, date, daySum, weekSum }: DayProps) => {
       <h2 className="font-bold">
         {new Intl.DateTimeFormat(language, {
           weekday: "short",
-        }).format(new Date(year, month - 1, day))}
+        }).format(new Date(date))}
       </h2>
     </div>
   );

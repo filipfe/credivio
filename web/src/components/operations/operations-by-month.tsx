@@ -20,7 +20,6 @@ import {
 import ChartLoader from "../ui/charts/loader";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
 import ChartTooltip from "../ui/charts/tooltip";
-import { usePreferences } from "@/lib/settings/queries";
 
 const getTitle = (type: "income" | "expense") => {
   switch (type) {
@@ -46,10 +45,6 @@ export default function OperationsByMonth({ type, settings }: Props) {
     }
   );
   const { width, tickFormatter } = useYAxisWidth(currency);
-  // useEffect(() => {
-  //   if (settings.currency) return;
-  //   setCurrency(preferences.currency);
-  // }, [preferences?.currency]);
 
   return (
     <Block

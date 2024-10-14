@@ -1,3 +1,4 @@
+import { getSettings } from "@/lib/general/actions";
 import { Select, SelectItem } from "@nextui-org/react";
 
 type Props = {
@@ -6,8 +7,18 @@ type Props = {
   disabledKeys: string[];
 };
 
-export default function MonthInput({ value, onChange, disabledKeys }: Props) {
-  const formatter = new Intl.DateTimeFormat("pl-PL", {
+export default async function MonthInput({
+  value,
+  onChange,
+  disabledKeys,
+}: Props) {
+  const { result: settings } = await getSettings();
+
+  if (!settings) {
+    throw new Error("Couldn't retrieve settings");
+  }
+
+  const formatter = new Intl.DateTimeFormat(settings.language, {
     month: "long",
   });
 

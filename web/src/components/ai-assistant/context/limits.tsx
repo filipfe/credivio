@@ -3,18 +3,17 @@
 import { Section } from "@/components/ui/block";
 import { useState } from "react";
 import Option from "./option";
-// import { useLimits } from "@/lib/operations/queries";
 import { CURRENCIES } from "@/const";
 import { cn, Skeleton } from "@nextui-org/react";
 import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
 import Empty from "@/components/ui/empty";
-import { useLimits } from "@/lib/general/queries";
+import { useLimits, useSettings } from "@/lib/general/queries";
 import NumberFormat from "@/utils/formatters/currency";
 
-export default function LimitsContext() {
+export default function LimitsContext({ timezone }: { timezone: string }) {
   const { setLimit } = useAIAssistant();
   const [currency, setCurrency] = useState<string>();
-  const { data: limits, isLoading, error } = useLimits(currency);
+  const { data: limits, isLoading, error } = useLimits(timezone, currency);
 
   return (
     <Section title="Limity wydatków">
@@ -57,9 +56,21 @@ export default function LimitsContext() {
                 </>
               ) : limits && limits.length > 0 ? (
                 <>
-                  <LimitRef period="daily" currency={currency} />
-                  <LimitRef period="weekly" currency={currency} />
-                  <LimitRef period="monthly" currency={currency} />
+                  <LimitRef
+                    period="daily"
+                    currency={currency}
+                    timezone={timezone}
+                  />
+                  <LimitRef
+                    period="weekly"
+                    currency={currency}
+                    timezone={timezone}
+                  />
+                  <LimitRef
+                    period="monthly"
+                    currency={currency}
+                    timezone={timezone}
+                  />
                 </>
               ) : (
                 <Empty
@@ -78,12 +89,14 @@ export default function LimitsContext() {
 const LimitRef = ({
   period,
   currency,
+  timezone,
 }: {
   period: Limit["period"];
   currency?: string;
+  timezone: string;
 }) => {
   const { limit: selectedLimit, setLimit } = useAIAssistant();
-  const { data: limits } = useLimits(currency);
+  const { data: limits } = useLimits(timezone, currency);
   const limit = currency
     ? limits?.find((limit) => limit.period === period)
     : null;

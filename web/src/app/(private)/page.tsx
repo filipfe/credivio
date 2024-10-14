@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import LatestOperations from "@/components/dashboard/latest-operations";
 import { OperationLoader } from "@/components/operations/ref";
 import Block from "@/components/ui/block";
-import { getPreferences } from "@/lib/settings/actions";
 import Limits from "@/components/operations/limits";
 import GoalPriority from "@/components/dashboard/goal-priority";
 import WeeklyGraph from "@/components/dashboard/weekly-graph";

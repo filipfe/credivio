@@ -8,7 +8,7 @@ import { Coins } from "lucide-react";
 export default async function LatestOperations({
   languageCode,
 }: {
-  languageCode: string;
+  languageCode: Locale;
 }) {
   const { results: operations } = await getLatestOperations();
 

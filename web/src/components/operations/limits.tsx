@@ -58,6 +58,7 @@ export default function Limits({ settings }: { settings: Settings }) {
         onOpenChange={onOpenChange}
         onClose={onClose}
         defaultLimit={defaultLimit}
+        timezone={settings.timezone}
       />
     </>
   );

@@ -2,6 +2,7 @@
 
 import ChartTooltip from "@/components/ui/charts/tooltip";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
+import { useSettings } from "@/lib/general/queries";
 import { useState } from "react";
 import {
   Area,
@@ -21,14 +22,14 @@ type Props = {
   currency: string;
 };
 
-const numberFormat = new Intl.NumberFormat("pl-PL", {
-  style: "currency",
-  currency: "PLN",
-  notation: "standard",
-  maximumFractionDigits: 2,
-});
-
 export default function BigChart({ quotes, isUp, isDown, currency }: Props) {
+  const { data: settings } = useSettings();
+  const numberFormat = new Intl.NumberFormat(settings?.language, {
+    style: "currency",
+    currency: "PLN",
+    notation: "standard",
+    maximumFractionDigits: 2,
+  });
   const { width, tickFormatter } = useYAxisWidth(currency, (value) =>
     numberFormat.format(value)
   );
@@ -80,7 +81,7 @@ export default function BigChart({ quotes, isUp, isDown, currency }: Props) {
           axisLine={false}
           repeatCount={0}
           tickFormatter={(value) =>
-            new Intl.DateTimeFormat("pl-PL", {
+            new Intl.DateTimeFormat(settings?.language, {
               month: "2-digit",
               day: "2-digit",
             }).format(value * 1000)
@@ -89,7 +90,7 @@ export default function BigChart({ quotes, isUp, isDown, currency }: Props) {
         <Tooltip
           isAnimationActive={false}
           labelFormatter={(label) =>
-            new Intl.DateTimeFormat("pl-PL", {
+            new Intl.DateTimeFormat(settings?.language, {
               weekday: "long",
               month: "long",
               day: "2-digit",

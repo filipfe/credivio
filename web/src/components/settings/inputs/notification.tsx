@@ -1,9 +1,7 @@
 "use client";
 
-import {
-  getNotificationsSettings,
-  updateSettings,
-} from "@/lib/settings/queries";
+import { useSettings } from "@/lib/general/queries";
+import { updateSettings } from "@/lib/settings/queries";
 import toast from "@/utils/toast";
 import { Button, Switch, Tooltip } from "@nextui-org/react";
 import Link from "next/link";
@@ -20,10 +18,7 @@ export default function NotificationSwitch({
   description,
   field,
 }: Props) {
-  const { data, isLoading, error, mutate } = useSWR(
-    ["settings", "notifications"],
-    () => getNotificationsSettings()
-  );
+  const { data: settings, mutate, isLoading, error } = useSettings();
 
   const onValueChange = async (isSelected: boolean) => {
     try {
@@ -45,7 +40,7 @@ export default function NotificationSwitch({
     field === "telegram_notifications" &&
     !isLoading &&
     !error &&
-    !data?.telegram_id;
+    !settings?.telegram_id;
 
   return (
     <div className="flex items-center justify-between gap-4">
@@ -79,10 +74,14 @@ export default function NotificationSwitch({
           </div>
         </Tooltip>
       ) : (
-        data && (
+        settings && (
           <Switch
             isDisabled={isLoading}
-            isSelected={data[field as keyof Settings] as boolean}
+            isSelected={
+              settings.notifications[
+                field as keyof Settings["notifications"]
+              ] as boolean
+            }
             onValueChange={onValueChange}
           />
         )
