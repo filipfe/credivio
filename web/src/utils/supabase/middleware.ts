@@ -1,18 +1,31 @@
-import { type CookieOptions, createServerClient } from "@supabase/ssr";
+import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
+import { match } from "@formatjs/intl-localematcher";
 import { createClient } from "@supabase/supabase-js";
+import Negotiator from "negotiator";
 
-const PUBLIC_ROUTES = [
+const locales = ["en", "pl"];
+const defaultLocale = "en";
+
+const LOCALE_ROUTES = [
   "/sign-in",
   "/sign-up",
-  "/auth/confirm",
   "/forgot-password",
 ];
+
+const PUBLIC_ROUTES = [...LOCALE_ROUTES, "/auth/confirm"];
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+function getLocale(req: NextRequest) {
+  const headers: Record<string, string> = {};
+  req.headers.forEach((value, key) => (headers[key] = value));
+  const languages = new Negotiator({ headers }).languages();
+  const locale = match(languages, locales, defaultLocale);
+  return locale;
+}
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -50,13 +63,24 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user && !PUBLIC_ROUTES.includes(request.nextUrl.pathname)) {
+  // User tried accessing private path without being authenticated
+
+  if (
+    !user &&
+    !PUBLIC_ROUTES.includes(request.nextUrl.pathname) &&
+    !PUBLIC_ROUTES.includes(
+      "/" + request.nextUrl.pathname.split("/").slice(2).join("/"),
+    )
+  ) {
     const url = request.nextUrl.clone();
-    url.pathname = "/sign-in";
+    const locale = getLocale(request);
+    url.pathname = `/${locale}/sign-in`;
     return NextResponse.redirect(url);
   }
 
   if (user) {
+    // User tried accessing public path being authenticated
+
     if (PUBLIC_ROUTES.includes(request.nextUrl.pathname)) {
       const url = request.nextUrl.clone();
       url.pathname = "/";
@@ -105,6 +129,15 @@ export async function updateSession(request: NextRequest) {
       url.pathname = "/settings/subscription";
       return NextResponse.redirect(url);
     }
+  }
+
+  // User accesses public path with locale
+
+  if (LOCALE_ROUTES.includes(request.nextUrl.pathname)) {
+    const url = request.nextUrl.clone();
+    const locale = getLocale(request);
+    url.pathname = `/${locale}${url.pathname}`;
+    return NextResponse.redirect(url);
   }
 
   return supabaseResponse;

@@ -15,8 +15,8 @@ import { useCallback, useEffect } from "react";
 import useTableQuery from "@/hooks/useTableQuery";
 import TopContent from "../ui/table/top-content";
 import Block from "../ui/block";
-import numberFormat from "@/utils/formatters/currency";
 import Empty from "../ui/empty";
+import NumberFormat from "@/utils/formatters/currency";
 
 const columns = ({ simplified }: { simplified?: boolean }) => [
   ...(!simplified ? [{ key: "issued_at", label: "DATA ZAWARCIA" }] : []),
@@ -61,9 +61,19 @@ export default function TransactionTable({
           (tt) => tt.value === stock.transaction_type
         )!.name;
       case "price":
-        return numberFormat(stock.currency, parseFloat(stock.price));
+        return (
+          <NumberFormat
+            currency={stock.currency}
+            amount={parseFloat(stock.price)}
+          />
+        );
       case "commission":
-        return numberFormat(stock.currency, parseFloat(stock.commission));
+        return (
+          <NumberFormat
+            currency={stock.currency}
+            amount={parseFloat(stock.commission)}
+          />
+        );
       default:
         return cellValue;
     }

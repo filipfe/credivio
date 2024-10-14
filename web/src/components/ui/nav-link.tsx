@@ -1,6 +1,7 @@
 "use client";
 
 import { MenuContext } from "@/app/(private)/providers";
+import { Dict } from "@/const/dict";
 import { cn } from "@nextui-org/react";
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
@@ -12,6 +13,7 @@ type Props = {
   isGroup?: boolean;
   matchPath?: boolean;
   endContent?: React.ReactNode;
+  dict?: Dict["private"]["_navigation"];
 };
 
 export default function NavLink({
@@ -21,6 +23,7 @@ export default function NavLink({
   links,
   isGroup,
   matchPath,
+  dict,
   endContent,
 }: Page & Props) {
   const [isOpen, setIsOpen] = useState(true);
@@ -38,7 +41,12 @@ export default function NavLink({
         onClick={() => setIsOpen((prev) => !prev)}
         className="px-3 sm:px-4 py-1 font-medium w-full text-font/70 flex items-center gap-1 justify-between"
       >
-        <span style={{ fontSize: 13 }}>{title}</span>
+        <span
+          className="whitespace-nowrap text-ellipsis"
+          style={{ fontSize: 13 }}
+        >
+          {title}
+        </span>
         <ChevronDown
           size={14}
           className={cn(
@@ -56,7 +64,13 @@ export default function NavLink({
         <div className="overflow-hidden">
           <div className="space-y-1.5 px-3 sm:px-4 mt-1.5">
             {links?.map((link) => (
-              <NavLink {...link} key={link.href} />
+              <NavLink
+                {...link}
+                title={
+                  dict ? dict[link.href.slice(1) as keyof typeof dict] : ""
+                }
+                key={link.href}
+              />
             ))}
           </div>
         </div>
@@ -65,14 +79,16 @@ export default function NavLink({
   ) : (
     <Link
       href={href}
-      className={`px-3 sm:px-4 rounded-lg text-sm font-medium flex justify-center items-center gap-3 sm:gap-3.5 ${
+      className={`px-3 sm:px-4 rounded-lg text-sm font-medium grid grid-cols-[15px_1fr] items-center gap-3 sm:gap-3.5 ${
         isActive ? "bg-light border" : "hover:bg-light bg-white text-font/70"
       }`}
       style={{ fontSize: 13, height: 34 }}
     >
-      <Icon size={15} />
+      <div className="grid place-content-center">
+        <Icon size={15} />
+      </div>
       <span
-        className={`flex-1 mt-px ${
+        className={`flex-1 whitespace-nowrap text-ellipsis mt-px ${
           isMenuHidden.desktop ? "sm:opacity-0 sm:absolute" : "opacity-100"
         }`}
       >

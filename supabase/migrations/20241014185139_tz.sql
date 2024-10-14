@@ -10,7 +10,9 @@ drop function if exists "public"."get_operations_stats"(p_currency currency_type
 
 alter table "public"."settings" drop column "created_at";
 
-alter table "public"."settings" add column "timezone" text not null;
+alter table "public"."settings" add column "timezone" text not null default 'Europe/Warsaw';
+
+alter table "public"."settings" alter column "timezone" drop default;
 
 set check_function_bodies = off;
 

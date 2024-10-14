@@ -145,6 +145,7 @@ export async function updatePreferences(formData: FormData) {
     .eq("id", user?.id);
 
   if (error) {
+    console.log(error);
     return {
       error: error.message,
     };

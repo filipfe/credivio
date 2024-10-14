@@ -4,7 +4,7 @@ import Block from "@/components/ui/block";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
 import { useLimits } from "@/lib/general/queries";
-import numberFormat from "@/utils/formatters/currency";
+import NumberFormat from "@/utils/formatters/currency";
 import { Button, CircularProgress, cn, Skeleton } from "@nextui-org/react";
 import { Plus, SquarePen } from "lucide-react";
 import { useState } from "react";
@@ -70,8 +70,8 @@ export default function LimitRef({ period, settings, onAdd }: Props) {
                 {getPeriodTitle(period)}
               </span>
               <span className="text-sm font-medium">
-                {numberFormat(currency, limit.total)} /{" "}
-                {numberFormat(currency, limit.amount)}
+                <NumberFormat currency={currency} amount={limit.total} /> /{" "}
+                <NumberFormat currency={currency} amount={limit.amount} />
               </span>
             </div>
           </div>

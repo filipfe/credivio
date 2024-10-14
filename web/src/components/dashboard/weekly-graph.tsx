@@ -1,11 +1,11 @@
 "use client";
 
-import numberFormat from "@/utils/formatters/currency";
-import Block from "../ui/block";
-import { useLimits } from "@/lib/general/queries";
-import { useWeeklyGraph } from "@/lib/dashboard/queries";
 import Empty from "../ui/empty";
 import { Skeleton } from "@nextui-org/react";
+import { useLimits } from "@/lib/general/queries";
+import Block from "../ui/block";
+import NumberFormat from "@/utils/formatters/currency";
+import { useWeeklyGraph } from "@/lib/dashboard/queries";
 
 export default function WeeklyGraph({ settings }: { settings: Settings }) {
   const { data: days, isLoading } = useWeeklyGraph(
@@ -70,11 +70,15 @@ export default function WeeklyGraph({ settings }: { settings: Settings }) {
             <h2 className="text-font/75 text-sm">Wydatki w tym tygodniu</h2>
             <div className="flex items-end gap-2">
               <strong className="text-3xl">
-                {numberFormat(settings.currency, sum)}
+                <NumberFormat currency={settings.currency} amount={sum} />
               </strong>
               {limit && (
                 <sub className="text-font/60 mb-1 text-lg">
-                  / {numberFormat(settings.currency, limit.amount)}
+                  /{" "}
+                  <NumberFormat
+                    currency={settings.currency}
+                    amount={limit.amount}
+                  />
                 </sub>
               )}
             </div>

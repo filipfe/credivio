@@ -1,0 +1,89 @@
+{
+  "private": {
+    "_navigation": {
+      "": "Tablero",
+      "stats": "Estadísticas",
+      "operations": "Operaciones",
+      "incomes": "Ingresos",
+      "expenses": "Gastos",
+      "recurring-payments": "Pagos Recurrentes",
+      "goals": "Objetivos",
+      "ai-assistant": "Asistente IA",
+      "automation": "Automatización",
+      "settings": "Configuración",
+      "settings/account": "Cuenta",
+      "settings/preferences": "Preferencias",
+      "settings/subscription": "Suscripción",
+      "settings/notifications": "Notificaciones",
+      "_logout": "Cerrar sesión"
+    },
+    "settings": {
+      "title": "Configuración",
+      "description": "Administra tus datos personales, preferencias y suscripción"
+    }
+  },
+  "public": {
+    "auth": {
+      "_layout": {
+        "or": "o",
+        "google": {
+          "label": "Iniciar sesión con Google"
+        }
+      },
+      "sign-in": {
+        "title": "¡Bienvenido de nuevo!",
+        "description": "Inicia sesión para continuar",
+        "form": {
+          "password": {
+            "label": "Contraseña"
+          },
+          "_submit": {
+            "label": "Iniciar sesión"
+          }
+        },
+        "forgot-password": {
+          "label": "¿Olvidaste tu contraseña?",
+          "link": "Restablecer contraseña"
+        },
+        "swap": {
+          "label": "¿No tienes una cuenta?",
+          "link": "Regístrate"
+        }
+      },
+      "sign-up": {
+        "title": "¡Bienvenido a Credivio!",
+        "description": "Regístrate para continuar",
+        "form": {
+          "first-name": {
+            "label": "Nombre"
+          },
+          "last-name": {
+            "label": "Apellido"
+          },
+          "password": {
+            "label": "Contraseña"
+          },
+          "_submit": {
+            "label": "Registrarse"
+          }
+        },
+        "swap": {
+          "label": "¿Ya tienes una cuenta?",
+          "link": "Iniciar sesión"
+        }
+      },
+      "forgot-password": {
+        "title": "Restablecer contraseña",
+        "description": "Ingresa tu dirección de correo electrónico para continuar",
+        "form": {
+          "_submit": {
+            "label": "Enviar"
+          },
+          "_toast": {
+            "success": "Se ha enviado un enlace de verificación a la dirección de correo electrónico"
+          }
+        }
+      }
+    }
+  }
+}

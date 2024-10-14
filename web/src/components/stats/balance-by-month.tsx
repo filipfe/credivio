@@ -22,9 +22,9 @@ import {
   Payload,
   ValueType,
 } from "recharts/types/component/DefaultTooltipContent";
-import numberFormat from "@/utils/formatters/currency";
 import { useBalanceHistory } from "@/lib/stats/queries";
 import ChartLoader from "../ui/charts/loader";
+import NumberFormat from "@/utils/formatters/currency";
 
 const CustomTooltip = ({
   active,
@@ -65,10 +65,10 @@ const CustomTooltip = ({
               </span>
             </div>
             <strong className="font-medium text-sm">
-              {numberFormat(
-                currency,
-                record.value ? parseFloat(record.value.toString()) : 0
-              )}
+              <NumberFormat
+                currency={currency}
+                amount={record.value ? parseFloat(record.value.toString()) : 0}
+              />
             </strong>
           </div>
         ))}

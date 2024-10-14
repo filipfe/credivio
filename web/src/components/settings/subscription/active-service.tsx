@@ -3,7 +3,7 @@
 import Block from "@/components/ui/block";
 import { LINKS } from "@/const";
 import { activateService } from "@/lib/settings/actions";
-import numberFormat from "@/utils/formatters/currency";
+import NumberFormat from "@/utils/formatters/currency";
 import {
   Button,
   Modal,
@@ -44,7 +44,7 @@ export default function ActiveService({ service }: Props) {
           <div className="border p-6 rounded-md bg-light"></div>
         </div>
         <strong className="text-4xl mb-8">
-          {numberFormat("PLN", price)}{" "}
+          <NumberFormat currency="PLN" amount={price} />{" "}
           <sub className="text-sm font-medium">/ miesiąc</sub>
         </strong>
         <div className="flex items-center gap-2 mt-auto">
@@ -75,7 +75,7 @@ export default function ActiveService({ service }: Props) {
               <ModalBody className="text-center max-w-64 flex flex-col items-center w-full mx-auto my-4 text-sm">
                 Do twojej subskrypcji zostanie naliczona następująca kwota:{" "}
                 <strong className="font-semibold text-xl">
-                  {numberFormat("PLN", price)}
+                  <NumberFormat currency="PLN" amount={price} />
                 </strong>
               </ModalBody>
               <ModalFooter className="pb-6 px-8 grid grid-cols-2 gap-3 w-full mx-auto">

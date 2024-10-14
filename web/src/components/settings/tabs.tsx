@@ -10,8 +10,13 @@ import {
 import TabTitle from "../ui/tab-title";
 import { usePathname } from "next/navigation";
 import React from "react";
+import { Dict } from "@/const/dict";
 
-export default function SettingsTabs() {
+export default function SettingsTabs({
+  dict,
+}: {
+  dict: Dict["private"]["_navigation"];
+}) {
   const pathname = usePathname();
   return (
     <Tabs
@@ -28,22 +33,31 @@ export default function SettingsTabs() {
       <Tab
         key="account"
         href="/settings/account"
-        title={<TabTitle title="Konto" Icon={UserCogIcon} />}
+        title={<TabTitle title={dict["settings/account"]} Icon={UserCogIcon} />}
       />
       <Tab
         key="preferences"
         href="/settings/preferences"
-        title={<TabTitle title="Preferencje" Icon={SlidersIcon} />}
+        title={
+          <TabTitle title={dict["settings/preferences"]} Icon={SlidersIcon} />
+        }
       />
       <Tab
         key="subscription"
         href="/settings/subscription"
-        title={<TabTitle title="Subskrypcja" Icon={LayersIcon} />}
+        title={
+          <TabTitle title={dict["settings/subscription"]} Icon={LayersIcon} />
+        }
       />
       <Tab
         key="notifications"
         href="/settings/notifications"
-        title={<TabTitle title="Powiadomienia" Icon={BellRingIcon} />}
+        title={
+          <TabTitle
+            title={dict["settings/notifications"]}
+            Icon={BellRingIcon}
+          />
+        }
       />
     </Tabs>
   );

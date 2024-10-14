@@ -8,7 +8,7 @@ export async function getLanguages(): Promise<Language[]> {
 
   const { data, error } = await supabase.from("languages").select(
     "code, name",
-  );
+  ).order("name");
 
   if (error) {
     throw new Error(error.message);
@@ -51,6 +51,9 @@ export async function getPreferences(): Promise<Preferences> {
 
   return data;
 }
+
+export const usePreferences = () =>
+  useSWR("preferences", () => getPreferences());
 
 export async function getServices(): Promise<Service[]> {
   const supabase = createClient();

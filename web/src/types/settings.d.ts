@@ -1,5 +1,5 @@
 type Language = {
-  code: string;
+  code: Locale;
   name: string;
 };
 

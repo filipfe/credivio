@@ -15,8 +15,9 @@ insert into storage.buckets (
 
 -- LANGUAGES
 insert into languages (name, code) values
-  ('Polski', 'pl-PL'),
-  ('English', 'en-US');
+  ('Polski', 'pl'),
+  ('English', 'en'),
+  ('Español', 'es');
 
 -- SERVICES
 insert into services (
@@ -72,7 +73,7 @@ insert into auth.users (
     "first_name": "Rory", 
     "last_name": "Zappa", 
     "currency": "PLN", 
-    "language_code": "pl-PL"
+    "language_code": "pl"
   }',
   timezone('utc'::text, now()), 
   timezone('utc'::text, now()),
@@ -99,7 +100,7 @@ insert into auth.identities (
     "first_name": "Rory", 
     "last_name": "Zappa", 
     "currency": "PLN", 
-    "language_code": "pl-PL"
+    "language_code": "pl"
   }', 
   'email', 
   timezone('utc'::text, now()), 
