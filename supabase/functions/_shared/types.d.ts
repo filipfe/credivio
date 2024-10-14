@@ -20,10 +20,6 @@ type Preferences = {
   language: Language;
 };
 
-type Settings = {
-  telegram_id: string;
-};
-
 type Period = "daily" | "weekly" | "monthly";
 
 type Limit = {

@@ -6,24 +6,25 @@ import { getPreferences } from "@/lib/settings/actions";
 import Limits from "@/components/operations/limits";
 import GoalPriority from "@/components/dashboard/goal-priority";
 import WeeklyGraph from "@/components/dashboard/weekly-graph";
+import { getSettings } from "@/lib/general/actions";
 
 export default async function Dashboard() {
-  const { result: preferences, error } = await getPreferences();
+  const { result: settings } = await getSettings();
 
-  if (error || !preferences) {
-    throw new Error(error || "Preferences could not be retrieved");
+  if (!settings) {
+    throw new Error("Couldn't retrieve settings");
   }
 
   return (
     <div className="sm:px-10 h-full py-4 sm:py-8 flex flex-col xl:grid grid-cols-6 xl:grid-rows-[max-content_max-content_1fr] gap-4 sm:gap-6">
       <Suspense fallback={latestOperationsFallback}>
-        <LatestOperations preferences={preferences} />
+        <LatestOperations languageCode={settings.language} />
       </Suspense>
-      <Limits defaultCurrency={preferences.currency} />
+      <Limits settings={settings} />
       <Suspense>
         <GoalPriority />
       </Suspense>
-      <WeeklyGraph preferences={preferences} />
+      <WeeklyGraph settings={settings} />
     </div>
   );
 }

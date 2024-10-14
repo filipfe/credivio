@@ -3,6 +3,26 @@
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 
+export async function getSettings(): Promise<
+  SupabaseSingleRowResponse<Settings>
+> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("currency, ...settings(timezone), ...languages(language:code)")
+    .returns<Settings>()
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return {
+    result: data,
+  };
+}
+
 export async function updateRow(
   id: string,
   type: OperationType,

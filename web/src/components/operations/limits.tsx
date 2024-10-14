@@ -5,14 +5,10 @@ import { useState } from "react";
 import { useDisclosure } from "@nextui-org/react";
 import LimitForm from "./limits/form";
 
-export default function Limits({
-  defaultCurrency,
-}: {
-  defaultCurrency: string;
-}) {
+export default function Limits({ settings }: { settings: Settings }) {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [defaultLimit, setDefaultLimit] = useState<NewLimit>({
-    currency: defaultCurrency,
+    currency: settings.currency,
     period: "daily",
     amount: "",
   });
@@ -22,7 +18,7 @@ export default function Limits({
       <div className="flex flex-col 2xl:grid grid-cols-3 gap-4 sm:gap-6 justify-center col-span-full">
         <LimitRef
           period="daily"
-          defaultCurrency={defaultCurrency}
+          settings={settings}
           onAdd={(currency, amount) => {
             setDefaultLimit({
               currency,
@@ -34,7 +30,7 @@ export default function Limits({
         />
         <LimitRef
           period="weekly"
-          defaultCurrency={defaultCurrency}
+          settings={settings}
           onAdd={(currency, amount) => {
             setDefaultLimit({
               currency,
@@ -46,7 +42,7 @@ export default function Limits({
         />
         <LimitRef
           period="monthly"
-          defaultCurrency={defaultCurrency}
+          settings={settings}
           onAdd={(currency, amount) => {
             setDefaultLimit({
               currency,

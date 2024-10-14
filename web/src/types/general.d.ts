@@ -91,3 +91,9 @@ type WithId<T> = T & { id: string };
 type PageProps = {
   preferences: Preferences;
 };
+
+type Settings = {
+  currency: string;
+  timezone: string;
+  language: string;
+};

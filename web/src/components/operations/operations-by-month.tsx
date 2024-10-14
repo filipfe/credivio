@@ -33,22 +33,23 @@ const getTitle = (type: "income" | "expense") => {
 
 type Props = {
   type: "income" | "expense";
+  settings: Settings;
 };
 
-export default function OperationsByMonth({ type }: Props) {
-  const { data: preferences } = usePreferences();
-  const [currency, setCurrency] = useState<string | undefined>(
-    preferences?.currency
+export default function OperationsByMonth({ type, settings }: Props) {
+  const [currency, setCurrency] = useState<string>(settings.currency);
+  const { data: results, isLoading } = useOperationsAmountsHistory(
+    type,
+    settings.timezone,
+    {
+      currency,
+    }
   );
-  const { data: results, isLoading } = useOperationsAmountsHistory(type, {
-    currency,
-  });
   const { width, tickFormatter } = useYAxisWidth(currency);
-
-  useEffect(() => {
-    if (!preferences?.currency) return;
-    setCurrency(preferences.currency);
-  }, [preferences?.currency]);
+  // useEffect(() => {
+  //   if (settings.currency) return;
+  //   setCurrency(preferences.currency);
+  // }, [preferences?.currency]);
 
   return (
     <Block
@@ -88,9 +89,10 @@ export default function OperationsByMonth({ type }: Props) {
               tick={{ fontSize: 12 }}
               tickFormatter={(label) => {
                 const [year, month, day] = label.split("-");
-                return new Intl.DateTimeFormat(preferences?.language.code, {
+                return new Intl.DateTimeFormat(settings.language, {
                   day: "2-digit",
                   month: "short",
+                  timeZone: settings.timezone,
                 }).format(new Date(year, parseInt(month) - 1, day));
               }}
               minTickGap={32}
@@ -115,8 +117,9 @@ export default function OperationsByMonth({ type }: Props) {
                   currency={currency}
                   label={undefined}
                   labelFormatter={(label) =>
-                    new Intl.DateTimeFormat(preferences?.language.code, {
+                    new Intl.DateTimeFormat(settings.language, {
                       dateStyle: "full",
+                      timeZone: settings.timezone,
                     }).format(new Date(label))
                   }
                 />
