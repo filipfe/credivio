@@ -22,12 +22,14 @@ export async function getDailyTotalAmounts(
 
 async function getOperationsAmountsHistory(
   type: "income" | "expense",
+  timezone: string,
   params: SearchParams
 ): Promise<DailyAmount[]> {
   const supabase = createClient();
 
   const { data, error } = await supabase.rpc("get_operations_daily_totals", {
     p_type: type,
+    p_timezone: timezone,
     p_currency: params.currency,
   });
 
@@ -41,10 +43,11 @@ async function getOperationsAmountsHistory(
 
 export const useOperationsAmountsHistory = (
   type: "income" | "expense",
+  timezone: string,
   params: SearchParams
 ) =>
-  useSWR(["history", type, params], ([_, type, params]) =>
-    getOperationsAmountsHistory(type, params)
+  useSWR(["history", type, timezone, params], ([_, type, timezone, params]) =>
+    getOperationsAmountsHistory(type, timezone, params)
   );
 
 export async function addLimit(limit: NewLimit) {

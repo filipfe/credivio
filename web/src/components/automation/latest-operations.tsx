@@ -9,9 +9,9 @@ import useSWR from "swr";
 import { getLatestOperations } from "@/lib/operations/queries";
 
 export default function LatestOperations({
-  preferences,
+  languageCode,
 }: {
-  preferences: Preferences;
+  languageCode: Locale;
 }) {
   const scrollAreaRef = useRef<HTMLElement | null>(null);
   const { isLoading, data: results } = useSWR(
@@ -63,7 +63,7 @@ export default function LatestOperations({
                   >
                     <OperationRef
                       payment={operation}
-                      preferences={preferences}
+                      languageCode={languageCode}
                       key={operation.id}
                     />
                   </motion.div>

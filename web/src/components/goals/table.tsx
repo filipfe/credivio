@@ -17,6 +17,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import PaymentPopover from "./popover";
 import NumberFormat from "@/utils/formatters/currency";
+import { useSettings } from "@/lib/general/queries";
 
 const generateDates = (start: Date, end: Date): Date[] => {
   const dates = [];
@@ -37,11 +38,7 @@ const getAmountByDate = (date: string, payments: GoalPayment[]): number =>
 const today = new Date();
 
 export default function GoalsTable({ goals }: { goals: Goal[] }) {
-  // const {
-  //   data: payments,
-  //   isLoading,
-  //   isValidating,
-  // } = useSWR("goals_payments", getGoalsPayments, { keepPreviousData: true });
+  const { data: settings } = useSettings();
   const [scrollButtonVisible, setScrollButtonVisible] = useState(false);
   const tbodyRef = useRef<HTMLDivElement | null>(null);
 
@@ -49,8 +46,6 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
     const startDate = subDays(today, 21);
     return generateDates(startDate, today);
   }, []);
-
-  // Helper function to get payment amount for a specific date and goal
 
   const sums = useMemo(
     () =>
@@ -88,10 +83,6 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
         tbodyRef.current.removeEventListener("scroll", onScroll);
     };
   }, [tbodyRef.current]);
-
-  // if (isLoading && !isValidating) {
-  //   return <Loader title="Wpłaty" className="row-span-2" />;
-  // }
 
   return (
     <Block title="Wpłaty" className="row-span-2">
@@ -168,7 +159,7 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
                     >
                       {isToday
                         ? "Dzisiaj"
-                        : new Intl.DateTimeFormat("pl-PL", {
+                        : new Intl.DateTimeFormat(settings?.language, {
                             dateStyle: "long",
                           }).format(date)}
                     </TableCell>

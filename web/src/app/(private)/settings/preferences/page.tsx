@@ -1,12 +1,12 @@
 import CurrencySelect from "@/components/settings/inputs/currency";
 import LocationInput from "@/components/settings/inputs/location";
-import { getPreferences } from "@/lib/settings/actions";
+import { getSettings } from "@/lib/general/actions";
 
 export default async function Preferences() {
-  const { result: preferences, error } = await getPreferences();
+  const { result: settings } = await getSettings();
 
-  if (error || !preferences) {
-    throw new Error("Couldn't retrieve preferences");
+  if (!settings) {
+    throw new Error("Couldn't retrieve settings");
   }
 
   return (
@@ -19,9 +19,9 @@ export default async function Preferences() {
               Używana domyślnie w aplikacji
             </p>
           </div>
-          <CurrencySelect defaultValue={preferences.currency} />
+          <CurrencySelect defaultValue={settings.currency} />
         </div>
-        <LocationInput {...preferences} />
+        <LocationInput languageCode={settings.language} />
       </div>
     </div>
   );

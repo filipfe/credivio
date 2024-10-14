@@ -18,15 +18,15 @@ const now = new Date();
 
 export default function Providers({
   children,
-  preferences,
+  settings,
 }: {
   children: React.ReactNode;
-  preferences: Preferences;
+  settings: Settings;
 }) {
   const [month, setMonth] = useState(now.getMonth());
   const [year, setYear] = useState(now.getFullYear());
-  const [currency, setCurrency] = useState<string>(preferences.currency);
-  const languageCode = preferences.language.code;
+  const [currency, setCurrency] = useState<string>(settings.currency);
+  const languageCode = settings.language;
 
   return (
     <StatsFilterContext.Provider

@@ -6,9 +6,9 @@ import Empty from "../ui/empty";
 import { Coins } from "lucide-react";
 
 export default async function LatestOperations({
-  preferences,
+  languageCode,
 }: {
-  preferences: Preferences;
+  languageCode: Locale;
 }) {
   const { results: operations } = await getLatestOperations();
 
@@ -22,7 +22,7 @@ export default async function LatestOperations({
         <HorizontalScroll fullWidth innerClassName="px-6 sm:px-10">
           {operations.map((operation) => (
             <OperationRef
-              preferences={preferences}
+              languageCode={languageCode}
               payment={operation}
               key={operation.id}
             />

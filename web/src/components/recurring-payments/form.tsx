@@ -10,9 +10,8 @@ import Block, { Section } from "../ui/block";
 import { format } from "date-fns";
 import toast from "@/utils/toast";
 import { addRecurringPayment } from "@/lib/recurring-payments/actions";
-import { I18nProvider } from "@react-aria/i18n";
 import { CalendarDate, parseDate } from "@internationalized/date";
-import { usePreferences } from "@/lib/settings/queries";
+import { useSettings } from "@/lib/general/queries";
 
 const tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
@@ -39,18 +38,18 @@ const defaultRecord: Omit<NewRecurringPayment, "currency"> = {
 };
 
 export default function RecurringPaymentForm() {
-  const { data: preferences, isLoading } = usePreferences();
+  const { data: settings, isLoading } = useSettings();
   const [isPending, startTransition] = useTransition();
   const [singleRecord, setSingleRecord] = useState<NewRecurringPayment>({
     ...defaultRecord,
-    currency: preferences?.currency,
+    currency: settings?.currency,
   });
   const [isStartTimeInvalid, setIsStartTimeInvalid] = useState(false);
 
   useEffect(() => {
-    if (!preferences?.currency) return;
-    setSingleRecord((prev) => ({ ...prev, currency: preferences.currency }));
-  }, [preferences?.currency]);
+    if (!settings?.currency) return;
+    setSingleRecord((prev) => ({ ...prev, currency: settings.currency }));
+  }, [settings?.currency]);
 
   return (
     <Block title="Nowa płatność cykliczna" className="w-full max-w-4xl">

@@ -21,15 +21,15 @@ const getPeriodTitle = (period: "daily" | "weekly" | "monthly") => {
 };
 
 interface Props extends Pick<Limit, "period"> {
-  defaultCurrency: string;
+  settings: Settings;
   onAdd: (currency: string, amount?: string) => void;
 }
 
-export default function LimitRef({ period, defaultCurrency, onAdd }: Props) {
-  const [currency, setCurrency] = useState(defaultCurrency);
-  const { data: limits, isLoading } = useLimits(currency);
+export default function LimitRef({ period, settings, onAdd }: Props) {
+  const [currency, setCurrency] = useState(settings.currency);
+  const { data: limits, isLoading } = useLimits(settings.timezone, currency);
 
-  const limit = limits?.find((limit) => limit.period === period);
+  const limit = limits?.find((limit: Limit) => limit.period === period);
 
   const percentage = limit ? (limit.total / limit.amount) * 100 : 0;
 
@@ -49,9 +49,9 @@ export default function LimitRef({ period, defaultCurrency, onAdd }: Props) {
         {isLoading ? (
           <div className="flex items-center gap-3">
             <div className="w-[58px] h-[58px] border-[6px] border-default-300/50 rounded-full"></div>
-            <div className="grid gap-2">
-              <Skeleton className="w-24 h-2 rounded-full" />
-              <Skeleton className="w-16 h-2 rounded-full" />
+            <div className="grid gap-1">
+              <Skeleton className="w-14 h-5 rounded-full" />
+              <Skeleton className="w-36 h-5 rounded-full" />
             </div>
           </div>
         ) : limit ? (

@@ -4,7 +4,7 @@ import { cn } from "@nextui-org/react";
 import Block from "../../ui/block";
 import NumberFormat from "@/utils/formatters/currency";
 
-export default function Comprasion({
+export default function Comparison({
   incomes,
   expenses,
   balance,

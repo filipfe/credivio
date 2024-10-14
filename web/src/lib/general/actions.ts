@@ -3,6 +3,28 @@
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 
+export async function getSettings(): Promise<
+  SupabaseSingleRowResponse<Settings>
+> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select(
+      "telegram_token, telegram_id, ...settings(timezone, currency, language)"
+    )
+    .returns<Settings>()
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return {
+    result: data,
+  };
+}
+
 export async function updateRow(
   id: string,
   type: OperationType,

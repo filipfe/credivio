@@ -1,17 +1,16 @@
 import BigChart from "@/components/stocks/company/big-chart";
 import Block from "@/components/ui/block";
-import { getDefaultCurrency } from "@/lib/settings/actions";
+import { getSettings } from "@/lib/general/actions";
 import { getPricePeriod, getSpecificStocks } from "@/lib/stocks/actions";
 import NumberFormat from "@/utils/formatters/currency";
 import { redirect } from "next/navigation";
 
 export default async function Page({ params }: { params: { symbol: string } }) {
   const { results: stocks } = await getSpecificStocks([params.symbol]);
-  const { result: defaultCurrency, error } = await getDefaultCurrency();
+  const { result: settings } = await getSettings();
 
-  if (!defaultCurrency) {
-    console.error("Couldn't retrieve default currency: ", error);
-    throw new Error(error);
+  if (!settings) {
+    throw new Error("Couldn't retrieve settings");
   }
 
   if (stocks.length === 0) redirect("/stocks");
@@ -69,7 +68,7 @@ export default async function Page({ params }: { params: { symbol: string } }) {
           quotes={quotes}
           isUp={isUp}
           isDown={isDown}
-          currency={defaultCurrency}
+          currency={settings.currency}
         />
       </Block>
       <Block title={_symbol}>

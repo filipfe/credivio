@@ -1,6 +1,6 @@
 "use client";
 
-import { getAccount, usePreferences } from "@/lib/settings/queries";
+import { useSettings } from "@/lib/general/queries";
 import { NextUIProvider } from "@nextui-org/react";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -37,14 +37,14 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     desktop: false,
   });
 
-  const { data: preferences } = usePreferences();
+  const { data: settings } = useSettings();
 
   useEffect(() => {
     setIsMenuHidden((prev) => ({ ...prev, mobile: true }));
   }, [pathname]);
 
   return (
-    <NextUIProvider navigate={router.push} locale={preferences?.language.code}>
+    <NextUIProvider navigate={router.push} locale={settings?.language}>
       <MenuContext.Provider value={{ isMenuHidden, setIsMenuHidden }}>
         <div
           className={`min-h-screen max-w-screen grid grid-rows-[64px_1fr] sm:grid-rows-[80px_1fr] ${

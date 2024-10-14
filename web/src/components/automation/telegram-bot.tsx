@@ -5,13 +5,13 @@ import Image from "next/image";
 import { ReactNode } from "react";
 
 type Props = {
-  preferences: Preferences;
+  settings: Settings;
   children?: ReactNode;
   isRegistered?: boolean;
 };
 
-export default function TelegramBot({ preferences, children }: Props) {
-  const isRegistered = !!preferences.telegram_id;
+export default function TelegramBot({ settings, children }: Props) {
+  const isRegistered = !!settings.telegram_id;
   return (
     <Block
       className="max-w-3xl"
@@ -56,7 +56,7 @@ export default function TelegramBot({ preferences, children }: Props) {
             Oto twój klucz Telegram. Wyślij go do bota, aby połączyć swoje
             konto:
           </p>
-          <TokenInput token={preferences.telegram_token} />
+          <TokenInput token={settings.telegram_token} />
         </div>
         {children}
       </div>

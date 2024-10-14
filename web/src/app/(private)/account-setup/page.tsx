@@ -5,17 +5,14 @@ import Block from "@/components/ui/block";
 import Form from "@/components/ui/form";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
-import { getPreferences } from "@/lib/settings/actions";
+import { getSettings } from "@/lib/general/actions";
 
 export default async function AccountSetup() {
-  const { result: preferences, error } = await getPreferences();
+  const { result: settings } = await getSettings();
 
-  if (!preferences) {
-    console.error(error);
-    throw new Error("Couldn't retrieve preferences");
+  if (!settings) {
+    throw new Error("Couldn't retrieve settings");
   }
-
-  console.log(preferences.language.code);
 
   return (
     <div className="sm:px-10 py-4 sm:py-8 h-full flex items-center justify-center">
@@ -29,7 +26,8 @@ export default async function AccountSetup() {
           ))}
         </div>
         {false ? (
-          <TelegramBot preferences={preferences!} />
+          // <TelegramBot settings={settings} />
+          <></>
         ) : (
           <Block
             title="Lokalizacja"
@@ -48,7 +46,7 @@ export default async function AccountSetup() {
                   isRequired
                 />
                 <LanguageSelect
-                  defaultValue={preferences.language.code}
+                  defaultValue={settings.language}
                   disableSubmit
                 />
                 <TimezoneSelect />

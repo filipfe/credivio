@@ -1,8 +1,14 @@
+import { getSettings } from "@/lib/general/actions";
 import { Button } from "@nextui-org/react";
 import { Check } from "lucide-react";
-import Stripe from "stripe";
 
-export default function Active({ status, plan }: Subscription) {
+export default async function Active({ status, plan }: Subscription) {
+  const { result: settings } = await getSettings();
+
+  if (!settings) {
+    throw new Error("Couldn't retrieve settings");
+  }
+
   return (
     <div className="px-10 py-8 border bg-light rounded-md flex flex-col items-center justify-center gap-8">
       <div className="flex flex-col items-center gap-4">
@@ -16,7 +22,7 @@ export default function Active({ status, plan }: Subscription) {
       </div>
       <p className="inline-flex items-end">
         <strong className="text-2xl sm:text-3xl lg:text-4xl">
-          {new Intl.NumberFormat("pl-PL", {
+          {new Intl.NumberFormat(settings.language, {
             style: "currency",
             currency: plan.currency,
           }).format(plan.amount / 100)}

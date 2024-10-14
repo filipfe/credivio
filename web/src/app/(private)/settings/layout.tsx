@@ -1,25 +1,28 @@
 import SettingsTabs from "@/components/settings/tabs";
 import Block from "@/components/ui/block";
 import getDictionary from "@/const/dict";
-import { getPreferences } from "@/lib/settings/actions";
+import { getSettings } from "@/lib/general/actions";
 
 export default async function SettingsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { result: preferences } = await getPreferences();
-  if (!preferences) {
-    throw new Error("Couldn't retrieve preferences");
+  const { result: settings } = await getSettings();
+
+  if (!settings) {
+    throw new Error("Couldn't retrieve settings");
   }
+
   const {
-    private: { _navigation, settings },
-  } = await getDictionary(preferences.language.code);
+    private: { _navigation, settings: _settings },
+  } = await getDictionary(settings.language);
+
   return (
     <section className="sm:px-10 py-4 sm:py-8 flex flex-col flex-wrap gap-4 sm:gap-6 h-full">
       <Block
-        title={settings.title}
-        description={settings.description}
+        title={_settings.title}
+        description={_settings.description}
         className="flex-1"
       >
         <SettingsTabs dict={_navigation} />

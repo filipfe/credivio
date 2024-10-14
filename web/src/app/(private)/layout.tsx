@@ -4,22 +4,22 @@ import MobileActions from "@/components/ui/cta/mobile-actions";
 import Header from "@/components/ui/header";
 import Sidebar from "@/components/ui/sidebar";
 import getDictionary from "@/const/dict";
-import { getPreferences } from "@/lib/settings/actions";
+import { getSettings } from "@/lib/general/actions";
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { result: preferences } = await getPreferences();
+  const { result: settings } = await getSettings();
 
-  if (!preferences) {
-    throw new Error("Couldn't retrieve preferences");
+  if (!settings) {
+    throw new Error("Couldn't retrieve settings");
   }
 
   const {
     private: { _navigation },
-  } = await getDictionary(preferences.language.code);
+  } = await getDictionary(settings.language);
 
   return (
     <Providers>

@@ -33,8 +33,9 @@ export default function OperationTable({
   count,
   children,
   viewOnly,
+  settings,
   ...props
-}: TableProps<Operation>) {
+}: TableProps<Operation> & { settings: Settings }) {
   const [docPath, setDocPath] = useState<string | null>(null);
   const pages = Math.ceil(count / 10);
   const { period } = useContext(PeriodContext);
@@ -89,8 +90,9 @@ export default function OperationTable({
         case "issued_at":
           return (
             <span className="line-clamp-1 break-all w-[10ch]">
-              {new Intl.DateTimeFormat("pl-PL", {
+              {new Intl.DateTimeFormat(settings.language, {
                 dateStyle: "short",
+                timeZone: settings.timezone,
               }).format(new Date(cellValue))}
             </span>
           );

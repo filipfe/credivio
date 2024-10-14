@@ -3,7 +3,7 @@
 import { Fragment, useContext } from "react";
 import { useStatsData } from "@/lib/stats/queries";
 import { StatsFilterContext } from "@/app/(private)/stats/providers";
-import Comprasion from "./comparison";
+import Comparison from "./comparison";
 import Stat, { StatLoader } from "./stat-ref";
 
 export default function StatsList() {
@@ -40,7 +40,7 @@ export default function StatsList() {
         amount={maxExpense}
         data={results.map((item) => ({ total: item.total_expenses }))}
       />
-      <Comprasion
+      <Comparison
         incomes={maxIncome}
         expenses={maxExpense}
         balance={maxIncome - maxExpense}
