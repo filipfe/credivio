@@ -90,7 +90,6 @@ type WithId<T> = T & { id: string };
 
 type PageProps = {
   preferences: Preferences;
-  lang: Locale;
 };
 
 type Locale = "pl" | "en";
