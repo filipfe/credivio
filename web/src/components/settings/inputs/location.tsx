@@ -6,7 +6,6 @@ export default function LocationInput({
   currency,
   language,
 }: Pick<Preferences, "currency" | "language">) {
-  console.log(currency, language);
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-2 mb-2">

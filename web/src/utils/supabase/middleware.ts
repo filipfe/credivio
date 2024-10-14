@@ -67,6 +67,7 @@ export async function updateSession(request: NextRequest) {
 
   if (
     !user &&
+    !PUBLIC_ROUTES.includes(request.nextUrl.pathname) &&
     !PUBLIC_ROUTES.includes(
       "/" + request.nextUrl.pathname.split("/").slice(2).join("/"),
     )

@@ -1,0 +1,63 @@
+{
+  "public": {
+    "auth": {
+      "_layout": {
+        "or": "or",
+        "google": {
+          "label": "Sign in with Google"
+        }
+      },
+      "sign-in": {
+        "title": "Welcome back!",
+        "description": "Sign in to continue",
+        "form": {
+          "password": {
+            "label": "Password"
+          },
+          "submit": {
+            "label": "Sign in"
+          }
+        },
+        "forgot-password": {
+          "label": "Forgot your password?",
+          "link": "Reset password"
+        },
+        "swap": {
+          "label": "Don't have an account?",
+          "link": "Sign up"
+        }
+      },
+      "sign-up": {
+        "title": "Welcome to Credivio!",
+        "description": "Sign up to continue",
+        "form": {
+          "first-name": {
+            "label": "First name"
+          },
+          "last-name": {
+            "label": "Last name"
+          },
+          "password": {
+            "label": "Password"
+          },
+          "submit": {
+            "label": "Sign up"
+          }
+        },
+        "swap": {
+          "label": "Already have an account?",
+          "link": "Sign in"
+        }
+      },
+      "forgot-password": {
+        "title": "Reset password",
+        "description": "Enter your email address to continue",
+        "form": {
+          "submit": {
+            "label": "Submit"
+          }
+        }
+      }
+    }
+  }
+}
