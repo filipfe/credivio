@@ -3,8 +3,8 @@
 import { Progress, ScrollShadow } from "@nextui-org/react";
 import Block from "../ui/block";
 import Empty from "../ui/empty";
-import numberFormat from "@/utils/formatters/currency";
-import usePreferences from "@/hooks/usePreferences";
+import { usePreferences } from "@/lib/settings/queries";
+import NumberFormat from "@/utils/formatters/currency";
 
 export default function Priority({
   goal,
@@ -33,7 +33,7 @@ export default function Priority({
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="font-bold">
-                    {numberFormat(goal.currency, sum)}
+                    <NumberFormat currency={goal.currency} amount={sum} />
                   </span>
                   <span className="text-font/80">{`(${percentage.toFixed(
                     2
@@ -51,7 +51,10 @@ export default function Priority({
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="font-bold">
-                    {numberFormat(goal.currency, goal.price - sum)}
+                    <NumberFormat
+                      currency={goal.currency}
+                      amount={goal.price - sum}
+                    />
                   </span>
                   <span className="text-font/80">{`(${(
                     100 - percentage
@@ -112,7 +115,7 @@ const PaymentRef = ({
         }).format(new Date(date))}
       </span>
       <span className="text-sm text-font/80">
-        {numberFormat(currency, amount)}
+        <NumberFormat currency={currency} amount={amount} />
       </span>
     </li>
   );

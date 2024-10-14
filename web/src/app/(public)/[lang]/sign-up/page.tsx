@@ -1,16 +1,23 @@
 import Form from "@/components/auth/form";
+import getDictionary from "@/const/dict";
 import { Input } from "@nextui-org/react";
 
-export default function Page() {
+export default async function Page({ params }: { params: { lang: Locale } }) {
+  const {
+    public: {
+      auth: { _layout, ...auth },
+    },
+  } = await getDictionary(params.lang);
+  const signUp = auth["sign-up"];
   return (
     <div className="h-screen sm:h-auto min-h-screen flex items-center justify-center bg-light">
       <div className="bg-white rounded-md px-6 sm:px-10 py-8 w-full max-w-lg border">
-        <Form isSignUp>
+        <Form isSignUp dict={{ ..._layout, ...signUp }}>
           <div className="flex flex-col gap-6">
             <div className="flex flex-col items-center text-center gap-2 mb-4">
               <div className="bg-light rounded-md h-16 w-16 mb-4 border"></div>
-              <h1 className="text-2xl font-medium">Witaj w Credivio!</h1>
-              <p className="text-sm">Zarejestruj się, aby kontynuować</p>
+              <h1 className="text-2xl font-medium">{signUp.title}</h1>
+              <p className="text-sm">{signUp.description}</p>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <Input
@@ -18,7 +25,7 @@ export default function Page() {
                   inputWrapper: "!bg-light shadow-none border",
                 }}
                 name="first-name"
-                label="Imię"
+                label={signUp.form["first-name"].label}
                 type="text"
                 placeholder="Jan"
                 isRequired
@@ -30,7 +37,7 @@ export default function Page() {
                   inputWrapper: "!bg-light shadow-none border",
                 }}
                 name="last-name"
-                label="Nazwisko"
+                label={signUp.form["last-name"].label}
                 type="text"
                 isRequired
                 required
@@ -55,7 +62,7 @@ export default function Page() {
                 inputWrapper: "!bg-light shadow-none border",
               }}
               name="password"
-              label="Hasło"
+              label={signUp.form.password.label}
               type="password"
               placeholder="**********"
               isRequired

@@ -4,8 +4,8 @@ import { Section } from "@/components/ui/block";
 import Option from "./option";
 import { cn, Progress, Skeleton } from "@nextui-org/react";
 import { useGoals } from "@/lib/goals/queries";
-import numberFormat from "@/utils/formatters/currency";
 import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
+import NumberFormat from "@/utils/formatters/currency";
 
 export default function GoalsContext() {
   const { data: goals, error, isLoading } = useGoals();
@@ -47,7 +47,8 @@ const GoalRef = ({ goal }: { goal: Goal }) => {
     >
       <h4 className="font-medium text-sm">{title}</h4>
       <small className="font-medium opacity-80">
-        {numberFormat(currency, paid)} / {numberFormat(currency, price)}
+        <NumberFormat currency={currency} amount={paid} /> /{" "}
+        <NumberFormat currency={currency} amount={price} />
       </small>
       <Progress
         size="sm"

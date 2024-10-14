@@ -2,7 +2,7 @@
 
 import { StatsFilterContext } from "@/app/(private)/stats/providers";
 import Block from "@/components/ui/block";
-import numberFormat from "@/utils/formatters/currency";
+import NumberFormat from "@/utils/formatters/currency";
 import { Skeleton, cn } from "@nextui-org/react";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
@@ -28,7 +28,9 @@ export default function StatBox({ data, type, amount }: Props) {
           <h2 className="text-font/75 text-sm">
             {type === "incomes" ? "Przychody" : "Wydatki"}
           </h2>
-          <strong className="text-3xl">{numberFormat(currency, amount)}</strong>
+          <strong className="text-3xl">
+            <NumberFormat currency={currency} amount={amount} />
+          </strong>
         </div>
         <button className="h-7 w-7 rounded-md border bg-light grid place-content-center">
           <Link

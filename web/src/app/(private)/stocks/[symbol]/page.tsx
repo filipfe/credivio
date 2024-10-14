@@ -2,7 +2,7 @@ import BigChart from "@/components/stocks/company/big-chart";
 import Block from "@/components/ui/block";
 import { getDefaultCurrency } from "@/lib/settings/actions";
 import { getPricePeriod, getSpecificStocks } from "@/lib/stocks/actions";
-import numberFormat from "@/utils/formatters/currency";
+import NumberFormat from "@/utils/formatters/currency";
 import { redirect } from "next/navigation";
 
 export default async function Page({ params }: { params: { symbol: string } }) {
@@ -30,7 +30,6 @@ export default async function Page({ params }: { params: { symbol: string } }) {
   } = stocks[0];
   const { results } = await getPricePeriod(_symbol_short);
   const quote = parseFloat(_quote);
-  const price = numberFormat("PLN", quote);
   const isUp =
     _change?.toString().startsWith("+") &&
     !_change?.toString().endsWith("0.00");
@@ -50,7 +49,9 @@ export default async function Page({ params }: { params: { symbol: string } }) {
           <h3 className="text-font/80 ">
             {_symbol} ({_symbol_short})
           </h3>
-          <strong className="text-3xl font-medium">{price}</strong>
+          <strong className="text-3xl font-medium">
+            <NumberFormat currency="PLN" amount={quote} />
+          </strong>
           <div className="flex items-center gap-[1ch]">
             <span
               className={`font-medium ${
@@ -58,7 +59,8 @@ export default async function Page({ params }: { params: { symbol: string } }) {
               }`}
             >
               {_change}
-              {_change_suffix} {numberFormat("PLN", _change_pnts)}
+              {_change_suffix}{" "}
+              <NumberFormat currency="PLN" amount={_change_pnts} />
             </span>
             <span>Ostatnie 24 godziny</span>
           </div>

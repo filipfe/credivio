@@ -6,10 +6,10 @@ import Option from "./option";
 // import { useLimits } from "@/lib/operations/queries";
 import { CURRENCIES } from "@/const";
 import { cn, Skeleton } from "@nextui-org/react";
-import numberFormat from "@/utils/formatters/currency";
 import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
 import Empty from "@/components/ui/empty";
 import { useLimits } from "@/lib/general/queries";
+import NumberFormat from "@/utils/formatters/currency";
 
 export default function LimitsContext() {
   const { setLimit } = useAIAssistant();
@@ -102,8 +102,8 @@ const LimitRef = ({
       onActiveChange={(checked) => setLimit(checked ? limit : undefined)}
     >
       <h5 className="text-xs font-medium opacity-80 select-none">
-        {numberFormat(currency!, limit.total)} /{" "}
-        {numberFormat(currency!, limit.amount)}
+        <NumberFormat currency={currency!} amount={limit.total} /> /{" "}
+        <NumberFormat currency={currency!} amount={limit.amount} />
       </h5>
       <h4 className="font-bold text-sm select-none">
         {period === "daily"

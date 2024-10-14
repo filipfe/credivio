@@ -23,7 +23,9 @@ export default function UniversalSelect(props: Props) {
           }}
           key={typeof element === "string" ? element : element.value}
         >
-          {typeof element === "string" ? element : element.name}
+          {typeof element === "string"
+            ? element
+            : element.label || element.name}
         </SelectItem>
       ))}
     </Select>

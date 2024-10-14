@@ -12,7 +12,7 @@ import toast from "@/utils/toast";
 import { addRecurringPayment } from "@/lib/recurring-payments/actions";
 import { I18nProvider } from "@react-aria/i18n";
 import { CalendarDate, parseDate } from "@internationalized/date";
-import usePreferences from "@/hooks/usePreferences";
+import { usePreferences } from "@/lib/settings/queries";
 
 const tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);

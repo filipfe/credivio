@@ -1,10 +1,10 @@
 "use client";
 
-import { Progress, cn } from "@nextui-org/react";
+import { Progress } from "@nextui-org/react";
 import { useMemo, useRef } from "react";
 import useOutsideObserver from "@/hooks/useOutsideObserver";
 import Menu from "./menu";
-import numberFormat from "@/utils/formatters/currency";
+import NumberFormat from "@/utils/formatters/currency";
 
 export default function GoalRef(goal: Goal) {
   const { title, price, currency, deadline, payments } = goal;
@@ -39,10 +39,15 @@ export default function GoalRef(goal: Goal) {
         </h3>
         <div className="h-10 flex items-end">
           <strong className="text-3xl font-bold text-white">
-            {numberFormat(currency, sum, "compact")}
+            <NumberFormat currency={currency} amount={sum} notation="compact" />
           </strong>
           <sub className="mb-2 ml-1.5 text-white text-sm">
-            / {numberFormat(currency, price, "compact")}
+            /{" "}
+            <NumberFormat
+              currency={currency}
+              amount={price}
+              notation="compact"
+            />
           </sub>
         </div>
         <Progress

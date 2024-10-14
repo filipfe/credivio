@@ -2,13 +2,13 @@
 
 import { useContext } from "react";
 import Block from "../ui/block";
-import numberFormat from "@/utils/formatters/currency";
 import { Skeleton } from "@nextui-org/react";
 import { ArrowUpRight, Coins } from "lucide-react";
 import Link from "next/link";
 import Empty from "../ui/empty";
 import { StatsFilterContext } from "@/app/(private)/stats/providers";
 import { useExpensesByLabel } from "@/lib/stats/queries";
+import NumberFormat from "@/utils/formatters/currency";
 
 const colors = ["#177981", "#fdbb2d", "#448dc9", "#fb923c", "#8b5cf6"];
 
@@ -37,7 +37,9 @@ export default function ExpensesByLabel() {
         ) : (
           <div className="grid gap-1">
             <h2 className="text-font/75 text-sm">Wydatki łącznie</h2>
-            <strong className="text-3xl">{numberFormat(currency, sum)}</strong>
+            <strong className="text-3xl">
+              <NumberFormat currency={currency} amount={sum} />
+            </strong>
           </div>
         )}
       </div>
@@ -91,7 +93,10 @@ export default function ExpensesByLabel() {
                   <span className="text-sm font-bold">{totalPercentage}%</span>
                   <span>-</span>
                   <span className="text-sm">
-                    {numberFormat(currency, label.total_amount)}
+                    <NumberFormat
+                      currency={currency}
+                      amount={label.total_amount}
+                    />
                   </span>
                 </div>
                 {label.name && (

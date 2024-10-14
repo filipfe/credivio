@@ -1,9 +1,6 @@
 "use client";
 
-import Header from "@/components/ui/header";
-import Sidebar from "@/components/ui/sidebar";
-import usePreferences from "@/hooks/usePreferences";
-import { getAccount } from "@/lib/settings/queries";
+import { getAccount, usePreferences } from "@/lib/settings/queries";
 import { NextUIProvider } from "@nextui-org/react";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -13,7 +10,6 @@ import {
   useEffect,
   useState,
 } from "react";
-import useSWR from "swr";
 
 type IsMenuHidden = {
   mobile: boolean;
@@ -57,8 +53,6 @@ export default function Providers({ children }: { children: React.ReactNode }) {
               : "sm:grid-cols-[15rem_1fr]"
           } transition-[grid-template-columns]`}
         >
-          <Header />
-          <Sidebar />
           {children}
         </div>
       </MenuContext.Provider>

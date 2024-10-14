@@ -21,7 +21,7 @@ type SupabaseSingleRowResponse<T> = {
   result: T | null;
 };
 
-type Option<T> = { name: string; value: T };
+type Option<T> = { name: string; label?: string; value: T };
 
 type SearchParams = {
   sort?: string;
@@ -91,3 +91,9 @@ type WithId<T> = T & { id: string };
 type PageProps = {
   preferences: Preferences;
 };
+
+type PageParams = {
+  lang: Locale;
+};
+
+type Locale = "pl" | "en" | "es";

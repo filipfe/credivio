@@ -10,9 +10,10 @@ import useSWR from "swr";
 
 type Props = {
   defaultValue: string;
+  disableSubmit?: boolean;
 };
 
-export default function LanguageSelect({ defaultValue }: Props) {
+export default function LanguageSelect({ defaultValue, disableSubmit }: Props) {
   const [isPending, startTransition] = useTransition();
   const [selected, setSelected] = useState(defaultValue);
   const formRef = useRef<HTMLFormElement | null>(null);
@@ -23,7 +24,7 @@ export default function LanguageSelect({ defaultValue }: Props) {
   } = useSWR("languages", () => getLanguages());
 
   useEffect(() => {
-    if (!formRef.current || selected === defaultValue) return;
+    if (disableSubmit || !formRef.current || selected === defaultValue) return;
     formRef.current.requestSubmit();
   }, [selected]);
 
@@ -40,27 +41,41 @@ export default function LanguageSelect({ defaultValue }: Props) {
       }
     });
 
-  return (
+  return disableSubmit ? (
+    <UniversalSelect
+      name="language_code"
+      aria-label="Language select"
+      label="Język"
+      selectedKeys={[selected]}
+      isLoading={isLoading || isPending}
+      isDisabled={isLoading || isPending}
+      elements={
+        languages
+          ? languages.map((lang) => ({ name: lang.name, value: lang.code }))
+          : []
+      }
+      placeholder="Wybierz język"
+      onChange={(e) => setSelected(e.target.value)}
+    />
+  ) : (
     <form action={action} ref={formRef}>
       <UniversalSelect
-        // size="sm"
-        name="language"
-        // radius="md"
+        name="language_code"
         aria-label="Language select"
         label="Język"
         selectedKeys={[selected]}
         isLoading={isLoading || isPending}
         isDisabled={isLoading || isPending}
-        elements={languages ? languages.map((lang) => lang.name) : []}
+        elements={
+          languages
+            ? languages.map((lang) => ({ name: lang.name, value: lang.code }))
+            : []
+        }
         placeholder="Wybierz język"
         onChange={(e) => setSelected(e.target.value)}
       />
       <input type="hidden" name="name" value="language_code" />
-      <input
-        type="hidden"
-        name="value"
-        value={languages?.find((lang) => lang.name === selected)?.code}
-      />
+      <input type="hidden" name="value" value={selected} />
     </form>
   );
 }

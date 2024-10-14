@@ -2,7 +2,7 @@
 
 import { cn } from "@nextui-org/react";
 import Block from "../../ui/block";
-import numberFormat from "@/utils/formatters/currency";
+import NumberFormat from "@/utils/formatters/currency";
 
 export default function Comprasion({
   incomes,
@@ -31,14 +31,16 @@ export default function Comprasion({
       <strong className="text-2xl">
         {sum > 0 ? ((value / sum) * 100).toFixed(1) : 50}%
       </strong>
-      <h4 className="text-sm text-font/60">{numberFormat(currency, value)}</h4>
+      <h4 className="text-sm text-font/60">
+        <NumberFormat currency={currency} amount={value} />
+      </h4>
     </div>
   );
 
   return (
     <Block className="lg:col-span-2 flex flex-col justify-between">
       {/* <div className="flex justify-center">
-        <strong className="text-4xl">{numberFormat(currency, balance)}</strong>
+        <strong className="text-4xl"><NumberFormat currency={currency} amount={balance} /></strong>
       </div> */}
       <div className="grid gap-4">
         <div className="flex justify-between">
@@ -48,7 +50,7 @@ export default function Comprasion({
               <h4>Bilans</h4>
             </div>
             <strong className="text-3xl">
-              {numberFormat(currency, balance)}
+              <NumberFormat currency={currency} amount={balance} />
             </strong>
           </div> */}
           {renderStat("Wydatki", expenses, "#fdbb2d")}

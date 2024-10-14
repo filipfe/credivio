@@ -1,0 +1,89 @@
+{
+  "private": {
+    "_navigation": {
+      "": "Dashboard",
+      "stats": "Stats",
+      "operations": "Operations",
+      "incomes": "Incomes",
+      "expenses": "Expenses",
+      "recurring-payments": "Recurring Payments",
+      "goals": "Goals",
+      "ai-assistant": "AI Assistant",
+      "automation": "Automation",
+      "settings": "Settings",
+      "settings/account": "Account",
+      "settings/preferences": "Preferences",
+      "settings/subscription": "Subscription",
+      "settings/notifications": "Notifications",
+      "_logout": "Sign out"
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Zarządzaj swoimi danymi osobowymi, preferencjami i subskrypcją"
+    }
+  },
+  "public": {
+    "auth": {
+      "_layout": {
+        "or": "or",
+        "google": {
+          "label": "Sign in with Google"
+        }
+      },
+      "sign-in": {
+        "title": "Welcome back!",
+        "description": "Sign in to continue",
+        "form": {
+          "password": {
+            "label": "Password"
+          },
+          "_submit": {
+            "label": "Sign in"
+          }
+        },
+        "forgot-password": {
+          "label": "Forgot your password?",
+          "link": "Reset password"
+        },
+        "swap": {
+          "label": "Don't have an account?",
+          "link": "Sign up"
+        }
+      },
+      "sign-up": {
+        "title": "Welcome to Credivio!",
+        "description": "Sign up to continue",
+        "form": {
+          "first-name": {
+            "label": "First name"
+          },
+          "last-name": {
+            "label": "Last name"
+          },
+          "password": {
+            "label": "Password"
+          },
+          "_submit": {
+            "label": "Sign up"
+          }
+        },
+        "swap": {
+          "label": "Already have an account?",
+          "link": "Sign in"
+        }
+      },
+      "forgot-password": {
+        "title": "Reset password",
+        "description": "Enter your email address to continue",
+        "form": {
+          "_submit": {
+            "label": "Submit"
+          },
+          "_toast": {
+            "success": "A verification link has been sent to the email address"
+          }
+        }
+      }
+    }
+  }
+}

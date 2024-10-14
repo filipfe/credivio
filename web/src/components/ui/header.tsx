@@ -1,3 +1,5 @@
+"use client";
+
 import { Fragment, useContext, useTransition } from "react";
 import { signOut } from "@/lib/auth/actions";
 import { BreadcrumbItem, Breadcrumbs, Button } from "@nextui-org/react";
@@ -5,6 +7,7 @@ import { AlignJustifyIcon, Bot, LogOutIcon, SettingsIcon } from "lucide-react";
 import { LINKS, PAGES, SETTINGS_PAGES } from "@/const";
 import { usePathname } from "next/navigation";
 import { MenuContext } from "@/app/(private)/providers";
+import { Dict } from "@/const/dict";
 
 const automationPage: Page = {
   href: "/automation",
@@ -19,7 +22,11 @@ const settingsPage: Page = {
   links: SETTINGS_PAGES,
 };
 
-export default function Header() {
+export default function Header({
+  dict,
+}: {
+  dict: Dict["private"]["_navigation"];
+}) {
   const [isPending, startTransition] = useTransition();
   const { isMenuHidden, setIsMenuHidden } = useContext(MenuContext);
   const pathname = usePathname();
@@ -63,7 +70,7 @@ export default function Header() {
               key={link.href}
               href={link.href}
             >
-              {link.title}
+              {dict[link.href.slice(1) as keyof typeof dict]}
             </BreadcrumbItem>
           ))}
         </Breadcrumbs>
@@ -77,13 +84,14 @@ export default function Header() {
             size="sm"
             disableRipple
             type="submit"
+            className="font-medium"
           >
             {isPending ? (
               <l-hatch size={12} stroke={1.5} />
             ) : (
               <LogOutIcon size={16} />
             )}
-            Wyloguj
+            {dict._logout}
           </Button>
         </form>
         <Button

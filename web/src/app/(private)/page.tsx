@@ -14,8 +14,6 @@ export default async function Dashboard() {
     throw new Error(error || "Preferences could not be retrieved");
   }
 
-  console.log(Intl.DateTimeFormat().resolvedOptions().timeZone);
-
   return (
     <div className="sm:px-10 h-full py-4 sm:py-8 flex flex-col xl:grid grid-cols-6 xl:grid-rows-[max-content_max-content_1fr] gap-4 sm:gap-6">
       <Suspense fallback={latestOperationsFallback}>
