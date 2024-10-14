@@ -24,7 +24,7 @@ export default function Month({
           <span className="font-medium">
             {Object.entries(total_amounts)
               .map(([currency, totalAmount]) =>
-                numberFormat(currency, totalAmount)
+                <NumberFormat currency={currency} amount={totalAmount} />
               )
               .join(", ")}
           </span>

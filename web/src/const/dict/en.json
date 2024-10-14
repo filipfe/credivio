@@ -1,4 +1,27 @@
 {
+  "private": {
+    "_navigation": {
+      "": "Dashboard",
+      "stats": "Stats",
+      "operations": "Operations",
+      "incomes": "Incomes",
+      "expenses": "Expenses",
+      "recurring-payments": "Recurring Payments",
+      "goals": "Goals",
+      "ai-assistant": "AI Assistant",
+      "automation": "Automation",
+      "settings": "Settings",
+      "settings/account": "Account",
+      "settings/preferences": "Preferences",
+      "settings/subscription": "Subscription",
+      "settings/notifications": "Notifications",
+      "_logout": "Sign out"
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Zarządzaj swoimi danymi osobowymi, preferencjami i subskrypcją"
+    }
+  },
   "public": {
     "auth": {
       "_layout": {
@@ -14,7 +37,7 @@
           "password": {
             "label": "Password"
           },
-          "submit": {
+          "_submit": {
             "label": "Sign in"
           }
         },
@@ -40,7 +63,7 @@
           "password": {
             "label": "Password"
           },
-          "submit": {
+          "_submit": {
             "label": "Sign up"
           }
         },
@@ -53,8 +76,11 @@
         "title": "Reset password",
         "description": "Enter your email address to continue",
         "form": {
-          "submit": {
+          "_submit": {
             "label": "Submit"
+          },
+          "_toast": {
+            "success": "A verification link has been sent to the email address"
           }
         }
       }

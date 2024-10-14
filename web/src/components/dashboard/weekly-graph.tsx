@@ -1,9 +1,9 @@
 "use client";
 
 import { useLimits, useWeeklyGraph } from "@/lib/general/queries";
-import numberFormat from "@/utils/formatters/currency";
 import { endOfWeek, startOfWeek } from "date-fns";
 import Block from "../ui/block";
+import NumberFormat from "@/utils/formatters/currency";
 
 export default function WeeklyGraph({
   preferences,
@@ -39,11 +39,15 @@ export default function WeeklyGraph({
           <h2 className="text-font/75 text-sm">Wydatki w tym tygodniu</h2>
           <div className="flex items-end gap-2">
             <strong className="text-3xl">
-              {numberFormat(preferences.currency, sum)}
+              <NumberFormat currency={preferences.currency} amount={sum} />
             </strong>
             {limit && (
               <sub className="text-font/60 mb-1 text-lg">
-                / {numberFormat(preferences.currency, limit.amount)}
+                /{" "}
+                <NumberFormat
+                  currency={preferences.currency}
+                  amount={limit.amount}
+                />
               </sub>
             )}
           </div>

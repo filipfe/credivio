@@ -1,6 +1,6 @@
 "use client";
 
-import usePreferences from "@/hooks/usePreferences";
+import { usePreferences } from "@/lib/settings/queries";
 import { Skeleton } from "@nextui-org/react";
 
 export default function IssuedAt({ issued_at }: Pick<Payment, "issued_at">) {

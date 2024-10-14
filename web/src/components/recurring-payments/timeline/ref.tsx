@@ -1,5 +1,5 @@
-import numberFormat from "@/utils/formatters/currency";
 import IssuedAt from "./issued-at";
+import NumberFormat from "@/utils/formatters/currency";
 
 export default function PaymentRef({
   title,
@@ -19,7 +19,7 @@ export default function PaymentRef({
       <div className="flex items-center mr-3">
         <strong className="text-xl sm:text-2xl md:text-3xl font-bold text-primary lg:hidden">
           {type === "income" ? "+" : type === "expense" ? "-" : ""}
-          {numberFormat(currency, amount)}
+          <NumberFormat currency={currency} amount={amount} />
         </strong>
       </div>
       <div className="h-[126px] py-2 w-0.5 bg-primary flex flex-col items-center justify-center relative mr-4 lg:mr-0">
@@ -33,7 +33,7 @@ export default function PaymentRef({
             <div className="h-10">
               <strong className="text-3xl font-bold text-white">
                 {type === "income" ? "+" : type === "expense" ? "-" : ""}
-                {numberFormat(currency, amount)}
+                <NumberFormat currency={currency} amount={amount} />
               </strong>
             </div>
           </div>

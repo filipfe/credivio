@@ -1,13 +1,13 @@
 "use client";
 
-import { Fragment, useContext, useEffect, useRef } from "react";
+import { Fragment, useRef } from "react";
 import Block from "../ui/block";
 import { Button, Chip, ScrollShadow } from "@nextui-org/react";
 import { CheckIcon, PlusIcon } from "lucide-react";
-import numberFormat from "@/utils/formatters/currency";
 import { formatDistance } from "date-fns";
 import { pl } from "date-fns/locale";
 import Empty from "../ui/empty";
+import NumberFormat from "@/utils/formatters/currency";
 
 export default function Timeline({ goals }: { goals: Goal[] }) {
   const listRef = useRef<HTMLDivElement>(null);
@@ -65,7 +65,11 @@ const DayRef = ({
             variant={isCompleted ? "solid" : "flat"}
             startContent={isCompleted ? <CheckIcon size={12} /> : undefined}
           >
-            {isCompleted ? "Zebrano" : numberFormat(currency, shortfall)}
+            {isCompleted ? (
+              "Zebrano"
+            ) : (
+              <NumberFormat currency={currency} amount={shortfall} />
+            )}
           </Chip>
         </div>
       </div>

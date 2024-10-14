@@ -14,12 +14,9 @@ import {
 import Block from "../ui/block";
 import { addDays, format, subDays } from "date-fns";
 import { useEffect, useMemo, useRef, useState } from "react";
-import numberFormat from "@/utils/formatters/currency";
 import { ChevronDown } from "lucide-react";
-import Loader from "../stocks/loader";
 import PaymentPopover from "./popover";
-import useSWR from "swr";
-import { getGoalsPayments } from "@/lib/goals/queries";
+import NumberFormat from "@/utils/formatters/currency";
 
 const generateDates = (start: Date, end: Date): Date[] => {
   const dates = [];
@@ -191,10 +188,10 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
                               }
                             />
                           ) : (
-                            numberFormat(
-                              goal.currency,
-                              getAmountByDate(YMD, goal.payments)
-                            )
+                            <NumberFormat
+                              currency={goal.currency}
+                              amount={getAmountByDate(YMD, goal.payments)}
+                            />
                           )}
                         </TableCell>
                       )) as any
@@ -211,10 +208,13 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
                 goals.map(({ id, currency, price }) => (
                   <TableCell className="text-foreground-700 bg-light shadow-[0_-1px_0_0_rgba(23,121,129,0.1),0_1px_0_0_rgba(23,121,129,0.1)] last:shadow-[1px_0_0_0_rgba(23,121,129,0.1),0_-1px_0_0_rgba(23,121,129,0.1),0_1px_0_0_rgba(23,121,129,0.1)] last:rounded-r-md">
                     <span className="font-semibold text-sm">
-                      {numberFormat(currency, sums[id] || 0)}
+                      <NumberFormat
+                        currency={currency}
+                        amount={sums[id] || 0}
+                      />
                     </span>{" "}
                     <span className="font-medium text-tiny">
-                      / {numberFormat(currency, price)}
+                      / <NumberFormat currency={currency} amount={price} />
                     </span>
                   </TableCell>
                 )) as any

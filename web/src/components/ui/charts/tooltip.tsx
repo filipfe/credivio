@@ -1,4 +1,4 @@
-import numberFormat from "@/utils/formatters/currency";
+import NumberFormat from "@/utils/formatters/currency";
 import { TooltipProps } from "recharts";
 import {
   NameType,
@@ -82,7 +82,10 @@ const BoxRef = ({
           <span className="text-sm">{payloadName}</span>
         </div>
         <strong className="font-medium text-sm">
-          {numberFormat((currency || title?.toString())!, amount)}
+          <NumberFormat
+            currency={(currency || title?.toString())!}
+            amount={amount}
+          />
         </strong>
       </div>
     </div>

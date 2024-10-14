@@ -92,4 +92,8 @@ type PageProps = {
   preferences: Preferences;
 };
 
-type Locale = "pl" | "en";
+type PageParams = {
+  lang: Locale;
+};
+
+type Locale = "pl" | "en" | "es";

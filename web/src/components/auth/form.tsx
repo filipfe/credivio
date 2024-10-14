@@ -15,7 +15,8 @@ export default function Form({
 }: {
   children: React.ReactNode;
   isSignUp?: boolean;
-  dict: Dict["public"]["auth"]["_layout"] & Dict["public"]["auth"]["sign-in"];
+  dict: Dict["public"]["auth"]["_layout"] &
+    (Dict["public"]["auth"]["sign-in"] | Dict["public"]["auth"]["sign-up"]);
 }) {
   const { lang } = useParams();
   const [isPending, startTransition] = useTransition();
@@ -42,7 +43,7 @@ export default function Form({
             type="submit"
             className="text-white font-medium w-full"
           >
-            {dict.form.submit.label}
+            {dict.form._submit.label}
           </Button>
           <p className="text-sm mt-4">
             {dict.swap.label}{" "}

@@ -16,7 +16,6 @@ type Props = {
 export default function LanguageSelect({ defaultValue, disableSubmit }: Props) {
   const [isPending, startTransition] = useTransition();
   const [selected, setSelected] = useState(defaultValue);
-  console.log({ selected });
   const formRef = useRef<HTMLFormElement | null>(null);
   const {
     isLoading,
@@ -76,11 +75,7 @@ export default function LanguageSelect({ defaultValue, disableSubmit }: Props) {
         onChange={(e) => setSelected(e.target.value)}
       />
       <input type="hidden" name="name" value="language_code" />
-      <input
-        type="hidden"
-        name="value"
-        value={languages?.find((lang) => lang.name === selected)?.code}
-      />
+      <input type="hidden" name="value" value={selected} />
     </form>
   );
 }

@@ -1,4 +1,27 @@
 {
+  "private": {
+    "_navigation": {
+      "": "Panel",
+      "stats": "Statystyki",
+      "operations": "Operacje",
+      "incomes": "Przychody",
+      "expenses": "Wydatki",
+      "recurring-payments": "Płatności cykliczne",
+      "goals": "Cele",
+      "ai-assistant": "Asystent AI",
+      "automation": "Automatyzacja",
+      "settings": "Ustawienia",
+      "settings/account": "Konto",
+      "settings/preferences": "Preferencje",
+      "settings/subscription": "Subskrypcja",
+      "settings/notifications": "Powiadomienia",
+      "_logout": "Wyloguj"
+    },
+    "settings": {
+      "title": "Ustawienia",
+      "description": "Zarządzaj swoimi danymi osobowymi, preferencjami i subskrypcją"
+    }
+  },
   "public": {
     "auth": {
       "_layout": {
@@ -14,7 +37,7 @@
           "password": {
             "label": "Hasło"
           },
-          "submit": {
+          "_submit": {
             "label": "Zaloguj się"
           }
         },
@@ -40,7 +63,7 @@
           "password": {
             "label": "Hasło"
           },
-          "submit": {
+          "_submit": {
             "label": "Zarejestruj się"
           }
         },
@@ -53,8 +76,11 @@
         "title": "Zresetuj hasło",
         "description": "Wprowadź adres email, aby kontynuować",
         "form": {
-          "submit": {
+          "_submit": {
             "label": "Zatwierdź"
+          },
+          "_toast": {
+            "success": "Link weryfikacyjny został wysłany na podany adres email"
           }
         }
       }

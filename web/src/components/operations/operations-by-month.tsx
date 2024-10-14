@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import CurrencySelect from "../ui/table/currency-select";
 import UniversalSelect from "../ui/universal-select";
 import { CURRENCIES } from "@/const";
-import usePreferences from "@/hooks/usePreferences";
 import {
   Bar,
   BarChart,
@@ -21,6 +20,7 @@ import {
 import ChartLoader from "../ui/charts/loader";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
 import ChartTooltip from "../ui/charts/tooltip";
+import { usePreferences } from "@/lib/settings/queries";
 
 const getTitle = (type: "income" | "expense") => {
   switch (type) {

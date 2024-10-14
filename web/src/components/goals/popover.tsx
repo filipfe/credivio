@@ -1,7 +1,5 @@
 "use client";
 
-import useClientQuery from "@/hooks/useClientQuery";
-import numberFormat from "@/utils/formatters/currency";
 import formatAmount from "@/utils/operations/format-amount";
 import {
   Button,
@@ -14,6 +12,7 @@ import { useRef, useState, useTransition } from "react";
 import toast from "react-hot-toast";
 import Toast from "../ui/toast";
 import { addGoalPayment } from "@/lib/goals/actions";
+import NumberFormat from "@/utils/formatters/currency";
 // import { addGoalPayment } from "@/lib/goals/queries";
 
 type Props = {
@@ -72,7 +71,7 @@ export default function PaymentPopover({
     <Popover placement="top" onClose={onClose}>
       <PopoverTrigger>
         <button className="w-full bg-light border rounded-md px-4 py-2">
-          {numberFormat(goal.currency, defaultAmount)}
+          <NumberFormat currency={goal.currency} amount={defaultAmount} />
         </button>
       </PopoverTrigger>
       <PopoverContent className="py-2">

@@ -17,7 +17,8 @@ export default function TimezoneSelect() {
         elements={options as Option<string>[]}
         onChange={(e) =>
           setTimezone(
-            parseTimezone(e.target.value).value === deviceTimezone
+            parseTimezone(e.target.value).value ===
+              parseTimezone(deviceTimezone).value
               ? deviceTimezone
               : e.target.value
           )

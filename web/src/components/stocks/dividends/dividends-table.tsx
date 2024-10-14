@@ -1,7 +1,7 @@
 "use client";
 
 import HorizontalScroll from "@/components/ui/horizontal-scroll";
-import numberFormat from "@/utils/formatters/currency";
+import { usePreferences } from "@/lib/settings/queries";
 import { Spinner } from "@nextui-org/react";
 import {
   Table,
@@ -50,6 +50,8 @@ export default function DividendsTable({
   simplified,
   holdings,
 }: Props) {
+  const { data: preferences } = usePreferences();
+
   const renderCell = useCallback(
     (dividend: TableDividend, columnKey: ColumnKey) => {
       const cellValue = dividend[columnKey];
@@ -73,8 +75,12 @@ export default function DividendsTable({
         const profitFloat =
           parseFloat(item.amount) * (holdings[item.company] || 0);
         const netProfitFloat = profitFloat * 0.81;
-        const profit = numberFormat(item.currency, profitFloat);
-        const net_profit = numberFormat(item.currency, netProfitFloat);
+        const formatter = new Intl.NumberFormat(preferences?.language.code, {
+          style: "currency",
+          currency: item.currency,
+        });
+        const profit = formatter.format(profitFloat);
+        const net_profit = formatter.format(netProfitFloat);
         return {
           ...item,
           net_profit,
