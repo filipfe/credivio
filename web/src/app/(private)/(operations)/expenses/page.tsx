@@ -8,6 +8,7 @@ import Providers from "../providers";
 import OperationsByMonth from "@/components/operations/operations-by-month";
 import Limits from "@/components/operations/limits";
 import { getSettings } from "@/lib/general/actions";
+import getDictionary from "@/const/dict";
 
 export default async function Page({
   searchParams,
@@ -26,11 +27,17 @@ export default async function Page({
     throw new Error("Failed to fetch the resource!");
   }
 
+  const {
+    private: {
+      operations: { expenses },
+    },
+  } = await getDictionary(settings.language);
+
   const { last_month, last_day } = result;
 
   return (
     <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 xl:grid grid-cols-2 2xl:grid-cols-4 2xl:grid-rows-[max-content_max-content_1fr]">
-      <Limits settings={settings} />
+      <Limits dict={expenses.limits} settings={settings} />
       <div className="col-[1/2]">
         <Stat
           title="Dzisiaj"
