@@ -99,6 +99,7 @@ export default function BalanceByMonth({
 }) {
   const { month, year, currency, settings } = useContext(StatsFilterContext);
   const { data: results, isLoading } = useBalanceHistory(
+    settings.timezone,
     currency,
     month + 1,
     year

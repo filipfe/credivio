@@ -29,6 +29,7 @@ export default function OperationsByDayOfWeek({
 }) {
   const { month, year, currency, settings } = useContext(StatsFilterContext);
   const { isLoading, data: results } = useOperationsByDayOfWeek(
+    settings.timezone,
     currency,
     month + 1,
     year
