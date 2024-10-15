@@ -207,6 +207,24 @@
       },
       "recurring-payments": {}
     },
+    "automation": {
+      "title": "Telegram Bot",
+      "description": {
+        "1": "Dodawaj operacje szybciej za pomocą dostosowanego Telegram Bota!",
+        "2": "Bot automatyzuje wiele procesów, oszczędzając Twój czas i minimalizując ryzyko błędów. Wszystkie dane są synchronizowane w czasie rzeczywistym, więc masz pewność, że informacje są zawsze aktualne.",
+        "3": "Oto twój klucz Telegram. Wyślij go do bota, aby połączyć swoje konto:"
+      },
+      "telegram-key": {
+        "label": "Klucz Telegram"
+      },
+      "latest-operations": {
+        "title": "Ostatnie operacje",
+        "empty": {
+          "title": "Nie dodałeś jeszcze operacji przy pomocy bota!",
+          "button": "Dodaj operacje"
+        }
+      }
+    },
     "settings": {
       "title": "Ustawienia",
       "description": "Zarządzaj swoimi danymi osobowymi, preferencjami i subskrypcją",
@@ -281,24 +299,6 @@
         "email": {
           "title": "Powiadomienia Email",
           "description": "Wysyłane automatycznie na adres email"
-        }
-      }
-    },
-    "automation": {
-      "title": "Telegram Bot",
-      "description": {
-        "1": "Dodawaj operacje szybciej za pomocą dostosowanego Telegram Bota!",
-        "2": "Bot automatyzuje wiele procesów, oszczędzając Twój czas i minimalizując ryzyko błędów. Wszystkie dane są synchronizowane w czasie rzeczywistym, więc masz pewność, że informacje są zawsze aktualne.",
-        "3": "Oto twój klucz Telegram. Wyślij go do bota, aby połączyć swoje konto:"
-      },
-      "telegram-key": {
-        "label": "Klucz Telegram"
-      },
-      "latest-operations": {
-        "title": "Ostatnie operacje",
-        "empty": {
-          "title": "Nie dodałeś jeszcze operacji przy pomocy bota!",
-          "button": "Dodaj operacje"
         }
       }
     }
