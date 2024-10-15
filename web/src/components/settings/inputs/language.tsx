@@ -43,7 +43,7 @@ export default function LanguageSelect({ defaultValue, disableSubmit }: Props) {
 
   return disableSubmit ? (
     <UniversalSelect
-      name="language_code"
+      name="language"
       aria-label="Language select"
       label="Język"
       selectedKeys={[selected]}
@@ -60,7 +60,7 @@ export default function LanguageSelect({ defaultValue, disableSubmit }: Props) {
   ) : (
     <form action={action} ref={formRef}>
       <UniversalSelect
-        name="language_code"
+        name="language"
         aria-label="Language select"
         label="Język"
         selectedKeys={[selected]}
@@ -74,7 +74,7 @@ export default function LanguageSelect({ defaultValue, disableSubmit }: Props) {
         placeholder="Wybierz język"
         onChange={(e) => setSelected(e.target.value)}
       />
-      <input type="hidden" name="name" value="language_code" />
+      <input type="hidden" name="name" value="language" />
       <input type="hidden" name="value" value={selected} />
     </form>
   );

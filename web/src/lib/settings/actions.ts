@@ -11,38 +11,13 @@ export async function getAccount(): Promise<
 
   const { data, error: authError } = await supabase
     .from("profiles")
-    .select("first_name, last_name, language_code, email")
+    .select("first_name, last_name, email")
     .single();
 
   if (authError) {
     return {
       result: null,
       error: authError.message,
-    };
-  }
-
-  return {
-    result: data,
-  };
-}
-
-export async function getPreferences(): Promise<
-  SupabaseSingleRowResponse<Preferences>
-> {
-  const supabase = createClient();
-
-  const { data, error } = await supabase
-    .from("profiles")
-    .select(
-      "currency, language:languages(code, name), telegram_token, telegram_id"
-    )
-    .returns<Preferences>()
-    .single();
-
-  if (error) {
-    return {
-      error: error.message,
-      result: null,
     };
   }
 
@@ -116,11 +91,11 @@ export async function updatePreferences(formData: FormData) {
   console.log("Updating...", { name, value });
 
   const { error } = await supabase
-    .from("profiles")
+    .from("settings")
     .update({
       [name]: value,
     })
-    .eq("id", user?.id);
+    .eq("user_id", user?.id);
 
   if (error) {
     console.log(error);

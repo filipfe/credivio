@@ -2,11 +2,10 @@
 
 import Form from "@/components/ui/form";
 import Toast from "@/components/ui/toast";
-import { getAccount, updateAccount } from "@/lib/settings/queries";
-import { Button, Input } from "@nextui-org/react";
+import { updateAccount } from "@/lib/settings/queries";
+import { Input } from "@nextui-org/react";
 import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
-import useSWR from "swr";
 
 export default function PersonalDataInput({
   first_name,

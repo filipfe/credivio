@@ -2,19 +2,27 @@
 
 import Block from "@/components/ui/block";
 import { useContext } from "react";
-import MonthInput from "../ui/inputs/month";
-import YearInput from "../ui/inputs/year";
+import MonthInput from "./inputs/month";
+import YearInput from "./inputs/year";
 import getDisabledMonths from "@/utils/operations/get-disabled-months";
 import UniversalSelect from "../ui/universal-select";
 import { CURRENCIES } from "@/const";
 import { StatsFilterContext } from "@/app/(private)/stats/providers";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-const now = new Date();
+import { now } from "@internationalized/date";
 
 export default function Filters() {
-  const { month, setMonth, year, setYear, currency, setCurrency } =
-    useContext(StatsFilterContext);
+  const {
+    month,
+    setMonth,
+    year,
+    setYear,
+    currency,
+    setCurrency,
+    settings: { timezone },
+  } = useContext(StatsFilterContext);
+
+  const today = now(timezone);
 
   const handlePreviousMonth = () => {
     if (month === 0) {
@@ -37,25 +45,21 @@ export default function Filters() {
   const handleYearChange = (newYear: number) => {
     setYear(newYear);
 
-    if (newYear === now.getFullYear()) {
-      setMonth(now.getMonth());
-    } else if (newYear < now.getFullYear()) {
+    if (newYear === today.year) {
+      setMonth(today.month - 1);
+    } else if (newYear < today.year) {
       setMonth(11);
     } else {
       setMonth(0);
     }
   };
 
-  const isPreviousMonthDisabled = () => {
-    if (year === 2023 && month === 0) {
-      return true;
-    } else return false;
-  };
+  const isPreviousMonthDisabled = year === 2023 && month === 0;
 
   const isNextMonthDisabled = () => {
-    if (year > now.getFullYear()) {
+    if (year > today.year) {
       return true;
-    } else if (year === now.getFullYear() && month >= now.getMonth()) {
+    } else if (year === today.year && month >= today.month - 1) {
       return true;
     }
     return false;
@@ -77,19 +81,19 @@ export default function Filters() {
         <button
           className="border h-8 min-w-8 rounded-md bg-[#fafafa]"
           onClick={handlePreviousMonth}
-          disabled={isPreviousMonthDisabled()}
+          disabled={isPreviousMonthDisabled}
         >
           <ChevronLeft
             size={12}
             className={`self-center w-full ${
-              isPreviousMonthDisabled() && "text-[#e5e5e7]"
+              isPreviousMonthDisabled && "text-[#e5e5e7]"
             }`}
           />
         </button>
         <MonthInput
           value={month}
           disabledKeys={
-            year === now.getFullYear() ? getDisabledMonths(now.getMonth()) : []
+            year === today.year ? getDisabledMonths(today.month - 1) : []
           }
           onChange={setMonth}
         />

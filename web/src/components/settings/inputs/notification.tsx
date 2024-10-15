@@ -5,12 +5,11 @@ import { updateSettings } from "@/lib/settings/queries";
 import toast from "@/utils/toast";
 import { Button, Switch, Tooltip } from "@nextui-org/react";
 import Link from "next/link";
-import useSWR from "swr";
 
 type Props = {
   title: string;
   description: string;
-  field: string;
+  field: keyof Settings["notifications"];
 };
 
 export default function NotificationSwitch({
@@ -19,10 +18,9 @@ export default function NotificationSwitch({
   field,
 }: Props) {
   const { data: settings, mutate, isLoading, error } = useSettings();
-
   const onValueChange = async (isSelected: boolean) => {
     try {
-      await mutate(updateSettings(field, isSelected), {
+      await mutate(updateSettings(field + "_notifications", isSelected), {
         optimisticData: (prev: any) => ({ ...prev, [field]: isSelected }),
         revalidate: false,
         populateCache: true,
@@ -37,10 +35,7 @@ export default function NotificationSwitch({
   };
 
   const isDisabled =
-    field === "telegram_notifications" &&
-    !isLoading &&
-    !error &&
-    !settings?.telegram_id;
+    field === "telegram" && !isLoading && !error && !settings?.telegram_id;
 
   return (
     <div className="flex items-center justify-between gap-4">

@@ -80,8 +80,7 @@ const CustomTooltip = ({
 };
 
 export default function BalanceByMonth() {
-  const { month, year, currency, languageCode } =
-    useContext(StatsFilterContext);
+  const { month, year, currency, settings } = useContext(StatsFilterContext);
   const { data: results, isLoading } = useBalanceHistory(
     currency,
     month + 1,
@@ -134,7 +133,7 @@ export default function BalanceByMonth() {
                 tick={{ fontSize: 12 }}
                 tickFormatter={(label) => {
                   const [year, month, day] = label.split("-");
-                  return new Intl.DateTimeFormat(languageCode, {
+                  return new Intl.DateTimeFormat(settings.language, {
                     day: "2-digit",
                     month: "short",
                   }).format(new Date(year, parseInt(month) - 1, day));
@@ -158,7 +157,7 @@ export default function BalanceByMonth() {
                   <CustomTooltip
                     {...props}
                     labelFormatter={(label) =>
-                      new Intl.DateTimeFormat(languageCode, {
+                      new Intl.DateTimeFormat(settings.language, {
                         dateStyle: "full",
                       }).format(new Date(label))
                     }

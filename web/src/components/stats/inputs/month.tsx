@@ -1,5 +1,6 @@
-import { getSettings } from "@/lib/general/actions";
+import { StatsFilterContext } from "@/app/(private)/stats/providers";
 import { Select, SelectItem } from "@nextui-org/react";
+import { useContext } from "react";
 
 type Props = {
   value: number;
@@ -7,17 +8,8 @@ type Props = {
   disabledKeys: string[];
 };
 
-export default async function MonthInput({
-  value,
-  onChange,
-  disabledKeys,
-}: Props) {
-  const { result: settings } = await getSettings();
-
-  if (!settings) {
-    throw new Error("Couldn't retrieve settings");
-  }
-
+export default function MonthInput({ value, onChange, disabledKeys }: Props) {
+  const { settings } = useContext(StatsFilterContext);
   const formatter = new Intl.DateTimeFormat(settings.language, {
     month: "long",
   });
