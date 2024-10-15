@@ -120,7 +120,7 @@ export default function WeeklyGraph({
           </div>
         </div>
       ) : (
-        <Empty title={dict.empty} />
+        <Empty title={dict._empty} />
       )}
     </Block>
   );
