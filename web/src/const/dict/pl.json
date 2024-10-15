@@ -17,9 +17,290 @@
       "settings/notifications": "Powiadomienia",
       "_logout": "Wyloguj"
     },
+    "dashboard": {
+      "latest-operations": {
+        "title": "Ostatnie operacje",
+        "empty": "Nie znaleziono ostatnich operacji"
+      },
+      "limits": {
+        "title": {
+          "day": "Limit - Dzień",
+          "week": "Limit - Tydzień",
+          "month": "Limit - Miesiąc"
+        },
+        "button": "Ustaw limit",
+        "modal": {
+          "form": {
+            "period": {
+              "label": "Okres",
+              "values": {
+                "daily": "Dzienny",
+                "weekly": "Tygodniowy",
+                "monthly": "Miesięczny"
+              }
+            },
+            "amount": {
+              "label": "Kwota"
+            },
+            "currency": {
+              "label": "Waluta"
+            },
+            "_close": {
+              "label": "Anuluj"
+            },
+            "_submit": {
+              "label": "Zapisz"
+            }
+          }
+        }
+      },
+      "goal-priority": {
+        "title": "Priorytet",
+        "collected": "Zebrano",
+        "left": "Pozostało",
+        "payments": {
+          "title": "Wpłaty",
+          "date": "Data",
+          "amount": "Kwota"
+        },
+        "empty": "Brak priorytetu"
+      },
+      "weekly-graph": {
+        "title": "Wydatki w tym tygodniu",
+        "empty": "Brak danych do wyświetlenia!"
+      }
+    },
+    "stats": {
+      "incomes": "Przychody",
+      "expenses": "Wydatki",
+      "balance-by-month": {
+        "title": "Bilans operacji",
+        "empty": "Brak danych do wyświetlenia!"
+      },
+      "operations-by-day-of-week": {
+        "title": "Operacje wg dnia tygodnia"
+      },
+      "expenses-by-label": {
+        "title": "Wydatki łącznie",
+        "description": "Wydatki według etykiet",
+        "empty": "Nie znaleziono wydatków"
+      }
+    },
+    "operations": {
+      "incomes": {
+        "today": "Dzisiaj",
+        "30-days": "30 dni",
+        "operations-by-month": {
+          "title": "Przychody",
+          "empty": {
+            "title": "Brak danych do wyświetlenia!",
+            "button": "Dodaj przychód"
+          }
+        },
+        "operation-table": {
+          "title": "Przychody",
+          "top-content": {
+            "search": {
+              "placeholder": "Wyszukaj"
+            },
+            "period": {
+              "button": "Resetuj"
+            },
+            "filter": {
+              "currency": {
+                "label": "Waluta",
+                "default": "Wszystkie"
+              },
+              "button": "Resetuj"
+            },
+            "add": "Dodaj"
+          },
+          "columns": {
+            "issued_at": "DATA",
+            "title": "TYTUŁ",
+            "amount": "KWOTA",
+            "currency": "WALUTA"
+          },
+          "empty": {
+            "title": "Nie znalezniono operacji",
+            "button": "Dodaj przychód"
+          }
+        }
+      },
+      "expenses": {
+        "limits": {
+          "title": {
+            "day": "Limit - Dzień",
+            "week": "Limit - Tydzień",
+            "month": "Limit - Miesiąc"
+          },
+          "button": "Ustaw limit",
+          "modal": {
+            "form": {
+              "period": {
+                "label": "Okres",
+                "values": {
+                  "daily": "Dzienny",
+                  "weekly": "Tygodniowy",
+                  "monthly": "Miesięczny"
+                }
+              },
+              "amount": {
+                "label": "Kwota"
+              },
+              "currency": {
+                "label": "Waluta"
+              },
+              "_close": {
+                "label": "Anuluj"
+              },
+              "_submit": {
+                "label": "Zapisz"
+              }
+            }
+          }
+        },
+        "today": "Dzisiaj",
+        "30-days": "30 dni",
+        "operations-by-month": {
+          "title": "Wydatki",
+          "empty": {
+            "title": "Brak danych do wyświetlenia!",
+            "button": "Dodaj wydatek"
+          }
+        },
+        "operation-table": {
+          "title": "Wydatki",
+          "top-content": {
+            "search": {
+              "placeholder": "Wyszukaj"
+            },
+            "period": {
+              "button": "Resetuj"
+            },
+            "filter": {
+              "label": {
+                "label": "Etykieta",
+                "default": "Wszystkie",
+                "description": "wydatków"
+              },
+              "currency": {
+                "label": "Waluta",
+                "default": "Wszystkie"
+              },
+              "button": "Resetuj"
+            },
+            "add": "Dodaj"
+          },
+          "columns": {
+            "issued_at": "DATA",
+            "title": "TYTUŁ",
+            "amount": "KWOTA",
+            "currency": "WALUTA",
+            "label": "ETYKIETA"
+          },
+          "empty": {
+            "title": "Nie znalezniono operacji",
+            "button": "Dodaj wydatek"
+          }
+        }
+      },
+      "recurring-payments": {}
+    },
     "settings": {
       "title": "Ustawienia",
-      "description": "Zarządzaj swoimi danymi osobowymi, preferencjami i subskrypcją"
+      "description": "Zarządzaj swoimi danymi osobowymi, preferencjami i subskrypcją",
+      "account": {
+        "personal-data": {
+          "title": "Dane osobowe",
+          "description": "Dostosuj dane osobowe do swojego konta",
+          "form": {
+            "first-name": {
+              "label": "Imię"
+            },
+            "last-name": {
+              "label": "Nazwisko"
+            },
+            "_submit": {
+              "label": "Zapisz"
+            }
+          }
+        },
+        "email": {
+          "title": "Email",
+          "description": "Zmień email przypisany do twojego konta",
+          "form": {
+            "email": {
+              "label": "Email",
+              "placeholder": "example@mail.com"
+            },
+            "_submit": {
+              "label": "Zapisz"
+            }
+          }
+        },
+        "password": {
+          "title": "Hasło",
+          "description": "Zmień hasło do swojego konta",
+          "form": {
+            "password": {
+              "label": "Nowe hasło"
+            },
+            "confirm-password": {
+              "label": "Potwierdź nowe hasło"
+            },
+            "_submit": {
+              "label": "Zapisz hasło"
+            }
+          }
+        }
+      },
+      "preferences": {
+        "default-currency": {
+          "title": "Domyślna waluta",
+          "description": "Używana domyślnie w aplikacji",
+          "select": {
+            "currency": "Waluta"
+          }
+        },
+        "location": {
+          "title": "Lokalizacja",
+          "description": "Wybierz język i strefę czasową",
+          "select": {
+            "language": "Język",
+            "timezone": "Strefa czasowa"
+          }
+        }
+      },
+      "subscription": {},
+      "notifications": {
+        "telegram": {
+          "title": "Powiadomienia Telegram",
+          "description": "Wysyłane automatycznie przez Telegram Bota"
+        },
+        "email": {
+          "title": "Powiadomienia Email",
+          "description": "Wysyłane automatycznie na adres email"
+        }
+      }
+    },
+    "automation": {
+      "title": "Telegram Bot",
+      "description": {
+        "1": "Dodawaj operacje szybciej za pomocą dostosowanego Telegram Bota!",
+        "2": "Bot automatyzuje wiele procesów, oszczędzając Twój czas i minimalizując ryzyko błędów. Wszystkie dane są synchronizowane w czasie rzeczywistym, więc masz pewność, że informacje są zawsze aktualne.",
+        "3": "Oto twój klucz Telegram. Wyślij go do bota, aby połączyć swoje konto:"
+      },
+      "telegram-key": {
+        "label": "Klucz Telegram"
+      },
+      "latest-operations": {
+        "title": "Ostatnie operacje",
+        "empty": {
+          "title": "Nie dodałeś jeszcze operacji przy pomocy bota!",
+          "button": "Dodaj operacje"
+        }
+      }
     }
   },
   "public": {
