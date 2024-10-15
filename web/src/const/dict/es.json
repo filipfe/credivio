@@ -100,6 +100,10 @@
             "label": "Establecer límite"
           },
           "modal": {
+            "title": {
+              "new": "Nuevo límite",
+              "edit": "Editar límite"
+            },
             "form": {
               "period": {
                 "label": "Período",
@@ -119,7 +123,8 @@
                 "label": "Cancelar"
               },
               "_submit": {
-                "label": "Guardar"
+                "label": "Guardar",
+                "_error": "Ocurrió un error al agregar el límite"
               }
             }
           }

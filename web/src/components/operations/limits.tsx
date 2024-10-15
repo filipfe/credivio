@@ -69,6 +69,7 @@ export default function Limits({
         onClose={onClose}
         defaultLimit={defaultLimit}
         timezone={settings.timezone}
+        dict={dict["modal"]}
       />
     </>
   );

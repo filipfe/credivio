@@ -101,6 +101,10 @@
             "label": "Set limit"
           },
           "modal": {
+            "title": {
+              "new": "New limit",
+              "edit": "Edit limit"
+            },
             "form": {
               "period": {
                 "label": "Period",
@@ -120,7 +124,8 @@
                 "label": "Cancel"
               },
               "_submit": {
-                "label": "Save"
+                "label": "Save",
+                "_error": "An error occurred while adding the limit"
               }
             }
           }

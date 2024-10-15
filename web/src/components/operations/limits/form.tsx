@@ -1,6 +1,7 @@
 import Form from "@/components/ui/form";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
+import { Dict } from "@/const/dict";
 import { useLimits } from "@/lib/general/queries";
 import { addLimit } from "@/lib/operations/queries";
 import formatAmount from "@/utils/operations/format-amount";
@@ -12,28 +13,10 @@ import {
   ModalBody,
   Select,
   SelectItem,
-  ModalFooter,
-  Button,
   Input,
   useDisclosure,
 } from "@nextui-org/react";
-import { SaveIcon } from "lucide-react";
 import { FormEvent, useLayoutEffect, useState } from "react";
-
-const periods = [
-  {
-    value: "daily",
-    label: "Dzienny",
-  },
-  {
-    value: "weekly",
-    label: "Tygodniowy",
-  },
-  {
-    value: "monthly",
-    label: "Miesięczny",
-  },
-];
 
 interface Props
   extends Pick<
@@ -42,6 +25,7 @@ interface Props
   > {
   defaultLimit: NewLimit;
   timezone: string;
+  dict: Dict["private"]["operations"]["expenses"]["limits"]["modal"];
 }
 
 export default function LimitForm({
@@ -50,6 +34,7 @@ export default function LimitForm({
   defaultLimit,
   onClose,
   timezone,
+  dict,
 }: Props) {
   const [singleRecord, setSingleRecord] = useState<NewLimit>(defaultLimit);
   const { mutate } = useLimits(timezone, singleRecord.currency);
@@ -66,7 +51,7 @@ export default function LimitForm({
     if (error) {
       toast({
         type: "error",
-        message: "Wystąpił błąd przy dodawaniu limitu",
+        message: dict.form._submit._error,
       });
     } else {
       mutate();
@@ -83,7 +68,7 @@ export default function LimitForm({
         {(onClose) => (
           <>
             <ModalHeader className="font-normal">
-              {isEdit ? "Edytuj" : "Nowy"} limit
+              {dict.title[isEdit ? "edit" : "new"]}
             </ModalHeader>
             <Form
               onSubmit={onSubmit}
@@ -94,8 +79,7 @@ export default function LimitForm({
               <ModalBody>
                 <div className="grid grid-cols-[1fr_128px] gap-4">
                   <Select
-                    placeholder="Wybierz okres"
-                    label="Okres"
+                    label={dict.form.period.label}
                     required
                     name="period"
                     isDisabled={isEdit}
@@ -114,14 +98,16 @@ export default function LimitForm({
                       }))
                     }
                   >
-                    {periods.map((period) => (
-                      <SelectItem key={period.value}>{period.label}</SelectItem>
-                    ))}
+                    {Object.entries(dict.form.period.values).map(
+                      ([key, value]) => (
+                        <SelectItem key={key}>{value}</SelectItem>
+                      )
+                    )}
                   </Select>
                   <Input
                     classNames={{ inputWrapper: "bg-light shadow-none border" }}
                     name="amount"
-                    label="Kwota"
+                    label={dict.form.amount.label}
                     placeholder="0.00"
                     isRequired
                     required
@@ -143,7 +129,7 @@ export default function LimitForm({
                   />
                   <UniversalSelect
                     name="currency"
-                    label="Waluta"
+                    label={dict.form.currency.label}
                     required
                     isRequired
                     isDisabled={isEdit}
@@ -151,7 +137,6 @@ export default function LimitForm({
                       singleRecord.currency ? [singleRecord.currency] : []
                     }
                     elements={CURRENCIES}
-                    placeholder="Wybierz walutę"
                     disallowEmptySelection
                     onChange={(e) =>
                       setSingleRecord((prev) => ({
