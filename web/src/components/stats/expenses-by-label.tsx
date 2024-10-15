@@ -9,10 +9,15 @@ import Empty from "../ui/empty";
 import { StatsFilterContext } from "@/app/(private)/stats/providers";
 import { useExpensesByLabel } from "@/lib/stats/queries";
 import NumberFormat from "@/utils/formatters/currency";
+import { Dict } from "@/const/dict";
 
 const colors = ["#177981", "#fdbb2d", "#448dc9", "#fb923c", "#8b5cf6"];
 
-export default function ExpensesByLabel() {
+export default function ExpensesByLabel({
+  dict,
+}: {
+  dict: Dict["private"]["stats"]["expenses-by-label"];
+}) {
   const { month, year, currency } = useContext(StatsFilterContext);
   const { isLoading, data: results } = useExpensesByLabel(
     currency,
@@ -47,13 +52,13 @@ export default function ExpensesByLabel() {
       ) : results && results.length ? (
         <>
           <div className="grid gap-1">
-            <h2 className="text-font/75 text-sm">Wydatki łącznie</h2>
+            <h2 className="text-font/75 text-sm">{dict.title}</h2>
             <strong className="text-3xl">
               <NumberFormat currency={currency} amount={sum} />
             </strong>
           </div>
           <div className="grid gap-2">
-            <h4 className="text-sm text-font/60">Wydatki według etykiet</h4>
+            <h4 className="text-sm text-font/60">{dict.description}</h4>
             <div className="flex h-2 gap-0.5 overflow-hidden rounded-full">
               {isLoading || !results || results.length === 0 ? (
                 <div className="flex-1 border bg-light"></div>
@@ -87,7 +92,7 @@ export default function ExpensesByLabel() {
                       className="h-2.5 w-2.5 rounded-full"
                     ></div>
                     <h5 className="text-sm text-font/75">
-                      {label.name || "Inne"}
+                      {label.name || dict.other}
                     </h5>
                   </div>
                   <div className="flex items-center gap-1">
@@ -135,7 +140,7 @@ export default function ExpensesByLabel() {
           </div>
         </>
       ) : (
-        <Empty title="Nie znaleziono wydatków" icon={Coins} />
+        <Empty title={dict._empty} icon={Coins} />
       )}
     </Block>
   );

@@ -17,6 +17,10 @@
       "settings/notifications": "Notifications",
       "_logout": "Sign out"
     },
+    "general": {
+      "incomes": "Incomes",
+      "expenses": "Expenses"
+    },
     "dashboard": {
       "latest-operations": {
         "title": "Latest operations",
@@ -29,8 +33,6 @@
       }
     },
     "stats": {
-      "incomes": "Incomes",
-      "expenses": "Expenses",
       "balance-by-month": {
         "title": "Balance",
         "_empty": "No data to display!"
@@ -39,8 +41,9 @@
         "title": "Operations by day of the week"
       },
       "expenses-by-label": {
-        "title": "Total expenses",
+        "title": "Total Expenses",
         "description": "Expenses by label",
+        "other": "Other",
         "_empty": "No expenses found"
       }
     },

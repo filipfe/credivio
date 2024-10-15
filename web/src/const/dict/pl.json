@@ -17,7 +17,7 @@
       "settings/notifications": "Powiadomienia",
       "_logout": "Wyloguj"
     },
-    "general": {},
+    "general": { "incomes": "Przychody", "expenses": "Wydatki" },
     "dashboard": {
       "latest-operations": {
         "title": "Ostatnie operacje",
@@ -29,8 +29,6 @@
       }
     },
     "stats": {
-      "incomes": "Przychody",
-      "expenses": "Wydatki",
       "balance-by-month": {
         "title": "Bilans operacji",
         "_empty": "Brak danych do wyświetlenia!"
@@ -41,6 +39,7 @@
       "expenses-by-label": {
         "title": "Wydatki łącznie",
         "description": "Wydatki według etykiet",
+        "other": "Inne",
         "_empty": "Nie znaleziono wydatków"
       }
     },
