@@ -60,7 +60,9 @@ Deno.serve(async (req) => {
   } = body;
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
-    .select("telegram_id, language:languages(code), ...settings(timezone)")
+    .select(
+      "telegram_id, ...settings(timezone, language:languages(code, name))"
+    )
     .eq("id", user_id)
     .returns<(Preferences & { telegram_id: string; timezone: string })[]>()
     .single();

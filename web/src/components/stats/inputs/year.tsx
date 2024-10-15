@@ -1,13 +1,18 @@
+import { StatsFilterContext } from "@/app/(private)/stats/providers";
+import { now } from "@internationalized/date";
 import { Select, SelectItem } from "@nextui-org/react";
+import { useContext } from "react";
 
 type Props = {
   value?: number;
   onChange: (value: number) => void;
 };
 
-const year = new Date().getFullYear();
-
 export default function YearInput({ value, onChange }: Props) {
+  const {
+    settings: { timezone },
+  } = useContext(StatsFilterContext);
+  const { year } = now(timezone);
   return (
     <Select
       name="year"

@@ -16,13 +16,14 @@ const NOTIFICATION_SECRET = Deno.env.get("NOTIFICATION_SECRET");
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !NOTIFICATION_SECRET) {
   throw new Error(
-    `Environment variables missing: ${
-      Object.entries({
-        SUPABASE_URL,
-        SUPABASE_SERVICE_ROLE_KEY,
-        NOTIFICATION_SECRET,
-      }).filter(([_key, value]) => !value).map(([key]) => key).join(", ")
-    }`,
+    `Environment variables missing: ${Object.entries({
+      SUPABASE_URL,
+      SUPABASE_SERVICE_ROLE_KEY,
+      NOTIFICATION_SECRET,
+    })
+      .filter(([_key, value]) => !value)
+      .map(([key]) => key)
+      .join(", ")}`
   );
 }
 
@@ -40,15 +41,14 @@ const sendNotification = async (user: Profile, { message, options }: Body) => {
   }
 
   if (options?.graph) {
-    const { data: graph } = await supabase.functions.invoke(
-      "weekly-graph",
-      {
-        body: { user, date: new Date().toISOString() },
-      },
-    );
+    const { data: graph } = await supabase.functions.invoke("weekly-graph", {
+      body: { user, date: new Date().toISOString() },
+    });
     if (!user.telegram_id || !telegram_notifications) return;
     await bot.api.sendPhoto(user.telegram_id, graph, {
-      caption: message || `Cześć ${user.first_name}!
+      caption:
+        message ||
+        `Cześć ${user.first_name}!
 📊 Oto twój wykres wydatków z poprzedniego tygodnia na podstawie etykiet. Tak trzymaj!`,
     });
   } else {
@@ -62,14 +62,15 @@ Deno.serve(async (req) => {
   if (secretKey !== NOTIFICATION_SECRET) {
     return new Response("Unauthorized", { status: 401 });
   }
-  const body = await req.json() as Body;
+  const body = (await req.json()) as Body;
 
-  const { data: users, error } = await supabase.from("profiles")
+  const { data: users, error } = await supabase
+    .from("profiles")
     .select(
-      "id, first_name, currency, language_code, telegram_id, settings!inner(telegram_notifications, email_notifications, graph_time)",
+      "id, first_name, telegram_id, settings!inner(telegram_notifications, email_notifications, currency, language)"
     )
-    .or("telegram_notifications.eq.true,email_notifications.eq.true", {
-      "foreignTable": "settings",
+    .or("telegram_notifications.eq.true, email_notifications.eq.true", {
+      foreignTable: "settings",
     })
     .returns<Profile[]>();
 
@@ -83,27 +84,25 @@ Deno.serve(async (req) => {
 
   await Promise.all(
     (body.options?.graph
-      ? users.filter((
-        { settings: { graph_time } },
-      ) => {
-        const date = new Date();
-        const offsetGreater = graph_time.includes("+");
-        const [time, timezoneOffset] = graph_time.split(
-          offsetGreater ? "+" : "-",
-        );
-        const [hour] = time.split(":").map(Number);
-        date.setUTCHours(
-          offsetGreater
-            ? hour - parseInt(timezoneOffset)
-            : hour + parseInt(timezoneOffset),
-          0,
-          0,
-          0,
-        );
-        return date.getUTCHours() === utcHours;
-      })
-      : users)
-      .map((user) => sendNotification(user, body)),
+      ? users.filter(({ settings: { graph_time } }) => {
+          const date = new Date();
+          const offsetGreater = graph_time.includes("+");
+          const [time, timezoneOffset] = graph_time.split(
+            offsetGreater ? "+" : "-"
+          );
+          const [hour] = time.split(":").map(Number);
+          date.setUTCHours(
+            offsetGreater
+              ? hour - parseInt(timezoneOffset)
+              : hour + parseInt(timezoneOffset),
+            0,
+            0,
+            0
+          );
+          return date.getUTCHours() === utcHours;
+        })
+      : users
+    ).map((user) => sendNotification(user, body))
   );
 
   return new Response("ok", { status: 200 });

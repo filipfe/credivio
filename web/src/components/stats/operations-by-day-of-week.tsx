@@ -17,15 +17,16 @@ import {
 } from "recharts";
 
 export default function OperationsByDayOfWeek() {
-  const { month, year, currency, languageCode } =
-    useContext(StatsFilterContext);
+  const { month, year, currency, settings } = useContext(StatsFilterContext);
   const { isLoading, data: results } = useOperationsByDayOfWeek(
     currency,
     month + 1,
     year
   );
 
-  const formatter = new Intl.DateTimeFormat(languageCode, { weekday: "short" });
+  const formatter = new Intl.DateTimeFormat(settings.language, {
+    weekday: "short",
+  });
 
   return (
     <Block className="col-span-2" title="Operacje wg dnia tygodnia">

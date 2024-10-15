@@ -26,7 +26,7 @@ alter table "public"."settings" add column "currency" currency_type default 'PLN
 
 alter table "public"."settings" alter column "currency" drop default;
 
-alter table "public"."settings" add column "language" text not null default 'pl';
+alter table "public"."settings" add column "language" text not null default 'pl-PL';
 
 alter table "public"."settings" alter column "language" drop default;
 

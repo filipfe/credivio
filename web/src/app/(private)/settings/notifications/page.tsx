@@ -8,14 +8,14 @@ export default function Page() {
           <NotificationSwitch
             title="Powiadomienia Telegram"
             description="Wysyłane automatycznie przez Telegram Bota"
-            field="telegram_notifications"
+            field="telegram"
           />
         </div>
         <div className="lg:pl-8 border-l">
           <NotificationSwitch
             title="Powiadomienia Email"
             description="Wysyłane automatycznie na adres email"
-            field="email_notifications"
+            field="email"
           />
         </div>
       </div>
