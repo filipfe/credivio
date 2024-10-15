@@ -13,7 +13,7 @@ export default function WeeklyGraph({ settings }: { settings: Settings }) {
     settings.currency
   );
   const { data: limits } = useLimits(settings.timezone, settings.currency);
-  console.log(days);
+
   const sum =
     days?.reduce(
       (prev: number, curr: DailyAmount) => prev + curr.total_amount,

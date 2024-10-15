@@ -88,8 +88,6 @@ export async function updatePreferences(formData: FormData) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  console.log("Updating...", { name, value });
-
   const { error } = await supabase
     .from("settings")
     .update({
@@ -98,7 +96,6 @@ export async function updatePreferences(formData: FormData) {
     .eq("user_id", user?.id);
 
   if (error) {
-    console.log(error);
     return {
       error: error.message,
     };

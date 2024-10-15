@@ -17,9 +17,285 @@
       "settings/notifications": "Notificaciones",
       "_logout": "Cerrar sesión"
     },
+    "dashboard": {
+      "latest-operations": {
+        "title": "Últimas operaciones",
+        "empty": "No se encontraron operaciones recientes"
+      },
+      "limits": {
+        "title": {
+          "day": "Límite - Día",
+          "week": "Límite - Semana",
+          "month": "Límite - Mes"
+        },
+        "button": "Establecer límite",
+        "modal": {
+          "form": {
+            "period": {
+              "label": "Período",
+              "values": {
+                "daily": "Diario",
+                "weekly": "Semanal",
+                "monthly": "Mensual"
+              }
+            },
+            "amount": {
+              "label": "Monto"
+            },
+            "currency": {
+              "label": "Moneda"
+            },
+            "_close": {
+              "label": "Cancelar"
+            },
+            "_submit": {
+              "label": "Guardar"
+            }
+          }
+        }
+      },
+      "goal-priority": {
+        "title": "Prioridad",
+        "collected": "Recopilado",
+        "left": "Restante",
+        "payments": {
+          "title": "Pagos",
+          "date": "Fecha",
+          "amount": "Monto"
+        },
+        "empty": "No se ha establecido ninguna prioridad"
+      },
+      "weekly-graph": {
+        "title": "Gastos de esta semana",
+        "empty": "¡No hay datos para mostrar!"
+      }
+    },
+    "stats": {
+      "incomes": "Ingresos",
+      "expenses": "Gastos",
+      "balance-by-month": {
+        "title": "Balance",
+        "empty": "¡No hay datos para mostrar!"
+      },
+      "operations-by-day-of-week": {
+        "title": "Operaciones por día de la semana"
+      },
+      "expenses-by-label": {
+        "title": "Gastos totales",
+        "description": "Gastos por etiqueta",
+        "empty": "No se encontraron gastos"
+      }
+    },
+    "operations": {
+      "incomes": {
+        "today": "Hoy",
+        "30-days": "30 días",
+        "operations-by-month": {
+          "title": "Ingresos",
+          "empty": {
+            "title": "¡No hay datos para mostrar!",
+            "button": "Agregar ingreso"
+          }
+        },
+        "operation-table": {
+          "title": "Ingresos",
+          "top-content": {
+            "search": {
+              "placeholder": "Buscar"
+            },
+            "period": {
+              "button": "Restablecer"
+            },
+            "filter": {
+              "currency": {
+                "label": "Moneda",
+                "default": "Todas"
+              },
+              "button": "Restablecer"
+            },
+            "add": "Agregar"
+          },
+          "columns": {
+            "issued_at": "FECHA",
+            "title": "TÍTULO",
+            "amount": "CANTIDAD",
+            "currency": "MONEDA"
+          },
+          "empty": {
+            "title": "No se encontraron operaciones",
+            "button": "Agregar ingreso"
+          }
+        }
+      },
+      "expenses": {
+        "limits": {
+          "title": {
+            "day": "Límite - Día",
+            "week": "Límite - Semana",
+            "month": "Límite - Mes"
+          },
+          "button": "Establecer límite",
+          "modal": {
+            "form": {
+              "period": {
+                "label": "Período",
+                "values": {
+                  "daily": "Diario",
+                  "weekly": "Semanal",
+                  "monthly": "Mensual"
+                }
+              },
+              "amount": {
+                "label": "Cantidad"
+              },
+              "currency": {
+                "label": "Moneda"
+              },
+              "_close": {
+                "label": "Cancelar"
+              },
+              "_submit": {
+                "label": "Guardar"
+              }
+            }
+          }
+        },
+        "today": "Hoy",
+        "30-days": "30 días",
+        "operations-by-month": {
+          "title": "Gastos",
+          "empty": {
+            "title": "¡No hay datos para mostrar!",
+            "button": "Agregar gasto"
+          }
+        },
+        "operation-table": {
+          "title": "Gastos",
+          "top-content": {
+            "search": {
+              "placeholder": "Buscar"
+            },
+            "period": {
+              "button": "Restablecer"
+            },
+            "filter": {
+              "label": {
+                "label": "Etiqueta",
+                "default": "Todas",
+                "description": "gastos"
+              },
+              "currency": {
+                "label": "Moneda",
+                "default": "Todas"
+              },
+              "button": "Restablecer"
+            },
+            "add": "Agregar"
+          },
+          "columns": {
+            "issued_at": "FECHA",
+            "title": "TÍTULO",
+            "amount": "CANTIDAD",
+            "currency": "MONEDA",
+            "label": "ETIQUETA"
+          },
+          "empty": {
+            "title": "No se encontraron operaciones",
+            "button": "Agregar gasto"
+          }
+        }
+      },
+      "recurring-payments": {}
+    },
     "settings": {
       "title": "Configuración",
-      "description": "Administra tus datos personales, preferencias y suscripción"
+      "description": "Administra tus datos personales, preferencias y suscripción",
+      "account": {
+        "personal-data": {
+          "title": "Datos personales",
+          "description": "Ajusta tus datos personales para tu cuenta",
+          "form": {
+            "first-name": {
+              "label": "Nombre"
+            },
+            "last-name": {
+              "label": "Apellido"
+            },
+            "_submit": {
+              "label": "Guardar"
+            }
+          }
+        },
+        "email": {
+          "title": "Correo electrónico",
+          "description": "Cambia el correo electrónico asociado a tu cuenta",
+          "form": {
+            "email": {
+              "label": "Correo electrónico",
+              "placeholder": "ejemplo@correo.com"
+            },
+            "_submit": {
+              "label": "Guardar"
+            }
+          }
+        },
+        "password": {
+          "title": "Contraseña",
+          "description": "Cambia la contraseña de tu cuenta",
+          "form": {
+            "password": {
+              "label": "Nueva contraseña"
+            },
+            "confirm-password": {
+              "label": "Confirmar nueva contraseña"
+            },
+            "_submit": {
+              "label": "Guardar contraseña"
+            }
+          }
+        }
+      },
+      "preferences": {
+        "default-currency": {
+          "title": "Moneda predeterminada",
+          "description": "Se utiliza de forma predeterminada en la aplicación",
+          "select": { "currency": "Moneda" }
+        },
+        "location": {
+          "title": "Ubicación",
+          "description": "Seleccione idioma y zona horaria",
+          "select": {
+            "language": "Idioma",
+            "timezone": "Zona horaria"
+          }
+        }
+      },
+      "notifications": {
+        "telegram": {
+          "title": "Notificaciones de Telegram",
+          "description": "Enviadas automáticamente por Telegram Bot"
+        },
+        "email": {
+          "title": "Notificaciones por correo electrónico",
+          "description": "Enviadas automáticamente a su dirección de correo electrónico"
+        }
+      }
+    },
+    "automation": {
+      "title": "Bot de Telegram",
+      "description": {
+        "1": "¡Agrega operaciones más rápido con un Bot de Telegram personalizado!",
+        "2": "El bot automatiza muchos procesos, ahorrándote tiempo y minimizando el riesgo de errores. Todos los datos se sincronizan en tiempo real, por lo que puedes estar seguro de que la información siempre está actualizada.",
+        "3": "Aquí está tu clave de Telegram. Envíala al bot para conectar tu cuenta:"
+      },
+      "input": "Clave de Telegram",
+      "latest-operations": {
+        "title": "Últimas operaciones",
+        "empty": {
+          "title": "¡Aún no has agregado ninguna operación usando el bot!",
+          "button": "Agregar operaciones"
+        }
+      }
     }
   },
   "public": {

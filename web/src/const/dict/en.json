@@ -17,9 +17,287 @@
       "settings/notifications": "Notifications",
       "_logout": "Sign out"
     },
+    "dashboard": {
+      "latest-operations": {
+        "title": "Latest operations",
+        "empty": "No recent operations found"
+      },
+      "limits": {
+        "title": {
+          "day": "Limit - Day",
+          "week": "Limit - Week",
+          "month": "Limit - Month"
+        },
+        "button": "Set limit",
+        "modal": {
+          "form": {
+            "period": {
+              "label": "Period",
+              "values": {
+                "daily": "Daily",
+                "weekly": "Weekly",
+                "monthly": "Monthly"
+              }
+            },
+            "amount": {
+              "label": "Amount"
+            },
+            "currency": {
+              "label": "Currency"
+            },
+            "_close": {
+              "label": "Cancel"
+            },
+            "_submit": {
+              "label": "Save"
+            }
+          }
+        }
+      },
+      "goal-priority": {
+        "title": "Priority",
+        "collected": "Collected",
+        "left": "Remaining",
+        "payments": {
+          "title": "Payments",
+          "date": "Date",
+          "amount": "Amount"
+        },
+        "empty": "No priority set"
+      },
+      "weekly-graph": {
+        "title": "This week's expenses",
+        "empty": "No data to display!"
+      }
+    },
+    "stats": {
+      "incomes": "Incomes",
+      "expenses": "Expenses",
+      "balance-by-month": {
+        "title": "Balance",
+        "empty": "No data to display!"
+      },
+      "operations-by-day-of-week": {
+        "title": "Operations by day of the week"
+      },
+      "expenses-by-label": {
+        "title": "Total expenses",
+        "description": "Expenses by label",
+        "empty": "No expenses found"
+      }
+    },
+    "operations": {
+      "incomes": {
+        "today": "Today",
+        "30-days": "30 days",
+        "operations-by-month": {
+          "title": "Income",
+          "empty": {
+            "title": "No data to display!",
+            "button": "Add income"
+          }
+        },
+        "operation-table": {
+          "title": "Income",
+          "top-content": {
+            "search": {
+              "placeholder": "Search"
+            },
+            "period": {
+              "button": "Reset"
+            },
+            "filter": {
+              "currency": {
+                "label": "Currency",
+                "default": "All"
+              },
+              "button": "Reset"
+            },
+            "add": "Add"
+          },
+          "columns": {
+            "issued_at": "DATE",
+            "title": "TITLE",
+            "amount": "AMOUNT",
+            "currency": "CURRENCY"
+          },
+          "empty": {
+            "title": "No operations found",
+            "button": "Add income"
+          }
+        }
+      },
+      "expenses": {
+        "limits": {
+          "title": {
+            "day": "Limit - Day",
+            "week": "Limit - Week",
+            "month": "Limit - Month"
+          },
+          "button": "Set limit",
+          "modal": {
+            "form": {
+              "period": {
+                "label": "Period",
+                "values": {
+                  "daily": "Daily",
+                  "weekly": "Weekly",
+                  "monthly": "Monthly"
+                }
+              },
+              "amount": {
+                "label": "Amount"
+              },
+              "currency": {
+                "label": "Currency"
+              },
+              "_close": {
+                "label": "Cancel"
+              },
+              "_submit": {
+                "label": "Save"
+              }
+            }
+          }
+        },
+        "today": "Today",
+        "30-days": "30 days",
+        "operations-by-month": {
+          "title": "Expenses",
+          "empty": {
+            "title": "No data to display!",
+            "button": "Add expense"
+          }
+        },
+        "operation-table": {
+          "title": "Expenses",
+          "top-content": {
+            "search": {
+              "placeholder": "Search"
+            },
+            "period": {
+              "button": "Reset"
+            },
+            "filter": {
+              "label": {
+                "label": "Label",
+                "default": "All",
+                "description": "expenses"
+              },
+              "currency": {
+                "label": "Currency",
+                "default": "All"
+              },
+              "button": "Reset"
+            },
+            "add": "Add"
+          },
+          "columns": {
+            "issued_at": "DATE",
+            "title": "TITLE",
+            "amount": "AMOUNT",
+            "currency": "CURRENCY",
+            "label": "LABEL"
+          },
+          "empty": {
+            "title": "No operations found",
+            "button": "Add expense"
+          }
+        }
+      },
+      "recurring-payments": {}
+    },
     "settings": {
       "title": "Settings",
-      "description": "Zarządzaj swoimi danymi osobowymi, preferencjami i subskrypcją"
+      "description": "Manage your personal data, preferences, and subscription",
+      "account": {
+        "personal-data": {
+          "title": "Personal data",
+          "description": "Adjust your personal data for your account",
+          "form": {
+            "first-name": {
+              "label": "First name"
+            },
+            "last-name": {
+              "label": "Last name"
+            },
+            "_submit": {
+              "label": "Save"
+            }
+          }
+        },
+        "email": {
+          "title": "Email",
+          "description": "Change the email associated with your account",
+          "form": {
+            "email": {
+              "label": "Email",
+              "placeholder": "example@mail.com"
+            },
+            "_submit": {
+              "label": "Save"
+            }
+          }
+        },
+        "password": {
+          "title": "Password",
+          "description": "Change your account password",
+          "form": {
+            "password": {
+              "label": "New password"
+            },
+            "confirm-password": {
+              "label": "Confirm new password"
+            },
+            "_submit": {
+              "label": "Save password"
+            }
+          }
+        }
+      },
+      "preferences": {
+        "default-currency": {
+          "title": "Default currency",
+          "description": "Used by default in the application",
+          "select": {
+            "currency": "Currency"
+          }
+        },
+        "location": {
+          "title": "Location",
+          "description": "Select language and time zone",
+          "select": {
+            "language": "Language",
+            "timezone": "Time zone"
+          }
+        }
+      },
+      "notifications": {
+        "telegram": {
+          "title": "Telegram Notifications",
+          "description": "Sent automatically by Telegram Bot"
+        },
+        "email": {
+          "title": "Email Notifications",
+          "description": "Sent automatically to your email address"
+        }
+      }
+    },
+    "automation": {
+      "title": "Telegram Bot",
+      "description": {
+        "1": "Add operations faster with a custom Telegram Bot!",
+        "2": "The bot automates many processes, saving you time and minimizing the risk of errors. All data is synchronized in real time, so you can be sure that information is always up-to-date.",
+        "3": "Here's your Telegram key. Send it to the bot to connect your account:"
+      },
+      "input": "Telegram key",
+      "latest-operations": {
+        "title": "Latest operations",
+        "empty": {
+          "title": "You haven't added any operations using the bot yet!",
+          "button": "Add operations"
+        }
+      }
     }
   },
   "public": {
