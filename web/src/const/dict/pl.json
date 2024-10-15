@@ -209,17 +209,17 @@
     },
     "automation": {
       "title": "Telegram Bot",
-      "description": {
-        "1": "Dodawaj operacje szybciej za pomocą dostosowanego Telegram Bota!",
-        "2": "Bot automatyzuje wiele procesów, oszczędzając Twój czas i minimalizując ryzyko błędów. Wszystkie dane są synchronizowane w czasie rzeczywistym, więc masz pewność, że informacje są zawsze aktualne.",
-        "3": "Oto twój klucz Telegram. Wyślij go do bota, aby połączyć swoje konto:"
-      },
-      "telegram-key": {
+      "description": [
+        "Dodawaj operacje szybciej za pomocą dostosowanego Telegram Bota!",
+        "Bot automatyzuje wiele procesów, oszczędzając Twój czas i minimalizując ryzyko błędów. Wszystkie dane są synchronizowane w czasie rzeczywistym, więc masz pewność, że informacje są zawsze aktualne.",
+        "Oto twój klucz Telegram. Wyślij go do bota, aby połączyć swoje konto:"
+      ],
+      "input": {
         "label": "Klucz Telegram"
       },
       "latest-operations": {
         "title": "Ostatnie operacje",
-        "empty": {
+        "_empty": {
           "title": "Nie dodałeś jeszcze operacji przy pomocy bota!",
           "button": "Dodaj operacje"
         }
@@ -269,6 +269,9 @@
             },
             "_submit": {
               "label": "Zapisz hasło"
+            },
+            "_toast": {
+              "success": "Hasło zostało pomyślnie zmienione"
             }
           }
         }
@@ -278,15 +281,19 @@
           "title": "Domyślna waluta",
           "description": "Używana domyślnie w aplikacji",
           "select": {
-            "currency": "Waluta"
+            "label": "Waluta"
           }
         },
         "location": {
           "title": "Lokalizacja",
           "description": "Wybierz język i strefę czasową",
-          "select": {
-            "language": "Język",
-            "timezone": "Strefa czasowa"
+          "language": {
+            "label": "Język",
+            "placeholder": "Wybierz język"
+          },
+          "timezone": {
+            "label": "Strefa czasowa",
+            "placeholder": "Wybierz strefę czasową"
           }
         }
       },

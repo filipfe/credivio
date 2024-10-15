@@ -7,11 +7,14 @@ import { ScrollShadow } from "@nextui-org/react";
 import { AnimatePresence, motion } from "framer-motion";
 import useSWR from "swr";
 import { getLatestOperations } from "@/lib/operations/queries";
+import { Dict } from "@/const/dict";
 
 export default function LatestOperations({
   languageCode,
+  dict,
 }: {
   languageCode: Locale;
+  dict: Dict["private"]["automation"]["latest-operations"];
 }) {
   const scrollAreaRef = useRef<HTMLElement | null>(null);
   const { isLoading, data: results } = useSWR(
@@ -26,7 +29,7 @@ export default function LatestOperations({
   const reversedResults = results ? [...results].reverse() : [];
   return (
     <div className="flex flex-col gap-4 flex-1">
-      <h3 className="text-sm sm:text-base">Ostatnie operacje</h3>
+      <h3 className="text-sm sm:text-base">{dict.title}</h3>
       <div className="flex-1 rounded-md bg-light border flex flex-col relative min-h-48">
         <ScrollShadow
           ref={scrollAreaRef}
@@ -72,9 +75,9 @@ export default function LatestOperations({
             </div>
           ) : (
             <Empty
-              title="Nie dodałeś jeszcze operacji przy pomocy bota!"
+              title={dict._empty.title}
               cta={{
-                title: "Dodaj operacje",
+                title: dict._empty.button,
                 href: "https://t.me/CreDevBot",
               }}
             />

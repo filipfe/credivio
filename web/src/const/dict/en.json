@@ -209,15 +209,17 @@
     },
     "automation": {
       "title": "Telegram Bot",
-      "description": {
-        "1": "Add operations faster with a custom Telegram Bot!",
-        "2": "The bot automates many processes, saving you time and minimizing the risk of errors. All data is synchronized in real time, so you can be sure that information is always up-to-date.",
-        "3": "Here's your Telegram key. Send it to the bot to connect your account:"
+      "description": [
+        "Add operations faster with our custom Telegram Bot!",
+        "The bot automates many processes, saving you time and minimizing the risk of errors. All data is synchronized in real time, so you can be sure that information is always up-to-date.",
+        "Here's your Telegram key. Send it to the bot to connect your account:"
+      ],
+      "input": {
+        "label": "Telegram key"
       },
-      "input": "Telegram key",
       "latest-operations": {
         "title": "Latest operations",
-        "empty": {
+        "_empty": {
           "title": "You haven't added any operations using the bot yet!",
           "button": "Add operations"
         }
@@ -267,6 +269,9 @@
             },
             "_submit": {
               "label": "Save password"
+            },
+            "_toast": {
+              "success": "Password has been successfully changed"
             }
           }
         }
@@ -276,15 +281,19 @@
           "title": "Default currency",
           "description": "Used by default in the application",
           "select": {
-            "currency": "Currency"
+            "label": "Currency"
           }
         },
         "location": {
           "title": "Location",
           "description": "Select language and time zone",
-          "select": {
-            "language": "Language",
-            "timezone": "Time zone"
+          "language": {
+            "label": "Language",
+            "placeholder": "Select language"
+          },
+          "timezone": {
+            "label": "Time zone",
+            "placeholder": "Select time zone"
           }
         }
       },

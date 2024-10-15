@@ -209,15 +209,17 @@
     },
     "automation": {
       "title": "Bot de Telegram",
-      "description": {
-        "1": "¡Agrega operaciones más rápido con un Bot de Telegram personalizado!",
-        "2": "El bot automatiza muchos procesos, ahorrándote tiempo y minimizando el riesgo de errores. Todos los datos se sincronizan en tiempo real, por lo que puedes estar seguro de que la información siempre está actualizada.",
-        "3": "Aquí está tu clave de Telegram. Envíala al bot para conectar tu cuenta:"
+      "description": [
+        "¡Agrega operaciones más rápido con un Bot de Telegram personalizado!",
+        "El bot automatiza muchos procesos, ahorrándote tiempo y minimizando el riesgo de errores. Todos los datos se sincronizan en tiempo real, por lo que puedes estar seguro de que la información siempre está actualizada.",
+        "Aquí está tu clave de Telegram. Envíala al bot para conectar tu cuenta:"
+      ],
+      "input": {
+        "label": "Clave de Telegram"
       },
-      "input": "Clave de Telegram",
       "latest-operations": {
         "title": "Últimas operaciones",
-        "empty": {
+        "_empty": {
           "title": "¡Aún no has agregado ninguna operación usando el bot!",
           "button": "Agregar operaciones"
         }
@@ -267,6 +269,9 @@
             },
             "_submit": {
               "label": "Guardar contraseña"
+            },
+            "_toast": {
+              "success": "La contraseña ha sido cambiada exitosamente"
             }
           }
         }
@@ -275,14 +280,18 @@
         "default-currency": {
           "title": "Moneda predeterminada",
           "description": "Se utiliza de forma predeterminada en la aplicación",
-          "select": { "currency": "Moneda" }
+          "select": { "label": "Moneda" }
         },
         "location": {
           "title": "Ubicación",
           "description": "Seleccione idioma y zona horaria",
-          "select": {
-            "language": "Idioma",
-            "timezone": "Zona horaria"
+          "language": {
+            "label": "Idioma",
+            "placeholder": "Selecciona el idioma"
+          },
+          "timezone": {
+            "label": "Zona horaria",
+            "placeholder": "Selecciona la zona horaria"
           }
         }
       },

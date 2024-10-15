@@ -11,7 +11,7 @@ export async function getAccount(): Promise<
 
   const { data, error: authError } = await supabase
     .from("profiles")
-    .select("first_name, last_name, email")
+    .select("first_name, last_name, email, ...settings(language)")
     .single();
 
   if (authError) {
@@ -27,7 +27,7 @@ export async function getAccount(): Promise<
 }
 
 export async function activateService(
-  formData: FormData
+  formData: FormData,
 ): Promise<SupabaseResponse<any>> {
   const service = formData.get("service")!.toString();
   const isActive = formData.get("is-active")!.toString();

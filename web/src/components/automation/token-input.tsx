@@ -4,7 +4,13 @@ import { Button, Input } from "@nextui-org/react";
 import { CheckIcon, CopyIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-export default function TokenInput({ token }: { token: string }) {
+export default function TokenInput({
+  token,
+  dict,
+}: {
+  token: string;
+  dict: { label: string };
+}) {
   const [copied, setCopied] = useState(false);
   const timeout = useRef<number | null>(null);
 
@@ -24,7 +30,7 @@ export default function TokenInput({ token }: { token: string }) {
         value={token}
         readOnly
         disableAnimation
-        label="Klucz Telegram"
+        label={dict.label}
         classNames={{
           inputWrapper: "!bg-light border shadow-none select-none",
         }}
