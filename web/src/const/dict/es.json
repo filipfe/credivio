@@ -207,6 +207,22 @@
       },
       "recurring-payments": {}
     },
+    "automation": {
+      "title": "Bot de Telegram",
+      "description": {
+        "1": "¡Agrega operaciones más rápido con un Bot de Telegram personalizado!",
+        "2": "El bot automatiza muchos procesos, ahorrándote tiempo y minimizando el riesgo de errores. Todos los datos se sincronizan en tiempo real, por lo que puedes estar seguro de que la información siempre está actualizada.",
+        "3": "Aquí está tu clave de Telegram. Envíala al bot para conectar tu cuenta:"
+      },
+      "input": "Clave de Telegram",
+      "latest-operations": {
+        "title": "Últimas operaciones",
+        "empty": {
+          "title": "¡Aún no has agregado ninguna operación usando el bot!",
+          "button": "Agregar operaciones"
+        }
+      }
+    },
     "settings": {
       "title": "Configuración",
       "description": "Administra tus datos personales, preferencias y suscripción",
@@ -278,22 +294,6 @@
         "email": {
           "title": "Notificaciones por correo electrónico",
           "description": "Enviadas automáticamente a su dirección de correo electrónico"
-        }
-      }
-    },
-    "automation": {
-      "title": "Bot de Telegram",
-      "description": {
-        "1": "¡Agrega operaciones más rápido con un Bot de Telegram personalizado!",
-        "2": "El bot automatiza muchos procesos, ahorrándote tiempo y minimizando el riesgo de errores. Todos los datos se sincronizan en tiempo real, por lo que puedes estar seguro de que la información siempre está actualizada.",
-        "3": "Aquí está tu clave de Telegram. Envíala al bot para conectar tu cuenta:"
-      },
-      "input": "Clave de Telegram",
-      "latest-operations": {
-        "title": "Últimas operaciones",
-        "empty": {
-          "title": "¡Aún no has agregado ninguna operación usando el bot!",
-          "button": "Agregar operaciones"
         }
       }
     }

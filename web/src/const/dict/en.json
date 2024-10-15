@@ -207,6 +207,22 @@
       },
       "recurring-payments": {}
     },
+    "automation": {
+      "title": "Telegram Bot",
+      "description": {
+        "1": "Add operations faster with a custom Telegram Bot!",
+        "2": "The bot automates many processes, saving you time and minimizing the risk of errors. All data is synchronized in real time, so you can be sure that information is always up-to-date.",
+        "3": "Here's your Telegram key. Send it to the bot to connect your account:"
+      },
+      "input": "Telegram key",
+      "latest-operations": {
+        "title": "Latest operations",
+        "empty": {
+          "title": "You haven't added any operations using the bot yet!",
+          "button": "Add operations"
+        }
+      }
+    },
     "settings": {
       "title": "Settings",
       "description": "Manage your personal data, preferences, and subscription",
@@ -280,22 +296,6 @@
         "email": {
           "title": "Email Notifications",
           "description": "Sent automatically to your email address"
-        }
-      }
-    },
-    "automation": {
-      "title": "Telegram Bot",
-      "description": {
-        "1": "Add operations faster with a custom Telegram Bot!",
-        "2": "The bot automates many processes, saving you time and minimizing the risk of errors. All data is synchronized in real time, so you can be sure that information is always up-to-date.",
-        "3": "Here's your Telegram key. Send it to the bot to connect your account:"
-      },
-      "input": "Telegram key",
-      "latest-operations": {
-        "title": "Latest operations",
-        "empty": {
-          "title": "You haven't added any operations using the bot yet!",
-          "button": "Add operations"
         }
       }
     }
