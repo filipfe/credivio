@@ -7,11 +7,7 @@ import { redirect } from "next/navigation";
 
 export default async function Page({ params }: { params: { symbol: string } }) {
   const { results: stocks } = await getSpecificStocks([params.symbol]);
-  const { result: settings } = await getSettings();
-
-  if (!settings) {
-    throw new Error("Couldn't retrieve settings");
-  }
+  const settings = await getSettings();
 
   if (stocks.length === 0) redirect("/stocks");
   const {

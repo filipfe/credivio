@@ -3,12 +3,7 @@ import getDictionary from "@/const/dict";
 import { getSettings } from "@/lib/general/actions";
 
 export default async function Page() {
-  const { result: settings, error } = await getSettings();
-
-  if (error || !settings) {
-    throw new Error(error);
-  }
-
+  const settings = await getSettings();
   const {
     private: {
       settings: { notifications: dict },

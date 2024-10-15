@@ -6,24 +6,34 @@ import Limits from "@/components/operations/limits";
 import GoalPriority from "@/components/dashboard/goal-priority";
 import WeeklyGraph from "@/components/dashboard/weekly-graph";
 import { getSettings } from "@/lib/general/actions";
+import getDictionary from "@/const/dict";
 
 export default async function Dashboard() {
-  const { result: settings } = await getSettings();
+  const settings = await getSettings();
 
-  if (!settings) {
-    throw new Error("Couldn't retrieve settings");
-  }
+  const {
+    private: {
+      dashboard: dict,
+      goals: { priority },
+      operations: {
+        expenses: { limits },
+      },
+    },
+  } = await getDictionary(settings.language);
 
   return (
     <div className="sm:px-10 h-full py-4 sm:py-8 flex flex-col xl:grid grid-cols-6 xl:grid-rows-[max-content_max-content_1fr] gap-4 sm:gap-6">
       <Suspense fallback={latestOperationsFallback}>
-        <LatestOperations languageCode={settings.language} />
+        <LatestOperations
+          dict={dict["latest-operations"]}
+          languageCode={settings.language}
+        />
       </Suspense>
-      <Limits settings={settings} />
+      <Limits dict={limits} settings={settings} />
       <Suspense>
-        <GoalPriority />
+        <GoalPriority dict={priority} />
       </Suspense>
-      <WeeklyGraph settings={settings} />
+      <WeeklyGraph settings={settings} dict={dict["weekly-graph"]} />
     </div>
   );
 }

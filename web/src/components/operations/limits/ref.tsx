@@ -3,29 +3,20 @@
 import Block from "@/components/ui/block";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
+import { Dict } from "@/const/dict";
 import { useLimits } from "@/lib/general/queries";
 import NumberFormat from "@/utils/formatters/currency";
 import { Button, CircularProgress, cn, Skeleton } from "@nextui-org/react";
 import { Plus, SquarePen } from "lucide-react";
 import { useState } from "react";
 
-const getPeriodTitle = (period: "daily" | "weekly" | "monthly") => {
-  switch (period) {
-    case "daily":
-      return "Dzień";
-    case "monthly":
-      return "Miesiąc";
-    case "weekly":
-      return "Tydzień";
-  }
-};
-
 interface Props extends Pick<Limit, "period"> {
+  dict: Dict["private"]["operations"]["expenses"]["limits"];
   settings: Settings;
   onAdd: (currency: string, amount?: string) => void;
 }
 
-export default function LimitRef({ period, settings, onAdd }: Props) {
+export default function LimitRef({ dict, period, settings, onAdd }: Props) {
   const [currency, setCurrency] = useState(settings.currency);
   const { data: limits, isLoading } = useLimits(settings.timezone, currency);
 
@@ -36,8 +27,8 @@ export default function LimitRef({ period, settings, onAdd }: Props) {
   return (
     <Block
       className={cn(
-        "sm:px-6 sm:py-6 relative",
-        !isLoading && !limit && "min-h-32 2xl:min-h-[114px]"
+        "sm:px-6 relative",
+        !isLoading && !limit && "min-h-32 2xl:min-h-[114px] sm:py-6"
       )}
     >
       <div
@@ -67,7 +58,7 @@ export default function LimitRef({ period, settings, onAdd }: Props) {
             />
             <div className="grid">
               <span className="text-sm text-font/60">
-                {getPeriodTitle(period)}
+                {dict.period[period]}
               </span>
               <span className="text-sm font-medium">
                 <NumberFormat currency={currency} amount={limit.total} /> /{" "}
@@ -76,7 +67,7 @@ export default function LimitRef({ period, settings, onAdd }: Props) {
             </div>
           </div>
         ) : (
-          <h4 className="text-sm">Limit - {getPeriodTitle(period)}</h4>
+          <h4 className="text-sm">{dict._empty.title[period]}</h4>
         )}
         <div className="hidden sm:flex items-center justify-between gap-3">
           {limit && (

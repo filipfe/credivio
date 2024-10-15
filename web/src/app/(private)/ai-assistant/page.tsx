@@ -8,11 +8,7 @@ import { ScrollShadow } from "@nextui-org/react";
 import { getSettings } from "@/lib/general/actions";
 
 export default async function Page() {
-  const { result: settings } = await getSettings();
-
-  if (!settings) {
-    throw new Error("Couldn't retrieve settings");
-  }
+  const settings = await getSettings();
 
   return (
     <div className="sm:px-10 flex flex-col h-full gap-4 sm:gap-10 xl:grid grid-cols-2">

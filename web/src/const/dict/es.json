@@ -20,54 +20,11 @@
     "dashboard": {
       "latest-operations": {
         "title": "Últimas operaciones",
-        "empty": "No se encontraron operaciones recientes"
-      },
-      "limits": {
-        "title": {
-          "day": "Límite - Día",
-          "week": "Límite - Semana",
-          "month": "Límite - Mes"
-        },
-        "button": "Establecer límite",
-        "modal": {
-          "form": {
-            "period": {
-              "label": "Período",
-              "values": {
-                "daily": "Diario",
-                "weekly": "Semanal",
-                "monthly": "Mensual"
-              }
-            },
-            "amount": {
-              "label": "Monto"
-            },
-            "currency": {
-              "label": "Moneda"
-            },
-            "_close": {
-              "label": "Cancelar"
-            },
-            "_submit": {
-              "label": "Guardar"
-            }
-          }
-        }
-      },
-      "goal-priority": {
-        "title": "Prioridad",
-        "collected": "Recopilado",
-        "left": "Restante",
-        "payments": {
-          "title": "Pagos",
-          "date": "Fecha",
-          "amount": "Monto"
-        },
-        "empty": "No se ha establecido ninguna prioridad"
+        "_empty": "No se encontraron operaciones recientes"
       },
       "weekly-graph": {
         "title": "Gastos de esta semana",
-        "empty": "¡No hay datos para mostrar!"
+        "_empty": "¡No hay datos para mostrar!"
       }
     },
     "stats": {
@@ -75,7 +32,7 @@
       "expenses": "Gastos",
       "balance-by-month": {
         "title": "Balance",
-        "empty": "¡No hay datos para mostrar!"
+        "_empty": "¡No hay datos para mostrar!"
       },
       "operations-by-day-of-week": {
         "title": "Operaciones por día de la semana"
@@ -83,7 +40,7 @@
       "expenses-by-label": {
         "title": "Gastos totales",
         "description": "Gastos por etiqueta",
-        "empty": "No se encontraron gastos"
+        "_empty": "No se encontraron gastos"
       }
     },
     "operations": {
@@ -92,7 +49,7 @@
         "30-days": "30 días",
         "operations-by-month": {
           "title": "Ingresos",
-          "empty": {
+          "_empty": {
             "title": "¡No hay datos para mostrar!",
             "button": "Agregar ingreso"
           }
@@ -121,7 +78,7 @@
             "amount": "CANTIDAD",
             "currency": "MONEDA"
           },
-          "empty": {
+          "_empty": {
             "title": "No se encontraron operaciones",
             "button": "Agregar ingreso"
           }
@@ -129,12 +86,19 @@
       },
       "expenses": {
         "limits": {
-          "title": {
-            "day": "Límite - Día",
-            "week": "Límite - Semana",
-            "month": "Límite - Mes"
+          "period": {
+            "daily": "Día",
+            "weekly": "Semana",
+            "monthly": "Mes"
           },
-          "button": "Establecer límite",
+          "_empty": {
+            "title": {
+              "daily": "Límite - Día",
+              "weekly": "Límite - Semana",
+              "monthly": "Límite - Mes"
+            },
+            "label": "Establecer límite"
+          },
           "modal": {
             "form": {
               "period": {
@@ -164,7 +128,7 @@
         "30-days": "30 días",
         "operations-by-month": {
           "title": "Gastos",
-          "empty": {
+          "_empty": {
             "title": "¡No hay datos para mostrar!",
             "button": "Agregar gasto"
           }
@@ -199,13 +163,26 @@
             "currency": "MONEDA",
             "label": "ETIQUETA"
           },
-          "empty": {
+          "_empty": {
             "title": "No se encontraron operaciones",
             "button": "Agregar gasto"
           }
         }
       },
       "recurring-payments": {}
+    },
+    "goals": {
+      "priority": {
+        "title": "Prioridad",
+        "collected": "Recopilado",
+        "left": "Restante",
+        "payments": {
+          "title": "Pagos",
+          "date": "Fecha",
+          "amount": "Monto"
+        },
+        "_empty": "No se ha establecido ninguna prioridad"
+      }
     },
     "automation": {
       "title": "Bot de Telegram",

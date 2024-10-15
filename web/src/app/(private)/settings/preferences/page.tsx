@@ -4,11 +4,7 @@ import getDictionary from "@/const/dict";
 import { getSettings } from "@/lib/general/actions";
 
 export default async function Preferences() {
-  const { result: settings, error } = await getSettings();
-
-  if (error || !settings) {
-    throw new Error("Couldn't retrieve preferences");
-  }
+  const settings = await getSettings();
 
   const {
     private: {

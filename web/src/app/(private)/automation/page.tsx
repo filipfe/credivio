@@ -4,11 +4,7 @@ import getDictionary from "@/const/dict";
 import { getSettings } from "@/lib/general/actions";
 
 export default async function Page() {
-  const { result: settings } = await getSettings();
-
-  if (!settings) {
-    throw new Error("Couldn't retrieve settings");
-  }
+  const settings = await getSettings();
 
   const {
     private: { automation: dict },

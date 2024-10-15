@@ -11,11 +11,7 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const { result: settings } = await getSettings();
-
-  if (!settings) {
-    throw new Error("Couldn't retrieve settings");
-  }
+  const settings = await getSettings();
 
   const {
     private: { _navigation },

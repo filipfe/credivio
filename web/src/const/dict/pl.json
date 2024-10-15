@@ -20,54 +20,11 @@
     "dashboard": {
       "latest-operations": {
         "title": "Ostatnie operacje",
-        "empty": "Nie znaleziono ostatnich operacji"
-      },
-      "limits": {
-        "title": {
-          "day": "Limit - Dzień",
-          "week": "Limit - Tydzień",
-          "month": "Limit - Miesiąc"
-        },
-        "button": "Ustaw limit",
-        "modal": {
-          "form": {
-            "period": {
-              "label": "Okres",
-              "values": {
-                "daily": "Dzienny",
-                "weekly": "Tygodniowy",
-                "monthly": "Miesięczny"
-              }
-            },
-            "amount": {
-              "label": "Kwota"
-            },
-            "currency": {
-              "label": "Waluta"
-            },
-            "_close": {
-              "label": "Anuluj"
-            },
-            "_submit": {
-              "label": "Zapisz"
-            }
-          }
-        }
-      },
-      "goal-priority": {
-        "title": "Priorytet",
-        "collected": "Zebrano",
-        "left": "Pozostało",
-        "payments": {
-          "title": "Wpłaty",
-          "date": "Data",
-          "amount": "Kwota"
-        },
-        "empty": "Brak priorytetu"
+        "_empty": "Nie znaleziono ostatnich operacji"
       },
       "weekly-graph": {
         "title": "Wydatki w tym tygodniu",
-        "empty": "Brak danych do wyświetlenia!"
+        "_empty": "Brak danych do wyświetlenia!"
       }
     },
     "stats": {
@@ -75,7 +32,7 @@
       "expenses": "Wydatki",
       "balance-by-month": {
         "title": "Bilans operacji",
-        "empty": "Brak danych do wyświetlenia!"
+        "_empty": "Brak danych do wyświetlenia!"
       },
       "operations-by-day-of-week": {
         "title": "Operacje wg dnia tygodnia"
@@ -83,7 +40,7 @@
       "expenses-by-label": {
         "title": "Wydatki łącznie",
         "description": "Wydatki według etykiet",
-        "empty": "Nie znaleziono wydatków"
+        "_empty": "Nie znaleziono wydatków"
       }
     },
     "operations": {
@@ -92,7 +49,7 @@
         "30-days": "30 dni",
         "operations-by-month": {
           "title": "Przychody",
-          "empty": {
+          "_empty": {
             "title": "Brak danych do wyświetlenia!",
             "button": "Dodaj przychód"
           }
@@ -121,7 +78,7 @@
             "amount": "KWOTA",
             "currency": "WALUTA"
           },
-          "empty": {
+          "_empty": {
             "title": "Nie znalezniono operacji",
             "button": "Dodaj przychód"
           }
@@ -129,12 +86,19 @@
       },
       "expenses": {
         "limits": {
-          "title": {
-            "day": "Limit - Dzień",
-            "week": "Limit - Tydzień",
-            "month": "Limit - Miesiąc"
+          "period": {
+            "daily": "Dzień",
+            "weekly": "Tydzień",
+            "monthly": "Miesiąc"
           },
-          "button": "Ustaw limit",
+          "_empty": {
+            "title": {
+              "daily": "Limit - Dzień",
+              "weekly": "Limit - Tydzień",
+              "monthly": "Limit - Miesiąc"
+            },
+            "label": "Ustaw limit"
+          },
           "modal": {
             "form": {
               "period": {
@@ -164,7 +128,7 @@
         "30-days": "30 dni",
         "operations-by-month": {
           "title": "Wydatki",
-          "empty": {
+          "_empty": {
             "title": "Brak danych do wyświetlenia!",
             "button": "Dodaj wydatek"
           }
@@ -199,13 +163,26 @@
             "currency": "WALUTA",
             "label": "ETYKIETA"
           },
-          "empty": {
+          "_empty": {
             "title": "Nie znalezniono operacji",
             "button": "Dodaj wydatek"
           }
         }
       },
       "recurring-payments": {}
+    },
+    "goals": {
+      "priority": {
+        "title": "Priorytet",
+        "collected": "Zebrano",
+        "left": "Pozostało",
+        "payments": {
+          "title": "Wpłaty",
+          "date": "Data",
+          "amount": "Kwota"
+        },
+        "_empty": "Brak priorytetu"
+      }
     },
     "automation": {
       "title": "Telegram Bot",
