@@ -17,6 +17,7 @@
       "settings/notifications": "Powiadomienia",
       "_logout": "Wyloguj"
     },
+    "general": { "incomes": "Przychody", "expenses": "Wydatki" },
     "dashboard": {
       "latest-operations": {
         "title": "Ostatnie operacje",
@@ -28,8 +29,6 @@
       }
     },
     "stats": {
-      "incomes": "Przychody",
-      "expenses": "Wydatki",
       "balance-by-month": {
         "title": "Bilans operacji",
         "_empty": "Brak danych do wyświetlenia!"
@@ -40,6 +39,7 @@
       "expenses-by-label": {
         "title": "Wydatki łącznie",
         "description": "Wydatki według etykiet",
+        "other": "Inne",
         "_empty": "Nie znaleziono wydatków"
       }
     },
@@ -100,6 +100,10 @@
             "label": "Ustaw limit"
           },
           "modal": {
+            "title": {
+              "new": "Nowy limit",
+              "edit": "Edytuj limit"
+            },
             "form": {
               "period": {
                 "label": "Okres",
@@ -119,7 +123,8 @@
                 "label": "Anuluj"
               },
               "_submit": {
-                "label": "Zapisz"
+                "label": "Zapisz",
+                "_error": "Wystąpił błąd przy dodawaniu limitu"
               }
             }
           }

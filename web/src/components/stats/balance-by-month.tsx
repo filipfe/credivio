@@ -25,13 +25,19 @@ import {
 import { useBalanceHistory } from "@/lib/stats/queries";
 import ChartLoader from "../ui/charts/loader";
 import NumberFormat from "@/utils/formatters/currency";
+import { Dict } from "@/const/dict";
 
 const CustomTooltip = ({
+  recordLabels,
   active,
   payload,
   labelFormatter,
   currency,
 }: TooltipProps<ValueType, NameType> & {
+  recordLabels: {
+    incomes: Dict["private"]["general"]["incomes"];
+    expenses: Dict["private"]["general"]["expenses"];
+  };
   labelFormatter: (
     label: any,
     payload: Payload<ValueType, NameType>[]
@@ -61,7 +67,9 @@ const CustomTooltip = ({
                 </div>
               )}
               <span className="text-sm">
-                {record.dataKey === "total_expenses" ? "Wydatki" : "Przychody"}
+                {record.dataKey === "total_expenses"
+                  ? recordLabels.expenses
+                  : recordLabels.incomes}
               </span>
             </div>
             <strong className="font-medium text-sm">
@@ -79,7 +87,16 @@ const CustomTooltip = ({
   return null;
 };
 
-export default function BalanceByMonth() {
+export default function BalanceByMonth({
+  dict,
+}: {
+  dict: {
+    general: {
+      incomes: Dict["private"]["general"]["incomes"];
+      expenses: Dict["private"]["general"]["expenses"];
+    };
+  } & Dict["private"]["stats"]["balance-by-month"];
+}) {
   const { month, year, currency, settings } = useContext(StatsFilterContext);
   const { data: results, isLoading } = useBalanceHistory(
     currency,
@@ -109,7 +126,7 @@ export default function BalanceByMonth() {
   return (
     <Block
       className="xl:row-start-1 xl:row-end-4 col-start-1 col-end-3 xl:col-start-3 xl:col-end-5"
-      title="Bilans operacji"
+      title={dict.title}
     >
       {isLoading ? (
         <ChartLoader className="!p-0" hideTitle />
@@ -156,6 +173,7 @@ export default function BalanceByMonth() {
                 content={(props) => (
                   <CustomTooltip
                     {...props}
+                    recordLabels={dict.general}
                     labelFormatter={(label) =>
                       new Intl.DateTimeFormat(settings.language, {
                         dateStyle: "full",
@@ -171,7 +189,7 @@ export default function BalanceByMonth() {
           </ResponsiveContainer>
         </div>
       ) : (
-        <Empty title="Brak danych do wyświetlenia!" />
+        <Empty title={dict._empty} />
       )}
     </Block>
   );

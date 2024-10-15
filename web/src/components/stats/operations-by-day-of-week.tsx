@@ -15,8 +15,18 @@ import {
   RadarChart,
   ResponsiveContainer,
 } from "recharts";
+import { Dict } from "@/const/dict";
 
-export default function OperationsByDayOfWeek() {
+export default function OperationsByDayOfWeek({
+  dict,
+}: {
+  dict: {
+    general: {
+      incomes: Dict["private"]["general"]["incomes"];
+      expenses: Dict["private"]["general"]["expenses"];
+    };
+  } & Dict["private"]["stats"]["operations-by-day-of-week"];
+}) {
   const { month, year, currency, settings } = useContext(StatsFilterContext);
   const { isLoading, data: results } = useOperationsByDayOfWeek(
     currency,
@@ -29,7 +39,7 @@ export default function OperationsByDayOfWeek() {
   });
 
   return (
-    <Block className="col-span-2" title="Operacje wg dnia tygodnia">
+    <Block className="col-span-2" title={dict.title}>
       <div className="flex max-h-[361px] h-[361px] w-full justify-between">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart outerRadius="80%" data={results}>
@@ -49,7 +59,7 @@ export default function OperationsByDayOfWeek() {
             />
             <Radar
               isAnimationActive={false}
-              name="Przychody"
+              name={dict.general.incomes}
               dataKey="total_incomes"
               stroke="#177981"
               fill="#177981"
@@ -77,7 +87,7 @@ export default function OperationsByDayOfWeek() {
             />
             <Radar
               isAnimationActive={false}
-              name="Wydatki"
+              name={dict.general.expenses}
               dataKey="total_expenses"
               stroke="#fdbb2d"
               fill="#fdbb2d"

@@ -106,7 +106,7 @@ export default function LimitRef({ dict, period, settings, onAdd }: Props) {
             className="bg-light border max-w-max text-font"
             onPress={() => onAdd(currency)}
           >
-            Ustaw limit
+            {dict._empty.label}
           </Button>
         </div>
       )}
