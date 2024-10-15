@@ -13,11 +13,7 @@ export default async function Page({
 }: {
   searchParams: SearchParams;
 }) {
-  const { result: settings } = await getSettings();
-
-  if (!settings) {
-    throw new Error("Couldn't retrieve settings");
-  }
+  const settings = await getSettings();
 
   const { result } = await getOperationsStats(
     settings.timezone,

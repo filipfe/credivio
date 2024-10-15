@@ -20,54 +20,12 @@
     "dashboard": {
       "latest-operations": {
         "title": "Latest operations",
-        "empty": "No recent operations found"
+        "_empty": "No recent operations found"
       },
-      "limits": {
-        "title": {
-          "day": "Limit - Day",
-          "week": "Limit - Week",
-          "month": "Limit - Month"
-        },
-        "button": "Set limit",
-        "modal": {
-          "form": {
-            "period": {
-              "label": "Period",
-              "values": {
-                "daily": "Daily",
-                "weekly": "Weekly",
-                "monthly": "Monthly"
-              }
-            },
-            "amount": {
-              "label": "Amount"
-            },
-            "currency": {
-              "label": "Currency"
-            },
-            "_close": {
-              "label": "Cancel"
-            },
-            "_submit": {
-              "label": "Save"
-            }
-          }
-        }
-      },
-      "goal-priority": {
-        "title": "Priority",
-        "collected": "Collected",
-        "left": "Remaining",
-        "payments": {
-          "title": "Payments",
-          "date": "Date",
-          "amount": "Amount"
-        },
-        "empty": "No priority set"
-      },
+
       "weekly-graph": {
         "title": "This week's expenses",
-        "empty": "No data to display!"
+        "_empty": "No data to display!"
       }
     },
     "stats": {
@@ -75,7 +33,7 @@
       "expenses": "Expenses",
       "balance-by-month": {
         "title": "Balance",
-        "empty": "No data to display!"
+        "_empty": "No data to display!"
       },
       "operations-by-day-of-week": {
         "title": "Operations by day of the week"
@@ -83,7 +41,7 @@
       "expenses-by-label": {
         "title": "Total expenses",
         "description": "Expenses by label",
-        "empty": "No expenses found"
+        "_empty": "No expenses found"
       }
     },
     "operations": {
@@ -92,7 +50,7 @@
         "30-days": "30 days",
         "operations-by-month": {
           "title": "Income",
-          "empty": {
+          "_empty": {
             "title": "No data to display!",
             "button": "Add income"
           }
@@ -121,7 +79,7 @@
             "amount": "AMOUNT",
             "currency": "CURRENCY"
           },
-          "empty": {
+          "_empty": {
             "title": "No operations found",
             "button": "Add income"
           }
@@ -129,12 +87,19 @@
       },
       "expenses": {
         "limits": {
-          "title": {
-            "day": "Limit - Day",
-            "week": "Limit - Week",
-            "month": "Limit - Month"
+          "period": {
+            "daily": "Day",
+            "weekly": "Week",
+            "monthly": "Month"
           },
-          "button": "Set limit",
+          "_empty": {
+            "title": {
+              "daily": "Limit - Day",
+              "weekly": "Limit - Week",
+              "monthly": "Limit - Month"
+            },
+            "label": "Set limit"
+          },
           "modal": {
             "form": {
               "period": {
@@ -164,7 +129,7 @@
         "30-days": "30 days",
         "operations-by-month": {
           "title": "Expenses",
-          "empty": {
+          "_empty": {
             "title": "No data to display!",
             "button": "Add expense"
           }
@@ -199,7 +164,7 @@
             "currency": "CURRENCY",
             "label": "LABEL"
           },
-          "empty": {
+          "_empty": {
             "title": "No operations found",
             "button": "Add expense"
           }
@@ -207,17 +172,32 @@
       },
       "recurring-payments": {}
     },
+    "goals": {
+      "priority": {
+        "title": "Priority",
+        "collected": "Collected",
+        "left": "Remaining",
+        "payments": {
+          "title": "Payments",
+          "date": "Date",
+          "amount": "Amount"
+        },
+        "_empty": "No priority set"
+      }
+    },
     "automation": {
       "title": "Telegram Bot",
-      "description": {
-        "1": "Add operations faster with a custom Telegram Bot!",
-        "2": "The bot automates many processes, saving you time and minimizing the risk of errors. All data is synchronized in real time, so you can be sure that information is always up-to-date.",
-        "3": "Here's your Telegram key. Send it to the bot to connect your account:"
+      "description": [
+        "Add operations faster with our custom Telegram Bot!",
+        "The bot automates many processes, saving you time and minimizing the risk of errors. All data is synchronized in real time, so you can be sure that information is always up-to-date.",
+        "Here's your Telegram key. Send it to the bot to connect your account:"
+      ],
+      "input": {
+        "label": "Telegram key"
       },
-      "input": "Telegram key",
       "latest-operations": {
         "title": "Latest operations",
-        "empty": {
+        "_empty": {
           "title": "You haven't added any operations using the bot yet!",
           "button": "Add operations"
         }
@@ -267,6 +247,9 @@
             },
             "_submit": {
               "label": "Save password"
+            },
+            "_toast": {
+              "success": "Password has been successfully changed"
             }
           }
         }
@@ -276,15 +259,19 @@
           "title": "Default currency",
           "description": "Used by default in the application",
           "select": {
-            "currency": "Currency"
+            "label": "Currency"
           }
         },
         "location": {
           "title": "Location",
           "description": "Select language and time zone",
-          "select": {
-            "language": "Language",
-            "timezone": "Time zone"
+          "language": {
+            "label": "Language",
+            "placeholder": "Select language"
+          },
+          "timezone": {
+            "label": "Time zone",
+            "placeholder": "Select time zone"
           }
         }
       },

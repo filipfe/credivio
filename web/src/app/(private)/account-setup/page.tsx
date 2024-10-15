@@ -5,14 +5,15 @@ import Block from "@/components/ui/block";
 import Form from "@/components/ui/form";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
+import getDictionary from "@/const/dict";
 import { getSettings } from "@/lib/general/actions";
 
 export default async function AccountSetup() {
-  const { result: settings } = await getSettings();
+  const settings = await getSettings();
 
-  if (!settings) {
-    throw new Error("Couldn't retrieve settings");
-  }
+  const {
+    private: { settings: dict },
+  } = await getDictionary(settings.language);
 
   return (
     <div className="sm:px-10 py-4 sm:py-8 h-full flex items-center justify-center">
@@ -46,10 +47,11 @@ export default async function AccountSetup() {
                   isRequired
                 />
                 <LanguageSelect
+                  dict={dict.preferences.location.language}
                   defaultValue={settings.language}
                   disableSubmit
                 />
-                <TimezoneSelect />
+                <TimezoneSelect dict={dict.preferences.location.timezone} />
               </div>
             </Form>
           </Block>

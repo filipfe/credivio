@@ -1,7 +1,12 @@
 import { createClient } from "@/utils/supabase/server";
 import Priority from "../goals/priority";
+import { Dict } from "@/const/dict";
 
-export default async function GoalPriority() {
+export default async function GoalPriority({
+  dict,
+}: {
+  dict: Dict["private"]["goals"]["priority"];
+}) {
   const supabase = createClient();
   const { data: goal } = await supabase
     .from("goals")
@@ -15,7 +20,7 @@ export default async function GoalPriority() {
 
   return (
     <div className="col-span-3 [&>div]:w-full flex items-stretch">
-      <Priority goal={goal} limitPayments={5} />
+      <Priority dict={dict} goal={goal} limitPayments={5} />
     </div>
   );
 }

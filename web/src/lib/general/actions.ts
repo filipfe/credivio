@@ -3,32 +3,28 @@
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 
-export async function getSettings(): Promise<
-  SupabaseSingleRowResponse<Settings>
-> {
+export async function getSettings(): Promise<Settings> {
   const supabase = createClient();
 
   const { data, error } = await supabase
     .from("profiles")
     .select(
-      "telegram_token, telegram_id, ...settings(timezone, currency, language)"
+      "telegram_token, telegram_id, ...settings(timezone, currency, language)",
     )
-    .returns<Settings>()
+    .returns<Settings[]>()
     .single();
 
   if (error) {
     throw new Error(error.message);
   }
 
-  return {
-    result: data,
-  };
+  return data;
 }
 
 export async function updateRow(
   id: string,
   type: OperationType,
-  fields: { [key: string]: any }
+  fields: { [key: string]: any },
 ) {
   const supabase = createClient();
   const { error } = await supabase.from(`${type}s`).update(fields).eq("id", id);
@@ -49,7 +45,7 @@ export async function updateRow(
 
 export async function deleteRows<T>(
   data: "all" | string[],
-  type: string
+  type: string,
 ): Promise<Pick<SupabaseResponse, "error">> {
   const supabase = createClient();
 

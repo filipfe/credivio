@@ -17,28 +17,6 @@ export async function getLanguages(): Promise<Language[]> {
   return data;
 }
 
-export async function updateAccount(account: Partial<Account>) {
-  const supabase = createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const { error } = await supabase
-    .from("profiles")
-    .update(account)
-    .eq("id", user?.id);
-
-  if (error) {
-    console.error(error);
-    return {
-      error: error.message,
-    };
-  }
-
-  return {};
-}
-
 export async function updateSettings(key: string, value: any) {
   const supabase = createClient();
   const {
@@ -53,7 +31,7 @@ export async function updateSettings(key: string, value: any) {
   const { data, error: selectError } = await supabase
     .from("profiles")
     .select(
-      "telegram_token, telegram_id, ...settings(timezone, currency, language), notifications:settings(telegram:telegram_notifications, email:email_notifications)"
+      "telegram_token, telegram_id, ...settings(timezone, currency, language), notifications:settings(telegram:telegram_notifications, email:email_notifications)",
     )
     .returns<Settings>()
     .single();

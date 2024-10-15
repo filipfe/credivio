@@ -1,16 +1,18 @@
 import LatestOperations from "@/components/automation/latest-operations";
 import TokenInput from "@/components/automation/token-input";
 import Block from "@/components/ui/block";
+import { Dict } from "@/const/dict";
 import Image from "next/image";
 import { ReactNode } from "react";
 
 type Props = {
+  dict: Dict["private"]["automation"];
   settings: Settings;
   children?: ReactNode;
   isRegistered?: boolean;
 };
 
-export default function TelegramBot({ settings, children }: Props) {
+export default function TelegramBot({ settings, children, dict }: Props) {
   const isRegistered = !!settings.telegram_id;
   return (
     <Block
@@ -43,20 +45,10 @@ export default function TelegramBot({ settings, children }: Props) {
     >
       <div className="flex-1 flex flex-col gap-6">
         <div className="flex flex-col gap-6">
-          <p className="text-sm">
-            Dodawaj operacje szybciej za pomocą dostosowanego Telegram Bota!
-          </p>
-          <p className="text-sm">
-            Bot automatyzuje wiele procesów, oszczędzając Twój czas i
-            minimalizując ryzyko błędów. Wszystkie dane są synchronizowane w
-            czasie rzeczywistym, więc masz pewność, że informacje są zawsze
-            aktualne.
-          </p>
-          <p className="text-sm">
-            Oto twój klucz Telegram. Wyślij go do bota, aby połączyć swoje
-            konto:
-          </p>
-          <TokenInput token={settings.telegram_token} />
+          {dict.description.map((text) => (
+            <p className="text-sm">{text}</p>
+          ))}
+          <TokenInput token={settings.telegram_token} dict={dict.input} />
         </div>
         {children}
       </div>

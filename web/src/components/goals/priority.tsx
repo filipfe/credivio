@@ -5,14 +5,15 @@ import Block from "../ui/block";
 import Empty from "../ui/empty";
 import NumberFormat from "@/utils/formatters/currency";
 import { useSettings } from "@/lib/general/queries";
+import { Dict } from "@/const/dict";
 
-export default function Priority({
-  goal,
-  limitPayments = 10,
-}: {
+type Props = {
+  dict: Dict["private"]["goals"]["priority"];
   goal?: Goal;
   limitPayments?: number;
-}) {
+};
+
+export default function Priority({ dict, goal, limitPayments = 10 }: Props) {
   const sum = goal
     ? goal.payments.reduce((prev, { amount }) => prev + amount, 0)
     : 0;
@@ -29,7 +30,7 @@ export default function Priority({
               <div className="grid gap-1">
                 <div className="flex items-center gap-2">
                   <div className="bg-primary rounded-full h-2.5 w-2.5" />
-                  <span className="text-sm">Zebrano</span>
+                  <span className="text-sm">{dict.collected}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="font-bold">
@@ -41,13 +42,13 @@ export default function Priority({
                 </div>
               </div>
               <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 text-center flex flex-col items-center">
-                <h2 className="text-font/80">Priorytet</h2>
+                <h2 className="text-font/80">{dict.title}</h2>
                 <h3 className="font-bold text-lg">{goal.title}</h3>
               </div>
               <div className="flex items-end flex-col gap-1">
                 <div className="flex items-center gap-2">
                   <div className="bg-light border rounded-full h-2.5 w-2.5" />
-                  <span className="text-sm">Pozostało</span>
+                  <span className="text-sm">{dict.left}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="font-bold">
@@ -74,9 +75,13 @@ export default function Priority({
           </div>
           <div>
             <div className="flex items-center justify-between gap-2 pb-2">
-              <span className="text-sm font-medium uppercase">Data</span>
-              <span className="text-sm font-bold">Wpłaty</span>
-              <span className="text-sm font-medium uppercase">Kwota</span>
+              <span className="text-sm font-medium uppercase">
+                {dict.payments.date}
+              </span>
+              <span className="text-sm font-bold">{dict.payments.title}</span>
+              <span className="text-sm font-medium uppercase">
+                {dict.payments.amount}
+              </span>
             </div>
             <ScrollShadow
               className="max-h-48 sm:max-h-[calc(100vh-684px)]"
@@ -95,7 +100,7 @@ export default function Priority({
           </div>
         </div>
       ) : (
-        <Empty title="Brak priorytetu" />
+        <Empty title={dict._empty} />
       )}
     </Block>
   );

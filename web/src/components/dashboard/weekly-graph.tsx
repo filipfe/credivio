@@ -6,8 +6,15 @@ import { useLimits } from "@/lib/general/queries";
 import Block from "../ui/block";
 import NumberFormat from "@/utils/formatters/currency";
 import { useWeeklyGraph } from "@/lib/dashboard/queries";
+import { Dict } from "@/const/dict";
 
-export default function WeeklyGraph({ settings }: { settings: Settings }) {
+export default function WeeklyGraph({
+  settings,
+  dict,
+}: {
+  settings: Settings;
+  dict: Dict["private"]["dashboard"]["weekly-graph"];
+}) {
   const { data: days, isLoading } = useWeeklyGraph(
     settings.timezone,
     settings.currency
@@ -23,14 +30,6 @@ export default function WeeklyGraph({ settings }: { settings: Settings }) {
   const limit = limits
     ? limits.find((limit) => limit.period === "weekly")
     : null;
-
-  const renderSkeletonBars = () =>
-    Array.from({ length: 7 }).map((_, index) => (
-      <div key={index} className="flex flex-col gap-2 items-center flex-1">
-        <Skeleton className="w-full flex-1 rounded-md" />
-        <Skeleton className="h-6 w-8 rounded-md" />
-      </div>
-    ));
 
   return (
     <Block className="grid lg:col-span-2 xl:col-span-3">
@@ -61,13 +60,21 @@ export default function WeeklyGraph({ settings }: { settings: Settings }) {
                 </div>
               </div>
             </div>
-            {renderSkeletonBars()}
+            {Array.from({ length: 7 }).map((_, index) => (
+              <div
+                key={index}
+                className="flex flex-col gap-2 items-center flex-1"
+              >
+                <Skeleton className="w-full flex-1 rounded-md" />
+                <Skeleton className="h-6 w-8 rounded-md" />
+              </div>
+            ))}
           </div>
         </div>
       ) : days ? (
         <div className="flex flex-col gap-6">
           <div className="grid gap-1">
-            <h2 className="text-font/75 text-sm">Wydatki w tym tygodniu</h2>
+            <h2 className="text-font/75 text-sm">{dict.title}</h2>
             <div className="flex items-end gap-2">
               <strong className="text-3xl">
                 <NumberFormat currency={settings.currency} amount={sum} />
@@ -113,7 +120,7 @@ export default function WeeklyGraph({ settings }: { settings: Settings }) {
           </div>
         </div>
       ) : (
-        <Empty title="Brak danych do wyświetlenia!" />
+        <Empty title={dict._empty} />
       )}
     </Block>
   );

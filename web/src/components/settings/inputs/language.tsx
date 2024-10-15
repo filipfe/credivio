@@ -2,6 +2,7 @@
 
 import Toast from "@/components/ui/toast";
 import UniversalSelect from "@/components/ui/universal-select";
+import { Dict } from "@/const/dict";
 import { updatePreferences } from "@/lib/settings/actions";
 import { getLanguages } from "@/lib/settings/queries";
 import { useEffect, useRef, useState, useTransition } from "react";
@@ -9,11 +10,16 @@ import toast from "react-hot-toast";
 import useSWR from "swr";
 
 type Props = {
+  dict: Dict["private"]["settings"]["preferences"]["location"]["language"];
   defaultValue: string;
   disableSubmit?: boolean;
 };
 
-export default function LanguageSelect({ defaultValue, disableSubmit }: Props) {
+export default function LanguageSelect({
+  defaultValue,
+  dict,
+  disableSubmit,
+}: Props) {
   const [isPending, startTransition] = useTransition();
   const [selected, setSelected] = useState(defaultValue);
   const formRef = useRef<HTMLFormElement | null>(null);
@@ -45,7 +51,7 @@ export default function LanguageSelect({ defaultValue, disableSubmit }: Props) {
     <UniversalSelect
       name="language"
       aria-label="Language select"
-      label="Język"
+      label={dict.label}
       selectedKeys={[selected]}
       isLoading={isLoading || isPending}
       isDisabled={isLoading || isPending}
@@ -54,7 +60,7 @@ export default function LanguageSelect({ defaultValue, disableSubmit }: Props) {
           ? languages.map((lang) => ({ name: lang.name, value: lang.code }))
           : []
       }
-      placeholder="Wybierz język"
+      placeholder={dict.placeholder}
       onChange={(e) => setSelected(e.target.value)}
     />
   ) : (
@@ -62,7 +68,7 @@ export default function LanguageSelect({ defaultValue, disableSubmit }: Props) {
       <UniversalSelect
         name="language"
         aria-label="Language select"
-        label="Język"
+        label={dict.label}
         selectedKeys={[selected]}
         isLoading={isLoading || isPending}
         isDisabled={isLoading || isPending}
@@ -71,7 +77,7 @@ export default function LanguageSelect({ defaultValue, disableSubmit }: Props) {
             ? languages.map((lang) => ({ name: lang.name, value: lang.code }))
             : []
         }
-        placeholder="Wybierz język"
+        placeholder={dict.placeholder}
         onChange={(e) => setSelected(e.target.value)}
       />
       <input type="hidden" name="name" value="language" />

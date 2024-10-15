@@ -6,11 +6,7 @@ export default async function Month({
   year,
   payments,
 }: Month & { year: number }) {
-  const { result: settings } = await getSettings();
-
-  if (!settings) {
-    throw new Error("Couldn't retrieve settings");
-  }
+  const settings = await getSettings();
 
   const monthDate = new Date();
   monthDate.setMonth(month - 1);

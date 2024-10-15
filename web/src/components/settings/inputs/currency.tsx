@@ -3,15 +3,17 @@
 import Toast from "@/components/ui/toast";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
+import { Dict } from "@/const/dict";
 import { updatePreferences } from "@/lib/settings/actions";
 import { useEffect, useRef, useState, useTransition } from "react";
 import toast from "react-hot-toast";
 
 type Props = {
+  dict: Dict["private"]["settings"]["preferences"]["default-currency"]["select"];
   defaultValue: string;
 };
 
-export default function CurrencySelect({ defaultValue }: Props) {
+export default function CurrencySelect({ defaultValue, dict }: Props) {
   const [isPending, startTransition] = useTransition();
   const [selected, setSelected] = useState(defaultValue);
   const formRef = useRef<HTMLFormElement | null>(null);
@@ -38,7 +40,7 @@ export default function CurrencySelect({ defaultValue }: Props) {
       <UniversalSelect
         name="currency"
         aria-label="Currency select"
-        label="Waluta"
+        label={dict.label}
         selectedKeys={[selected]}
         isLoading={isPending}
         isDisabled={isPending}

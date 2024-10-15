@@ -4,17 +4,20 @@ import OperationRef from "../operations/ref";
 import Block from "@/components/ui/block";
 import Empty from "../ui/empty";
 import { Coins } from "lucide-react";
+import { Dict } from "@/const/dict";
 
 export default async function LatestOperations({
   languageCode,
+  dict,
 }: {
   languageCode: Locale;
+  dict: Dict["private"]["dashboard"]["latest-operations"];
 }) {
   const { results: operations } = await getLatestOperations();
 
   return (
     <Block
-      title="Ostatnie operacje"
+      title={dict.title}
       className="xl:col-span-6 !px-0 h-fit"
       titleClassName="px-6 sm:px-10"
     >
@@ -29,7 +32,7 @@ export default async function LatestOperations({
           ))}
         </HorizontalScroll>
       ) : (
-        <Empty title="Nie znaleziono ostatnich operacji" icon={Coins} />
+        <Empty title={dict._empty} icon={Coins} />
       )}
     </Block>
   );

@@ -3,8 +3,13 @@
 import { useTimezoneSelect } from "react-timezone-select";
 import UniversalSelect from "@/components/ui/universal-select";
 import { useState } from "react";
+import { Dict } from "@/const/dict";
 
-export default function TimezoneSelect() {
+export default function TimezoneSelect({
+  dict,
+}: {
+  dict: Dict["private"]["settings"]["preferences"]["location"]["timezone"];
+}) {
   const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const [timezone, setTimezone] = useState(deviceTimezone);
   const { options, parseTimezone } = useTimezoneSelect({});
@@ -12,7 +17,7 @@ export default function TimezoneSelect() {
   return (
     <>
       <UniversalSelect
-        label="Strefa czasowa"
+        label={dict.label}
         selectedKeys={timezone ? [parseTimezone(timezone).value] : []}
         elements={options as Option<string>[]}
         onChange={(e) =>

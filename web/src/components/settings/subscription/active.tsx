@@ -3,11 +3,7 @@ import { Button } from "@nextui-org/react";
 import { Check } from "lucide-react";
 
 export default async function Active({ status, plan }: Subscription) {
-  const { result: settings } = await getSettings();
-
-  if (!settings) {
-    throw new Error("Couldn't retrieve settings");
-  }
+  const settings = await getSettings();
 
   return (
     <div className="px-10 py-8 border bg-light rounded-md flex flex-col items-center justify-center gap-8">

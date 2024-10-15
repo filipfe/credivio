@@ -20,54 +20,11 @@
     "dashboard": {
       "latest-operations": {
         "title": "Últimas operaciones",
-        "empty": "No se encontraron operaciones recientes"
-      },
-      "limits": {
-        "title": {
-          "day": "Límite - Día",
-          "week": "Límite - Semana",
-          "month": "Límite - Mes"
-        },
-        "button": "Establecer límite",
-        "modal": {
-          "form": {
-            "period": {
-              "label": "Período",
-              "values": {
-                "daily": "Diario",
-                "weekly": "Semanal",
-                "monthly": "Mensual"
-              }
-            },
-            "amount": {
-              "label": "Monto"
-            },
-            "currency": {
-              "label": "Moneda"
-            },
-            "_close": {
-              "label": "Cancelar"
-            },
-            "_submit": {
-              "label": "Guardar"
-            }
-          }
-        }
-      },
-      "goal-priority": {
-        "title": "Prioridad",
-        "collected": "Recopilado",
-        "left": "Restante",
-        "payments": {
-          "title": "Pagos",
-          "date": "Fecha",
-          "amount": "Monto"
-        },
-        "empty": "No se ha establecido ninguna prioridad"
+        "_empty": "No se encontraron operaciones recientes"
       },
       "weekly-graph": {
         "title": "Gastos de esta semana",
-        "empty": "¡No hay datos para mostrar!"
+        "_empty": "¡No hay datos para mostrar!"
       }
     },
     "stats": {
@@ -75,7 +32,7 @@
       "expenses": "Gastos",
       "balance-by-month": {
         "title": "Balance",
-        "empty": "¡No hay datos para mostrar!"
+        "_empty": "¡No hay datos para mostrar!"
       },
       "operations-by-day-of-week": {
         "title": "Operaciones por día de la semana"
@@ -83,7 +40,7 @@
       "expenses-by-label": {
         "title": "Gastos totales",
         "description": "Gastos por etiqueta",
-        "empty": "No se encontraron gastos"
+        "_empty": "No se encontraron gastos"
       }
     },
     "operations": {
@@ -92,7 +49,7 @@
         "30-days": "30 días",
         "operations-by-month": {
           "title": "Ingresos",
-          "empty": {
+          "_empty": {
             "title": "¡No hay datos para mostrar!",
             "button": "Agregar ingreso"
           }
@@ -121,7 +78,7 @@
             "amount": "CANTIDAD",
             "currency": "MONEDA"
           },
-          "empty": {
+          "_empty": {
             "title": "No se encontraron operaciones",
             "button": "Agregar ingreso"
           }
@@ -129,12 +86,19 @@
       },
       "expenses": {
         "limits": {
-          "title": {
-            "day": "Límite - Día",
-            "week": "Límite - Semana",
-            "month": "Límite - Mes"
+          "period": {
+            "daily": "Día",
+            "weekly": "Semana",
+            "monthly": "Mes"
           },
-          "button": "Establecer límite",
+          "_empty": {
+            "title": {
+              "daily": "Límite - Día",
+              "weekly": "Límite - Semana",
+              "monthly": "Límite - Mes"
+            },
+            "label": "Establecer límite"
+          },
           "modal": {
             "form": {
               "period": {
@@ -164,7 +128,7 @@
         "30-days": "30 días",
         "operations-by-month": {
           "title": "Gastos",
-          "empty": {
+          "_empty": {
             "title": "¡No hay datos para mostrar!",
             "button": "Agregar gasto"
           }
@@ -199,7 +163,7 @@
             "currency": "MONEDA",
             "label": "ETIQUETA"
           },
-          "empty": {
+          "_empty": {
             "title": "No se encontraron operaciones",
             "button": "Agregar gasto"
           }
@@ -207,17 +171,32 @@
       },
       "recurring-payments": {}
     },
+    "goals": {
+      "priority": {
+        "title": "Prioridad",
+        "collected": "Recopilado",
+        "left": "Restante",
+        "payments": {
+          "title": "Pagos",
+          "date": "Fecha",
+          "amount": "Monto"
+        },
+        "_empty": "No se ha establecido ninguna prioridad"
+      }
+    },
     "automation": {
       "title": "Bot de Telegram",
-      "description": {
-        "1": "¡Agrega operaciones más rápido con un Bot de Telegram personalizado!",
-        "2": "El bot automatiza muchos procesos, ahorrándote tiempo y minimizando el riesgo de errores. Todos los datos se sincronizan en tiempo real, por lo que puedes estar seguro de que la información siempre está actualizada.",
-        "3": "Aquí está tu clave de Telegram. Envíala al bot para conectar tu cuenta:"
+      "description": [
+        "¡Agrega operaciones más rápido con un Bot de Telegram personalizado!",
+        "El bot automatiza muchos procesos, ahorrándote tiempo y minimizando el riesgo de errores. Todos los datos se sincronizan en tiempo real, por lo que puedes estar seguro de que la información siempre está actualizada.",
+        "Aquí está tu clave de Telegram. Envíala al bot para conectar tu cuenta:"
+      ],
+      "input": {
+        "label": "Clave de Telegram"
       },
-      "input": "Clave de Telegram",
       "latest-operations": {
         "title": "Últimas operaciones",
-        "empty": {
+        "_empty": {
           "title": "¡Aún no has agregado ninguna operación usando el bot!",
           "button": "Agregar operaciones"
         }
@@ -267,6 +246,9 @@
             },
             "_submit": {
               "label": "Guardar contraseña"
+            },
+            "_toast": {
+              "success": "La contraseña ha sido cambiada exitosamente"
             }
           }
         }
@@ -275,14 +257,18 @@
         "default-currency": {
           "title": "Moneda predeterminada",
           "description": "Se utiliza de forma predeterminada en la aplicación",
-          "select": { "currency": "Moneda" }
+          "select": { "label": "Moneda" }
         },
         "location": {
           "title": "Ubicación",
           "description": "Seleccione idioma y zona horaria",
-          "select": {
-            "language": "Idioma",
-            "timezone": "Zona horaria"
+          "language": {
+            "label": "Idioma",
+            "placeholder": "Selecciona el idioma"
+          },
+          "timezone": {
+            "label": "Zona horaria",
+            "placeholder": "Selecciona la zona horaria"
           }
         }
       },
