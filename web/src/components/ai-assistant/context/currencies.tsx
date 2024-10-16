@@ -6,7 +6,7 @@ import Option from "./option";
 import { Section } from "@/components/ui/block";
 
 export default function Currencies() {
-  const { currency, setCurrency } = useAIAssistant();
+  const { currency, setCurrency, setGoal, setLimit } = useAIAssistant();
 
   return (
     <Section title="Waluty">
@@ -17,7 +17,11 @@ export default function Currencies() {
             // highlight="outline"
             id={`context-limit-${curr}`}
             isActive={currency === curr}
-            onActiveChange={() => setCurrency(curr)}
+            onActiveChange={() => {
+              setGoal(undefined);
+              setLimit(undefined);
+              setCurrency(curr);
+            }}
             key={curr}
           >
             {curr}

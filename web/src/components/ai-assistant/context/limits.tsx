@@ -35,21 +35,9 @@ export default function LimitsContext({ timezone }: { timezone: string }) {
                 </>
               ) : limits && limits.length > 0 ? (
                 <>
-                  <LimitRef
-                    period="daily"
-                    currency={currency}
-                    timezone={timezone}
-                  />
-                  <LimitRef
-                    period="weekly"
-                    currency={currency}
-                    timezone={timezone}
-                  />
-                  <LimitRef
-                    period="monthly"
-                    currency={currency}
-                    timezone={timezone}
-                  />
+                  <LimitRef period="daily" timezone={timezone} />
+                  <LimitRef period="weekly" timezone={timezone} />
+                  <LimitRef period="monthly" timezone={timezone} />
                 </>
               ) : (
                 <Empty
@@ -67,19 +55,16 @@ export default function LimitsContext({ timezone }: { timezone: string }) {
 
 const LimitRef = ({
   period,
-  currency,
   timezone,
 }: {
   period: Limit["period"];
-  currency?: string;
   timezone: string;
 }) => {
-  const { limit: selectedLimit, setLimit } = useAIAssistant();
+  const { limit: selectedLimit, setLimit, currency } = useAIAssistant();
   const { data: limits } = useLimits(timezone, currency);
   const limit = currency
     ? limits?.find((limit) => limit.period === period)
     : null;
-  console.log({ limits });
 
   if (!limit) return <></>;
 

@@ -51,7 +51,7 @@ async function getLimits(timezone: string, currency: string): Promise<Limit[]> {
   return data;
 }
 
-export const useLimits = (timezone: string, currency?: string) =>
-  useSWR(currency ? ["limits", timezone, currency] : null, ([_k, tz, curr]) =>
+export const useLimits = (timezone: string, currency: string) =>
+  useSWR(["limits", timezone, currency], ([_k, tz, curr]) =>
     getLimits(tz, curr)
   );

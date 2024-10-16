@@ -9,7 +9,7 @@ begin
   return query
   with cte1 as (
     select 
-      (i.issued_at at time zone p_timezone)::date,  
+      (i.issued_at at time zone p_timezone)::date as issued_at,  
       'income' as type, 
       i.title,
       i.amount, 
@@ -22,15 +22,15 @@ begin
     union all
     
     select 
-      (e.issued_at at time zone p_timezone)::date,
+      (e.issued_at at time zone p_timezone)::date as issued_at,
       'expense' as type, 
       e.title,
       e.amount, 
       e.label
     from expenses e
     where 
-      (i.issued_at at time zone p_timezone) >= (current_timestamp at time zone p_timezone)::date - interval '30 days' and
-      i.currency = p_currency 
+      (e.issued_at at time zone p_timezone) >= (current_timestamp at time zone p_timezone)::date - interval '30 days' and
+      e.currency = p_currency 
     
     -- union all
 

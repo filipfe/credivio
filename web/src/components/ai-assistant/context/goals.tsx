@@ -8,7 +8,8 @@ import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
 import NumberFormat from "@/utils/formatters/currency";
 
 export default function GoalsContext() {
-  const { data: goals, error, isLoading } = useGoals();
+  const { currency } = useAIAssistant();
+  const { data: goals, error, isLoading } = useGoals(currency);
 
   return (
     <Section title="Cele">
