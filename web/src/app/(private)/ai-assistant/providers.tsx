@@ -14,6 +14,8 @@ type SelectedType = {
 };
 
 type AIAssistantContextType = {
+  currency: string;
+  setCurrency: Dispatch<SetStateAction<string>>;
   limit?: Limit;
   goal?: Goal;
   setLimit: Dispatch<SetStateAction<Limit | undefined>>;
@@ -28,9 +30,12 @@ export const useAIAssistant = () => useContext(AIAssistantContext);
 
 export default function AIAssistantProvider({
   children,
+  defaultCurrency,
 }: {
   children: React.ReactNode;
+  defaultCurrency: string;
 }) {
+  const [currency, setCurrency] = useState<string>(defaultCurrency);
   const [limit, setLimit] = useState<Limit>();
   const [goal, setGoal] = useState<Goal>();
   const [selected, setSelected] = useState<SelectedType>({
@@ -40,7 +45,16 @@ export default function AIAssistantProvider({
 
   return (
     <AIAssistantContext.Provider
-      value={{ limit, setLimit, goal, setGoal, selected, setSelected }}
+      value={{
+        currency,
+        setCurrency,
+        limit,
+        setLimit,
+        goal,
+        setGoal,
+        selected,
+        setSelected,
+      }}
     >
       {children}
     </AIAssistantContext.Provider>

@@ -6,13 +6,14 @@ import Block from "@/components/ui/block";
 import AIAssistantProvider from "./providers";
 import { ScrollShadow } from "@nextui-org/react";
 import { getSettings } from "@/lib/general/actions";
+import Currencies from "@/components/ai-assistant/context/currencies";
 
 export default async function Page() {
   const settings = await getSettings();
 
   return (
     <div className="sm:px-10 flex flex-col h-full gap-4 sm:gap-10 xl:grid grid-cols-2">
-      <AIAssistantProvider>
+      <AIAssistantProvider defaultCurrency={settings.currency}>
         <Chat settings={settings} />
         <Block
           title="Zbuduj kontekst"
@@ -21,6 +22,7 @@ export default async function Page() {
         >
           <ScrollShadow className="max-h-[calc(100vh-298px)]" hideScrollBar>
             <div>
+              <Currencies />
               <OperationsContext />
               <LimitsContext timezone={settings.timezone} />
               <GoalsContext />

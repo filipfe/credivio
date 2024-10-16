@@ -1,40 +1,19 @@
 "use client";
 
 import { Section } from "@/components/ui/block";
-import { useState } from "react";
 import Option from "./option";
-import { CURRENCIES } from "@/const";
 import { cn, Skeleton } from "@nextui-org/react";
 import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
 import Empty from "@/components/ui/empty";
-import { useLimits, useSettings } from "@/lib/general/queries";
+import { useLimits } from "@/lib/general/queries";
 import NumberFormat from "@/utils/formatters/currency";
 
 export default function LimitsContext({ timezone }: { timezone: string }) {
-  const { setLimit } = useAIAssistant();
-  const [currency, setCurrency] = useState<string>();
+  const { currency } = useAIAssistant();
   const { data: limits, isLoading, error } = useLimits(timezone, currency);
 
   return (
     <Section title="Limity wydatków">
-      <div className="flex flex-wrap items-center gap-3 col-span-full">
-        {CURRENCIES.map((curr) => (
-          <Option
-            className="text-sm font-medium py-2"
-            // highlight="outline"
-            id={`context-limit-${curr}`}
-            isActive={currency === curr}
-            onActiveChange={(checked) => {
-              setLimit(undefined);
-              setCurrency(checked ? curr : undefined);
-            }}
-            key={`limits-${curr}`}
-          >
-            {curr}
-          </Option>
-        ))}
-      </div>
-
       {error ? (
         <div className="pt-6 pb-4">
           <p className="text-danger text-sm text-center">Wystąpił błąd</p>

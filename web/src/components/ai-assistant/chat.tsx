@@ -9,7 +9,7 @@ import { FormEvent, useState } from "react";
 import MessageRef from "./chat/message";
 
 export default function Chat({ settings }: { settings: Settings }) {
-  const { selected, limit, goal } = useAIAssistant();
+  const { currency, selected, limit, goal } = useAIAssistant();
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -24,13 +24,16 @@ export default function Chat({ settings }: { settings: Settings }) {
 
     const supabase = createClient();
 
-    const { data: latestTransactions, error: operationsError } =
-      await supabase.rpc("get_ai_assistant_operations", {
+    const { data: operations, error: operationsError } = await supabase.rpc(
+      "get_ai_assistant_operations",
+      {
         p_timezone: settings.timezone,
+        p_currency: currency,
         p_incomes: selected.incomes,
         p_expenses: selected.expenses,
         p_recurring_payments: false,
-      });
+      }
+    );
 
     if (operationsError) {
       toast({
@@ -48,7 +51,7 @@ export default function Chat({ settings }: { settings: Settings }) {
         input,
         limit,
         goal,
-        latestTransactions,
+        operations,
       },
     });
 

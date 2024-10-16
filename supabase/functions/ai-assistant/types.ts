@@ -3,10 +3,11 @@ export type Body = {
   language: string;
   input: string;
   limit?: Limit;
-  transactionsFromLast30Days?: {
-    transaction_date: string;
-    title: string;
+  operations?: {
+    issued_at: string;
     type: "income" | "expense";
+    title: string;
     amount: number;
+    label?: string;
   }[];
 };
