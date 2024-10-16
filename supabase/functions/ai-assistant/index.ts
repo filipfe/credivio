@@ -11,10 +11,16 @@ import { corsHeaders } from "../_shared/cors.ts";
 import { createClient } from "supabase";
 import { Payment } from "../_shared/types.ts";
 import { toZonedTime } from "npm:date-fns-tz";
-import { intervalToDuration } from "npm:date-fns";
+import {
+  endOfDay,
+  intervalToDuration,
+  parseISO,
+  startOfDay,
+} from "npm:date-fns";
 import functions from "./functions.ts";
 import { ChatCompletionMessageParam } from "https://deno.land/x/openai@v4.51.0/resources/chat/completions.ts";
 import { OperationsType } from "./types.ts";
+import { fromZonedTime } from "npm:date-fns-tz";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY");
@@ -67,13 +73,16 @@ Deno.serve(async (req) => {
     from: string,
     to: string,
   ) => {
-    const start = toZonedTime(new Date(from), settings.timezone);
-    const end = toZonedTime(new Date(to), settings.timezone);
-    const diff = intervalToDuration({ start, end }).days;
-    if (!diff || diff > 31) {
+    const start = fromZonedTime(startOfDay(parseISO(from)), settings.timezone);
+    const end = fromZonedTime(endOfDay(parseISO(to)), settings.timezone);
+    const { months } = intervalToDuration({
+      start: start.toUTCString(),
+      end: end.toUTCString(),
+    });
+    if ((months || 0) > 1) {
       return {
         results: [],
-        error: "Period has to be 31 days or less",
+        error: "Difference between start and end date cannot exceeed 31 days",
       };
     }
     const cols: (keyof Payment)[] = [
@@ -87,8 +96,8 @@ Deno.serve(async (req) => {
         type === "expenses" ? [...cols, "label"].join(", ") : cols.join(", "),
       )
       .eq("currency", currency)
-      .gte("issued_at", start.toISOString())
-      .lte("issued_at", end.toISOString());
+      .gte("issued_at", start.toUTCString())
+      .lte("issued_at", end.toUTCString());
 
     if (error) {
       return {
@@ -151,7 +160,9 @@ Deno.serve(async (req) => {
     if (!choice.message.tool_calls) {
       return new Response("Internal server error", { status: 500 });
     }
+    messages.push(choice.message);
     for (const tool_call of choice.message.tool_calls) {
+      console.log("Function call: ", tool_call);
       const { function: { name, arguments: args }, id } = tool_call;
       if (name === "get_recurring_payments") {
         const { results, error } = await getRecurringPayments();
@@ -171,6 +182,16 @@ Deno.serve(async (req) => {
         });
       }
     }
+
+    const finalCompletion = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages,
+    });
+    return new Response(
+      // JSON.stringify({ message: "" }),
+      JSON.stringify({ message: finalCompletion.choices[0].message.content }),
+      { headers: { "Content-Type": "application/json", ...corsHeaders } },
+    );
   }
 
   return new Response(
