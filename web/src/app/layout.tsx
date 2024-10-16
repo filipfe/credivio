@@ -25,6 +25,11 @@ export default function RootLayout({
           defer
           src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/hatch.js"
         ></Script>
+        <Script
+          type="module"
+          defer
+          src="https://cdn.jsdelivr.net/npm/ldrs/dist/auto/bouncy.js"
+        ></Script>
         <Providers>{children}</Providers>
         <NextTopLoader color="#177981" showSpinner={false} />
         <Toaster toastOptions={{ duration: 3000 }} />

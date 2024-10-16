@@ -10,7 +10,12 @@ import Empty from "@/components/ui/empty";
 import { useLimits, useSettings } from "@/lib/general/queries";
 import NumberFormat from "@/utils/formatters/currency";
 
-export default function LimitsContext({ timezone }: { timezone: string }) {
+export default function LimitsContext({
+  timezone,
+}: {
+  timezone: string;
+  dict: string;
+}) {
   const { currency } = useAIAssistant();
   const { data: limits, isLoading, error } = useLimits(timezone, currency);
 

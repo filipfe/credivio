@@ -5,10 +5,10 @@ import { CURRENCIES } from "@/const";
 import Option from "./option";
 import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
 
-export default function CurrencyPicker() {
+export default function CurrencyPicker({ dict }: { dict: string }) {
   const { currency, setCurrency } = useAIAssistant();
   return (
-    <Section title="Waluta">
+    <Section title={dict}>
       <div className="flex flex-wrap items-center gap-3 col-span-full">
         {CURRENCIES.map((curr) => (
           <Option

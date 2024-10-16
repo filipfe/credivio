@@ -193,6 +193,30 @@
         "_empty": "No priority set"
       }
     },
+    "ai-assistant": {
+      "chat": {
+        "input": {
+          "placeholder": "Detect anomalies in this week's expenses"
+        },
+        "_submit": {
+          "label": "Send"
+        }
+      },
+      "context": {
+        "title": "Context",
+        "description": "Select the information to be processed by the assistant",
+        "form": {
+          "currency": "Currency",
+          "operations": {
+            "incomes": "Incomes",
+            "expenses": "Expenses",
+            "recurring-payments": "Recurring Payments"
+          },
+          "limits": "Expense Limits",
+          "goals": "Goals"
+        }
+      }
+    },
     "automation": {
       "title": "Telegram Bot",
       "description": [

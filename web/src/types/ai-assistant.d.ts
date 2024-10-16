@@ -1,4 +1,4 @@
 type ChatMessage = {
   from: "user" | "assistant";
-  content: string;
+  content: string | React.ReactNode;
 };

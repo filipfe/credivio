@@ -189,6 +189,30 @@
         "_empty": "Brak priorytetu"
       }
     },
+    "ai-assistant": {
+      "chat": {
+        "input": {
+          "placeholder": "Wykryj anomalie w wydatkach z tego tygodnia"
+        },
+        "_submit": {
+          "label": "Wyślij"
+        }
+      },
+      "context": {
+        "title": "Kontekst",
+        "description": "Wybierz informacje, które mają być przetworzone przez asystenta",
+        "form": {
+          "currency": "Waluta",
+          "operations": {
+            "incomes": "Przychody",
+            "expenses": "Wydatki",
+            "recurring-payments": "Płatności cykliczne"
+          },
+          "limits": "Limity wydatków",
+          "goals": "Cele"
+        }
+      }
+    },
     "automation": {
       "title": "Telegram Bot",
       "description": [
