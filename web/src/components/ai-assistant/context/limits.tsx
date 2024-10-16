@@ -11,30 +11,15 @@ import { useLimits, useSettings } from "@/lib/general/queries";
 import NumberFormat from "@/utils/formatters/currency";
 
 export default function LimitsContext({ timezone }: { timezone: string }) {
-  const { setLimit } = useAIAssistant();
-  const [currency, setCurrency] = useState<string>();
+  const { currency } = useAIAssistant();
   const { data: limits, isLoading, error } = useLimits(timezone, currency);
+
+  if (!currency) {
+    return <></>;
+  }
 
   return (
     <Section title="Limity wydatków">
-      <div className="flex flex-wrap items-center gap-3 col-span-full">
-        {CURRENCIES.map((curr) => (
-          <Option
-            className="text-sm font-medium py-2"
-            // highlight="outline"
-            id={`context-limit-${curr}`}
-            isActive={currency === curr}
-            onActiveChange={(checked) => {
-              setLimit(undefined);
-              setCurrency(checked ? curr : undefined);
-            }}
-            key={`limits-${curr}`}
-          >
-            {curr}
-          </Option>
-        ))}
-      </div>
-
       {error ? (
         <div className="pt-6 pb-4">
           <p className="text-danger text-sm text-center">Wystąpił błąd</p>
@@ -47,7 +32,7 @@ export default function LimitsContext({ timezone }: { timezone: string }) {
           )}
         >
           <div className="overflow-hidden">
-            <div className="flex flex-col sm:grid grid-cols-3 gap-3 pt-3">
+            <div className="flex flex-col sm:grid grid-cols-3 gap-3">
               {isLoading ? (
                 <>
                   <Skeleton className="h-[62px] rounded-md" />
