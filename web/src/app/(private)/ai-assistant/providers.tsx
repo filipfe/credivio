@@ -9,10 +9,18 @@ import {
 } from "react";
 
 type AIAssistantContextType = {
+  currency?: string;
   limit?: Limit;
   goal?: Goal;
+  operations: Record<"incomes" | "expenses" | "recurring_payments", boolean>;
+  setCurrency: Dispatch<SetStateAction<string | undefined>>;
   setLimit: Dispatch<SetStateAction<Limit | undefined>>;
   setGoal: Dispatch<SetStateAction<Goal | undefined>>;
+  setOperations: Dispatch<
+    SetStateAction<
+      Record<"incomes" | "expenses" | "recurring_payments", boolean>
+    >
+  >;
 };
 
 const AIAssistantContext = createContext<AIAssistantContextType>(null!);
@@ -24,10 +32,29 @@ export default function AIAssistantProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const [currency, setCurrency] = useState<string>();
   const [limit, setLimit] = useState<Limit>();
   const [goal, setGoal] = useState<Goal>();
+  const [operations, setOperations] = useState<
+    Record<"incomes" | "expenses" | "recurring_payments", boolean>
+  >({
+    incomes: false,
+    expenses: false,
+    recurring_payments: false,
+  });
   return (
-    <AIAssistantContext.Provider value={{ limit, setLimit, goal, setGoal }}>
+    <AIAssistantContext.Provider
+      value={{
+        currency,
+        setCurrency,
+        limit,
+        setLimit,
+        goal,
+        setGoal,
+        operations,
+        setOperations,
+      }}
+    >
       {children}
     </AIAssistantContext.Provider>
   );

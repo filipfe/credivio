@@ -13,10 +13,10 @@ export default async function help(ctx: BotContext) {
   if (user) {
     await ctx.reply(
       `🔎 Oto lista wszystkich dostępnych komend:
-/${ADD[user.language_code as keyof typeof ADD]} - Dodaj nową operację
-/${UNDO[user.language_code as keyof typeof UNDO]} - Cofnij ostatnią operację
+/${ADD[user.settings.language as keyof typeof ADD]} - Dodaj nową operację
+/${UNDO[user.settings.language as keyof typeof UNDO]} - Cofnij ostatnią operację
 /${
-        GRAPH[user.language_code as keyof typeof GRAPH]
+        GRAPH[user.settings.language as keyof typeof GRAPH]
       } - Wygeneruj tygodniowy wykres wydatków`,
     );
   } else {

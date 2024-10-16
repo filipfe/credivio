@@ -6,6 +6,7 @@ import Block from "@/components/ui/block";
 import AIAssistantProvider from "./providers";
 import { ScrollShadow } from "@nextui-org/react";
 import { getSettings } from "@/lib/general/actions";
+import CurrencyPicker from "@/components/ai-assistant/context/currency";
 
 export default async function Page() {
   const settings = await getSettings();
@@ -19,8 +20,12 @@ export default async function Page() {
           description="Wybierz informacje, które mają być przetworzone przez asystenta"
           className="my-4 sm:my-8"
         >
-          <ScrollShadow className="max-h-[calc(100vh-298px)]" hideScrollBar>
+          <ScrollShadow
+            className="max-h-[calc(100vh-298px)] flex-1"
+            hideScrollBar
+          >
             <div>
+              <CurrencyPicker />
               <OperationsContext />
               <LimitsContext timezone={settings.timezone} />
               <GoalsContext />

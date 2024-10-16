@@ -1,6 +1,7 @@
 import "https://esm.sh/@supabase/functions-js/src/edge-runtime.d.ts";
 import { createClient } from "supabase";
 import { corsHeaders } from "../_shared/cors.ts";
+import { Payment } from "../_shared/types.ts";
 
 const HCTI_API_KEY = Deno.env.get("HCTI_API_KEY");
 const HCTI_USER_ID = Deno.env.get("HCTI_USER_ID");

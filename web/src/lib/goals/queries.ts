@@ -3,14 +3,19 @@
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
 
-async function getGoals(): Promise<Goal[]> {
+async function getGoals(currency?: string): Promise<Goal[]> {
   const supabase = createClient();
-  const { data, error } = await supabase
+  let query = supabase
     .from("goals")
     .select(
-      "id, title, description, price, currency, deadline, is_priority, payments:goals_payments(amount)"
-    )
-    .order("deadline")
+      "id, title, description, price, currency, deadline, is_priority, payments:goals_payments(amount)",
+    );
+
+  if (currency) {
+    query = query.eq("currency", currency);
+  }
+
+  const { data, error } = await query.order("deadline")
     .order("created_at")
     .returns<Goal[]>();
 
@@ -21,7 +26,11 @@ async function getGoals(): Promise<Goal[]> {
   return data;
 }
 
-export const useGoals = () => useSWR("goals", () => getGoals());
+export const useGoals = (currency?: string) =>
+  useSWR(
+    currency ? ["goals", currency] : ["goals"],
+    ([_k, curr]: [string, string | undefined]) => getGoals(curr),
+  );
 
 export async function getGoalsPayments(): Promise<GoalPayment[]> {
   const supabase = createClient();
@@ -38,7 +47,7 @@ export async function getGoalsPayments(): Promise<GoalPayment[]> {
 
 export async function addGoalPayment(
   goal_id: string,
-  amount: string
+  amount: string,
 ): Promise<Omit<SupabaseResponse, "results">> {
   const supabase = createClient();
 

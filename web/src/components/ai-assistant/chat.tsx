@@ -10,7 +10,7 @@ import { FormEvent, useState } from "react";
 import MessageRef from "./chat/message";
 
 export default function Chat() {
-  const { limit, goal } = useAIAssistant();
+  const { limit, goal, operations, currency } = useAIAssistant();
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -25,6 +25,8 @@ export default function Chat() {
     const supabase = createClient();
     const { data, error } = await supabase.functions.invoke("ai-assistant", {
       body: {
+        currency,
+        operations,
         input,
         limit,
         goal,

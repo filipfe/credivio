@@ -1,16 +1,17 @@
 import supabase from "../supabase.ts";
 
 export default async function getUser(
-  telegram_id: number
+  telegram_id: number,
 ): Promise<Profile | null> {
   const { data, error } = await supabase
     .from("profiles")
     .select(
-      "id, first_name, telegram_id, settings(currency, language, telegram_notifications, email_notifications)"
+      "id, first_name, telegram_id, settings(currency, language, timezone, telegram_notifications, email_notifications)",
     )
     .match({
       telegram_id,
     })
+    .returns<Profile[]>()
     .single();
 
   if (error) {

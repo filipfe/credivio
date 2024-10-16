@@ -3,6 +3,8 @@ import "https://esm.sh/v135/@supabase/functions-js@2.4.1/src/edge-runtime.d.ts";
 import bot from "../_shared/telegram-bot.ts";
 import { breakpoints } from "./dict.ts";
 import { type Breakpoint } from "./types.ts";
+import { Payment } from "../_shared/types.ts";
+import { Preferences } from "../_shared/types.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -10,14 +12,16 @@ const NOTIFICATION_SECRET = Deno.env.get("NOTIFICATION_SECRET");
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !NOTIFICATION_SECRET) {
   throw new Error(
-    `Environment variables missing: ${Object.entries({
-      SUPABASE_URL,
-      SUPABASE_SERVICE_ROLE_KEY,
-      NOTIFICATION_SECRET,
-    })
-      .filter(([_key, value]) => !value)
-      .map(([key]) => key)
-      .join(", ")}`
+    `Environment variables missing: ${
+      Object.entries({
+        SUPABASE_URL,
+        SUPABASE_SERVICE_ROLE_KEY,
+        NOTIFICATION_SECRET,
+      })
+        .filter(([_key, value]) => !value)
+        .map(([key]) => key)
+        .join(", ")
+    }`,
   );
 }
 
@@ -43,11 +47,11 @@ type Limit = {
 const sendNotification = async (
   profile: Preferences & { telegram_id: string },
   limit: Limit,
-  breakpoint: Breakpoint
+  breakpoint: Breakpoint,
 ) => {
   await bot.api.sendMessage(
     profile.telegram_id,
-    breakpoint.messages[profile.language.code](limit)
+    breakpoint.messages[profile.language.code](limit),
   );
 };
 
@@ -61,7 +65,7 @@ Deno.serve(async (req) => {
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select(
-      "telegram_id, ...settings(timezone, language:languages(code, name))"
+      "telegram_id, ...settings(timezone, language:languages(code, name))",
     )
     .eq("id", user_id)
     .returns<(Preferences & { telegram_id: string; timezone: string })[]>()
@@ -87,13 +91,15 @@ Deno.serve(async (req) => {
       profile.telegram_id,
       `Dodano ${
         operation_type === "income" ? "przychód" : "wydatek"
-      } cykliczny ${title} na kwotę ${new Intl.NumberFormat(
-        profile.language.code,
-        {
-          style: "currency",
-          currency,
-        }
-      ).format(amount)}`
+      } cykliczny ${title} na kwotę ${
+        new Intl.NumberFormat(
+          profile.language.code,
+          {
+            style: "currency",
+            currency,
+          },
+        ).format(amount)
+      }`,
     );
   }
 
@@ -128,7 +134,7 @@ Deno.serve(async (req) => {
         const exceededBreakpoint = breakpoints.find(
           (breakpoint) =>
             paidPercentage >= breakpoint.value &&
-            noCurrentPaidPercentage < breakpoint.value
+            noCurrentPaidPercentage < breakpoint.value,
         );
 
         if (!exceededBreakpoint) {
@@ -139,7 +145,7 @@ Deno.serve(async (req) => {
           ...prev,
           sendNotification(profile, { ...limit, currency }, exceededBreakpoint),
         ];
-      }, [] as Promise<void>[])
+      }, [] as Promise<void>[]),
     );
   }
 
