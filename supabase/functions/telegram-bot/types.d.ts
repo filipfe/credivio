@@ -3,10 +3,11 @@ type Profile = {
   first_name: string;
   telegram_id: number;
   settings: {
-    language: Locale;
+    language: string;
     currency: string;
     telegram_notifications: boolean;
     email_notifications: boolean;
+    timezone: string;
   };
 };
 
