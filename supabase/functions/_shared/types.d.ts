@@ -28,3 +28,5 @@ type Limit = {
   total: number;
   period: Period;
 };
+
+type Locale = "pl" | "en" | "es";
