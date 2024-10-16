@@ -189,6 +189,30 @@
         "_empty": "No se ha establecido ninguna prioridad"
       }
     },
+    "ai-assistant": {
+      "chat": {
+        "input": {
+          "placeholder": "Detecta anomalías en los gastos de esta semana"
+        },
+        "_submit": {
+          "label": "Enviar"
+        }
+      },
+      "context": {
+        "title": "Contexto",
+        "description": "Selecciona la información que debe ser procesada por el asistente",
+        "form": {
+          "currency": "Moneda",
+          "operations": {
+            "incomes": "Ingresos",
+            "expenses": "Gastos",
+            "recurring-payments": "Pagos recurrentes"
+          },
+          "limits": "Límites de gastos",
+          "goals": "Objetivos"
+        }
+      }
+    },
     "automation": {
       "title": "Bot de Telegram",
       "description": [

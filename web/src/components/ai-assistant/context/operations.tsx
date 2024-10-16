@@ -4,8 +4,13 @@ import { Section } from "@/components/ui/block";
 import Option from "./option";
 import { Coins, Repeat, Wallet2 } from "lucide-react";
 import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
+import { Dict } from "@/const/dict";
 
-export default function OperationsContext() {
+export default function OperationsContext({
+  dict,
+}: {
+  dict: Dict["private"]["ai-assistant"]["context"]["form"]["operations"];
+}) {
   const { operations, setOperations } = useAIAssistant();
   return (
     <Section title="Operacje">
@@ -21,7 +26,7 @@ export default function OperationsContext() {
           }
         >
           <Wallet2 size={14} />
-          Przychody
+          {dict.incomes}
         </Option>
         <Option
           id="context-operations-expenses"
@@ -36,7 +41,7 @@ export default function OperationsContext() {
           }
         >
           <Coins size={14} />
-          Wydatki
+          {dict.expenses}
         </Option>
         <Option
           id="context-operations-recurring-payments"
@@ -51,7 +56,7 @@ export default function OperationsContext() {
           }
         >
           <Repeat size={14} />
-          Płatności cykliczne
+          {dict["recurring-payments"]}
         </Option>
       </div>
     </Section>

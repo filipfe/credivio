@@ -6,8 +6,9 @@ import { cn, Progress, Skeleton } from "@nextui-org/react";
 import { useGoals } from "@/lib/goals/queries";
 import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
 import NumberFormat from "@/utils/formatters/currency";
+import Empty from "@/components/ui/empty";
 
-export default function GoalsContext() {
+export default function GoalsContext({ dict }: { dict: string }) {
   const { currency } = useAIAssistant();
   const { data: goals, error, isLoading } = useGoals(currency);
 
@@ -16,23 +17,25 @@ export default function GoalsContext() {
   }
 
   return (
-    <Section title="Cele">
+    <Section title={dict}>
       {error ? (
         <div className="pt-6 pb-4">
           <p className="text-danger text-sm text-center">Wystąpił błąd</p>
         </div>
-      ) : (
+      ) : isLoading ? (
         <div className="flex flex-col sm:grid grid-cols-3 gap-3">
-          {isLoading ? (
-            <>
-              <Skeleton className="h-[62px] rounded-md" />
-              <Skeleton className="h-[62px] rounded-md" />
-              <Skeleton className="h-[62px] rounded-md" />
-            </>
-          ) : (
-            goals?.map((goal) => <GoalRef goal={goal} />)
-          )}
+          <Skeleton className="h-[62px] rounded-md" />
+          <Skeleton className="h-[62px] rounded-md" />
+          <Skeleton className="h-[62px] rounded-md" />
         </div>
+      ) : goals && goals.length > 0 ? (
+        <div className="flex flex-col sm:grid grid-cols-3 gap-3">
+          {goals.map((goal) => (
+            <GoalRef goal={goal} />
+          ))}
+        </div>
+      ) : (
+        <Empty title="Brak celów dla podanej waluty" />
       )}
     </Section>
   );
