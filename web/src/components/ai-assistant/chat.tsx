@@ -4,13 +4,12 @@ import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
 import { createClient } from "@/utils/supabase/client";
 import toast from "@/utils/toast";
 import { Button, Input, ScrollShadow } from "@nextui-org/react";
-import { AnimatePresence, motion } from "framer-motion";
 import { Send } from "lucide-react";
 import { FormEvent, useState } from "react";
 import MessageRef from "./chat/message";
 
-export default function Chat() {
-  const { limit, goal } = useAIAssistant();
+export default function Chat({ settings }: { settings: Settings }) {
+  const { selected, limit, goal } = useAIAssistant();
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -18,18 +17,41 @@ export default function Chat() {
   const onSubmit = async (e?: FormEvent) => {
     e?.preventDefault();
     if (!input) return;
-    console.log(limit);
+
     setMessages((prev) => [...prev, { from: "user", content: input }]);
     setIsLoading(true);
     setInput("");
+
     const supabase = createClient();
+
+    const { data: latestTransactions, error: operationsError } =
+      await supabase.rpc("get_ai_assistant_operations", {
+        p_timezone: settings.timezone,
+        p_incomes: selected.incomes,
+        p_expenses: selected.expenses,
+        p_recurring_payments: false,
+      });
+
+    if (operationsError) {
+      toast({
+        type: "error",
+        message: "Wystąpił błąd przy pobieraniu operacji",
+      });
+      setIsLoading(false);
+      return;
+    }
+
     const { data, error } = await supabase.functions.invoke("ai-assistant", {
       body: {
+        timezone: settings.timezone,
+        language: settings.language,
         input,
         limit,
         goal,
+        latestTransactions,
       },
     });
+
     if (error) {
       toast({
         type: "error",

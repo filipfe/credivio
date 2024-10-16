@@ -14,9 +14,7 @@ Deno.serve(async (req) => {
     return new Response("ok", { headers: corsHeaders });
   }
 
-  const { input, ...context } = await req.json() as Body;
-
-  console.log(input, context);
+  const { timezone, language, input, ...context } = (await req.json()) as Body;
 
   const completion = await openai.chat.completions.create({
     model: "gpt-4o",
@@ -27,7 +25,12 @@ Deno.serve(async (req) => {
       },
       {
         role: "user",
-        content: prompts.user(input, JSON.stringify(context), "pl-PL"),
+        content: prompts.user(
+          input,
+          JSON.stringify(context),
+          language,
+          timezone
+        ),
       },
     ],
   });
@@ -35,6 +38,6 @@ Deno.serve(async (req) => {
   return new Response(
     // JSON.stringify({ message: "" }),
     JSON.stringify({ message: completion.choices[0].message.content }),
-    { headers: { "Content-Type": "application/json", ...corsHeaders } },
+    { headers: { "Content-Type": "application/json", ...corsHeaders } }
   );
 });

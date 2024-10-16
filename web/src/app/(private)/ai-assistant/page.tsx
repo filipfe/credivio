@@ -13,7 +13,7 @@ export default async function Page() {
   return (
     <div className="sm:px-10 flex flex-col h-full gap-4 sm:gap-10 xl:grid grid-cols-2">
       <AIAssistantProvider>
-        <Chat />
+        <Chat settings={settings} />
         <Block
           title="Zbuduj kontekst"
           description="Wybierz informacje, które mają być przetworzone przez asystenta"

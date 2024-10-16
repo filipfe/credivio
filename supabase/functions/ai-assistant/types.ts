@@ -1,7 +1,12 @@
 export type Body = {
+  timezone: string;
+  language: string;
   input: string;
   limit?: Limit;
-  operations: {
-    // expenses: Expes
-  };
+  transactionsFromLast30Days?: {
+    transaction_date: string;
+    title: string;
+    type: "income" | "expense";
+    amount: number;
+  }[];
 };
