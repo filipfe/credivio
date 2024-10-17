@@ -1,6 +1,6 @@
 "use client";
 
-import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
+import { useAIAssistant } from "@/app/(private)/(sidebar)/ai-assistant/providers";
 import { createClient } from "@/utils/supabase/client";
 import toast from "@/utils/toast";
 import { Button, Input, ScrollShadow } from "@nextui-org/react";

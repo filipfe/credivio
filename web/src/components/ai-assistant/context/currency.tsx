@@ -3,7 +3,7 @@
 import { Section } from "@/components/ui/block";
 import { CURRENCIES } from "@/const";
 import Option from "./option";
-import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
+import { useAIAssistant } from "@/app/(private)/(sidebar)/ai-assistant/providers";
 
 export default function CurrencyPicker({ dict }: { dict: string }) {
   const { currency, setCurrency, setGoal, setLimit } = useAIAssistant();

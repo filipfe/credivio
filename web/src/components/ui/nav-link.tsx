@@ -1,6 +1,6 @@
 "use client";
 
-import { MenuContext } from "@/app/(private)/providers";
+import { MenuContext } from "@/app/(private)/(sidebar)/providers";
 import { Dict } from "@/const/dict";
 import { cn } from "@nextui-org/react";
 import { ChevronDown } from "lucide-react";

@@ -60,8 +60,10 @@ export async function updateSession(request: NextRequest) {
   // issues with users being randomly logged out.
 
   const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    data: user,
+  } = await supabase.from("profiles").select(
+    "id, ...settings(currency, timezone, language)",
+  ).single();
 
   // User tried accessing private path without being authenticated
 
@@ -80,7 +82,6 @@ export async function updateSession(request: NextRequest) {
 
   if (user) {
     // User tried accessing public path being authenticated
-
     if (PUBLIC_ROUTES.includes(request.nextUrl.pathname)) {
       const url = request.nextUrl.clone();
       url.pathname = "/";
@@ -127,6 +128,10 @@ export async function updateSession(request: NextRequest) {
     if (!isActive) {
       const url = request.nextUrl.clone();
       url.pathname = "/settings/subscription";
+      return NextResponse.redirect(url);
+    } else if (!user.currency || !user.language || !user.timezone) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/account-setup";
       return NextResponse.redirect(url);
     }
   }

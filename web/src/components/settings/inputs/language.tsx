@@ -12,14 +12,9 @@ import useSWR from "swr";
 type Props = {
   dict: Dict["private"]["settings"]["preferences"]["location"]["language"];
   defaultValue: string;
-  disableSubmit?: boolean;
 };
 
-export default function LanguageSelect({
-  defaultValue,
-  dict,
-  disableSubmit,
-}: Props) {
+export default function LanguageSelect({ defaultValue, dict }: Props) {
   const [isPending, startTransition] = useTransition();
   const [selected, setSelected] = useState(defaultValue);
   const formRef = useRef<HTMLFormElement | null>(null);
@@ -30,7 +25,7 @@ export default function LanguageSelect({
   } = useSWR("languages", () => getLanguages());
 
   useEffect(() => {
-    if (disableSubmit || !formRef.current || selected === defaultValue) return;
+    if (!formRef.current || selected === defaultValue) return;
     formRef.current.requestSubmit();
   }, [selected]);
 
@@ -47,23 +42,7 @@ export default function LanguageSelect({
       }
     });
 
-  return disableSubmit ? (
-    <UniversalSelect
-      name="language"
-      aria-label="Language select"
-      label={dict.label}
-      selectedKeys={[selected]}
-      isLoading={isLoading || isPending}
-      isDisabled={isLoading || isPending}
-      elements={
-        languages
-          ? languages.map((lang) => ({ name: lang.name, value: lang.code }))
-          : []
-      }
-      placeholder={dict.placeholder}
-      onChange={(e) => setSelected(e.target.value)}
-    />
-  ) : (
+  return (
     <form action={action} ref={formRef}>
       <UniversalSelect
         name="language"

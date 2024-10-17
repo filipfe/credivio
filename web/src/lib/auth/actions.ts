@@ -114,3 +114,34 @@ export async function signOut() {
 
   redirect("/sign-in");
 }
+
+export async function setupAccount(formData: FormData) {
+  const currency = formData.get("currency") as string;
+  const language = formData.get("language") as string;
+  const timezone = formData.get("timezone") as string;
+
+  const supabase = createClient();
+
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return {
+      error: authError,
+    };
+  }
+
+  const { error } = await supabase.from("settings").update({
+    currency,
+    language,
+    timezone,
+  }).eq("user_id", user.id);
+
+  if (error) {
+    return {
+      error,
+    };
+  }
+
+  revalidatePath("/", "layout");
+  redirect("/");
+}
