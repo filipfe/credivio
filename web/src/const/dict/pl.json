@@ -156,7 +156,11 @@
             "title": "Skan zdjęcia",
             "description": "Dodaj lub upuść pliki",
             "table": {
-              "title": "Podgląd"
+              "title": "Podgląd",
+              "modal": {
+                "button": "Pobierz",
+                "_error": "Nie udało się wczytać obrazu!"
+              }
             }
           }
         }

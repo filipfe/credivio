@@ -160,7 +160,11 @@
             "title": "Scan image",
             "description": "Add or drop files",
             "table": {
-              "title": "Preview"
+              "title": "Preview",
+              "modal": {
+                "button": "Download",
+                "_error": "Failed to load the image!"
+              }
             }
           }
         }

@@ -29,7 +29,7 @@ export default function AddForm({
   return records.length > 0 ? (
     <PreviewTable
       title={dict.add.tab.scan.title}
-      dict={dict.table}
+      dict={{ ...dict.table, ...dict.add.tab.scan.table }}
       type={type}
       rows={records}
       count={records.length}

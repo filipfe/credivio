@@ -32,7 +32,8 @@ import { Dict } from "@/const/dict";
 
 type Props<T> = {
   title: string;
-  dict: Dict["private"]["operations"]["operation-table"];
+  dict: Dict["private"]["operations"]["operation-table"] &
+    Dict["private"]["operations"]["add"]["tab"]["scan"]["table"];
   count: number;
   children?: ReactNode;
   type: OperationType;
@@ -198,7 +199,7 @@ export default function PreviewTable({
       //   />
       // }
     >
-      <DocModal docPath={docPath} setDocPath={setDocPath} />
+      <DocModal dict={dict.modal} docPath={docPath} setDocPath={setDocPath} />
       <ScrollShadow orientation="horizontal" hideScrollBar>
         <Table
           removeWrapper
