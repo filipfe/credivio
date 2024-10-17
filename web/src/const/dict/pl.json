@@ -139,7 +139,7 @@
           "title": "Nie znalezniono operacji",
           "button": {
             "income": "Dodaj przychód",
-            "button": "Dodaj wydatek"
+            "expense": "Dodaj wydatek"
           }
         }
       },

@@ -222,11 +222,9 @@ export default function OperationTable({
             isLoading={isLoading}
             emptyContent={
               <Empty
-                title="Nie znaleziono operacji"
+                title={dict._empty.title}
                 cta={{
-                  title: `Dodaj ${
-                    props.type === "expense" ? "wydatek" : "przychód"
-                  }`,
+                  title: dict._empty.button[props.type as "expense" | "income"],
                   href: `/${props.type}s/add`,
                 }}
               />
