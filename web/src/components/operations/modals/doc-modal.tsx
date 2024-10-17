@@ -17,8 +17,10 @@ import toast from "react-hot-toast";
 import Toast from "../../ui/toast";
 import { DownloadIcon } from "lucide-react";
 import Link from "next/link";
+import { Dict } from "@/const/dict";
 
 type Props = {
+  dict: Dict["private"]["operations"]["operation-table"]["modal"];
   docPath: string | null;
   setDocPath: Dispatch<SetStateAction<string | null>>;
 };

@@ -198,7 +198,7 @@ export default function PreviewTable({
       //   />
       // }
     >
-      <DocModal docPath={docPath} setDocPath={setDocPath} />
+      <DocModal dict={dict.modal} docPath={docPath} setDocPath={setDocPath} />
       <ScrollShadow orientation="horizontal" hideScrollBar>
         <Table
           removeWrapper

@@ -83,6 +83,10 @@
           "currency": "WALUTA",
           "label": "ETYKIETA"
         },
+        "modal": {
+          "button": "Pobierz",
+          "_error": "Nie udało się wczytać obrazu!"
+        },
         "dropdown": {
           "menu": {
             "edit": {

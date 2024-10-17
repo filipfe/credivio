@@ -84,6 +84,10 @@
           "currency": "MONEDA",
           "label": "ETIQUETA"
         },
+        "modal": {
+          "button": "Descargar",
+          "_error": "¡No se pudo cargar la imagen!"
+        },
         "dropdown": {
           "menu": {
             "edit": {
