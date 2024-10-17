@@ -84,6 +84,10 @@
           "currency": "MONEDA",
           "label": "ETIQUETA"
         },
+        "modal": {
+          "button": "Descargar",
+          "_error": "¡No se pudo cargar la imagen!"
+        },
         "dropdown": {
           "menu": {
             "edit": {
@@ -157,11 +161,7 @@
             "title": "Escanear imagen",
             "description": "Añadir o soltar archivos",
             "table": {
-              "title": "Vista previa",
-              "modal": {
-                "button": "Descargar",
-                "_error": "¡No se pudo cargar la imagen!"
-              }
+              "title": "Vista previa"
             }
           }
         }

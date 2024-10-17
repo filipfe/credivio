@@ -87,6 +87,10 @@
           "currency": "CURRENCY",
           "label": "LABEL"
         },
+        "modal": {
+          "button": "Download",
+          "_error": "Failed to load the image!"
+        },
         "dropdown": {
           "menu": {
             "edit": {
@@ -160,11 +164,7 @@
             "title": "Scan image",
             "description": "Add or drop files",
             "table": {
-              "title": "Preview",
-              "modal": {
-                "button": "Download",
-                "_error": "Failed to load the image!"
-              }
+              "title": "Preview"
             }
           }
         }

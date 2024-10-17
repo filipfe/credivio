@@ -20,7 +20,7 @@ import Link from "next/link";
 import { Dict } from "@/const/dict";
 
 type Props = {
-  dict: Dict["private"]["operations"]["add"]["tab"]["scan"]["table"]["modal"];
+  dict: Dict["private"]["operations"]["operation-table"]["modal"];
   docPath: string | null;
   setDocPath: Dispatch<SetStateAction<string | null>>;
 };

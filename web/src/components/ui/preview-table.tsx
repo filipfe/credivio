@@ -32,8 +32,7 @@ import { Dict } from "@/const/dict";
 
 type Props<T> = {
   title: string;
-  dict: Dict["private"]["operations"]["operation-table"] &
-    Dict["private"]["operations"]["add"]["tab"]["scan"]["table"];
+  dict: Dict["private"]["operations"]["operation-table"];
   count: number;
   children?: ReactNode;
   type: OperationType;
