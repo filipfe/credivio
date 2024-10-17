@@ -6,7 +6,7 @@ import { BreadcrumbItem, Breadcrumbs, Button } from "@nextui-org/react";
 import { AlignJustifyIcon, Bot, LogOutIcon, SettingsIcon } from "lucide-react";
 import { LINKS, PAGES, SETTINGS_PAGES } from "@/const";
 import { usePathname } from "next/navigation";
-import { MenuContext } from "@/app/(private)/providers";
+import { MenuContext } from "@/app/(private)/(sidebar)/providers";
 import { Dict } from "@/const/dict";
 
 const automationPage: Page = {

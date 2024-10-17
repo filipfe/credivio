@@ -16,7 +16,7 @@ import {
   YAxis,
 } from "recharts";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
-import { StatsFilterContext } from "@/app/(private)/stats/providers";
+import { StatsFilterContext } from "@/app/(private)/(sidebar)/stats/providers";
 import {
   NameType,
   Payload,

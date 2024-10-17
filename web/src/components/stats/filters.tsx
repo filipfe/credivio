@@ -7,7 +7,7 @@ import YearInput from "./inputs/year";
 import getDisabledMonths from "@/utils/operations/get-disabled-months";
 import UniversalSelect from "../ui/universal-select";
 import { CURRENCIES } from "@/const";
-import { StatsFilterContext } from "@/app/(private)/stats/providers";
+import { StatsFilterContext } from "@/app/(private)/(sidebar)/stats/providers";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { now } from "@internationalized/date";
 

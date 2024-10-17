@@ -1,6 +1,6 @@
 "use client";
 
-import { MenuContext } from "@/app/(private)/providers";
+import { MenuContext } from "@/app/(private)/(sidebar)/providers";
 import { ScrollShadow, cn } from "@nextui-org/react";
 import { useContext } from "react";
 

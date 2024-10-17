@@ -3,7 +3,7 @@
 import { useContext } from "react";
 import Block from "../ui/block";
 import Empty from "../ui/empty";
-import { StatsFilterContext } from "@/app/(private)/stats/providers";
+import { StatsFilterContext } from "@/app/(private)/(sidebar)/stats/providers";
 import { useOperationsByDayOfWeek } from "@/lib/stats/queries";
 import LineChartLoader from "../ui/charts/line-loader";
 import {

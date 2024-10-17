@@ -4,7 +4,7 @@ import { Section } from "@/components/ui/block";
 import Option from "./option";
 import { cn, Progress, Skeleton } from "@nextui-org/react";
 import { useGoals } from "@/lib/goals/queries";
-import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
+import { useAIAssistant } from "@/app/(private)/(sidebar)/ai-assistant/providers";
 import NumberFormat from "@/utils/formatters/currency";
 import Empty from "@/components/ui/empty";
 import { Dict } from "@/const/dict";

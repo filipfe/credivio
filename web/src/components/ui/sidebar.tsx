@@ -3,7 +3,7 @@
 import NavLink from "./nav-link";
 import { BotIcon, SettingsIcon } from "lucide-react";
 import { useContext, useEffect, useRef } from "react";
-import { MenuContext } from "@/app/(private)/providers";
+import { MenuContext } from "@/app/(private)/(sidebar)/providers";
 import useOutsideObserver from "@/hooks/useOutsideObserver";
 import { Dict } from "@/const/dict";
 import { LINKS, PAGES } from "@/const";

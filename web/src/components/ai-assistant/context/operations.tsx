@@ -3,7 +3,7 @@
 import { Section } from "@/components/ui/block";
 import Option from "./option";
 import { Coins, Repeat, Wallet2 } from "lucide-react";
-import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
+import { useAIAssistant } from "@/app/(private)/(sidebar)/ai-assistant/providers";
 import { Dict } from "@/const/dict";
 
 export default function OperationsContext({
