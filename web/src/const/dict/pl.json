@@ -143,7 +143,24 @@
           }
         }
       },
-      "incomes": {},
+      "add": {
+        "title": {
+          "income": "Nowy przychód",
+          "expense": "Nowy wydatek"
+        },
+        "tab": {
+          "manual": {
+            "title": "Ręcznie"
+          },
+          "scan": {
+            "title": "Skan zdjęcia",
+            "description": "Dodaj lub upuść pliki",
+            "table": {
+              "title": "Podgląd"
+            }
+          }
+        }
+      },
       "expenses": {
         "limits": {
           "period": {

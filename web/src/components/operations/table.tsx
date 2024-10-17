@@ -30,18 +30,18 @@ import { PeriodContext } from "@/app/(private)/(operations)/providers";
 import { Dict } from "@/const/dict";
 
 export default function OperationTable({
+  title,
+  dict,
   rows,
   count,
   children,
   viewOnly,
   settings,
-  dict,
   ...props
 }: TableProps<Operation> & {
   settings: Settings;
-  dict: {
-    title: Dict["private"]["general"]["incomes" | "expenses"];
-  } & Dict["private"]["operations"]["operation-table"];
+  dict: Dict["private"]["operations"]["operation-table"];
+  title: string;
 }) {
   const [docPath, setDocPath] = useState<string | null>(null);
   const pages = Math.ceil(count / 10);
@@ -154,7 +154,7 @@ export default function OperationTable({
 
   return (
     <Block
-      title={dict.title}
+      title={title}
       className="w-screen sm:w-full"
       hideTitleMobile
       cta={

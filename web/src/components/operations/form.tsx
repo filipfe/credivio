@@ -17,7 +17,10 @@ export default function AddForm({
   type,
   defaultCurrency,
 }: {
-  dict: Dict["private"]["operations"]["operation-table"]["dropdown"];
+  dict: {
+    add: Dict["private"]["operations"]["add"];
+    table: Dict["private"]["operations"]["operation-table"];
+  };
   type: OperationType;
   defaultCurrency: string;
 }) {
@@ -25,7 +28,8 @@ export default function AddForm({
 
   return records.length > 0 ? (
     <PreviewTable
-      dict={dict}
+      title={dict.add.tab.scan.title}
+      dict={dict.table}
       type={type}
       rows={records}
       count={records.length}
@@ -37,7 +41,7 @@ export default function AddForm({
       >
         <div className="flex flex-col justify-end h-full mt-6">
           {type === "expense" && (
-            <LabelInput dict={dict.modal.edit.form.label} />
+            <LabelInput dict={dict.table.dropdown.modal.edit.form.label} />
           )}
           <input type="hidden" name="type" value={type} />
           <input type="hidden" name="data" value={JSON.stringify(records)} />
@@ -46,7 +50,7 @@ export default function AddForm({
     </PreviewTable>
   ) : (
     <Block
-      title={`Nowy ${type === "expense" ? "wydatek" : "przychód"}`}
+      title={dict.add.title[type as "income" | "expense"]}
       className="max-w-3xl w-full mx-auto"
     >
       <Tabs
@@ -61,7 +65,7 @@ export default function AddForm({
           title={
             <div className="flex items-center gap-2">
               <WrenchIcon size={16} opacity={0.8} />
-              <span>Ręcznie</span>
+              <span>{dict.add.tab.manual.title}</span>
             </div>
           }
         >
@@ -72,7 +76,7 @@ export default function AddForm({
             successMessage="Pomyślnie dodano operację!"
           >
             <Manual
-              dict={dict.modal.edit.form}
+              dict={dict.table.dropdown.modal.edit.form}
               withLabel={type === "expense"}
               type={type}
               defaultCurrency={defaultCurrency}
@@ -99,11 +103,15 @@ export default function AddForm({
           title={
             <div className="flex items-center gap-2">
               <ScanTextIcon size={16} opacity={0.8} />
-              <span>Skan zdjęcia</span>
+              <span>{dict.add.tab.scan.title}</span>
             </div>
           }
         >
-          <Scan type={type} setRecords={setRecords} />
+          <Scan
+            description={dict.add.tab.scan.description}
+            type={type}
+            setRecords={setRecords}
+          />
         </Tab>
       </Tabs>
     </Block>

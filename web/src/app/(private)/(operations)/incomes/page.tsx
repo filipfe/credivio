@@ -104,6 +104,7 @@ async function Incomes({
   return (
     <div className="row-span-2 col-span-2 flex items-stretch">
       <OperationTable
+        title={dict.title}
         type="income"
         rows={incomes || []}
         count={count || 0}

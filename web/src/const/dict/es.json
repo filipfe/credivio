@@ -144,7 +144,24 @@
           }
         }
       },
-      "incomes": {},
+      "add": {
+        "title": {
+          "income": "Nuevo ingreso",
+          "expense": "Nuevo gasto"
+        },
+        "tab": {
+          "manual": {
+            "title": "Manualmente"
+          },
+          "scan": {
+            "title": "Escanear imagen",
+            "description": "Añadir o soltar archivos",
+            "table": {
+              "title": "Vista previa"
+            }
+          }
+        }
+      },
       "expenses": {
         "limits": {
           "period": {
