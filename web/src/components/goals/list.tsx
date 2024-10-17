@@ -5,7 +5,7 @@ import { PlusIcon } from "lucide-react";
 import HorizontalScroll from "../ui/horizontal-scroll";
 import GoalRef from "./ref";
 
-export default function GoalsList({ goals }: { goals: Goal[] }) {
+export default async function GoalsList({ goals }: { goals: Goal[] }) {
   return (
     <Block
       title="Bieżące"

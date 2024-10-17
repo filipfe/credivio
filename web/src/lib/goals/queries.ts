@@ -24,37 +24,3 @@ async function getGoals(currency: string): Promise<Goal[]> {
 
 export const useGoals = (currency: string) =>
   useSWR(["goals", currency], ([_, curr]) => getGoals(curr));
-
-export async function getGoalsPayments(): Promise<GoalPayment[]> {
-  const supabase = createClient();
-  const { data, error } = await supabase
-    .from("goals_payments")
-    .select("goal_id, amount, date");
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data;
-}
-
-export async function addGoalPayment(
-  goal_id: string,
-  amount: string
-): Promise<Omit<SupabaseResponse, "results">> {
-  const supabase = createClient();
-
-  const date = new Date().toDateString();
-
-  const { data, error } = await supabase
-    .from("goals_payments")
-    .upsert({ date, goal_id, amount })
-    .select();
-
-  if (error) {
-    return {
-      error: error.message,
-    };
-  }
-  return {};
-}
