@@ -215,10 +215,32 @@
       "recurring-payments": {}
     },
     "goals": {
+      "list": {
+        "title": "Actual",
+        "button": "Añadir",
+        "goal": {
+          "no-deadline": "Sin fecha límite",
+          "menu": {
+            "add": {
+              "title": "Añadir",
+              "description": "Añadir dinero al objetivo"
+            },
+            "priority": {
+              "title": "Establecer prioridad",
+              "description": "Establecer este objetivo como prioritario"
+            },
+            "delete": {
+              "title": "Eliminar objetivo",
+              "description": "Eliminar permanentemente el objetivo"
+            }
+          },
+          "collected": "Recaudado"
+        }
+      },
       "priority": {
         "title": "Prioridad",
-        "collected": "Recopilado",
-        "left": "Restante",
+        "collected": "Recaudado",
+        "remaining": "Restante",
         "payments": {
           "title": "Pagos",
           "date": "Fecha",

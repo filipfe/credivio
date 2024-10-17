@@ -218,10 +218,32 @@
       "recurring-payments": {}
     },
     "goals": {
+      "list": {
+        "title": "Current",
+        "button": "Add",
+        "goal": {
+          "no-deadline": "No deadline",
+          "menu": {
+            "add": {
+              "title": "Add",
+              "description": "Add money to the goal"
+            },
+            "priority": {
+              "title": "Set priority",
+              "description": "Set this goal as a priority"
+            },
+            "delete": {
+              "title": "Delete goal",
+              "description": "Permanently delete the goal"
+            }
+          },
+          "collected": "Collected"
+        }
+      },
       "priority": {
         "title": "Priority",
         "collected": "Collected",
-        "left": "Remaining",
+        "remaining": "Remaining",
         "payments": {
           "title": "Payments",
           "date": "Date",
