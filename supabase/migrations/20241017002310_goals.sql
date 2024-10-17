@@ -2,7 +2,7 @@ alter table "public"."goals" drop column "description";
 
 set check_function_bodies = off;
 
-CREATE OR REPLACE FUNCTION public.get_goals_current()
+CREATE OR REPLACE FUNCTION public.get_goals_current(p_currency currency_type DEFAULT NULL::currency_type)
  RETURNS TABLE(id uuid, title text, price double precision, currency currency_type, deadline date, total_paid double precision, is_priority boolean)
  LANGUAGE plpgsql
  SET search_path TO 'public'
@@ -19,10 +19,12 @@ begin
     g.is_priority
   from goals g
   left join goals_payments gp on g.id = gp.goal_id
+  where p_currency is null or g.currency = p_currency
   group by g.id
   order by g.is_priority desc, g.deadline;
 end;
 $function$
+;
 ;
 
 CREATE OR REPLACE FUNCTION public.get_goals_payments(p_timezone text, p_page integer)
