@@ -232,6 +232,14 @@
     },
     "ai-assistant": {
       "chat": {
+        "recomendation": [
+          "Monthly Summary",
+          "Weekly Overview",
+          "Financial Recommendations",
+          "View Predictions",
+          "Calculate Savings Rate",
+          "Plan for Goal Completion"
+        ],
         "input": {
           "placeholder": "Detect anomalies in this week's expenses"
         },
@@ -245,12 +253,18 @@
         "form": {
           "currency": "Currency",
           "operations": {
-            "incomes": "Incomes",
-            "expenses": "Expenses",
+            "title": "Operations",
             "recurring-payments": "Recurring Payments"
           },
-          "limits": "Expense Limits",
-          "goals": "Goals"
+          "limits": {
+            "title": "Expense Limits",
+            "_empty": "No limits for the specified currency"
+          },
+          "goals": {
+            "title": "Goals",
+            "_empty": "No goals for the specified currency"
+          },
+          "_error": "An error occurred"
         }
       }
     },

@@ -60,30 +60,12 @@ export default function Chat({
       <div className="flex-1 flex flex-col justify-center">
         {messages.length === 0 ? (
           <div className="grid grid-cols-3 gap-4 mx-6">
-            <RecommendationRef
-              title="Wygeneruj prasówkę"
-              onSubmit={(input) => onSubmit(input)}
-            />
-            <RecommendationRef
-              title="Example"
-              onSubmit={(input) => onSubmit(input)}
-            />
-            <RecommendationRef
-              title="Example"
-              onSubmit={(input) => onSubmit(input)}
-            />
-            <RecommendationRef
-              title="Example"
-              onSubmit={(input) => onSubmit(input)}
-            />
-            <RecommendationRef
-              title="Example"
-              onSubmit={(input) => onSubmit(input)}
-            />
-            <RecommendationRef
-              title="Example"
-              onSubmit={(input) => onSubmit(input)}
-            />
+            {dict.recomendation.map((title) => (
+              <RecommendationRef
+                title={title}
+                onSubmit={(input) => onSubmit(input)}
+              />
+            ))}
           </div>
         ) : (
           <ScrollShadow

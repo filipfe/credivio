@@ -228,6 +228,14 @@
     },
     "ai-assistant": {
       "chat": {
+        "recomendation": [
+          "Podsumowanie miesięczne",
+          "Przegląd tygodniowy",
+          "Zalecenia finansowe",
+          "Zobacz prognozy",
+          "Oblicz wskaźnik oszczędności",
+          "Zaplanuj realizację celu"
+        ],
         "input": {
           "placeholder": "Wykryj anomalie w wydatkach z tego tygodnia"
         },
@@ -241,12 +249,18 @@
         "form": {
           "currency": "Waluta",
           "operations": {
-            "incomes": "Przychody",
-            "expenses": "Wydatki",
+            "title": "Operacje",
             "recurring-payments": "Płatności cykliczne"
           },
-          "limits": "Limity wydatków",
-          "goals": "Cele"
+          "limits": {
+            "title": "Limity wydatków",
+            "_empty": "Brak limitów dla podanej waluty"
+          },
+          "goals": {
+            "title": "Cele",
+            "_empty": "Brak celów dla podanej waluty"
+          },
+          "_error": "Wystąpił błąd"
         }
       }
     },
