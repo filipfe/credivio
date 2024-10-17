@@ -12,8 +12,10 @@ import Manual from "../inputs/manual";
 import { updateOperation } from "@/lib/operations/actions";
 import formDataToOperation from "@/utils/operations/form-data-to-operation";
 import Form from "@/components/ui/form";
+import { Dict } from "@/const/dict";
 
 interface Props extends ReturnType<typeof useDisclosure> {
+  dict: Dict["private"]["operations"]["operation-table"]["dropdown"]["modal"]["edit"];
   edited: Operation | null;
   setEdited: Dispatch<SetStateAction<Operation | null>>;
   type: OperationType;
@@ -21,6 +23,7 @@ interface Props extends ReturnType<typeof useDisclosure> {
 }
 
 export default function EditModal({
+  dict,
   type,
   edited,
   onEdit,
@@ -47,7 +50,7 @@ export default function EditModal({
       <ModalContent>
         <ModalHeader className="font-normal">
           <span>
-            Edytuj wydatek <span className="font-bold">{edited?.title}</span>
+            {dict.title} <span className="font-bold">{edited?.title}</span>
           </span>
         </ModalHeader>
         <Form
@@ -61,7 +64,12 @@ export default function EditModal({
         >
           <ModalBody className="relative flex items-center justify-center min-h-48 py-0 [&:has(+button)]:z-40 my-3">
             {edited && (
-              <Manual withLabel={!onEdit} initialValue={edited} type={type} />
+              <Manual
+                dict={dict.form}
+                withLabel={!onEdit}
+                initialValue={edited}
+                type={type}
+              />
             )}
           </ModalBody>
         </Form>

@@ -44,46 +44,107 @@
       }
     },
     "operations": {
-      "incomes": {
+      "stats": {
         "today": "Hoy",
-        "30-days": "30 días",
-        "operations-by-month": {
-          "title": "Ingresos",
-          "_empty": {
-            "title": "¡No hay datos para mostrar!",
-            "button": "Agregar ingreso"
-          }
-        },
-        "operation-table": {
-          "title": "Ingresos",
-          "top-content": {
-            "search": {
-              "placeholder": "Buscar"
-            },
-            "period": {
-              "button": "Restablecer"
-            },
-            "filter": {
-              "currency": {
-                "label": "Moneda",
-                "default": "Todas"
-              },
-              "button": "Restablecer"
-            },
-            "add": "Agregar"
-          },
-          "columns": {
-            "issued_at": "FECHA",
-            "title": "TÍTULO",
-            "amount": "CANTIDAD",
-            "currency": "MONEDA"
-          },
-          "_empty": {
-            "title": "No se encontraron operaciones",
-            "button": "Agregar ingreso"
+        "30-days": "30 días"
+      },
+      "operations-by-month": {
+        "title": "Ingresos",
+        "_empty": {
+          "title": "¡No hay datos para mostrar!",
+          "button": {
+            "income": "Agregar ingreso",
+            "expense": "Agregar gasto"
           }
         }
       },
+      "operation-table": {
+        "top-content": {
+          "reset": "Restablecer",
+          "search": {
+            "placeholder": "Buscar"
+          },
+          "filter": {
+            "label": {
+              "label": "Etiqueta",
+              "default": "Todas",
+              "description": "gastos"
+            },
+            "currency": {
+              "label": "Moneda",
+              "default": "Todas"
+            }
+          },
+          "add": "Agregar"
+        },
+        "columns": {
+          "issued_at": "FECHA",
+          "title": "TÍTULO",
+          "amount": "CANTIDAD",
+          "currency": "MONEDA",
+          "label": "ETIQUETA"
+        },
+        "dropdown": {
+          "menu": {
+            "edit": {
+              "title": "Editar",
+              "description": "Modificar operación"
+            },
+            "delete": {
+              "title": "Eliminar",
+              "description": "Eliminar operación"
+            }
+          },
+          "modal": {
+            "edit": {
+              "title": "Editar gasto",
+              "form": {
+                "title": {
+                  "label": "Título",
+                  "placeholder": "Salario"
+                },
+                "amount": {
+                  "label": "Cantidad"
+                },
+                "currency": {
+                  "label": "Moneda"
+                },
+                "issued-at": {
+                  "label": "Fecha de emisión"
+                },
+                "label": {
+                  "label": "Etiqueta",
+                  "placeholder": "Comida",
+                  "description": "gastos",
+                  "tooltip": "Añade una etiqueta para agrupar las operaciones"
+                },
+                "_close": {
+                  "label": "Cancelar"
+                },
+                "_submit": {
+                  "label": "Guardar"
+                }
+              }
+            },
+            "delete": {
+              "title": "¿Eliminar la operación",
+              "description": "¡Esta acción es irreversible! Asegúrate de que estás eliminando las operaciones correctas antes de confirmar",
+              "button": {
+                "_close": "Cancelar",
+                "_submit": "Eliminar"
+              }
+            }
+          }
+        },
+        "_empty": {
+          "title": "No se encontraron operaciones",
+          "button": {
+            "income": "Agregar ingreso",
+            "expense": "Agregar gasto"
+          }
+        }
+      },
+      "incomes": {},
       "expenses": {
         "limits": {
           "period": {
@@ -127,50 +188,6 @@
                 "_error": "Ocurrió un error al agregar el límite"
               }
             }
-          }
-        },
-        "today": "Hoy",
-        "30-days": "30 días",
-        "operations-by-month": {
-          "title": "Gastos",
-          "_empty": {
-            "title": "¡No hay datos para mostrar!",
-            "button": "Agregar gasto"
-          }
-        },
-        "operation-table": {
-          "title": "Gastos",
-          "top-content": {
-            "search": {
-              "placeholder": "Buscar"
-            },
-            "period": {
-              "button": "Restablecer"
-            },
-            "filter": {
-              "label": {
-                "label": "Etiqueta",
-                "default": "Todas",
-                "description": "gastos"
-              },
-              "currency": {
-                "label": "Moneda",
-                "default": "Todas"
-              },
-              "button": "Restablecer"
-            },
-            "add": "Agregar"
-          },
-          "columns": {
-            "issued_at": "FECHA",
-            "title": "TÍTULO",
-            "amount": "CANTIDAD",
-            "currency": "MONEDA",
-            "label": "ETIQUETA"
-          },
-          "_empty": {
-            "title": "No se encontraron operaciones",
-            "button": "Agregar gasto"
           }
         }
       },

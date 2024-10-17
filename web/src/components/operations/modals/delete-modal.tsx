@@ -1,4 +1,5 @@
 import Toast from "@/components/ui/toast";
+import { Dict } from "@/const/dict";
 import { deleteRows } from "@/lib/general/actions";
 import {
   Button,
@@ -15,12 +16,13 @@ import toast from "react-hot-toast";
 import { useSWRConfig } from "swr";
 
 type Props = {
+  dict: Dict["private"]["operations"]["operation-table"]["dropdown"]["modal"]["delete"];
   deleted: Operation[];
   type: OperationType;
   onClose: () => void;
 };
 
-export default function DeleteModal({ deleted, type, onClose }: Props) {
+export default function DeleteModal({ dict, deleted, type, onClose }: Props) {
   const { mutate } = useSWRConfig();
   const [isPending, startTransition] = useTransition();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -37,27 +39,18 @@ export default function DeleteModal({ deleted, type, onClose }: Props) {
           <>
             <ModalHeader className="font-normal text-center">
               <p className="text-center w-full inline-block">
-                Usunąć{" "}
-                {deleted.length === 1 ? (
-                  <Fragment>
-                    <span>operację</span>{" "}
-                    <span className="font-bold">{deleted[0].title}</span>
-                  </Fragment>
-                ) : (
-                  "operacje"
-                )}
-                ?
+                <span>{dict.title}</span>{" "}
+                <span className="font-bold">{deleted[0].title}</span>?
               </p>
             </ModalHeader>
             <ModalBody className="relative flex items-center justify-center min-h-12 py-0 [&:has(+button)]:z-40 my-3">
               <p className="text-font/80 text-sm text-center">
-                Ta akcja jest nieodwracalna! Upewnij się, że usuwasz poprawne
-                operacje przed zatwierdzeniem
+                {dict.description}
               </p>
             </ModalBody>
             <ModalFooter>
               <Button disableRipple onPress={onClose}>
-                Anuluj
+                {dict.button._close}
               </Button>
               <form
                 action={(formData) =>
@@ -99,7 +92,7 @@ export default function DeleteModal({ deleted, type, onClose }: Props) {
                   disabled={isPending}
                 >
                   {!isPending && <Trash2Icon size={16} />}
-                  Usuń
+                  {dict.button._submit}
                 </Button>
                 <input
                   type="hidden"

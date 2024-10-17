@@ -12,11 +12,17 @@ import { useRef, useState } from "react";
 import CurrencySelect from "./currency-select";
 import LabelSelect from "./label-select";
 import TransactionSelect from "./transaction-select";
+import { Dict } from "@/const/dict";
 
 export default function Filter({
+  dict,
   enabled = { label: false, currency: true, transaction: false },
   state,
-}: FilterProps) {
+}: FilterProps & {
+  dict: {
+    reset: string;
+  } & Dict["private"]["operations"]["operation-table"]["top-content"]["filter"];
+}) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const numberOfParams = Object.keys(state).filter(
@@ -51,9 +57,11 @@ export default function Filter({
       </PopoverTrigger>
       <PopoverContent className="w-[200px]">
         <div className="flex flex-col gap-2 py-2 w-full">
-          {enabled.label && state.label && <LabelSelect {...state.label} />}
+          {enabled.label && state.label && (
+            <LabelSelect dict={dict.label} {...state.label} />
+          )}
           {enabled.currency && state.currency && (
-            <CurrencySelect {...state.currency} />
+            <CurrencySelect dict={dict.currency} {...state.currency} />
           )}
           {enabled.transaction && state.transaction && (
             <TransactionSelect {...state.transaction} />
@@ -68,7 +76,7 @@ export default function Filter({
                 });
               }}
             >
-              <ListRestartIcon size={15} strokeWidth={2} /> Resetuj
+              <ListRestartIcon size={15} strokeWidth={2} /> {dict.reset}
             </Button>
           )}
         </div>

@@ -27,6 +27,7 @@ import { PaperclipIcon } from "lucide-react";
 import DocModal from "./modals/doc-modal";
 import ActionsDropdown from "./actions-dropdown";
 import { PeriodContext } from "@/app/(private)/(operations)/providers";
+import { Dict } from "@/const/dict";
 
 export default function OperationTable({
   rows,
@@ -34,8 +35,14 @@ export default function OperationTable({
   children,
   viewOnly,
   settings,
+  dict,
   ...props
-}: TableProps<Operation> & { settings: Settings }) {
+}: TableProps<Operation> & {
+  settings: Settings;
+  dict: {
+    title: Dict["private"]["general"]["incomes" | "expenses"];
+  } & Dict["private"]["operations"]["operation-table"];
+}) {
   const [docPath, setDocPath] = useState<string | null>(null);
   const pages = Math.ceil(count / 10);
   const { period } = useContext(PeriodContext);
@@ -65,11 +72,11 @@ export default function OperationTable({
 
   const columns = useCallback(
     (hasLabel: boolean, hasDoc: boolean) => [
-      { key: "issued_at", label: "DATA" },
-      { key: "title", label: "TYTUŁ" },
-      { key: "amount", label: "KWOTA" },
-      { key: "currency", label: "WALUTA" },
-      ...(hasLabel ? [{ key: "label", label: "ETYKIETA" }] : []),
+      { key: "issued_at", label: dict.columns.issued_at },
+      { key: "title", label: dict.columns.title },
+      { key: "amount", label: dict.columns.amount },
+      { key: "currency", label: dict.columns.currency },
+      ...(hasLabel ? [{ key: "label", label: dict.columns.label }] : []),
       ...(hasDoc ? [{ key: "doc_path", label: "" }] : []),
       { key: "actions", label: "" },
     ],
@@ -127,7 +134,13 @@ export default function OperationTable({
         //     <></>
         //   );
         case "actions":
-          return <ActionsDropdown type={props.type} operation={item} />;
+          return (
+            <ActionsDropdown
+              dict={dict.dropdown}
+              type={props.type}
+              operation={item}
+            />
+          );
         default:
           return <span className="line-clamp-1 break-all">{cellValue}</span>;
       }
@@ -141,12 +154,13 @@ export default function OperationTable({
 
   return (
     <Block
-      title={props.title}
+      title={dict.title}
       className="w-screen sm:w-full"
       hideTitleMobile
       cta={
         <TopContent
           {...props}
+          dict={dict["top-content"]}
           viewOnly={false}
           // selected={selectedKeys}
           handleSearch={handleSearch}

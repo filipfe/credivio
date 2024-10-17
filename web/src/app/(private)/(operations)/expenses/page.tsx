@@ -8,7 +8,7 @@ import Providers from "../providers";
 import OperationsByMonth from "@/components/operations/operations-by-month";
 import Limits from "@/components/operations/limits";
 import { getSettings } from "@/lib/general/actions";
-import getDictionary from "@/const/dict";
+import getDictionary, { Dict } from "@/const/dict";
 
 export default async function Page({
   searchParams,
@@ -16,6 +16,13 @@ export default async function Page({
   searchParams: SearchParams;
 }) {
   const settings = await getSettings();
+
+  const {
+    private: {
+      operations: dict,
+      general: { expenses: title },
+    },
+  } = await getDictionary(settings.language);
 
   const { result } = await getOperationsStats(
     settings.timezone,
@@ -27,20 +34,14 @@ export default async function Page({
     throw new Error("Failed to fetch the resource!");
   }
 
-  const {
-    private: {
-      operations: { expenses },
-    },
-  } = await getDictionary(settings.language);
-
   const { last_month, last_day } = result;
 
   return (
     <div className="sm:px-10 py-4 sm:py-8 flex flex-col h-full gap-4 sm:gap-6 xl:grid grid-cols-2 2xl:grid-cols-4 2xl:grid-rows-[max-content_max-content_1fr]">
-      <Limits dict={expenses.limits} settings={settings} />
+      <Limits dict={dict.expenses.limits} settings={settings} />
       <div className="col-[1/2]">
         <Stat
-          title="Dzisiaj"
+          title={dict.stats["today"]}
           description=""
           currency={settings.currency}
           stat={last_day}
@@ -48,7 +49,7 @@ export default async function Page({
       </div>
       <div className="col-[2/3]">
         <Stat
-          title="30 dni"
+          title={dict.stats["30-days"]}
           description=""
           currency={settings.currency}
           stat={last_month}
@@ -61,10 +62,19 @@ export default async function Page({
         }}
       >
         <div className="col-start-1 col-end-3 row-start-3 row-end-3 flex flex-col order-last">
-          <OperationsByMonth type="expense" settings={settings} />
+          <OperationsByMonth
+            type="expense"
+            settings={settings}
+            title={title}
+            dict={dict["operations-by-month"]}
+          />
         </div>
         <Suspense fallback={<Loader className="row-span-3 col-span-2" />}>
-          <Expenses searchParams={searchParams} settings={settings} />
+          <Expenses
+            searchParams={searchParams}
+            settings={settings}
+            dict={{ title, ...dict["operation-table"] }}
+          />
         </Suspense>
       </Providers>
     </div>
@@ -74,11 +84,16 @@ export default async function Page({
 async function Expenses({
   searchParams,
   settings,
+  dict,
 }: {
   searchParams: SearchParams;
   settings: Settings;
+  dict: {
+    title: Dict["private"]["general"]["incomes" | "expenses"];
+  } & Dict["private"]["operations"]["operation-table"];
 }) {
   const supabase = createClient();
+
   const {
     data: { results: expenses, count },
   } = await supabase.rpc("get_expenses_own_rows", {
@@ -95,11 +110,11 @@ async function Expenses({
   return (
     <div className="row-span-2 col-span-2 flex items-stretch">
       <OperationTable
-        title="Wydatki"
         type="expense"
         rows={expenses || []}
         count={count || 0}
         settings={settings}
+        dict={dict}
       />
     </div>
   );

@@ -3,17 +3,18 @@ import { Input } from "@nextui-org/react";
 import { useState } from "react";
 
 type Props = {
+  label: string;
   defaultValue?: string;
 };
 
-export default function AmountInput({ defaultValue }: Props) {
+export default function AmountInput({ label, defaultValue }: Props) {
   const [amount, setAmount] = useState(defaultValue || "");
 
   return (
     <Input
       classNames={{ inputWrapper: "!bg-light shadow-none border" }}
       name="amount"
-      label="Kwota"
+      label={label}
       placeholder="0.00"
       required
       isRequired

@@ -44,46 +44,106 @@
       }
     },
     "operations": {
-      "incomes": {
+      "stats": {
         "today": "Dzisiaj",
-        "30-days": "30 dni",
-        "operations-by-month": {
-          "title": "Przychody",
-          "_empty": {
-            "title": "Brak danych do wyświetlenia!",
-            "button": "Dodaj przychód"
-          }
-        },
-        "operation-table": {
-          "title": "Przychody",
-          "top-content": {
-            "search": {
-              "placeholder": "Wyszukaj"
-            },
-            "period": {
-              "button": "Resetuj"
-            },
-            "filter": {
-              "currency": {
-                "label": "Waluta",
-                "default": "Wszystkie"
-              },
-              "button": "Resetuj"
-            },
-            "add": "Dodaj"
-          },
-          "columns": {
-            "issued_at": "DATA",
-            "title": "TYTUŁ",
-            "amount": "KWOTA",
-            "currency": "WALUTA"
-          },
-          "_empty": {
-            "title": "Nie znalezniono operacji",
-            "button": "Dodaj przychód"
+        "30-days": "30 dni"
+      },
+      "operations-by-month": {
+        "_empty": {
+          "title": "Brak danych do wyświetlenia!",
+          "button": {
+            "income": "Dodaj przychód",
+            "expense": "Dodaj wydatek"
           }
         }
       },
+      "operation-table": {
+        "top-content": {
+          "reset": "Resetuj",
+          "search": {
+            "placeholder": "Wyszukaj"
+          },
+          "filter": {
+            "label": {
+              "label": "Etykieta",
+              "default": "Wszystkie",
+              "description": "wydatków"
+            },
+            "currency": {
+              "label": "Waluta",
+              "default": "Wszystkie"
+            }
+          },
+          "add": "Dodaj"
+        },
+        "columns": {
+          "issued_at": "DATA",
+          "title": "TYTUŁ",
+          "amount": "KWOTA",
+          "currency": "WALUTA",
+          "label": "ETYKIETA"
+        },
+        "dropdown": {
+          "menu": {
+            "edit": {
+              "title": "Edytuj",
+              "description": "Modyfikuj operację"
+            },
+            "delete": {
+              "title": "Usuń",
+              "description": "Usuń operację"
+            }
+          },
+          "modal": {
+            "edit": {
+              "title": "Edytuj wydatek",
+              "form": {
+                "title": {
+                  "label": "Tytuł",
+                  "placeholder": "Wynagrodzenie"
+                },
+                "amount": {
+                  "label": "Kwota"
+                },
+                "currency": {
+                  "label": "Waluta"
+                },
+                "issued-at": {
+                  "label": "Data uiszczenia"
+                },
+                "label": {
+                  "label": "Etykieta",
+                  "placeholder": "Jedzenie",
+                  "description": "wydatków",
+                  "tooltip": "Dodaj etykietę, aby pogrupować operacje"
+                },
+                "_close": {
+                  "label": "Anuluj"
+                },
+                "_submit": {
+                  "label": "Zapisz"
+                }
+              }
+            },
+            "delete": {
+              "title": "Usunąć operację",
+              "description": "Ta akcja jest nieodwracalna! Upewnij się, że usuwasz poprawne operacje przed zatwierdzeniem",
+              "button": {
+                "_close": "Anuluj",
+                "_submit": "Usuń"
+              }
+            }
+          }
+        },
+        "_empty": {
+          "title": "Nie znalezniono operacji",
+          "button": {
+            "income": "Dodaj przychód",
+            "button": "Dodaj wydatek"
+          }
+        }
+      },
+      "incomes": {},
       "expenses": {
         "limits": {
           "period": {
@@ -127,50 +187,6 @@
                 "_error": "Wystąpił błąd przy dodawaniu limitu"
               }
             }
-          }
-        },
-        "today": "Dzisiaj",
-        "30-days": "30 dni",
-        "operations-by-month": {
-          "title": "Wydatki",
-          "_empty": {
-            "title": "Brak danych do wyświetlenia!",
-            "button": "Dodaj wydatek"
-          }
-        },
-        "operation-table": {
-          "title": "Wydatki",
-          "top-content": {
-            "search": {
-              "placeholder": "Wyszukaj"
-            },
-            "period": {
-              "button": "Resetuj"
-            },
-            "filter": {
-              "label": {
-                "label": "Etykieta",
-                "default": "Wszystkie",
-                "description": "wydatków"
-              },
-              "currency": {
-                "label": "Waluta",
-                "default": "Wszystkie"
-              },
-              "button": "Resetuj"
-            },
-            "add": "Dodaj"
-          },
-          "columns": {
-            "issued_at": "DATA",
-            "title": "TYTUŁ",
-            "amount": "KWOTA",
-            "currency": "WALUTA",
-            "label": "ETYKIETA"
-          },
-          "_empty": {
-            "title": "Nie znalezniono operacji",
-            "button": "Dodaj wydatek"
           }
         }
       },

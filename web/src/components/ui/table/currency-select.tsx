@@ -1,18 +1,22 @@
 "use client";
 
 import { CURRENCIES } from "@/const";
+import { Dict } from "@/const/dict";
 import { Select, SelectItem, SelectProps } from "@nextui-org/react";
 
 export default function CurrencySelect({
+  dict,
   onChange,
   value,
   ...props
-}: Pick<SelectProps, "labelPlacement"> & State) {
+}: Pick<SelectProps, "labelPlacement"> &
+  State & {
+    dict: Dict["private"]["operations"]["operation-table"]["top-content"]["filter"]["currency"];
+  }) {
   return (
     <Select
       name="currency"
-      placeholder="PLN"
-      label="Waluta"
+      label={dict.label}
       size="sm"
       radius="md"
       selectedKeys={[value]}
@@ -36,7 +40,7 @@ export default function CurrencySelect({
             }`}
             key=""
           >
-            Wszystkie
+            {dict.default}
           </SelectItem>
         ) as any
       }

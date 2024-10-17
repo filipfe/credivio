@@ -1,15 +1,21 @@
 import { Select, SelectItem } from "@nextui-org/react";
 import { useLabels } from "@/lib/operations/queries";
+import { Dict } from "@/const/dict";
 
-export default function LabelSelect({ value, onChange }: State) {
+export default function LabelSelect({
+  dict,
+  value,
+  onChange,
+}: State & {
+  dict: Dict["private"]["operations"]["operation-table"]["top-content"]["filter"]["label"];
+}) {
   const { data: labels, isLoading } = useLabels();
 
   return (
     <Select
       name="label"
-      placeholder="Jedzenie"
       aria-label="Label filter"
-      label="Etykieta"
+      label={dict.label}
       size="sm"
       isLoading={isLoading}
       isDisabled={isLoading}
@@ -25,13 +31,13 @@ export default function LabelSelect({ value, onChange }: State) {
       {
         (
           <SelectItem
-            value="Wszystkie"
+            value={dict.default}
             className={`${
               value === "" ? "!bg-light" : "!bg-white hover:!bg-light"
             }`}
             key="all"
           >
-            Wszystkie
+            {dict.default}
           </SelectItem>
         ) as any
       }
@@ -39,7 +45,7 @@ export default function LabelSelect({ value, onChange }: State) {
         ? labels.map(({ name, count }) => (
             <SelectItem
               value={name}
-              description={`${count} wydatków`}
+              description={`${count} ${dict.description}`}
               classNames={{
                 base: `${
                   value === name ? "!bg-light" : "!bg-white hover:!bg-light"
