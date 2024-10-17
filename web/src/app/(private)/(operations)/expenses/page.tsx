@@ -73,7 +73,8 @@ export default async function Page({
           <Expenses
             searchParams={searchParams}
             settings={settings}
-            dict={{ title, ...dict["operation-table"] }}
+            title={title}
+            dict={dict["operation-table"]}
           />
         </Suspense>
       </Providers>
@@ -82,15 +83,15 @@ export default async function Page({
 }
 
 async function Expenses({
+  title,
   searchParams,
   settings,
   dict,
 }: {
   searchParams: SearchParams;
   settings: Settings;
-  dict: {
-    title: Dict["private"]["general"]["incomes" | "expenses"];
-  } & Dict["private"]["operations"]["operation-table"];
+  title: string;
+  dict: Dict["private"]["operations"]["operation-table"];
 }) {
   const supabase = createClient();
 
@@ -110,6 +111,7 @@ async function Expenses({
   return (
     <div className="row-span-2 col-span-2 flex items-stretch">
       <OperationTable
+        title={title}
         type="expense"
         rows={expenses || []}
         count={count || 0}

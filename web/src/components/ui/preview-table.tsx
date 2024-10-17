@@ -30,31 +30,9 @@ import ActionsDropdown from "../operations/actions-dropdown";
 import { useSettings } from "@/lib/general/queries";
 import { Dict } from "@/const/dict";
 
-const getColumns = (type: OperationType, hasDoc: boolean) => {
-  if (type === "stock") {
-    return [
-      { key: "issued_at", label: "DATA" },
-      { key: "symbol", label: "INSTRUMENT" },
-      { key: "transaction_type", label: "TRANSAKCJA" },
-      { key: "quantity", label: "ILOŚĆ" },
-      { key: "price", label: "CENA" },
-      { key: "commission", label: "PROWIZJA" },
-      { key: "actions", label: "" },
-    ];
-  } else {
-    return [
-      { key: "issued_at", label: "DATA" },
-      { key: "title", label: "TYTUŁ" },
-      { key: "amount", label: "KWOTA" },
-      { key: "currency", label: "WALUTA" },
-      ...(hasDoc ? [{ key: "doc_path", label: "" }] : []),
-      { key: "actions", label: "" },
-    ];
-  }
-};
-
 type Props<T> = {
-  dict: Dict["private"]["operations"]["operation-table"]["dropdown"];
+  title: string;
+  dict: Dict["private"]["operations"]["operation-table"];
   count: number;
   children?: ReactNode;
   type: OperationType;
@@ -64,6 +42,7 @@ type Props<T> = {
 };
 
 export default function PreviewTable({
+  title,
   dict,
   count,
   children,
@@ -88,6 +67,29 @@ export default function PreviewTable({
   const { page } = searchQuery;
   // const { selectionMode, selectedKeys, onSelectionChange, onRowAction } =
   //   useSelection(items.map((item) => item.id));
+
+  const getColumns = (type: OperationType, hasDoc: boolean) => {
+    if (type === "stock") {
+      return [
+        { key: "issued_at", label: "DATA" },
+        { key: "symbol", label: "INSTRUMENT" },
+        { key: "transaction_type", label: "TRANSAKCJA" },
+        { key: "quantity", label: "ILOŚĆ" },
+        { key: "price", label: "CENA" },
+        { key: "commission", label: "PROWIZJA" },
+        { key: "actions", label: "" },
+      ];
+    } else {
+      return [
+        { key: "issued_at", label: dict.columns.issued_at },
+        { key: "title", label: dict.columns.title },
+        { key: "amount", label: dict.columns.amount },
+        { key: "currency", label: dict.columns.currency },
+        ...(hasDoc ? [{ key: "doc_path", label: "" }] : []),
+        { key: "actions", label: "" },
+      ];
+    }
+  };
 
   const renderCell = useCallback(
     (item: any, columnKey: any) => {
@@ -138,7 +140,7 @@ export default function PreviewTable({
         case "actions":
           return (
             <ActionsDropdown
-              dict={dict}
+              dict={dict.dropdown}
               type={type}
               operation={item}
               // onSelect={() => onRowAction(item.id)}
@@ -171,7 +173,7 @@ export default function PreviewTable({
 
   return (
     <Block
-      title="Podgląd"
+      title={title}
       className="max-w-3xl w-full mx-auto"
       // cta={
       //   <TopContent

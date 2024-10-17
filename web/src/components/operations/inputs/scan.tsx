@@ -14,11 +14,12 @@ import {
 import { v4 } from "uuid";
 
 type Props = {
+  description: string;
   type: OperationType;
   setRecords: Dispatch<SetStateAction<Operation[]>>;
 };
 
-export default function Scan({ type, setRecords }: Props) {
+export default function Scan({ description, type, setRecords }: Props) {
   const [isLoading, setIsLoading] = useState(false);
 
   const onChange = async (files: File[]) => {
@@ -52,7 +53,7 @@ export default function Scan({ type, setRecords }: Props) {
       ) : (
         <>
           <ScanLineIcon size={28} />
-          <p className="text-sm">Dodaj lub upuść pliki</p>
+          <p className="text-sm">{description}</p>
         </>
       )}
     </Dropzone>

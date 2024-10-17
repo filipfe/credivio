@@ -7,15 +7,17 @@ export default async function Page() {
 
   const {
     private: {
-      operations: {
-        "operation-table": { dropdown: dict },
-      },
+      operations: { "operation-table": table, add: dict },
     },
   } = await getDictionary(settings.language);
 
   return (
     <div className="sm:px-10 py-4 sm:py-8 h-full flex items-center justify-center">
-      <AddForm dict={dict} type="income" defaultCurrency={settings.currency} />
+      <AddForm
+        dict={{ table, add: dict }}
+        type="income"
+        defaultCurrency={settings.currency}
+      />
     </div>
   );
 }
