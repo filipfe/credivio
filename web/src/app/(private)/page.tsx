@@ -23,7 +23,9 @@ export default async function Dashboard() {
 
   return (
     <div className="sm:px-10 h-full py-4 sm:py-8 flex flex-col xl:grid grid-cols-6 xl:grid-rows-[max-content_max-content_1fr] gap-4 sm:gap-6">
-      <Suspense fallback={latestOperationsFallback}>
+      <Suspense
+        fallback={<LatestOperationsFallback dict={dict["latest-operations"]} />}
+      >
         <LatestOperations
           dict={dict["latest-operations"]}
           languageCode={settings.language}
@@ -38,8 +40,8 @@ export default async function Dashboard() {
   );
 }
 
-const latestOperationsFallback = (
-  <Block title="Ostatnie operacje" className="xl:col-span-6">
+const LatestOperationsFallback = ({ dict }: { dict: { title: string } }) => (
+  <Block title={dict.title} className="xl:col-span-6">
     <div className="grid grid-cols-6 gap-6">
       <OperationLoader />
       <OperationLoader />

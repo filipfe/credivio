@@ -9,7 +9,6 @@ import { usePathname } from "next/navigation";
 import { useContext, useState } from "react";
 
 type Props = {
-  isMenuHidden?: boolean;
   isGroup?: boolean;
   matchPath?: boolean;
   endContent?: React.ReactNode;
@@ -79,9 +78,14 @@ export default function NavLink({
   ) : (
     <Link
       href={href}
-      className={`px-3 sm:px-4 rounded-lg text-sm font-medium grid grid-cols-[15px_1fr] items-center gap-3 sm:gap-3.5 ${
-        isActive ? "bg-light border" : "hover:bg-light bg-white text-font/70"
-      }`}
+      className={cn(
+        `px-3 sm:px-4 rounded-lg text-sm font-medium grid transition-all items-center ${
+          isActive ? "bg-light border" : "hover:bg-light bg-white text-font/70"
+        }`,
+        isMenuHidden.desktop
+          ? "grid-cols-[1fr]"
+          : "gap-3 sm:gap-3.5 grid-cols-[15px_1fr]"
+      )}
       style={{ fontSize: 13, height: 34 }}
     >
       <div className="grid place-content-center">
@@ -89,7 +93,7 @@ export default function NavLink({
       </div>
       <span
         className={`flex-1 whitespace-nowrap text-ellipsis mt-px ${
-          isMenuHidden.desktop ? "sm:opacity-0 sm:absolute" : "opacity-100"
+          isMenuHidden.desktop ? "sm:opacity-0 absolute" : "opacity-100"
         }`}
       >
         {title}
