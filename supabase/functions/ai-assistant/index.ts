@@ -27,15 +27,13 @@ const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY");
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   throw new Error(
-    `Environment variables missing: ${
-      Object.entries({
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY,
-      })
-        .filter(([_key, value]) => !value)
-        .map(([key]) => key)
-        .join(", ")
-    }`,
+    `Environment variables missing: ${Object.entries({
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY,
+    })
+      .filter(([_key, value]) => !value)
+      .map(([key]) => key)
+      .join(", ")}`
   );
 }
 
@@ -58,20 +56,45 @@ Deno.serve(async (req) => {
     },
   });
 
-  const { data: settings, error } = await supabase.from("settings").select(
-    "language, timezone",
-  ).returns<Profile["settings"][]>().single();
+  const { data: settings, error } = await supabase
+    .from("settings")
+    .select("language, timezone")
+    .returns<Profile["settings"][]>()
+    .single();
 
   if (error) {
     return new Response("Couldn't retrieve settings", { status: 500 });
   }
 
-  const { input, currency, ...context } = await req.json() as Body;
+  const { input, currency, ...context } = (await req.json()) as Body;
+
+  const getGoalPayments = async (goalId: string) => {
+    const { data: payments, error } = await supabase
+      .from("goals_payments")
+      .select("amount, date")
+      .eq("goal_id", goalId)
+      .limit(20);
+
+    if (error) {
+      return {
+        error: "Error fetching payments: " + error.message,
+        payments: [],
+      };
+    }
+
+    return { payments };
+  };
+
+  if (context.goal) {
+    const { payments } = await getGoalPayments(context.goal.id);
+
+    context.goal.payments = payments;
+  }
 
   const getOperations = async (
     type: OperationsType,
     from: string,
-    to: string,
+    to: string
   ) => {
     const start = fromZonedTime(startOfDay(parseISO(from)), settings.timezone);
     const end = fromZonedTime(endOfDay(parseISO(to)), settings.timezone);
@@ -91,9 +114,10 @@ Deno.serve(async (req) => {
       "issued_at",
       "recurring",
     ];
-    const { data, error } = await supabase.from(type)
+    const { data, error } = await supabase
+      .from(type)
       .select(
-        type === "expenses" ? [...cols, "label"].join(", ") : cols.join(", "),
+        type === "expenses" ? [...cols, "label"].join(", ") : cols.join(", ")
       )
       .eq("currency", currency)
       .gte("issued_at", start.toUTCString())
@@ -112,7 +136,8 @@ Deno.serve(async (req) => {
   };
 
   async function getRecurringPayments() {
-    const { data, error } = await supabase.from("recurring_payments")
+    const { data, error } = await supabase
+      .from("recurring_payments")
       .select("title, type, amount, interval_amount, interval_unit, start_date")
       .eq("currency", currency);
 
@@ -143,9 +168,8 @@ Deno.serve(async (req) => {
     model: "gpt-4o",
     messages,
     tool_choice:
-      context.operations && Object.values(context.operations).some((v) =>
-          v === true
-        )
+      context.operations &&
+      Object.values(context.operations).some((v) => v === true)
         ? "required"
         : "none",
     tools: Object.values(functions).map((func) => ({
@@ -163,7 +187,10 @@ Deno.serve(async (req) => {
     messages.push(choice.message);
     for (const tool_call of choice.message.tool_calls) {
       console.log("Function call: ", tool_call);
-      const { function: { name, arguments: args }, id } = tool_call;
+      const {
+        function: { name, arguments: args },
+        id,
+      } = tool_call;
       if (name === "get_recurring_payments") {
         const { results, error } = await getRecurringPayments();
         messages.push({
@@ -190,13 +217,13 @@ Deno.serve(async (req) => {
     return new Response(
       // JSON.stringify({ message: "" }),
       JSON.stringify({ message: finalCompletion.choices[0].message.content }),
-      { headers: { "Content-Type": "application/json", ...corsHeaders } },
+      { headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   }
 
   return new Response(
     // JSON.stringify({ message: "" }),
     JSON.stringify({ message: choice.message.content }),
-    { headers: { "Content-Type": "application/json", ...corsHeaders } },
+    { headers: { "Content-Type": "application/json", ...corsHeaders } }
   );
 });

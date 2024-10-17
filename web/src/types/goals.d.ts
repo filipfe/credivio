@@ -1,16 +1,31 @@
+type PriorityGoalPayment = {
+  date: string;
+  amount: number;
+};
+
+type PriorityGoal = {
+  title: string;
+  price: number;
+  currency: string;
+  total_paid: number;
+  payments: PriorityGoalPayment[];
+};
+
 type Goal = {
   id: string;
   title: string;
-  description?: string;
   price: number;
   currency: string;
-  is_priority?: boolean;
   deadline?: string;
-  payments: GoalPayment[];
+  total_paid: number;
+  is_priority: boolean;
 };
 
 type GoalPayment = {
-  goal_id: string;
-  amount: number;
   date: string;
+  payments: {
+    goal_id: string;
+    currency: string;
+    amount: number;
+  }[];
 };

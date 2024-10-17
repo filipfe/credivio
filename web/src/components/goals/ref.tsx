@@ -1,7 +1,7 @@
 "use client";
 
 import { Progress } from "@nextui-org/react";
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
 import useOutsideObserver from "@/hooks/useOutsideObserver";
 import Menu from "./menu";
 import NumberFormat from "@/utils/formatters/currency";
@@ -10,18 +10,13 @@ import { useSettings } from "@/lib/general/queries";
 export default function GoalRef(goal: Goal) {
   const { data: settings } = useSettings();
 
-  const { title, price, currency, deadline, payments } = goal;
+  const { title, price, currency, deadline, total_paid } = goal;
   const formRef = useRef<HTMLFormElement>(null);
 
   useOutsideObserver(formRef, () =>
     formRef.current?.dispatchEvent(
       new Event("submit", { cancelable: true, bubbles: true })
     )
-  );
-
-  const sum = useMemo(
-    () => payments.reduce((prev, { amount }) => prev + amount, 0),
-    [payments]
   );
 
   return (
@@ -42,7 +37,11 @@ export default function GoalRef(goal: Goal) {
         </h3>
         <div className="h-10 flex items-end">
           <strong className="text-3xl font-bold text-white">
-            <NumberFormat currency={currency} amount={sum} notation="compact" />
+            <NumberFormat
+              currency={currency}
+              amount={total_paid}
+              notation="compact"
+            />
           </strong>
           <sub className="mb-2 ml-1.5 text-white text-sm">
             /{" "}
@@ -55,7 +54,7 @@ export default function GoalRef(goal: Goal) {
         </div>
         <Progress
           color="secondary"
-          value={sum}
+          value={total_paid}
           maxValue={price}
           aria-label={title}
           label="Zebrano"

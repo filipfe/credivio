@@ -18,8 +18,9 @@ export default function ExpensesByLabel({
 }: {
   dict: Dict["private"]["stats"]["expenses-by-label"];
 }) {
-  const { month, year, currency } = useContext(StatsFilterContext);
+  const { month, year, currency, settings } = useContext(StatsFilterContext);
   const { isLoading, data: results } = useExpensesByLabel(
+    settings.timezone,
     currency,
     month + 1,
     year

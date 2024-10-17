@@ -34,16 +34,15 @@ export type Locale = "pl" | "en" | "es";
 export type Goal = {
   id: string;
   title: string;
-  description?: string;
   price: number;
+  total_paid: number;
   currency: string;
-  is_priority?: boolean;
   deadline?: string;
-  payments: GoalPayment[];
+  is_priority?: boolean;
+  payments?: GoalPayment[];
 };
 
 type GoalPayment = {
-  goal_id: string;
   amount: number;
   date: string;
 };

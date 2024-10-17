@@ -4,17 +4,55 @@ import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function getGoals(): Promise<SupabaseResponse<Goal>> {
+export async function getPriorityGoal(
+  limit?: number
+): Promise<SupabaseSingleRowResponse<PriorityGoal>> {
   const supabase = createClient();
-  const { data: results, error } = await supabase
-    .from("goals")
-    .select(
-      "id, title, description, price, currency, deadline, is_priority, payments:goals_payments(amount, date)",
-    )
-    .order("deadline")
-    .order("date", { referencedTable: "goals_payments", ascending: false })
-    .order("created_at")
-    .returns<Goal[]>();
+
+  const { data: result, error } = await supabase.rpc(
+    "get_goals_priority_goal",
+    {
+      p_limit: limit,
+    }
+  );
+
+  if (error) {
+    return {
+      result: null,
+      error: error.message,
+    };
+  }
+
+  return {
+    result,
+  };
+}
+
+export async function getCurrentGoals(): Promise<SupabaseResponse<Goal>> {
+  const supabase = createClient();
+
+  const { data: results, error } = await supabase.rpc("get_goals_current");
+
+  if (error) {
+    return {
+      results: [],
+      error: error.message,
+    };
+  }
+
+  return {
+    results,
+  };
+}
+
+export async function getGoalsPayments(
+  timezone: string
+): Promise<SupabaseResponse<GoalPayment>> {
+  const supabase = createClient();
+  const { data: results, error } = await supabase.rpc("get_goals_payments", {
+    p_timezone: timezone,
+    p_page: 1,
+  });
 
   if (error) {
     return {
@@ -29,7 +67,7 @@ export async function getGoals(): Promise<SupabaseResponse<Goal>> {
 }
 
 export async function addGoal(
-  formData: FormData,
+  formData: FormData
 ): Promise<Pick<SupabaseResponse, "error">> {
   const data = JSON.parse(formData.get("data")!.toString());
   const supabase = createClient();
@@ -60,7 +98,7 @@ export async function addGoal(
 }
 
 export async function addGoalPayment(
-  formData: FormData,
+  formData: FormData
 ): Promise<Pick<SupabaseResponse, "error">> {
   const amount = formData.get("amount")?.toString();
   const goal_id = formData.get("goal_id")?.toString();

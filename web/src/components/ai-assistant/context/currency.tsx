@@ -6,7 +6,7 @@ import Option from "./option";
 import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
 
 export default function CurrencyPicker({ dict }: { dict: string }) {
-  const { currency, setCurrency } = useAIAssistant();
+  const { currency, setCurrency, setGoal, setLimit } = useAIAssistant();
   return (
     <Section title={dict}>
       <div className="flex flex-wrap items-center gap-3 col-span-full">
@@ -16,9 +16,11 @@ export default function CurrencyPicker({ dict }: { dict: string }) {
             // highlight="outline"
             id={`context-limit-${curr}`}
             isActive={currency === curr}
-            onActiveChange={(checked) =>
-              setCurrency(checked ? curr : undefined)
-            }
+            onActiveChange={() => {
+              setLimit(undefined);
+              setGoal(undefined);
+              setCurrency(curr);
+            }}
             key={`limits-${curr}`}
           >
             {curr}

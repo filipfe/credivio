@@ -1,26 +1,23 @@
 import { createClient } from "@/utils/supabase/server";
-import Priority from "../goals/priority";
+import Priority from "../goals/priority-goal/priority";
 import { Dict } from "@/const/dict";
+import { getPriorityGoal } from "@/lib/goals/actions";
+import Block from "../ui/block";
 
 export default async function GoalPriority({
   dict,
 }: {
   dict: Dict["private"]["goals"]["priority"];
 }) {
-  const supabase = createClient();
-  const { data: goal } = await supabase
-    .from("goals")
-    .select("title, price, currency, payments:goals_payments(date, amount)")
-    .eq("is_priority", true)
-    .order("date", { referencedTable: "goals_payments", ascending: false })
-    .returns<Goal[]>()
-    .single();
+  const { result: goal } = await getPriorityGoal(5);
 
   if (!goal) return <></>;
 
   return (
     <div className="col-span-3 [&>div]:w-full flex items-stretch">
-      <Priority dict={dict} goal={goal} limitPayments={5} />
+      <Block>
+        <Priority dict={dict} goal={goal} />
+      </Block>
     </div>
   );
 }

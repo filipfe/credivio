@@ -15,8 +15,9 @@ export default function StatsList({
     expenses: Dict["private"]["general"]["expenses"];
   };
 }) {
-  const { currency, month, year } = useContext(StatsFilterContext);
+  const { currency, month, year, settings } = useContext(StatsFilterContext);
   const { data: results, isLoading: isLoading } = useStatsData(
+    settings.timezone,
     currency,
     month + 1,
     year

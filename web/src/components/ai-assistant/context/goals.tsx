@@ -12,10 +12,6 @@ export default function GoalsContext({ dict }: { dict: string }) {
   const { currency } = useAIAssistant();
   const { data: goals, error, isLoading } = useGoals(currency);
 
-  if (!currency) {
-    return <></>;
-  }
-
   return (
     <Section title={dict}>
       {error ? (
@@ -31,7 +27,7 @@ export default function GoalsContext({ dict }: { dict: string }) {
       ) : goals && goals.length > 0 ? (
         <div className="flex flex-col sm:grid grid-cols-3 gap-3">
           {goals.map((goal) => (
-            <GoalRef goal={goal} />
+            <GoalRef goal={goal} currency={currency} />
           ))}
         </div>
       ) : (
@@ -41,11 +37,11 @@ export default function GoalsContext({ dict }: { dict: string }) {
   );
 }
 
-const GoalRef = ({ goal }: { goal: Goal }) => {
-  const { id, payments, title, price, currency } = goal;
+const GoalRef = ({ goal, currency }: { goal: Goal; currency: string }) => {
+  const { id, title, price, total_paid } = goal;
   const { goal: selectedGoal, setGoal } = useAIAssistant();
   const isActive = selectedGoal ? selectedGoal.id === id : false;
-  const paid = payments.reduce((prev, { amount }) => prev + amount, 0);
+
   return (
     <Option
       id={`goal-${id}`}
@@ -55,12 +51,12 @@ const GoalRef = ({ goal }: { goal: Goal }) => {
     >
       <h4 className="font-medium text-sm">{title}</h4>
       <small className="font-medium opacity-80">
-        <NumberFormat currency={currency} amount={paid} /> /{" "}
+        <NumberFormat currency={currency} amount={total_paid} /> /{" "}
         <NumberFormat currency={currency} amount={price} />
       </small>
       <Progress
         size="sm"
-        value={paid}
+        value={total_paid}
         maxValue={price}
         classNames={{ indicator: cn(isActive && "bg-secondary") }}
       />
