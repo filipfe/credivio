@@ -29,6 +29,8 @@ export default function GoalsTable({
   const [scrollButtonVisible, setScrollButtonVisible] = useState(false);
   const tbodyRef = useRef<HTMLDivElement | null>(null);
 
+  if (goals.length === 0) return <></>;
+
   useEffect(() => {
     if (!tbodyRef.current) return;
 
