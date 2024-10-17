@@ -1,15 +1,14 @@
 "use client";
 
-import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
+import { Section } from "@/components/ui/block";
 import { CURRENCIES } from "@/const";
 import Option from "./option";
-import { Section } from "@/components/ui/block";
+import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
 
-export default function Currencies() {
+export default function CurrencyPicker({ dict }: { dict: string }) {
   const { currency, setCurrency, setGoal, setLimit } = useAIAssistant();
-
   return (
-    <Section title="Waluty">
+    <Section title={dict}>
       <div className="flex flex-wrap items-center gap-3 col-span-full">
         {CURRENCIES.map((curr) => (
           <Option
@@ -18,11 +17,11 @@ export default function Currencies() {
             id={`context-limit-${curr}`}
             isActive={currency === curr}
             onActiveChange={() => {
-              setGoal(undefined);
               setLimit(undefined);
+              setGoal(undefined);
               setCurrency(curr);
             }}
-            key={curr}
+            key={`limits-${curr}`}
           >
             {curr}
           </Option>

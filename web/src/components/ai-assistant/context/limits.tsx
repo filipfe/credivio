@@ -8,7 +8,12 @@ import Empty from "@/components/ui/empty";
 import { useLimits } from "@/lib/general/queries";
 import NumberFormat from "@/utils/formatters/currency";
 
-export default function LimitsContext({ timezone }: { timezone: string }) {
+export default function LimitsContext({
+  timezone,
+}: {
+  timezone: string;
+  dict: string;
+}) {
   const { currency } = useAIAssistant();
   const { data: limits, isLoading, error } = useLimits(timezone, currency);
 
@@ -26,7 +31,7 @@ export default function LimitsContext({ timezone }: { timezone: string }) {
           )}
         >
           <div className="overflow-hidden">
-            <div className="flex flex-col sm:grid grid-cols-3 gap-3 pt-3">
+            <div className="flex flex-col sm:grid grid-cols-3 gap-3">
               {isLoading ? (
                 <>
                   <Skeleton className="h-[62px] rounded-md" />

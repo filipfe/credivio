@@ -11,6 +11,7 @@ import registerUser from "./commands/start.ts";
 import processVoice from "./utils/process-voice.ts";
 import processText from "./utils/process-text.ts";
 import graph from "./commands/graph.ts";
+import { Payment } from "../_shared/types.ts";
 
 // Setup type definitions for built-in Supabase Runtime APIs
 /// <reference types="https://esm.sh/@supabase/functions-js/src/edge-runtime.d.ts" />

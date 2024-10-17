@@ -8,20 +8,19 @@ import {
   useState,
 } from "react";
 
-type SelectedType = {
-  incomes: boolean;
-  expenses: boolean;
-};
-
 type AIAssistantContextType = {
   currency: string;
-  setCurrency: Dispatch<SetStateAction<string>>;
   limit?: Limit;
   goal?: Goal;
+  operations: Record<"incomes" | "expenses" | "recurring_payments", boolean>;
+  setCurrency: Dispatch<SetStateAction<string>>;
   setLimit: Dispatch<SetStateAction<Limit | undefined>>;
   setGoal: Dispatch<SetStateAction<Goal | undefined>>;
-  selected: SelectedType;
-  setSelected: Dispatch<SetStateAction<SelectedType>>;
+  setOperations: Dispatch<
+    SetStateAction<
+      Record<"incomes" | "expenses" | "recurring_payments", boolean>
+    >
+  >;
 };
 
 const AIAssistantContext = createContext<AIAssistantContextType>(null!);
@@ -38,11 +37,13 @@ export default function AIAssistantProvider({
   const [currency, setCurrency] = useState<string>(defaultCurrency);
   const [limit, setLimit] = useState<Limit>();
   const [goal, setGoal] = useState<Goal>();
-  const [selected, setSelected] = useState<SelectedType>({
+  const [operations, setOperations] = useState<
+    Record<"incomes" | "expenses" | "recurring_payments", boolean>
+  >({
     incomes: false,
     expenses: false,
+    recurring_payments: false,
   });
-
   return (
     <AIAssistantContext.Provider
       value={{
@@ -52,8 +53,8 @@ export default function AIAssistantProvider({
         setLimit,
         goal,
         setGoal,
-        selected,
-        setSelected,
+        operations,
+        setOperations,
       }}
     >
       {children}

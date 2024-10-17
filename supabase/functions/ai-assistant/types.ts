@@ -1,13 +1,12 @@
+import { Goal } from "../_shared/types.ts";
+import { Limit } from "../_shared/types.ts";
+
 export type Body = {
-  timezone: string;
-  language: string;
   input: string;
+  currency: string;
   limit?: Limit;
-  operations?: {
-    issued_at: string;
-    type: "income" | "expense";
-    title: string;
-    amount: number;
-    label?: string;
-  }[];
+  goal?: Goal;
+  operations?: Partial<Record<OperationsType, boolean>>;
 };
+
+export type OperationsType = "incomes" | "expenses" | "recurring_payments";
