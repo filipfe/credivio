@@ -215,10 +215,32 @@
       "recurring-payments": {}
     },
     "goals": {
+      "list": {
+        "title": "Actual",
+        "button": "Añadir",
+        "goal": {
+          "no-deadline": "Sin fecha límite",
+          "menu": {
+            "add": {
+              "title": "Añadir",
+              "description": "Añadir dinero al objetivo"
+            },
+            "priority": {
+              "title": "Establecer prioridad",
+              "description": "Establecer este objetivo como prioritario"
+            },
+            "delete": {
+              "title": "Eliminar objetivo",
+              "description": "Eliminar permanentemente el objetivo"
+            }
+          },
+          "collected": "Recaudado"
+        }
+      },
       "priority": {
         "title": "Prioridad",
-        "collected": "Recopilado",
-        "left": "Restante",
+        "collected": "Recaudado",
+        "remaining": "Restante",
         "payments": {
           "title": "Pagos",
           "date": "Fecha",
@@ -229,6 +251,14 @@
     },
     "ai-assistant": {
       "chat": {
+        "recomendation": [
+          "Resumen mensual",
+          "Visión general semanal",
+          "Recomendaciones financieras",
+          "Ver predicciones",
+          "Calcular tasa de ahorro",
+          "Plan para completar el objetivo"
+        ],
         "input": {
           "placeholder": "Detecta anomalías en los gastos de esta semana"
         },
@@ -242,12 +272,18 @@
         "form": {
           "currency": "Moneda",
           "operations": {
-            "incomes": "Ingresos",
-            "expenses": "Gastos",
+            "title": "Operaciones",
             "recurring-payments": "Pagos recurrentes"
           },
-          "limits": "Límites de gastos",
-          "goals": "Objetivos"
+          "limits": {
+            "title": "Límites de gastos",
+            "_empty": "No hay límites para la moneda especificada"
+          },
+          "goals": {
+            "title": "Objetivos",
+            "_empty": "No hay objetivos para la moneda especificada"
+          },
+          "_error": "Ocurrió un error"
         }
       }
     },

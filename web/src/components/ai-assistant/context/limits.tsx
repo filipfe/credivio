@@ -7,21 +7,26 @@ import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
 import Empty from "@/components/ui/empty";
 import { useLimits } from "@/lib/general/queries";
 import NumberFormat from "@/utils/formatters/currency";
+import { Dict } from "@/const/dict";
 
 export default function LimitsContext({
+  dict,
   timezone,
 }: {
+  dict: Dict["private"]["ai-assistant"]["context"]["form"]["limits"] & {
+    _error: string;
+    periodValues: Dict["private"]["operations"]["expenses"]["limits"]["modal"]["form"]["period"]["values"];
+  };
   timezone: string;
-  dict: string;
 }) {
   const { currency } = useAIAssistant();
   const { data: limits, isLoading, error } = useLimits(timezone, currency);
 
   return (
-    <Section title="Limity wydatków">
+    <Section title={dict.title}>
       {error ? (
         <div className="pt-6 pb-4">
-          <p className="text-danger text-sm text-center">Wystąpił błąd</p>
+          <p className="text-danger text-sm text-center">{dict._error}</p>
         </div>
       ) : (
         <div
@@ -40,13 +45,25 @@ export default function LimitsContext({
                 </>
               ) : limits && limits.length > 0 ? (
                 <>
-                  <LimitRef period="daily" timezone={timezone} />
-                  <LimitRef period="weekly" timezone={timezone} />
-                  <LimitRef period="monthly" timezone={timezone} />
+                  <LimitRef
+                    title={dict.periodValues.daily}
+                    period="daily"
+                    timezone={timezone}
+                  />
+                  <LimitRef
+                    title={dict.periodValues.weekly}
+                    period="weekly"
+                    timezone={timezone}
+                  />
+                  <LimitRef
+                    title={dict.periodValues.monthly}
+                    period="monthly"
+                    timezone={timezone}
+                  />
                 </>
               ) : (
                 <Empty
-                  title="Brak limitów dla podanej waluty"
+                  title={dict._empty}
                   className="pt-4 pb-2 col-span-full"
                 />
               )}
@@ -59,9 +76,11 @@ export default function LimitsContext({
 }
 
 const LimitRef = ({
+  title,
   period,
   timezone,
 }: {
+  title: string;
   period: Limit["period"];
   timezone: string;
 }) => {
@@ -87,13 +106,7 @@ const LimitRef = ({
         <NumberFormat currency={currency!} amount={limit.total} /> /{" "}
         <NumberFormat currency={currency!} amount={limit.amount} />
       </h5>
-      <h4 className="font-bold text-sm select-none">
-        {period === "daily"
-          ? "Dzienny"
-          : period === "weekly"
-          ? "Tygodniowy"
-          : "Miesięczny"}
-      </h4>
+      <h4 className="font-bold text-sm select-none">{title}</h4>
     </Option>
   );
 };

@@ -214,10 +214,32 @@
       "recurring-payments": {}
     },
     "goals": {
+      "list": {
+        "title": "Bieżące",
+        "button": "Dodaj",
+        "goal": {
+          "no-deadline": "Bez terminu",
+          "menu": {
+            "add": {
+              "title": "Dodaj",
+              "description": "Dodaj pieniądze na cel"
+            },
+            "priority": {
+              "title": "Ustaw priorytet",
+              "description": "Ustaw ten cel jako priorytet"
+            },
+            "delete": {
+              "title": "Usuń cel",
+              "description": "Nieodwracalnie usuń cel"
+            }
+          },
+          "collected": "Zebrano"
+        }
+      },
       "priority": {
         "title": "Priorytet",
         "collected": "Zebrano",
-        "left": "Pozostało",
+        "remaining": "Pozostało",
         "payments": {
           "title": "Wpłaty",
           "date": "Data",
@@ -228,6 +250,14 @@
     },
     "ai-assistant": {
       "chat": {
+        "recomendation": [
+          "Podsumowanie miesięczne",
+          "Przegląd tygodniowy",
+          "Zalecenia finansowe",
+          "Zobacz prognozy",
+          "Oblicz wskaźnik oszczędności",
+          "Zaplanuj realizację celu"
+        ],
         "input": {
           "placeholder": "Wykryj anomalie w wydatkach z tego tygodnia"
         },
@@ -241,12 +271,18 @@
         "form": {
           "currency": "Waluta",
           "operations": {
-            "incomes": "Przychody",
-            "expenses": "Wydatki",
+            "title": "Operacje",
             "recurring-payments": "Płatności cykliczne"
           },
-          "limits": "Limity wydatków",
-          "goals": "Cele"
+          "limits": {
+            "title": "Limity wydatków",
+            "_empty": "Brak limitów dla podanej waluty"
+          },
+          "goals": {
+            "title": "Cele",
+            "_empty": "Brak celów dla podanej waluty"
+          },
+          "_error": "Wystąpił błąd"
         }
       }
     },

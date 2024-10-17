@@ -7,16 +7,23 @@ import { useGoals } from "@/lib/goals/queries";
 import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
 import NumberFormat from "@/utils/formatters/currency";
 import Empty from "@/components/ui/empty";
+import { Dict } from "@/const/dict";
 
-export default function GoalsContext({ dict }: { dict: string }) {
+export default function GoalsContext({
+  dict,
+}: {
+  dict: Dict["private"]["ai-assistant"]["context"]["form"]["goals"] & {
+    _error: string;
+  };
+}) {
   const { currency } = useAIAssistant();
   const { data: goals, error, isLoading } = useGoals(currency);
 
   return (
-    <Section title={dict}>
+    <Section title={dict.title}>
       {error ? (
         <div className="pt-6 pb-4">
-          <p className="text-danger text-sm text-center">Wystąpił błąd</p>
+          <p className="text-danger text-sm text-center">{dict._error}</p>
         </div>
       ) : isLoading ? (
         <div className="flex flex-col sm:grid grid-cols-3 gap-3">
@@ -31,7 +38,7 @@ export default function GoalsContext({ dict }: { dict: string }) {
           ))}
         </div>
       ) : (
-        <Empty title="Brak celów dla podanej waluty" />
+        <Empty title={dict._empty} />
       )}
     </Section>
   );

@@ -9,11 +9,14 @@ import { Dict } from "@/const/dict";
 export default function OperationsContext({
   dict,
 }: {
-  dict: Dict["private"]["ai-assistant"]["context"]["form"]["operations"];
+  dict: Dict["private"]["ai-assistant"]["context"]["form"]["operations"] & {
+    incomes: string;
+    expenses: string;
+  };
 }) {
   const { operations, setOperations } = useAIAssistant();
   return (
-    <Section title="Operacje">
+    <Section title={dict.title}>
       <div className="flex flex-col sm:grid grid-cols-3 gap-3">
         <Option
           id="context-operations-incomes"

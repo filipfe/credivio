@@ -40,7 +40,7 @@ export default async function Priority({ dict, goal }: Props) {
           <div className="flex items-end flex-col gap-1">
             <div className="flex items-center gap-2">
               <div className="bg-light border rounded-full h-2.5 w-2.5" />
-              <span className="text-sm">{dict.left}</span>
+              <span className="text-sm">{dict.remaining}</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="font-bold">

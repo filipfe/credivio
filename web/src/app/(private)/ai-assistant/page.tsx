@@ -12,7 +12,23 @@ import getDictionary from "@/const/dict";
 export default async function Page() {
   const settings = await getSettings();
 
-  const dict = (await getDictionary(settings.language)).private["ai-assistant"];
+  const {
+    private: {
+      "ai-assistant": dict,
+      general: { incomes, expenses },
+      operations: {
+        expenses: {
+          limits: {
+            modal: {
+              form: {
+                period: { values: periodValues },
+              },
+            },
+          },
+        },
+      },
+    },
+  } = await getDictionary(settings.language);
 
   return (
     <div className="sm:px-10 flex flex-col h-full gap-4 sm:gap-10 xl:grid grid-cols-2">
@@ -29,12 +45,23 @@ export default async function Page() {
           >
             <div>
               <CurrencyPicker dict={dict.context.form.currency} />
-              <OperationsContext dict={dict.context.form.operations} />
+              <OperationsContext
+                dict={{ ...dict.context.form.operations, incomes, expenses }}
+              />
               <LimitsContext
-                dict={dict.context.form.limits}
+                dict={{
+                  ...dict.context.form.limits,
+                  _error: dict.context.form._error,
+                  periodValues: periodValues,
+                }}
                 timezone={settings.timezone}
               />
-              <GoalsContext dict={dict.context.form.goals} />
+              <GoalsContext
+                dict={{
+                  ...dict.context.form.goals,
+                  _error: dict.context.form._error,
+                }}
+              />
             </div>
           </ScrollShadow>
         </Block>
