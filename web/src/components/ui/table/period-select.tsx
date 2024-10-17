@@ -1,4 +1,5 @@
 import { PeriodContext } from "@/app/(private)/(operations)/providers";
+import { Dict } from "@/const/dict";
 import { getLocalTimeZone, parseDate, today } from "@internationalized/date";
 import {
   Badge,
@@ -13,7 +14,13 @@ import {
 import { CalendarDaysIcon, ListRestartIcon } from "lucide-react";
 import { useContext, useRef, useState } from "react";
 
-export default function PeriodSelect() {
+export default function PeriodSelect({
+  dict,
+}: {
+  dict: {
+    reset: string;
+  };
+}) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const { period, setPeriod } = useContext(PeriodContext);
@@ -87,7 +94,7 @@ export default function PeriodSelect() {
                   setPeriod({ from: "", to: "" });
                 }}
               >
-                <ListRestartIcon size={15} strokeWidth={2} /> Resetuj
+                <ListRestartIcon size={15} strokeWidth={2} /> {dict.reset}
               </Button>
             </div>
           }

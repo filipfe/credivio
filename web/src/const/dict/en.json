@@ -48,46 +48,106 @@
       }
     },
     "operations": {
-      "incomes": {
+      "stats": {
         "today": "Today",
-        "30-days": "30 days",
-        "operations-by-month": {
-          "title": "Income",
-          "_empty": {
-            "title": "No data to display!",
-            "button": "Add income"
-          }
-        },
-        "operation-table": {
-          "title": "Income",
-          "top-content": {
-            "search": {
-              "placeholder": "Search"
-            },
-            "period": {
-              "button": "Reset"
-            },
-            "filter": {
-              "currency": {
-                "label": "Currency",
-                "default": "All"
-              },
-              "button": "Reset"
-            },
-            "add": "Add"
-          },
-          "columns": {
-            "issued_at": "DATE",
-            "title": "TITLE",
-            "amount": "AMOUNT",
-            "currency": "CURRENCY"
-          },
-          "_empty": {
-            "title": "No operations found",
-            "button": "Add income"
+        "30-days": "30 days"
+      },
+      "operations-by-month": {
+        "_empty": {
+          "title": "No data to display!",
+          "button": {
+            "income": "Add income",
+            "expense": "Add expense"
           }
         }
       },
+      "operation-table": {
+        "top-content": {
+          "reset": "Reset",
+          "search": {
+            "placeholder": "Search"
+          },
+          "filter": {
+            "label": {
+              "label": "Label",
+              "default": "All",
+              "description": "expenses"
+            },
+            "currency": {
+              "label": "Currency",
+              "default": "All"
+            }
+          },
+          "add": "Add"
+        },
+        "columns": {
+          "issued_at": "DATE",
+          "title": "TITLE",
+          "amount": "AMOUNT",
+          "currency": "CURRENCY",
+          "label": "LABEL"
+        },
+        "dropdown": {
+          "menu": {
+            "edit": {
+              "title": "Edit",
+              "description": "Modify operation"
+            },
+            "delete": {
+              "title": "Delete",
+              "description": "Delete operation"
+            }
+          },
+          "modal": {
+            "edit": {
+              "title": "Edit expense",
+              "form": {
+                "title": {
+                  "label": "Title",
+                  "placeholder": "Salary"
+                },
+                "amount": {
+                  "label": "Amount"
+                },
+                "currency": {
+                  "label": "Currency"
+                },
+                "issued-at": {
+                  "label": "Date of issue"
+                },
+                "label": {
+                  "label": "Label",
+                  "placeholder": "Food",
+                  "description": "expenses",
+                  "tooltip": "Add a label to group operations"
+                },
+                "_close": {
+                  "label": "Cancel"
+                },
+                "_submit": {
+                  "label": "Save"
+                }
+              }
+            },
+            "delete": {
+              "title": "Remove operation",
+              "description": "This action is irreversible! Make sure you are deleting the correct operations before confirming",
+              "button": {
+                "_close": "Cancel",
+                "_submit": "Delete"
+              }
+            }
+          }
+        },
+        "_empty": {
+          "title": "No operations found",
+          "button": {
+            "income": "Add income",
+            "expense": "Add expense"
+          }
+        }
+      },
+      "incomes": {},
       "expenses": {
         "limits": {
           "period": {
@@ -131,50 +191,6 @@
                 "_error": "An error occurred while adding the limit"
               }
             }
-          }
-        },
-        "today": "Today",
-        "30-days": "30 days",
-        "operations-by-month": {
-          "title": "Expenses",
-          "_empty": {
-            "title": "No data to display!",
-            "button": "Add expense"
-          }
-        },
-        "operation-table": {
-          "title": "Expenses",
-          "top-content": {
-            "search": {
-              "placeholder": "Search"
-            },
-            "period": {
-              "button": "Reset"
-            },
-            "filter": {
-              "label": {
-                "label": "Label",
-                "default": "All",
-                "description": "expenses"
-              },
-              "currency": {
-                "label": "Currency",
-                "default": "All"
-              },
-              "button": "Reset"
-            },
-            "add": "Add"
-          },
-          "columns": {
-            "issued_at": "DATE",
-            "title": "TITLE",
-            "amount": "AMOUNT",
-            "currency": "CURRENCY",
-            "label": "LABEL"
-          },
-          "_empty": {
-            "title": "No operations found",
-            "button": "Add expense"
           }
         }
       },

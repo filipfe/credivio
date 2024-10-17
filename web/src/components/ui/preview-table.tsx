@@ -28,6 +28,7 @@ import Empty from "./empty";
 import { TRANSACTION_TYPES } from "@/const";
 import ActionsDropdown from "../operations/actions-dropdown";
 import { useSettings } from "@/lib/general/queries";
+import { Dict } from "@/const/dict";
 
 const getColumns = (type: OperationType, hasDoc: boolean) => {
   if (type === "stock") {
@@ -53,6 +54,7 @@ const getColumns = (type: OperationType, hasDoc: boolean) => {
 };
 
 type Props<T> = {
+  dict: Dict["private"]["operations"]["operation-table"]["dropdown"];
   count: number;
   children?: ReactNode;
   type: OperationType;
@@ -62,6 +64,7 @@ type Props<T> = {
 };
 
 export default function PreviewTable({
+  dict,
   count,
   children,
   type,
@@ -135,6 +138,7 @@ export default function PreviewTable({
         case "actions":
           return (
             <ActionsDropdown
+              dict={dict}
               type={type}
               operation={item}
               // onSelect={() => onRowAction(item.id)}

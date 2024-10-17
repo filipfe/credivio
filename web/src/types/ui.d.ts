@@ -1,5 +1,4 @@
 type TableProps<T> = {
-  title: string;
   rows: T[];
   count: number;
   simplified?: boolean;

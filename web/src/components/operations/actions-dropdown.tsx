@@ -14,8 +14,10 @@ import {
 import { Fragment, Key, useState } from "react";
 import EditModal from "./modals/edit-modal";
 import DeleteModal from "./modals/delete-modal";
+import { Dict } from "@/const/dict";
 
 type Props = {
+  dict: Dict["private"]["operations"]["operation-table"]["dropdown"];
   operation: Operation;
   // onSelect?: () => void;
   onEdit?: (updated: Operation) => void;
@@ -24,6 +26,7 @@ type Props = {
 };
 
 export default function ActionsDropdown({
+  dict,
   operation,
   type,
   onEdit,
@@ -82,26 +85,27 @@ export default function ActionsDropdown({
           </DropdownItem> */}
           <DropdownItem
             key="edit"
-            description="Modyfikuj operację"
+            description={dict.menu.edit.description}
             startContent={<SquarePenIcon size={16} />}
             closeOnSelect={false}
             showDivider
           >
-            Edytuj
+            {dict.menu.edit.title}
           </DropdownItem>
           <DropdownItem
             closeOnSelect={false}
             key="delete"
             className="text-danger"
             color="danger"
-            description="Usuń operację"
+            description={dict.menu.delete.description}
             startContent={<Trash2Icon className="text-danger" size={16} />}
           >
-            Usuń
+            {dict.menu.delete.title}
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>
       <EditModal
+        dict={dict.modal.edit}
         edited={edited}
         setEdited={setEdited}
         type={type}
@@ -110,6 +114,7 @@ export default function ActionsDropdown({
       />
       {!onDelete && (
         <DeleteModal
+          dict={dict.modal.delete}
           type={type}
           deleted={deleted ? [deleted] : []}
           onClose={() => setDeleted(null)}

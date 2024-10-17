@@ -1,12 +1,21 @@
 import AddForm from "@/components/operations/form";
+import getDictionary from "@/const/dict";
 import { getSettings } from "@/lib/general/actions";
 
 export default async function Page() {
   const settings = await getSettings();
 
+  const {
+    private: {
+      operations: {
+        "operation-table": { dropdown: dict },
+      },
+    },
+  } = await getDictionary(settings.language);
+
   return (
     <div className="sm:px-10 py-4 sm:py-8 h-full flex items-center justify-center">
-      <AddForm type="income" defaultCurrency={settings.currency} />
+      <AddForm dict={dict} type="income" defaultCurrency={settings.currency} />
     </div>
   );
 }
