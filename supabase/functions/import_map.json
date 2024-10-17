@@ -4,6 +4,7 @@
     "supabase": "https://esm.sh/@supabase/supabase-js@2.43.4",
     "grammy": "https://deno.land/x/grammy@v1.25.0/mod.ts",
     "grammy:menu": "https://deno.land/x/grammy_menu@v1.2.1/mod.ts",
-    "grammy:storage": "https://deno.land/x/grammy_storages@v2.4.2/free/src/mod.ts"
+    "grammy:storage": "https://deno.land/x/grammy_storages@v2.4.2/free/src/mod.ts",
+    "grammy:i18n": "https://deno.land/x/grammy_i18n@v1.1.0/mod.ts"
   }
 }
