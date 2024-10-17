@@ -3,6 +3,8 @@ import "https://esm.sh/v135/@supabase/functions-js@2.4.1/src/edge-runtime.d.ts";
 import bot from "../_shared/telegram-bot.ts";
 import { breakpoints } from "./dict.ts";
 import { type Breakpoint } from "./types.ts";
+import { Payment } from "../_shared/types.ts";
+import { Preferences } from "../_shared/types.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -15,7 +17,10 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !NOTIFICATION_SECRET) {
         SUPABASE_URL,
         SUPABASE_SERVICE_ROLE_KEY,
         NOTIFICATION_SECRET,
-      }).filter(([_key, value]) => !value).map(([key]) => key).join(", ")
+      })
+        .filter(([_key, value]) => !value)
+        .map(([key]) => key)
+        .join(", ")
     }`,
   );
 }
@@ -40,7 +45,7 @@ type Limit = {
 };
 
 const sendNotification = async (
-  profile: Preferences & Settings,
+  profile: Preferences & { telegram_id: string },
   limit: Limit,
   breakpoint: Breakpoint,
 ) => {
@@ -51,18 +56,19 @@ const sendNotification = async (
 };
 
 Deno.serve(async (req) => {
-  const body = await req
-    .json() as Body;
+  const body = (await req.json()) as Body;
   console.log(req, { body });
   const {
     record: { currency, title, recurring, amount, user_id },
     operation_type,
   } = body;
-  const { data: profile, error: profileError } = await supabase.from(
-    "profiles",
-  ).select("telegram_id, language:languages(code)").eq("id", user_id).returns<
-    (Preferences & Settings)[]
-  >()
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select(
+      "telegram_id, ...settings(timezone, language:languages(code, name))",
+    )
+    .eq("id", user_id)
+    .returns<(Preferences & { telegram_id: string; timezone: string })[]>()
     .single();
 
   if (profileError) {
@@ -86,10 +92,13 @@ Deno.serve(async (req) => {
       `Dodano ${
         operation_type === "income" ? "przychód" : "wydatek"
       } cykliczny ${title} na kwotę ${
-        new Intl.NumberFormat(profile.language.code, {
-          style: "currency",
-          currency,
-        }).format(amount)
+        new Intl.NumberFormat(
+          profile.language.code,
+          {
+            style: "currency",
+            currency,
+          },
+        ).format(amount)
       }`,
     );
   }
@@ -98,13 +107,13 @@ Deno.serve(async (req) => {
     return new Response("ok", { status: 200 });
   }
 
-  const { data: limits, error: limitsError } = await supabase.rpc(
-    "get_expenses_limits",
-    {
+  const { data: limits, error: limitsError } = await supabase
+    .rpc("get_general_limits", {
+      p_timezone: profile.timezone,
       p_currency: currency,
       p_user_id: user_id,
-    },
-  ).returns<Limit[]>();
+    })
+    .returns<Limit[]>();
 
   if (limitsError) {
     console.warn("Couldn't retrieve limits: ", limitsError);
@@ -122,9 +131,10 @@ Deno.serve(async (req) => {
         const paidPercentage = (limit.total / limit.amount) * 100;
         const noCurrentPaidPercentage =
           ((limit.total - amount) / limit.amount) * 100;
-        const exceededBreakpoint = breakpoints.find((breakpoint) =>
-          paidPercentage >= breakpoint.value &&
-          noCurrentPaidPercentage < breakpoint.value
+        const exceededBreakpoint = breakpoints.find(
+          (breakpoint) =>
+            paidPercentage >= breakpoint.value &&
+            noCurrentPaidPercentage < breakpoint.value,
         );
 
         if (!exceededBreakpoint) {

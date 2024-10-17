@@ -22,16 +22,22 @@ import {
   Payload,
   ValueType,
 } from "recharts/types/component/DefaultTooltipContent";
-import numberFormat from "@/utils/formatters/currency";
 import { useBalanceHistory } from "@/lib/stats/queries";
 import ChartLoader from "../ui/charts/loader";
+import NumberFormat from "@/utils/formatters/currency";
+import { Dict } from "@/const/dict";
 
 const CustomTooltip = ({
+  recordLabels,
   active,
   payload,
   labelFormatter,
   currency,
 }: TooltipProps<ValueType, NameType> & {
+  recordLabels: {
+    incomes: Dict["private"]["general"]["incomes"];
+    expenses: Dict["private"]["general"]["expenses"];
+  };
   labelFormatter: (
     label: any,
     payload: Payload<ValueType, NameType>[]
@@ -61,14 +67,16 @@ const CustomTooltip = ({
                 </div>
               )}
               <span className="text-sm">
-                {record.dataKey === "total_expenses" ? "Wydatki" : "Przychody"}
+                {record.dataKey === "total_expenses"
+                  ? recordLabels.expenses
+                  : recordLabels.incomes}
               </span>
             </div>
             <strong className="font-medium text-sm">
-              {numberFormat(
-                currency,
-                record.value ? parseFloat(record.value.toString()) : 0
-              )}
+              <NumberFormat
+                currency={currency}
+                amount={record.value ? parseFloat(record.value.toString()) : 0}
+              />
             </strong>
           </div>
         ))}
@@ -79,10 +87,19 @@ const CustomTooltip = ({
   return null;
 };
 
-export default function BalanceByMonth() {
-  const { month, year, currency, languageCode } =
-    useContext(StatsFilterContext);
+export default function BalanceByMonth({
+  dict,
+}: {
+  dict: {
+    general: {
+      incomes: Dict["private"]["general"]["incomes"];
+      expenses: Dict["private"]["general"]["expenses"];
+    };
+  } & Dict["private"]["stats"]["balance-by-month"];
+}) {
+  const { month, year, currency, settings } = useContext(StatsFilterContext);
   const { data: results, isLoading } = useBalanceHistory(
+    settings.timezone,
     currency,
     month + 1,
     year
@@ -110,7 +127,7 @@ export default function BalanceByMonth() {
   return (
     <Block
       className="xl:row-start-1 xl:row-end-4 col-start-1 col-end-3 xl:col-start-3 xl:col-end-5"
-      title="Bilans operacji"
+      title={dict.title}
     >
       {isLoading ? (
         <ChartLoader className="!p-0" hideTitle />
@@ -134,7 +151,7 @@ export default function BalanceByMonth() {
                 tick={{ fontSize: 12 }}
                 tickFormatter={(label) => {
                   const [year, month, day] = label.split("-");
-                  return new Intl.DateTimeFormat(languageCode, {
+                  return new Intl.DateTimeFormat(settings.language, {
                     day: "2-digit",
                     month: "short",
                   }).format(new Date(year, parseInt(month) - 1, day));
@@ -157,8 +174,9 @@ export default function BalanceByMonth() {
                 content={(props) => (
                   <CustomTooltip
                     {...props}
+                    recordLabels={dict.general}
                     labelFormatter={(label) =>
-                      new Intl.DateTimeFormat(languageCode, {
+                      new Intl.DateTimeFormat(settings.language, {
                         dateStyle: "full",
                       }).format(new Date(label))
                     }
@@ -166,13 +184,13 @@ export default function BalanceByMonth() {
                   />
                 )}
               />
-              <Bar dataKey="total_incomes" stackId="a" fill="#177981" />
               <Bar dataKey="total_expenses" stackId="a" fill="#fdbb2d" />
+              <Bar dataKey="total_incomes" stackId="a" fill="#177981" />
             </BarChart>
           </ResponsiveContainer>
         </div>
       ) : (
-        <Empty title="Brak danych do wyświetlenia!" />
+        <Empty title={dict._empty} />
       )}
     </Block>
   );

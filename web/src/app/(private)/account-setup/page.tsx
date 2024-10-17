@@ -1,17 +1,19 @@
 import TelegramBot from "@/components/automation/telegram-bot";
+import LanguageSelect from "@/components/settings/inputs/language";
+import TimezoneSelect from "@/components/settings/inputs/timezone";
 import Block from "@/components/ui/block";
 import Form from "@/components/ui/form";
 import UniversalSelect from "@/components/ui/universal-select";
 import { CURRENCIES } from "@/const";
-import { getPreferences } from "@/lib/settings/actions";
+import getDictionary from "@/const/dict";
+import { getSettings } from "@/lib/general/actions";
 
 export default async function AccountSetup() {
-  const { result: preferences, error } = await getPreferences();
+  const settings = await getSettings();
 
-  if (!preferences) {
-    console.error(error);
-    throw new Error("Couldn't retrieve preferences");
-  }
+  const {
+    private: { settings: dict },
+  } = await getDictionary(settings.language);
 
   return (
     <div className="sm:px-10 py-4 sm:py-8 h-full flex items-center justify-center">
@@ -25,20 +27,32 @@ export default async function AccountSetup() {
           ))}
         </div>
         {false ? (
-          <TelegramBot preferences={preferences!} />
+          // <TelegramBot settings={settings} />
+          <></>
         ) : (
           <Block
             title="Lokalizacja"
             description="Potrzebujemy tych informacji do wysyłania powiadomień i generowania statystyk"
           >
-            <Form buttonProps={{ children: "Dalej" }}>
-              <UniversalSelect
-                label="Domyślna waluta"
-                placeholder="USD"
-                elements={CURRENCIES}
-                required
-                isRequired
-              />
+            <Form
+              buttonProps={{ children: "Dalej", className: "w-full" }}
+              buttonWrapperClassName="max-w-none"
+            >
+              <div className="flex flex-col gap-4">
+                <UniversalSelect
+                  label="Domyślna waluta"
+                  placeholder="USD"
+                  elements={CURRENCIES}
+                  required
+                  isRequired
+                />
+                <LanguageSelect
+                  dict={dict.preferences.location.language}
+                  defaultValue={settings.language}
+                  disableSubmit
+                />
+                <TimezoneSelect dict={dict.preferences.location.timezone} />
+              </div>
             </Form>
           </Block>
         )}

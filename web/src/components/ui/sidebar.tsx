@@ -2,25 +2,20 @@
 
 import NavLink from "./nav-link";
 import { BotIcon, SettingsIcon } from "lucide-react";
-import Nav from "./nav";
 import { useContext, useEffect, useRef } from "react";
 import { MenuContext } from "@/app/(private)/providers";
 import useOutsideObserver from "@/hooks/useOutsideObserver";
-// import useSWR from "swr";
-// import { createClient } from "@/utils/supabase/client";
+import { Dict } from "@/const/dict";
+import { LINKS, PAGES } from "@/const";
 
-// async function getTelegramToken() {
-//   const supabase = createClient();
-//   const { data } = await supabase
-//     .from("profiles")
-//     .select("telegram_id")
-//     .single();
-//   return data?.telegram_id;
-// }
-
-export default function Sidebar() {
+export default function Sidebar({
+  dict,
+}: {
+  dict: Dict["private"]["_navigation"];
+}) {
   const aside = useRef<HTMLElement | null>(null);
   const { isMenuHidden, setIsMenuHidden } = useContext(MenuContext);
+  const links = isMenuHidden.desktop ? LINKS : PAGES;
   // const { data, isLoading } = useSWR("telegram_id", () => getTelegramToken());
 
   useOutsideObserver(aside, () =>
@@ -53,10 +48,20 @@ export default function Sidebar() {
             : "translate-x-0"
         }`}
       >
-        <Nav />
+        <nav className="flex flex-col gap-2">
+          {links.map((group) => (
+            <NavLink
+              {...group}
+              title={dict[group.href.slice(1) as keyof typeof dict]}
+              isGroup={!!group.links}
+              dict={dict}
+              key={group.href}
+            />
+          ))}
+        </nav>
         <div className="flex flex-col gap-2">
           <NavLink
-            title="Automatyzacja"
+            title={dict.automation}
             href="/automation"
             icon={BotIcon}
             // endContent={
@@ -78,7 +83,7 @@ export default function Sidebar() {
             // }
           />
           <NavLink
-            title="Ustawienia"
+            title={dict.settings}
             href="/settings/account"
             icon={SettingsIcon}
           />

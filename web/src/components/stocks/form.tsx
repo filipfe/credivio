@@ -280,7 +280,7 @@ export default function Form({
           </Tabs>
         </Block>
       </form>
-      <PreviewTable
+      {/* <PreviewTable
         rows={records}
         type="stock"
         count={records.length}
@@ -312,7 +312,7 @@ export default function Form({
             <input type="hidden" name="data" value={JSON.stringify(records)} />
           </form>
         </div>
-      </PreviewTable>
+      </PreviewTable> */}
     </div>
   );
 }

@@ -27,14 +27,22 @@ import { PaperclipIcon } from "lucide-react";
 import DocModal from "./modals/doc-modal";
 import ActionsDropdown from "./actions-dropdown";
 import { PeriodContext } from "@/app/(private)/(operations)/providers";
+import { Dict } from "@/const/dict";
 
 export default function OperationTable({
+  title,
+  dict,
   rows,
   count,
   children,
   viewOnly,
+  settings,
   ...props
-}: TableProps<Operation>) {
+}: TableProps<Operation> & {
+  settings: Settings;
+  dict: Dict["private"]["operations"]["operation-table"];
+  title: string;
+}) {
   const [docPath, setDocPath] = useState<string | null>(null);
   const pages = Math.ceil(count / 10);
   const { period } = useContext(PeriodContext);
@@ -64,11 +72,11 @@ export default function OperationTable({
 
   const columns = useCallback(
     (hasLabel: boolean, hasDoc: boolean) => [
-      { key: "issued_at", label: "DATA" },
-      { key: "title", label: "TYTUŁ" },
-      { key: "amount", label: "KWOTA" },
-      { key: "currency", label: "WALUTA" },
-      ...(hasLabel ? [{ key: "label", label: "ETYKIETA" }] : []),
+      { key: "issued_at", label: dict.columns.issued_at },
+      { key: "title", label: dict.columns.title },
+      { key: "amount", label: dict.columns.amount },
+      { key: "currency", label: dict.columns.currency },
+      ...(hasLabel ? [{ key: "label", label: dict.columns.label }] : []),
       ...(hasDoc ? [{ key: "doc_path", label: "" }] : []),
       { key: "actions", label: "" },
     ],
@@ -89,8 +97,9 @@ export default function OperationTable({
         case "issued_at":
           return (
             <span className="line-clamp-1 break-all w-[10ch]">
-              {new Intl.DateTimeFormat("pl-PL", {
+              {new Intl.DateTimeFormat(settings.language, {
                 dateStyle: "short",
+                timeZone: settings.timezone,
               }).format(new Date(cellValue))}
             </span>
           );
@@ -125,7 +134,13 @@ export default function OperationTable({
         //     <></>
         //   );
         case "actions":
-          return <ActionsDropdown type={props.type} operation={item} />;
+          return (
+            <ActionsDropdown
+              dict={dict.dropdown}
+              type={props.type}
+              operation={item}
+            />
+          );
         default:
           return <span className="line-clamp-1 break-all">{cellValue}</span>;
       }
@@ -139,12 +154,13 @@ export default function OperationTable({
 
   return (
     <Block
-      title={props.title}
+      title={title}
       className="w-screen sm:w-full"
       hideTitleMobile
       cta={
         <TopContent
           {...props}
+          dict={dict["top-content"]}
           viewOnly={false}
           // selected={selectedKeys}
           handleSearch={handleSearch}
@@ -165,7 +181,7 @@ export default function OperationTable({
         />
       }
     >
-      <DocModal docPath={docPath} setDocPath={setDocPath} />
+      <DocModal dict={dict.modal} docPath={docPath} setDocPath={setDocPath} />
       <ScrollShadow orientation="horizontal" hideScrollBar>
         <Table
           removeWrapper
@@ -206,11 +222,9 @@ export default function OperationTable({
             isLoading={isLoading}
             emptyContent={
               <Empty
-                title="Nie znaleziono operacji"
+                title={dict._empty.title}
                 cta={{
-                  title: `Dodaj ${
-                    props.type === "expense" ? "wydatek" : "przychód"
-                  }`,
+                  title: dict._empty.button[props.type as "expense" | "income"],
                   href: `/${props.type}s/add`,
                 }}
               />

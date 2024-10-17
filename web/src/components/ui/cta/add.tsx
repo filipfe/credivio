@@ -3,10 +3,12 @@ import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 
 export default function Add({
+  title,
   href,
   size = "sm",
   className,
 }: {
+  title: string;
   href: string;
   size?: "sm" | "md" | "lg";
   className?: string;
@@ -20,7 +22,7 @@ export default function Add({
         radius="md"
         disableRipple
       >
-        <PlusIcon size={16} /> Dodaj
+        <PlusIcon size={16} /> {title}
       </Button>
     </Link>
   );

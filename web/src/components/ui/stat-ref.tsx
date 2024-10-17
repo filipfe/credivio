@@ -1,6 +1,6 @@
 "use client";
 
-import numberFormat from "@/utils/formatters/currency";
+import NumberFormat from "@/utils/formatters/currency";
 import { Skeleton, cn } from "@nextui-org/react";
 import { ArrowDownIcon, ArrowUpIcon, ArrowUpRight, Minus } from "lucide-react";
 
@@ -29,7 +29,10 @@ export default function StatBox({
       </div>
       <div className="flex items-center gap-2">
         <strong className="text-3xl">
-          {numberFormat(currency, stat ? stat.amount : amount!)}
+          <NumberFormat
+            currency={currency}
+            amount={stat ? stat.amount : amount!}
+          />
         </strong>
         {stat &&
           (stat.difference_indicator === "no_change" ? (

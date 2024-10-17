@@ -18,13 +18,15 @@ import {
 import { Key, useState } from "react";
 import toast from "react-hot-toast";
 import Toast from "../ui/toast";
+import { Dict } from "@/const/dict";
 
 type Props = {
+  dict: Dict["private"]["goals"]["list"]["goal"]["menu"];
   goal: Goal;
   onAdd?: () => void;
 };
 
-export default function Menu({ goal, onAdd }: Props) {
+export default function Menu({ dict, goal, onAdd }: Props) {
   const { isOpen, onClose, onOpenChange } = useDisclosure();
   const [loadingKey, setLoadingKey] = useState<string | null>(null);
 
@@ -76,29 +78,29 @@ export default function Menu({ goal, onAdd }: Props) {
       >
         <DropdownItem
           key="add"
-          description="Dodaj pieniądze na cel"
+          description={dict.add.description}
           startContent={<PlusIcon size={16} />}
         >
-          Dodaj
+          {dict.add.title}
         </DropdownItem>
         <DropdownItem
           key="priority"
-          description="Ustaw ten cel jako priorytet"
+          description={dict.priority.description}
           startContent={<AlertOctagonIcon size={16} />}
           closeOnSelect={false}
           showDivider
         >
-          Ustaw priorytet
+          {dict.priority.title}
         </DropdownItem>
         <DropdownItem
           closeOnSelect={false}
           key="delete"
           className="text-danger"
           color="danger"
-          description="Nieodwracalnie usuń cel"
+          description={dict.delete.description}
           startContent={<Trash2Icon className="text-danger" size={16} />}
         >
-          Usuń cel
+          {dict.delete.title}
         </DropdownItem>
       </DropdownMenu>
     </Dropdown>

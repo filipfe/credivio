@@ -1,60 +1,65 @@
 "use client";
 
 import { Section } from "@/components/ui/block";
-import { useState } from "react";
 import Option from "./option";
 import { Coins, Repeat, Wallet2 } from "lucide-react";
+import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
+import { Dict } from "@/const/dict";
 
-export default function OperationsContext() {
-  const [selected, setSelected] = useState<Limit["period"][]>([]);
-
+export default function OperationsContext({
+  dict,
+}: {
+  dict: Dict["private"]["ai-assistant"]["context"]["form"]["operations"] & {
+    incomes: string;
+    expenses: string;
+  };
+}) {
+  const { operations, setOperations } = useAIAssistant();
   return (
-    <Section title="Operacje">
+    <Section title={dict.title}>
       <div className="flex flex-col sm:grid grid-cols-3 gap-3">
         <Option
           id="context-operations-incomes"
           className="flex items-center gap-2 font-medium text-sm select-none"
-          isActive={selected.includes("daily")}
+          isActive={operations.incomes}
           onActiveChange={(checked) =>
-            setSelected((prev) =>
-              checked
-                ? [...prev, "daily"]
-                : prev.filter((limit) => limit !== "daily")
+            setOperations((prev) =>
+              checked ? { ...prev, incomes: true } : { ...prev, incomes: false }
             )
           }
         >
           <Wallet2 size={14} />
-          Przychody
+          {dict.incomes}
         </Option>
         <Option
           id="context-operations-expenses"
           className="flex items-center gap-2 font-medium text-sm select-none"
-          isActive={selected.includes("weekly")}
+          isActive={operations.expenses}
           onActiveChange={(checked) =>
-            setSelected((prev) =>
+            setOperations((prev) =>
               checked
-                ? [...prev, "weekly"]
-                : prev.filter((limit) => limit !== "weekly")
+                ? { ...prev, expenses: true }
+                : { ...prev, expenses: false }
             )
           }
         >
           <Coins size={14} />
-          Wydatki
+          {dict.expenses}
         </Option>
         <Option
           id="context-operations-recurring-payments"
           className="flex items-center gap-2 font-medium text-sm select-none"
-          isActive={selected.includes("monthly")}
+          isActive={operations.recurring_payments}
           onActiveChange={(checked) =>
-            setSelected((prev) =>
+            setOperations((prev) =>
               checked
-                ? [...prev, "monthly"]
-                : prev.filter((limit) => limit !== "monthly")
+                ? { ...prev, recurring_payments: true }
+                : { ...prev, recurring_payments: false }
             )
           }
         >
           <Repeat size={14} />
-          Płatności cykliczne
+          {dict["recurring-payments"]}
         </Option>
       </div>
     </Section>

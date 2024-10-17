@@ -2,7 +2,7 @@
 
 import { StatsFilterContext } from "@/app/(private)/stats/providers";
 import Block from "@/components/ui/block";
-import numberFormat from "@/utils/formatters/currency";
+import NumberFormat from "@/utils/formatters/currency";
 import { Skeleton, cn } from "@nextui-org/react";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
@@ -10,12 +10,13 @@ import { useContext } from "react";
 import { Area, AreaChart, ResponsiveContainer, YAxis } from "recharts";
 
 type Props = {
+  title: string;
   data: { total: number }[];
   type: "incomes" | "expenses";
   amount: number;
 };
 
-export default function StatBox({ data, type, amount }: Props) {
+export default function StatBox({ title, data, type, amount }: Props) {
   const { currency, month, year } = useContext(StatsFilterContext);
   const maxValue = Math.max(...data.map((item) => item.total));
 
@@ -25,10 +26,10 @@ export default function StatBox({ data, type, amount }: Props) {
     <Block className="col-span-1 row-start-2 row-end-3 !p-0 self-start overflow-hidden w-full">
       <div className="flex items-start justify-between px-6 sm:px-10 pt-4 sm:pt-8">
         <div className="grid gap-1">
-          <h2 className="text-font/75 text-sm">
-            {type === "incomes" ? "Przychody" : "Wydatki"}
-          </h2>
-          <strong className="text-3xl">{numberFormat(currency, amount)}</strong>
+          <h2 className="text-font/75 text-sm">{title}</h2>
+          <strong className="text-3xl">
+            <NumberFormat currency={currency} amount={amount} />
+          </strong>
         </div>
         <button className="h-7 w-7 rounded-md border bg-light grid place-content-center">
           <Link

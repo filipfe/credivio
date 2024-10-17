@@ -1,6 +1,5 @@
 "use client";
 
-import numberFormat from "@/utils/formatters/currency";
 import {
   Chip,
   cn,
@@ -18,6 +17,7 @@ import Menu from "./menu";
 import { formatDuration } from "date-fns";
 import { pl } from "date-fns/locale";
 import { useRouter, useSearchParams } from "next/navigation";
+import NumberFormat from "@/utils/formatters/currency";
 
 const columns = [
   {
@@ -82,7 +82,7 @@ export default function Table({
               )}
             > */}
               {item.type === "income" ? "+" : "-"}
-              {numberFormat(item.currency, item[columnKey])}
+              <NumberFormat currency={item.currency} amount={item[columnKey]} />
               {/* </span> */}
             </Chip>
           );

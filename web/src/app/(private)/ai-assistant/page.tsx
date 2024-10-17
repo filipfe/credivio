@@ -5,22 +5,63 @@ import OperationsContext from "@/components/ai-assistant/context/operations";
 import Block from "@/components/ui/block";
 import AIAssistantProvider from "./providers";
 import { ScrollShadow } from "@nextui-org/react";
+import { getSettings } from "@/lib/general/actions";
+import CurrencyPicker from "@/components/ai-assistant/context/currency";
+import getDictionary from "@/const/dict";
 
-export default function Page() {
+export default async function Page() {
+  const settings = await getSettings();
+
+  const {
+    private: {
+      "ai-assistant": dict,
+      general: { incomes, expenses },
+      operations: {
+        expenses: {
+          limits: {
+            modal: {
+              form: {
+                period: { values: periodValues },
+              },
+            },
+          },
+        },
+      },
+    },
+  } = await getDictionary(settings.language);
+
   return (
     <div className="sm:px-10 flex flex-col h-full gap-4 sm:gap-10 xl:grid grid-cols-2">
-      <AIAssistantProvider>
-        <Chat />
+      <AIAssistantProvider defaultCurrency={settings.currency}>
+        <Chat dict={dict.chat} />
         <Block
-          title="Zbuduj kontekst"
-          description="Wybierz informacje, które mają być przetworzone przez asystenta"
+          title={dict.context.title}
+          description={dict.context.description}
           className="my-4 sm:my-8"
         >
-          <ScrollShadow className="max-h-[calc(100vh-298px)]" hideScrollBar>
+          <ScrollShadow
+            className="max-h-[calc(100vh-298px)] flex-1"
+            hideScrollBar
+          >
             <div>
-              <OperationsContext />
-              <LimitsContext />
-              <GoalsContext />
+              <CurrencyPicker dict={dict.context.form.currency} />
+              <OperationsContext
+                dict={{ ...dict.context.form.operations, incomes, expenses }}
+              />
+              <LimitsContext
+                dict={{
+                  ...dict.context.form.limits,
+                  _error: dict.context.form._error,
+                  periodValues: periodValues,
+                }}
+                timezone={settings.timezone}
+              />
+              <GoalsContext
+                dict={{
+                  ...dict.context.form.goals,
+                  _error: dict.context.form._error,
+                }}
+              />
             </div>
           </ScrollShadow>
         </Block>

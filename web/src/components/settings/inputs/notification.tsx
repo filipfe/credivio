@@ -1,18 +1,15 @@
 "use client";
 
-import {
-  getNotificationsSettings,
-  updateSettings,
-} from "@/lib/settings/queries";
+import { useSettings } from "@/lib/general/queries";
+import { updateSettings } from "@/lib/settings/queries";
 import toast from "@/utils/toast";
 import { Button, Switch, Tooltip } from "@nextui-org/react";
 import Link from "next/link";
-import useSWR from "swr";
 
 type Props = {
   title: string;
   description: string;
-  field: string;
+  field: keyof Settings["notifications"];
 };
 
 export default function NotificationSwitch({
@@ -20,14 +17,10 @@ export default function NotificationSwitch({
   description,
   field,
 }: Props) {
-  const { data, isLoading, error, mutate } = useSWR(
-    ["settings", "notifications"],
-    () => getNotificationsSettings()
-  );
-
+  const { data: settings, mutate, isLoading, error } = useSettings();
   const onValueChange = async (isSelected: boolean) => {
     try {
-      await mutate(updateSettings(field, isSelected), {
+      await mutate(updateSettings(field + "_notifications", isSelected), {
         optimisticData: (prev: any) => ({ ...prev, [field]: isSelected }),
         revalidate: false,
         populateCache: true,
@@ -42,10 +35,7 @@ export default function NotificationSwitch({
   };
 
   const isDisabled =
-    field === "telegram_notifications" &&
-    !isLoading &&
-    !error &&
-    !data?.telegram_id;
+    field === "telegram" && !isLoading && !error && !settings?.telegram_id;
 
   return (
     <div className="flex items-center justify-between gap-4">
@@ -79,10 +69,14 @@ export default function NotificationSwitch({
           </div>
         </Tooltip>
       ) : (
-        data && (
+        settings && (
           <Switch
             isDisabled={isLoading}
-            isSelected={data[field as keyof Settings] as boolean}
+            isSelected={
+              settings.notifications[
+                field as keyof Settings["notifications"]
+              ] as boolean
+            }
             onValueChange={onValueChange}
           />
         )

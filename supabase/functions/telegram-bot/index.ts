@@ -1,62 +1,38 @@
-import { session, webhookCallback } from "grammy";
+import { webhookCallback } from "grammy";
 import undo from "./commands/undo.ts";
 import add, { insertOperations } from "./commands/add.ts";
 import help from "./commands/help.ts";
 import getUser from "./utils/get-user.ts";
 import supabase from "./supabase.ts";
 import { ADD, GRAPH, HELP, UNDO } from "./commands.ts";
-import { freeStorage } from "grammy:storage";
-import bot, { type SessionData } from "../_shared/telegram-bot.ts";
+import bot from "../_shared/telegram-bot.ts";
 import registerUser from "./commands/start.ts";
 import processVoice from "./utils/process-voice.ts";
 import processText from "./utils/process-text.ts";
 import graph from "./commands/graph.ts";
+import { Payment } from "../_shared/types.ts";
 
 // Setup type definitions for built-in Supabase Runtime APIs
 /// <reference types="https://esm.sh/@supabase/functions-js/src/edge-runtime.d.ts" />
 
-bot.use(
-  session({
-    initial: () => ({ lastPayments: [] } as SessionData),
-    getSessionKey: (ctx) => ctx.from?.id.toString(),
-    storage: freeStorage<SessionData>(bot.token),
-  }),
-);
-
-// const menu = new Menu<BotContext>("operations-menu")
-//   .text("Przychód", async (ctx) => {
-//     ctx.session.type = "income";
-//     await ctx.reply(
-//       `Jasne!
-//       Podaj tytuł i cenę`,
-//     );
-//   })
-//   .text("Wydatek", async (ctx) => {
-//     ctx.session.type = "expense";
-//     console.log({ type: ctx.session.type });
-//     await ctx.reply(
-//       `Jasne!
-// Podaj tytuł i cenę`,
-//     );
-//   });
-
-// bot.use(menu);
-
 bot.command("start", async (ctx) => {
+  // console.log({ source: toFluentFormat(pl) });
   if (!ctx.from) {
     await ctx.reply(
-      "Nie posiadam uprawnień do zidentyfikowania kim jesteś. Spróbuj zmienić ustawienia profilu Telegram.",
+      ctx.t("global.unauthorized"),
     );
     return;
   }
   const user = await getUser(ctx.from.id);
   if (user) {
     await ctx.reply(
-      `Cześć ${user.first_name}! Rejestracja została już wykonana`,
+      ctx.t("start.already-registered", {
+        first_name: user.first_name,
+      }),
     );
   } else {
     await ctx.reply(
-      "Podaj swój unikalny klucz Telegram. Znajdziesz go tutaj: https://credivio.vercel.app/automations",
+      ctx.t("start.registration"),
     );
   }
 });
@@ -98,10 +74,7 @@ bot.on("message:photo", async (ctx) => {
   const user = await getUser(ctx.from.id);
 
   if (!user) {
-    ctx.reply(
-      "Nie znalazłem twojego konta! Zarejestruj się, aby zapisywać operacje. Wpisz komendę /start",
-    );
-    return;
+    return await ctx.reply(ctx.t("global.not-found"));
   }
 
   console.log({ user });

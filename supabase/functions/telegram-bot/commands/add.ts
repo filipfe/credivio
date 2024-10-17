@@ -2,6 +2,7 @@ import { CommandContext } from "grammy";
 import supabase from "../supabase.ts";
 import getUser from "../utils/get-user.ts";
 import { BotContext } from "../../_shared/telegram-bot.ts";
+import { Payment } from "../../_shared/types.ts";
 
 const constructReply = (operations: Payment[]) =>
   `💸 Dodałem następujące operacje:

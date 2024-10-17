@@ -2,9 +2,8 @@
 
 import SmallChart from "./small-chart";
 import Link from "next/link";
-import numberFormat from "@/utils/formatters/currency";
-import useClientQuery from "@/hooks/useClientQuery";
-import { getPriceHistory } from "@/lib/stocks/queries";
+import { usePriceHistory } from "@/lib/stocks/queries";
+import NumberFormat from "@/utils/formatters/currency";
 
 export default function CompanyBlock({
   _symbol,
@@ -12,9 +11,7 @@ export default function CompanyBlock({
   _change,
   _quote,
 }: Stock) {
-  const { results } = useClientQuery({
-    query: getPriceHistory(_symbol_short),
-  });
+  const { data } = usePriceHistory(_symbol_short);
 
   const quote = parseFloat(_quote);
   const isUp =
@@ -36,9 +33,9 @@ export default function CompanyBlock({
           isUp ? "text-success" : isDown ? "text-danger" : "text-font/70"
         }`}
       >
-        <SmallChart quotes={results} isDown={isDown} isUp={isUp} />
+        <SmallChart quotes={data || []} isDown={isDown} isUp={isUp} />
         <span className="text-sm font-medium">
-          {numberFormat("PLN", quote)}
+          <NumberFormat currency="PLN" amount={quote} />
         </span>
         <div
           className={`flex items-center gap-2 rounded px-1.5 py-1 ${

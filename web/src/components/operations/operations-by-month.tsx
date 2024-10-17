@@ -1,14 +1,11 @@
 "use client";
 
 import Block from "@/components/ui/block";
-import LineChartLoader from "@/components/ui/charts/line-loader";
 import Empty from "@/components/ui/empty";
 import { useOperationsAmountsHistory } from "@/lib/operations/queries";
-import { useEffect, useState } from "react";
-import CurrencySelect from "../ui/table/currency-select";
+import { useState } from "react";
 import UniversalSelect from "../ui/universal-select";
 import { CURRENCIES } from "@/const";
-import usePreferences from "@/hooks/usePreferences";
 import {
   Bar,
   BarChart,
@@ -21,39 +18,35 @@ import {
 import ChartLoader from "../ui/charts/loader";
 import useYAxisWidth from "@/hooks/useYAxisWidth";
 import ChartTooltip from "../ui/charts/tooltip";
-
-const getTitle = (type: "income" | "expense") => {
-  switch (type) {
-    case "income":
-      return "Przychody";
-    case "expense":
-      return "Wydatki";
-  }
-};
+import { Dict } from "@/const/dict";
 
 type Props = {
   type: "income" | "expense";
+  settings: Settings;
+  title: string;
+  dict: Dict["private"]["operations"]["operations-by-month"];
 };
 
-export default function OperationsByMonth({ type }: Props) {
-  const { data: preferences } = usePreferences();
-  const [currency, setCurrency] = useState<string | undefined>(
-    preferences?.currency
+export default function OperationsByMonth({
+  type,
+  settings,
+  title,
+  dict,
+}: Props) {
+  const [currency, setCurrency] = useState<string>(settings.currency);
+  const { data: results, isLoading } = useOperationsAmountsHistory(
+    type,
+    settings.timezone,
+    {
+      currency,
+    }
   );
-  const { data: results, isLoading } = useOperationsAmountsHistory(type, {
-    currency,
-  });
   const { width, tickFormatter } = useYAxisWidth(currency);
-
-  useEffect(() => {
-    if (!preferences?.currency) return;
-    setCurrency(preferences.currency);
-  }, [preferences?.currency]);
 
   return (
     <Block
       className="xl:col-span-3 flex-1"
-      title={`${getTitle(type)}`}
+      title={title}
       cta={
         <UniversalSelect
           className="w-20"
@@ -88,9 +81,10 @@ export default function OperationsByMonth({ type }: Props) {
               tick={{ fontSize: 12 }}
               tickFormatter={(label) => {
                 const [year, month, day] = label.split("-");
-                return new Intl.DateTimeFormat(preferences?.language.code, {
+                return new Intl.DateTimeFormat(settings.language, {
                   day: "2-digit",
                   month: "short",
+                  timeZone: settings.timezone,
                 }).format(new Date(year, parseInt(month) - 1, day));
               }}
               minTickGap={32}
@@ -111,12 +105,13 @@ export default function OperationsByMonth({ type }: Props) {
               content={(props) => (
                 <ChartTooltip
                   {...props}
-                  payloadName={type === "income" ? "Przychody" : "Wydatki"}
+                  payloadName={title}
                   currency={currency}
                   label={undefined}
                   labelFormatter={(label) =>
-                    new Intl.DateTimeFormat(preferences?.language.code, {
+                    new Intl.DateTimeFormat(settings.language, {
                       dateStyle: "full",
+                      timeZone: settings.timezone,
                     }).format(new Date(label))
                   }
                 />
@@ -127,9 +122,9 @@ export default function OperationsByMonth({ type }: Props) {
         </ResponsiveContainer>
       ) : (
         <Empty
-          title="Brak danych do wyświetlenia!"
+          title={dict._empty.title}
           cta={{
-            title: `Dodaj ${type === "income" ? "przychód" : "wydatek"}`,
+            title: dict._empty.button[type],
             href: `/${type}s/add`,
           }}
         />

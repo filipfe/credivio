@@ -1,17 +1,23 @@
 import AddForm from "@/components/operations/form";
-import { getDefaultCurrency } from "@/lib/settings/actions";
+import getDictionary from "@/const/dict";
+import { getSettings } from "@/lib/general/actions";
 
 export default async function Page() {
-  const { result: defaultCurrency, error } = await getDefaultCurrency();
+  const settings = await getSettings();
 
-  if (!defaultCurrency) {
-    console.error("Couldn't retrieve default currency: ", error);
-    throw new Error(error);
-  }
+  const {
+    private: {
+      operations: { "operation-table": table, add: dict },
+    },
+  } = await getDictionary(settings.language);
 
   return (
     <div className="sm:px-10 py-4 sm:py-8 h-full flex items-center justify-center">
-      <AddForm type="expense" defaultCurrency={defaultCurrency} />
+      <AddForm
+        dict={{ table, add: dict }}
+        type="expense"
+        defaultCurrency={settings.currency}
+      />
     </div>
   );
 }

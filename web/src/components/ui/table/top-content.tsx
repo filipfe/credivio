@@ -6,8 +6,10 @@ import Filter from "./filter";
 import { DebouncedState } from "use-debounce";
 import PeriodSelect from "./period-select";
 import Delete from "../cta/delete";
+import { Dict } from "@/const/dict";
 
 type Props = FilterProps & {
+  dict: Dict["private"]["operations"]["operation-table"]["top-content"];
   search?: string;
   handleSearch: DebouncedState<(search?: string) => void>;
   type: OperationType;
@@ -19,6 +21,7 @@ type Props = FilterProps & {
 };
 
 export default function TopContent({
+  dict,
   type,
   search,
   state,
@@ -39,7 +42,7 @@ Props) {
         classNames={{
           inputWrapper: "!h-9 shadow-none border",
         }}
-        placeholder="Wyszukaj"
+        placeholder={dict.search.placeholder}
         startContent={<SearchIcon size={16} className="mx-1" />}
         defaultValue={search}
         onValueChange={handleSearch}
@@ -52,8 +55,9 @@ Props) {
             type={type as OperationType}
           />
         )}
-        {showPeriodFilter && <PeriodSelect />}
+        {showPeriodFilter && <PeriodSelect dict={{ reset: dict.reset }} />}
         <Filter
+          dict={{ reset: dict.reset, ...dict.filter }}
           enabled={{
             label: type === "expense",
             currency: true,
@@ -63,7 +67,7 @@ Props) {
         />
         {addHref && (
           <div className="hidden sm:block">
-            <Add size="sm" href={addHref} className="!h-10" />
+            <Add title={dict.add} size="sm" href={addHref} className="!h-10" />
           </div>
         )}
       </div>

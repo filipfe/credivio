@@ -2,10 +2,11 @@
 
 import { createClient } from "@/utils/supabase/client";
 import formatError from "@/utils/supabase/format-error";
+import useSWR from "swr";
 
-export async function getPriceHistory(
+async function getPriceHistory(
   short_symbol: string,
-): Promise<SupabaseResponse<PriceRecord>> {
+): Promise<PriceRecord[]> {
   const supabase = createClient();
   const { data, error } = await supabase.functions.invoke(
     "get-stock-price-history",
@@ -14,13 +15,14 @@ export async function getPriceHistory(
   const err = await formatError(error);
 
   if (err || !data) {
-    return {
-      error: err || "Internal server error",
-      results: [],
-    };
+    throw new Error(err || "Internal server error");
   }
 
-  return {
-    results: data.results,
-  };
+  return data.results;
 }
+
+export const usePriceHistory = (short_symbol: string) =>
+  useSWR(
+    ["stocks", "price_history", short_symbol],
+    ([_k, _t, short_symbol]) => getPriceHistory(short_symbol),
+  );

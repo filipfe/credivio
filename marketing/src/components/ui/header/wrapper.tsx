@@ -16,18 +16,15 @@ export default function Wrapper({ children }: { children: React.ReactNode[] }) {
     };
   }, []);
 
+  const isHome = pathname.split("/").length === 2;
+
   return (
     <Fragment>
-      <div
-        className={cn(
-          "px-6 py-4",
-          pathname === "/" ? "bg-primary-dark" : "bg-white"
-        )}
-      >
+      <div className={cn("px-6 py-4", isHome ? "bg-primary-dark" : "bg-white")}>
         <div
           className={cn(
             "max-w-7xl mx-auto flex items-center justify-between h-14 rounded-lg px-1",
-            pathname === "/"
+            isHome
               ? "border border-white/10 [&_nav>a]:text-white [&>a]:text-white bg-gradient-to-br from-[rgba(255,255,255,0.05)] to-[rgba(255,255,255,0)]"
               : "border  [&_nav>a]:text-foreground [&>a]:text-foreground"
           )}
@@ -35,7 +32,7 @@ export default function Wrapper({ children }: { children: React.ReactNode[] }) {
           {children}
         </div>
       </div>
-      {pathname !== "/" && (
+      {!isHome && (
         <div
           className={cn(
             "px-6 fixed z-50 top-0 right-0 left-0 transition-transform",

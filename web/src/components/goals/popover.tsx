@@ -1,7 +1,5 @@
 "use client";
 
-import useClientQuery from "@/hooks/useClientQuery";
-import numberFormat from "@/utils/formatters/currency";
 import formatAmount from "@/utils/operations/format-amount";
 import {
   Button,
@@ -14,31 +12,27 @@ import { useRef, useState, useTransition } from "react";
 import toast from "react-hot-toast";
 import Toast from "../ui/toast";
 import { addGoalPayment } from "@/lib/goals/actions";
+import NumberFormat from "@/utils/formatters/currency";
 // import { addGoalPayment } from "@/lib/goals/queries";
 
 type Props = {
   goal: Goal;
-  amount: number;
-  max: number;
+  paid: number;
 };
 
-export default function PaymentPopover({
-  goal,
-  amount: defaultAmount,
-  max,
-}: Props) {
+export default function PaymentPopover({ goal, paid }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
-  const [inputValue, setInputValue] = useState(defaultAmount.toString());
+  const [inputValue, setInputValue] = useState(paid.toString());
 
   function onClose() {
-    if (!inputValue || inputValue === defaultAmount.toString()) return;
+    if (!inputValue || inputValue === paid.toString()) return;
     const amount = parseFloat(inputValue);
-    if (amount > max) {
+    if (goal.total_paid - paid + amount > goal.price) {
       toast.custom((t) => (
         <Toast {...t} type="error" message="Kwota przekracza cenę celu!" />
       ));
-      setInputValue(defaultAmount.toString());
+      setInputValue(paid.toString());
       return;
     }
     formRef.current?.dispatchEvent(
@@ -72,13 +66,16 @@ export default function PaymentPopover({
     <Popover placement="top" onClose={onClose}>
       <PopoverTrigger>
         <button className="w-full bg-light border rounded-md px-4 py-2">
-          {numberFormat(goal.currency, defaultAmount)}
+          <NumberFormat
+            currency={goal.currency}
+            amount={parseFloat(inputValue)}
+          />
         </button>
       </PopoverTrigger>
       <PopoverContent className="py-2">
         <form ref={formRef} action={onSubmit}>
           <AmountInput
-            max={max}
+            max={goal.price - goal.total_paid + paid}
             value={inputValue}
             onChange={(value) => setInputValue(value)}
           />
@@ -116,7 +113,7 @@ const AmountInput = ({ value, onChange, max }: InputProps) => {
         isIconOnly
         disableRipple
         className="border bg-white absolute right-2 min-w-12 z-10"
-        onClick={() => onChange(max.toString())}
+        onClick={() => onChange(formatAmount(max.toString()))}
       >
         100%
       </Button>

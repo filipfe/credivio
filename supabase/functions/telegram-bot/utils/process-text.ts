@@ -24,8 +24,8 @@ type Operation = {
   label: string | null;
 };
 
-User's native language: ${user.language_code} - use it for 'title' and 'label' unless user specified otherwise
-User's default currency: ${user.currency} - use it in case client didn't mention any other
+User's native language: ${user.settings.language} - use it for 'title' and 'label' unless user specified otherwise
+User's default currency: ${user.settings.currency} - use it in case client didn't mention any other
 
 Important: Only insert 'label' when you classified operation as 'expense'
 If there's no matching label, you can come up with one yourself but choose very general naming

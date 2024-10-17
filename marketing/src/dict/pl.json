@@ -1,0 +1,30 @@
+{
+  "landing": {
+    "hero": {
+      "title": "Zarządzaj wszelkimi finansami z łatwością",
+      "cta": {
+        "primary": "Rozpocznij",
+        "secondary": "Więcej"
+      }
+    },
+    "operations": {
+      "category": "Operacje",
+      "title": "Wszystkie kategorie w jednym miejscu",
+      "incomes": {
+        "title": "Przychody",
+        "description": "Monitoruj i analizuj swoje źródła przychodów, aby łatwiej identyfikować trendy oraz podejmować lepsze decyzje, które przyspieszą rozwój twojego budżetu."
+      },
+      "expenses": {
+        "title": "Wydatki",
+        "description": "Śledź i kontroluj swoje wydatki, aby lepiej zarządzać budżetem, unikać nadmiernych kosztów i optymalizować przepływ środków."
+      },
+      "recurring-payments": {
+        "title": "Płatności cykliczne",
+        "description": "Zarządzaj płatnościami cyklicznymi, aby mieć pełną kontrolę nad abonamentami oraz subskrypcjami unikając niespodziewanych obciążeń."
+      }
+    }
+  },
+  "banner": {
+    "title": "Przejmij pełną kontrolę nad finansami osobistymi"
+  }
+}

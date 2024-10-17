@@ -5,10 +5,13 @@ export default async function getUser(
 ): Promise<Profile | null> {
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, first_name, currency, language_code, telegram_id")
+    .select(
+      "id, first_name, telegram_id, settings(currency, language, timezone, telegram_notifications, email_notifications)",
+    )
     .match({
       telegram_id,
     })
+    .returns<Profile[]>()
     .single();
 
   if (error) {

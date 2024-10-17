@@ -1,8 +1,8 @@
-import { Context } from "grammy";
 import supabase from "../supabase.ts";
+import { BotContext } from "../../_shared/telegram-bot.ts";
 
 export default async function registerUser(
-  ctx: Context,
+  ctx: BotContext,
 ) {
   const { from, text: telegramToken } = ctx.msg!;
   const { data, error } = await supabase.from("profiles").update(
@@ -13,9 +13,7 @@ export default async function registerUser(
   ).select("first_name").single();
   if (error || !data) {
     if (error.code === "PGRST116" || error.code === "22P02") {
-      await ctx.reply(
-        "Podano nieprawidłowy klucz Telegram, spróbuj ponownie!",
-      );
+      await ctx.reply(ctx.t("global.invalid-token"));
     } else {
       await ctx.reply("Wystąpił błąd, spróbuj ponownie później!");
       return;

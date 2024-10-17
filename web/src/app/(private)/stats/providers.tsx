@@ -9,7 +9,7 @@ type StatsFilterContextType = {
   setYear: Dispatch<SetStateAction<number>>;
   currency: string;
   setCurrency: Dispatch<SetStateAction<string>>;
-  languageCode: string;
+  settings: Settings;
 };
 
 export const StatsFilterContext = createContext<StatsFilterContextType>(null!);
@@ -18,15 +18,14 @@ const now = new Date();
 
 export default function Providers({
   children,
-  preferences,
+  settings,
 }: {
   children: React.ReactNode;
-  preferences: Preferences;
+  settings: Settings;
 }) {
   const [month, setMonth] = useState(now.getMonth());
   const [year, setYear] = useState(now.getFullYear());
-  const [currency, setCurrency] = useState<string>(preferences.currency);
-  const languageCode = preferences.language.code;
+  const [currency, setCurrency] = useState<string>(settings.currency);
 
   return (
     <StatsFilterContext.Provider
@@ -37,7 +36,7 @@ export default function Providers({
         setYear,
         currency,
         setCurrency,
-        languageCode,
+        settings,
       }}
     >
       {children}

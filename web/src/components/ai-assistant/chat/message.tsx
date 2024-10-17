@@ -14,13 +14,14 @@ export default function MessageRef({ from, content }: ChatMessage) {
       </div>
       <div
         className={cn(
-          "p-4 border rounded-md max-w-[84%] bg-white",
-          from === "user" ? "self-end" : "self-start"
+          "border rounded-md max-w-[84%] bg-white px-4",
+          from === "user" ? "self-end" : "self-start",
+          typeof content === "string" ? "py-4" : "py-2"
         )}
       >
         {from === "user" ? (
           <p className="text-sm">{content}</p>
-        ) : (
+        ) : typeof content === "string" ? (
           <Markdown
             className="flex flex-col gap-3"
             components={{
@@ -35,12 +36,18 @@ export default function MessageRef({ from, content }: ChatMessage) {
                 </p>
               ),
               ul: ({ children, ...props }) => (
-                <ul className="list-disc pl-3.5 grid gap-0.5" {...props}>
+                <ul
+                  className="list-disc list-outside pl-3.5 flex flex-col items-start gap-0.5"
+                  {...props}
+                >
                   {children}
                 </ul>
               ),
               ol: ({ children, ...props }) => (
-                <ol className="list-decimal pl-3.5 grid gap-1" {...props}>
+                <ol
+                  className="list-decimal list-outside pl-3.5 flex flex-col items-start gap-1"
+                  {...props}
+                >
                   {children}
                 </ol>
               ),
@@ -53,6 +60,8 @@ export default function MessageRef({ from, content }: ChatMessage) {
           >
             {content}
           </Markdown>
+        ) : (
+          content
         )}
       </div>
     </div>

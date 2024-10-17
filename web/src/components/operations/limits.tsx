@@ -4,15 +4,18 @@ import LimitRef from "./limits/ref";
 import { useState } from "react";
 import { useDisclosure } from "@nextui-org/react";
 import LimitForm from "./limits/form";
+import { Dict } from "@/const/dict";
 
 export default function Limits({
-  defaultCurrency,
+  settings,
+  dict,
 }: {
-  defaultCurrency: string;
+  settings: Settings;
+  dict: Dict["private"]["operations"]["expenses"]["limits"];
 }) {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [defaultLimit, setDefaultLimit] = useState<NewLimit>({
-    currency: defaultCurrency,
+    currency: settings.currency,
     period: "daily",
     amount: "",
   });
@@ -21,8 +24,9 @@ export default function Limits({
     <>
       <div className="flex flex-col 2xl:grid grid-cols-3 gap-4 sm:gap-6 justify-center col-span-full">
         <LimitRef
+          dict={dict}
           period="daily"
-          defaultCurrency={defaultCurrency}
+          settings={settings}
           onAdd={(currency, amount) => {
             setDefaultLimit({
               currency,
@@ -33,8 +37,9 @@ export default function Limits({
           }}
         />
         <LimitRef
+          dict={dict}
           period="weekly"
-          defaultCurrency={defaultCurrency}
+          settings={settings}
           onAdd={(currency, amount) => {
             setDefaultLimit({
               currency,
@@ -45,8 +50,9 @@ export default function Limits({
           }}
         />
         <LimitRef
+          dict={dict}
           period="monthly"
-          defaultCurrency={defaultCurrency}
+          settings={settings}
           onAdd={(currency, amount) => {
             setDefaultLimit({
               currency,
@@ -62,6 +68,8 @@ export default function Limits({
         onOpenChange={onOpenChange}
         onClose={onClose}
         defaultLimit={defaultLimit}
+        timezone={settings.timezone}
+        dict={dict["modal"]}
       />
     </>
   );

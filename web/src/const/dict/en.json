@@ -1,0 +1,459 @@
+{
+  "private": {
+    "_navigation": {
+      "": "Dashboard",
+      "stats": "Stats",
+      "operations": "Operations",
+      "incomes": "Incomes",
+      "expenses": "Expenses",
+      "recurring-payments": "Recurring Payments",
+      "goals": "Goals",
+      "ai-assistant": "AI Assistant",
+      "automation": "Automation",
+      "settings": "Settings",
+      "settings/account": "Account",
+      "settings/preferences": "Preferences",
+      "settings/subscription": "Subscription",
+      "settings/notifications": "Notifications",
+      "_logout": "Sign out"
+    },
+    "general": {
+      "incomes": "Incomes",
+      "expenses": "Expenses"
+    },
+    "dashboard": {
+      "latest-operations": {
+        "title": "Latest operations",
+        "_empty": "No recent operations found"
+      },
+
+      "weekly-graph": {
+        "title": "This week's expenses",
+        "_empty": "No data to display!"
+      }
+    },
+    "stats": {
+      "balance-by-month": {
+        "title": "Balance",
+        "_empty": "No data to display!"
+      },
+      "operations-by-day-of-week": {
+        "title": "Operations by day of the week"
+      },
+      "expenses-by-label": {
+        "title": "Total Expenses",
+        "description": "Expenses by label",
+        "other": "Other",
+        "_empty": "No expenses found"
+      }
+    },
+    "operations": {
+      "stats": {
+        "today": "Today",
+        "30-days": "30 days"
+      },
+      "operations-by-month": {
+        "_empty": {
+          "title": "No data to display!",
+          "button": {
+            "income": "Add income",
+            "expense": "Add expense"
+          }
+        }
+      },
+      "operation-table": {
+        "top-content": {
+          "reset": "Reset",
+          "search": {
+            "placeholder": "Search"
+          },
+          "filter": {
+            "label": {
+              "label": "Label",
+              "default": "All",
+              "description": "expenses"
+            },
+            "currency": {
+              "label": "Currency",
+              "default": "All"
+            }
+          },
+          "add": "Add"
+        },
+        "columns": {
+          "issued_at": "DATE",
+          "title": "TITLE",
+          "amount": "AMOUNT",
+          "currency": "CURRENCY",
+          "label": "LABEL"
+        },
+        "modal": {
+          "button": "Download",
+          "_error": "Failed to load the image!"
+        },
+        "dropdown": {
+          "menu": {
+            "edit": {
+              "title": "Edit",
+              "description": "Modify operation"
+            },
+            "delete": {
+              "title": "Delete",
+              "description": "Delete operation"
+            }
+          },
+          "modal": {
+            "edit": {
+              "title": "Edit expense",
+              "form": {
+                "title": {
+                  "label": "Title",
+                  "placeholder": "Salary"
+                },
+                "amount": {
+                  "label": "Amount"
+                },
+                "currency": {
+                  "label": "Currency"
+                },
+                "issued-at": {
+                  "label": "Date of issue"
+                },
+                "label": {
+                  "label": "Label",
+                  "placeholder": "Food",
+                  "description": "expenses",
+                  "tooltip": "Add a label to group operations"
+                },
+                "_close": {
+                  "label": "Cancel"
+                },
+                "_submit": {
+                  "label": "Save"
+                }
+              }
+            },
+            "delete": {
+              "title": "Remove operation",
+              "description": "This action is irreversible! Make sure you are deleting the correct operations before confirming",
+              "button": {
+                "_close": "Cancel",
+                "_submit": "Delete"
+              }
+            }
+          }
+        },
+        "_empty": {
+          "title": "No operations found",
+          "button": {
+            "income": "Add income",
+            "expense": "Add expense"
+          }
+        }
+      },
+      "add": {
+        "title": {
+          "income": "New income",
+          "expense": "New expense"
+        },
+        "tab": {
+          "manual": {
+            "title": "Manually"
+          },
+          "scan": {
+            "title": "Scan image",
+            "description": "Add or drop files",
+            "table": {
+              "title": "Preview"
+            }
+          }
+        }
+      },
+      "expenses": {
+        "limits": {
+          "period": {
+            "daily": "Day",
+            "weekly": "Week",
+            "monthly": "Month"
+          },
+          "_empty": {
+            "title": {
+              "daily": "Limit - Day",
+              "weekly": "Limit - Week",
+              "monthly": "Limit - Month"
+            },
+            "label": "Set limit"
+          },
+          "modal": {
+            "title": {
+              "new": "New limit",
+              "edit": "Edit limit"
+            },
+            "form": {
+              "period": {
+                "label": "Period",
+                "values": {
+                  "daily": "Daily",
+                  "weekly": "Weekly",
+                  "monthly": "Monthly"
+                }
+              },
+              "amount": {
+                "label": "Amount"
+              },
+              "currency": {
+                "label": "Currency"
+              },
+              "_close": {
+                "label": "Cancel"
+              },
+              "_submit": {
+                "label": "Save",
+                "_error": "An error occurred while adding the limit"
+              }
+            }
+          }
+        }
+      },
+      "recurring-payments": {}
+    },
+    "goals": {
+      "list": {
+        "title": "Current",
+        "button": "Add",
+        "goal": {
+          "no-deadline": "No deadline",
+          "menu": {
+            "add": {
+              "title": "Add",
+              "description": "Add money to the goal"
+            },
+            "priority": {
+              "title": "Set priority",
+              "description": "Set this goal as a priority"
+            },
+            "delete": {
+              "title": "Delete goal",
+              "description": "Permanently delete the goal"
+            }
+          },
+          "collected": "Collected"
+        }
+      },
+      "priority": {
+        "title": "Priority",
+        "collected": "Collected",
+        "remaining": "Remaining",
+        "payments": {
+          "title": "Payments",
+          "date": "Date",
+          "amount": "Amount"
+        },
+        "_empty": "No priority set"
+      }
+    },
+    "ai-assistant": {
+      "chat": {
+        "recomendation": [
+          "Monthly Summary",
+          "Weekly Overview",
+          "Financial Recommendations",
+          "View Predictions",
+          "Calculate Savings Rate",
+          "Plan for Goal Completion"
+        ],
+        "input": {
+          "placeholder": "Detect anomalies in this week's expenses"
+        },
+        "_submit": {
+          "label": "Send"
+        }
+      },
+      "context": {
+        "title": "Context",
+        "description": "Select the information to be processed by the assistant",
+        "form": {
+          "currency": "Currency",
+          "operations": {
+            "title": "Operations",
+            "recurring-payments": "Recurring Payments"
+          },
+          "limits": {
+            "title": "Expense Limits",
+            "_empty": "No limits for the specified currency"
+          },
+          "goals": {
+            "title": "Goals",
+            "_empty": "No goals for the specified currency"
+          },
+          "_error": "An error occurred"
+        }
+      }
+    },
+    "automation": {
+      "title": "Telegram Bot",
+      "description": [
+        "Add operations faster with our custom Telegram Bot!",
+        "The bot automates many processes, saving you time and minimizing the risk of errors. All data is synchronized in real time, so you can be sure that information is always up-to-date.",
+        "Here's your Telegram key. Send it to the bot to connect your account:"
+      ],
+      "input": {
+        "label": "Telegram key"
+      },
+      "latest-operations": {
+        "title": "Latest operations",
+        "_empty": {
+          "title": "You haven't added any operations using the bot yet!",
+          "button": "Add operations"
+        }
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Manage your personal data, preferences, and subscription",
+      "account": {
+        "personal-data": {
+          "title": "Personal data",
+          "description": "Adjust your personal data for your account",
+          "form": {
+            "first-name": {
+              "label": "First name"
+            },
+            "last-name": {
+              "label": "Last name"
+            },
+            "_submit": {
+              "label": "Save"
+            }
+          }
+        },
+        "email": {
+          "title": "Email",
+          "description": "Change the email associated with your account",
+          "form": {
+            "email": {
+              "label": "Email",
+              "placeholder": "example@mail.com"
+            },
+            "_submit": {
+              "label": "Save"
+            }
+          }
+        },
+        "password": {
+          "title": "Password",
+          "description": "Change your account password",
+          "form": {
+            "password": {
+              "label": "New password"
+            },
+            "confirm-password": {
+              "label": "Confirm new password"
+            },
+            "_submit": {
+              "label": "Save password"
+            },
+            "_toast": {
+              "success": "Password has been successfully changed"
+            }
+          }
+        }
+      },
+      "preferences": {
+        "default-currency": {
+          "title": "Default currency",
+          "description": "Used by default in the application",
+          "select": {
+            "label": "Currency"
+          }
+        },
+        "location": {
+          "title": "Location",
+          "description": "Select language and time zone",
+          "language": {
+            "label": "Language",
+            "placeholder": "Select language"
+          },
+          "timezone": {
+            "label": "Time zone",
+            "placeholder": "Select time zone"
+          }
+        }
+      },
+      "notifications": {
+        "telegram": {
+          "title": "Telegram Notifications",
+          "description": "Sent automatically by Telegram Bot"
+        },
+        "email": {
+          "title": "Email Notifications",
+          "description": "Sent automatically to your email address"
+        }
+      }
+    }
+  },
+  "public": {
+    "auth": {
+      "_layout": {
+        "or": "or",
+        "google": {
+          "label": "Sign in with Google"
+        }
+      },
+      "sign-in": {
+        "title": "Welcome back!",
+        "description": "Sign in to continue",
+        "form": {
+          "password": {
+            "label": "Password"
+          },
+          "_submit": {
+            "label": "Sign in"
+          }
+        },
+        "forgot-password": {
+          "label": "Forgot your password?",
+          "link": "Reset password"
+        },
+        "swap": {
+          "label": "Don't have an account?",
+          "link": "Sign up"
+        }
+      },
+      "sign-up": {
+        "title": "Welcome to Credivio!",
+        "description": "Sign up to continue",
+        "form": {
+          "first-name": {
+            "label": "First name"
+          },
+          "last-name": {
+            "label": "Last name"
+          },
+          "password": {
+            "label": "Password"
+          },
+          "_submit": {
+            "label": "Sign up"
+          }
+        },
+        "swap": {
+          "label": "Already have an account?",
+          "link": "Sign in"
+        }
+      },
+      "forgot-password": {
+        "title": "Reset password",
+        "description": "Enter your email address to continue",
+        "form": {
+          "_submit": {
+            "label": "Submit"
+          },
+          "_toast": {
+            "success": "A verification link has been sent to the email address"
+          }
+        }
+      }
+    }
+  }
+}

@@ -11,37 +11,13 @@ export async function getAccount(): Promise<
 
   const { data, error: authError } = await supabase
     .from("profiles")
-    .select("first_name, last_name, language_code, email")
+    .select("first_name, last_name, email, ...settings(language)")
     .single();
 
   if (authError) {
     return {
       result: null,
       error: authError.message,
-    };
-  }
-
-  return {
-    result: data,
-  };
-}
-
-export async function getPreferences(): Promise<
-  SupabaseSingleRowResponse<Preferences>
-> {
-  const supabase = createClient();
-
-  const { data, error } = await supabase
-    .from("profiles")
-    .select(
-      "currency, language:languages(code, name), telegram_token, telegram_id",
-    ).returns<Preferences>()
-    .single();
-
-  if (error) {
-    return {
-      error: error.message,
-      result: null,
     };
   }
 
@@ -102,29 +78,6 @@ export async function activateService(
   };
 }
 
-export async function getDefaultCurrency(): Promise<
-  SupabaseSingleRowResponse<string>
-> {
-  const supabase = createClient();
-
-  const { data, error: authError } = await supabase
-    .from("profiles")
-    .select("currency")
-    .single();
-
-  if (!data || authError) {
-    return {
-      result: null,
-      error: authError.message ||
-        "Błąd autoryzacji, spróbuj zalogować się ponownie!",
-    };
-  }
-
-  return {
-    result: data.currency,
-  };
-}
-
 export async function updatePreferences(formData: FormData) {
   const name = formData.get("name")?.toString() ?? "";
   const value = formData.get("value")?.toString() ?? "";
@@ -135,14 +88,12 @@ export async function updatePreferences(formData: FormData) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  console.log("Updating...", { name, value });
-
   const { error } = await supabase
-    .from("profiles")
+    .from("settings")
     .update({
       [name]: value,
     })
-    .eq("id", user?.id);
+    .eq("user_id", user?.id);
 
   if (error) {
     return {

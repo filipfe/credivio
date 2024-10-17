@@ -26,8 +26,8 @@ export default function Block({
     <div
       className={cn(
         "bg-white px-6 sm:px-10 gap-4 flex flex-col",
-        className,
         title ? "pt-5 pb-6 sm:py-8" : "py-6 sm:py-8",
+        className,
         mobileRadius
           ? "rounded-md border"
           : "border-y sm:border-x sm:rounded-md"

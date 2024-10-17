@@ -1,0 +1,456 @@
+{
+  "private": {
+    "_navigation": {
+      "": "Panel",
+      "stats": "Statystyki",
+      "operations": "Operacje",
+      "incomes": "Przychody",
+      "expenses": "Wydatki",
+      "recurring-payments": "Płatności cykliczne",
+      "goals": "Cele",
+      "ai-assistant": "Asystent AI",
+      "automation": "Automatyzacja",
+      "settings": "Ustawienia",
+      "settings/account": "Konto",
+      "settings/preferences": "Preferencje",
+      "settings/subscription": "Subskrypcja",
+      "settings/notifications": "Powiadomienia",
+      "_logout": "Wyloguj"
+    },
+    "general": { "incomes": "Przychody", "expenses": "Wydatki" },
+    "dashboard": {
+      "latest-operations": {
+        "title": "Ostatnie operacje",
+        "_empty": "Nie znaleziono ostatnich operacji"
+      },
+      "weekly-graph": {
+        "title": "Wydatki w tym tygodniu",
+        "_empty": "Brak danych do wyświetlenia!"
+      }
+    },
+    "stats": {
+      "balance-by-month": {
+        "title": "Bilans operacji",
+        "_empty": "Brak danych do wyświetlenia!"
+      },
+      "operations-by-day-of-week": {
+        "title": "Operacje wg dnia tygodnia"
+      },
+      "expenses-by-label": {
+        "title": "Wydatki łącznie",
+        "description": "Wydatki według etykiet",
+        "other": "Inne",
+        "_empty": "Nie znaleziono wydatków"
+      }
+    },
+    "operations": {
+      "stats": {
+        "today": "Dzisiaj",
+        "30-days": "30 dni"
+      },
+      "operations-by-month": {
+        "_empty": {
+          "title": "Brak danych do wyświetlenia!",
+          "button": {
+            "income": "Dodaj przychód",
+            "expense": "Dodaj wydatek"
+          }
+        }
+      },
+      "operation-table": {
+        "top-content": {
+          "reset": "Resetuj",
+          "search": {
+            "placeholder": "Wyszukaj"
+          },
+          "filter": {
+            "label": {
+              "label": "Etykieta",
+              "default": "Wszystkie",
+              "description": "wydatków"
+            },
+            "currency": {
+              "label": "Waluta",
+              "default": "Wszystkie"
+            }
+          },
+          "add": "Dodaj"
+        },
+        "columns": {
+          "issued_at": "DATA",
+          "title": "TYTUŁ",
+          "amount": "KWOTA",
+          "currency": "WALUTA",
+          "label": "ETYKIETA"
+        },
+        "modal": {
+          "button": "Pobierz",
+          "_error": "Nie udało się wczytać obrazu!"
+        },
+        "dropdown": {
+          "menu": {
+            "edit": {
+              "title": "Edytuj",
+              "description": "Modyfikuj operację"
+            },
+            "delete": {
+              "title": "Usuń",
+              "description": "Usuń operację"
+            }
+          },
+          "modal": {
+            "edit": {
+              "title": "Edytuj wydatek",
+              "form": {
+                "title": {
+                  "label": "Tytuł",
+                  "placeholder": "Wynagrodzenie"
+                },
+                "amount": {
+                  "label": "Kwota"
+                },
+                "currency": {
+                  "label": "Waluta"
+                },
+                "issued-at": {
+                  "label": "Data uiszczenia"
+                },
+                "label": {
+                  "label": "Etykieta",
+                  "placeholder": "Jedzenie",
+                  "description": "wydatków",
+                  "tooltip": "Dodaj etykietę, aby pogrupować operacje"
+                },
+                "_close": {
+                  "label": "Anuluj"
+                },
+                "_submit": {
+                  "label": "Zapisz"
+                }
+              }
+            },
+            "delete": {
+              "title": "Usunąć operację",
+              "description": "Ta akcja jest nieodwracalna! Upewnij się, że usuwasz poprawne operacje przed zatwierdzeniem",
+              "button": {
+                "_close": "Anuluj",
+                "_submit": "Usuń"
+              }
+            }
+          }
+        },
+        "_empty": {
+          "title": "Nie znalezniono operacji",
+          "button": {
+            "income": "Dodaj przychód",
+            "expense": "Dodaj wydatek"
+          }
+        }
+      },
+      "add": {
+        "title": {
+          "income": "Nowy przychód",
+          "expense": "Nowy wydatek"
+        },
+        "tab": {
+          "manual": {
+            "title": "Ręcznie"
+          },
+          "scan": {
+            "title": "Skan zdjęcia",
+            "description": "Dodaj lub upuść pliki",
+            "table": {
+              "title": "Podgląd"
+            }
+          }
+        }
+      },
+      "expenses": {
+        "limits": {
+          "period": {
+            "daily": "Dzień",
+            "weekly": "Tydzień",
+            "monthly": "Miesiąc"
+          },
+          "_empty": {
+            "title": {
+              "daily": "Limit - Dzień",
+              "weekly": "Limit - Tydzień",
+              "monthly": "Limit - Miesiąc"
+            },
+            "label": "Ustaw limit"
+          },
+          "modal": {
+            "title": {
+              "new": "Nowy limit",
+              "edit": "Edytuj limit"
+            },
+            "form": {
+              "period": {
+                "label": "Okres",
+                "values": {
+                  "daily": "Dzienny",
+                  "weekly": "Tygodniowy",
+                  "monthly": "Miesięczny"
+                }
+              },
+              "amount": {
+                "label": "Kwota"
+              },
+              "currency": {
+                "label": "Waluta"
+              },
+              "_close": {
+                "label": "Anuluj"
+              },
+              "_submit": {
+                "label": "Zapisz",
+                "_error": "Wystąpił błąd przy dodawaniu limitu"
+              }
+            }
+          }
+        }
+      },
+      "recurring-payments": {}
+    },
+    "goals": {
+      "list": {
+        "title": "Bieżące",
+        "button": "Dodaj",
+        "goal": {
+          "no-deadline": "Bez terminu",
+          "menu": {
+            "add": {
+              "title": "Dodaj",
+              "description": "Dodaj pieniądze na cel"
+            },
+            "priority": {
+              "title": "Ustaw priorytet",
+              "description": "Ustaw ten cel jako priorytet"
+            },
+            "delete": {
+              "title": "Usuń cel",
+              "description": "Nieodwracalnie usuń cel"
+            }
+          },
+          "collected": "Zebrano"
+        }
+      },
+      "priority": {
+        "title": "Priorytet",
+        "collected": "Zebrano",
+        "remaining": "Pozostało",
+        "payments": {
+          "title": "Wpłaty",
+          "date": "Data",
+          "amount": "Kwota"
+        },
+        "_empty": "Brak priorytetu"
+      }
+    },
+    "ai-assistant": {
+      "chat": {
+        "recomendation": [
+          "Podsumowanie miesięczne",
+          "Przegląd tygodniowy",
+          "Zalecenia finansowe",
+          "Zobacz prognozy",
+          "Oblicz wskaźnik oszczędności",
+          "Zaplanuj realizację celu"
+        ],
+        "input": {
+          "placeholder": "Wykryj anomalie w wydatkach z tego tygodnia"
+        },
+        "_submit": {
+          "label": "Wyślij"
+        }
+      },
+      "context": {
+        "title": "Kontekst",
+        "description": "Wybierz informacje, które mają być przetworzone przez asystenta",
+        "form": {
+          "currency": "Waluta",
+          "operations": {
+            "title": "Operacje",
+            "recurring-payments": "Płatności cykliczne"
+          },
+          "limits": {
+            "title": "Limity wydatków",
+            "_empty": "Brak limitów dla podanej waluty"
+          },
+          "goals": {
+            "title": "Cele",
+            "_empty": "Brak celów dla podanej waluty"
+          },
+          "_error": "Wystąpił błąd"
+        }
+      }
+    },
+    "automation": {
+      "title": "Telegram Bot",
+      "description": [
+        "Dodawaj operacje szybciej za pomocą dostosowanego Telegram Bota!",
+        "Bot automatyzuje wiele procesów, oszczędzając Twój czas i minimalizując ryzyko błędów. Wszystkie dane są synchronizowane w czasie rzeczywistym, więc masz pewność, że informacje są zawsze aktualne.",
+        "Oto twój klucz Telegram. Wyślij go do bota, aby połączyć swoje konto:"
+      ],
+      "input": {
+        "label": "Klucz Telegram"
+      },
+      "latest-operations": {
+        "title": "Ostatnie operacje",
+        "_empty": {
+          "title": "Nie dodałeś jeszcze operacji przy pomocy bota!",
+          "button": "Dodaj operacje"
+        }
+      }
+    },
+    "settings": {
+      "title": "Ustawienia",
+      "description": "Zarządzaj swoimi danymi osobowymi, preferencjami i subskrypcją",
+      "account": {
+        "personal-data": {
+          "title": "Dane osobowe",
+          "description": "Dostosuj dane osobowe do swojego konta",
+          "form": {
+            "first-name": {
+              "label": "Imię"
+            },
+            "last-name": {
+              "label": "Nazwisko"
+            },
+            "_submit": {
+              "label": "Zapisz"
+            }
+          }
+        },
+        "email": {
+          "title": "Email",
+          "description": "Zmień email przypisany do twojego konta",
+          "form": {
+            "email": {
+              "label": "Email",
+              "placeholder": "example@mail.com"
+            },
+            "_submit": {
+              "label": "Zapisz"
+            }
+          }
+        },
+        "password": {
+          "title": "Hasło",
+          "description": "Zmień hasło do swojego konta",
+          "form": {
+            "password": {
+              "label": "Nowe hasło"
+            },
+            "confirm-password": {
+              "label": "Potwierdź nowe hasło"
+            },
+            "_submit": {
+              "label": "Zapisz hasło"
+            },
+            "_toast": {
+              "success": "Hasło zostało pomyślnie zmienione"
+            }
+          }
+        }
+      },
+      "preferences": {
+        "default-currency": {
+          "title": "Domyślna waluta",
+          "description": "Używana domyślnie w aplikacji",
+          "select": {
+            "label": "Waluta"
+          }
+        },
+        "location": {
+          "title": "Lokalizacja",
+          "description": "Wybierz język i strefę czasową",
+          "language": {
+            "label": "Język",
+            "placeholder": "Wybierz język"
+          },
+          "timezone": {
+            "label": "Strefa czasowa",
+            "placeholder": "Wybierz strefę czasową"
+          }
+        }
+      },
+      "subscription": {},
+      "notifications": {
+        "telegram": {
+          "title": "Powiadomienia Telegram",
+          "description": "Wysyłane automatycznie przez Telegram Bota"
+        },
+        "email": {
+          "title": "Powiadomienia Email",
+          "description": "Wysyłane automatycznie na adres email"
+        }
+      }
+    }
+  },
+  "public": {
+    "auth": {
+      "_layout": {
+        "or": "lub",
+        "google": {
+          "label": "Zaloguj się z Google"
+        }
+      },
+      "sign-in": {
+        "title": "Witaj z powrotem!",
+        "description": "Zaloguj się, aby kontynuować",
+        "form": {
+          "password": {
+            "label": "Hasło"
+          },
+          "_submit": {
+            "label": "Zaloguj się"
+          }
+        },
+        "forgot-password": {
+          "label": "Nie pamiętasz hasła?",
+          "link": "Zresetuj hasło"
+        },
+        "swap": {
+          "label": "Nie masz konta?",
+          "link": "Zarejestruj się"
+        }
+      },
+      "sign-up": {
+        "title": "Witaj w Credivio!",
+        "description": "Zarejestruj się, aby kontynuować",
+        "form": {
+          "first-name": {
+            "label": "Imię"
+          },
+          "last-name": {
+            "label": "Nazwisko"
+          },
+          "password": {
+            "label": "Hasło"
+          },
+          "_submit": {
+            "label": "Zarejestruj się"
+          }
+        },
+        "swap": {
+          "label": "Posiadasz już konto?",
+          "link": "Zaloguj się"
+        }
+      },
+      "forgot-password": {
+        "title": "Zresetuj hasło",
+        "description": "Wprowadź adres email, aby kontynuować",
+        "form": {
+          "_submit": {
+            "label": "Zatwierdź"
+          },
+          "_toast": {
+            "success": "Link weryfikacyjny został wysłany na podany adres email"
+          }
+        }
+      }
+    }
+  }
+}

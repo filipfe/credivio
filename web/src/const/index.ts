@@ -5,7 +5,6 @@ import {
   CoinsIcon,
   LayersIcon,
   LayoutDashboardIcon,
-  Newspaper,
   PlusIcon,
   RepeatIcon,
   SlidersIcon,

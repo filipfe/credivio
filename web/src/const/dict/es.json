@@ -1,0 +1,454 @@
+{
+  "private": {
+    "_navigation": {
+      "": "Tablero",
+      "stats": "Estadísticas",
+      "operations": "Operaciones",
+      "incomes": "Ingresos",
+      "expenses": "Gastos",
+      "recurring-payments": "Pagos Recurrentes",
+      "goals": "Objetivos",
+      "ai-assistant": "Asistente IA",
+      "automation": "Automatización",
+      "settings": "Configuración",
+      "settings/account": "Cuenta",
+      "settings/preferences": "Preferencias",
+      "settings/subscription": "Suscripción",
+      "settings/notifications": "Notificaciones",
+      "_logout": "Cerrar sesión"
+    },
+    "general": { "incomes": "Ingresos", "expenses": "Gastos" },
+    "dashboard": {
+      "latest-operations": {
+        "title": "Últimas operaciones",
+        "_empty": "No se encontraron operaciones recientes"
+      },
+      "weekly-graph": {
+        "title": "Gastos de esta semana",
+        "_empty": "¡No hay datos para mostrar!"
+      }
+    },
+    "stats": {
+      "balance-by-month": {
+        "title": "Balance",
+        "_empty": "¡No hay datos para mostrar!"
+      },
+      "operations-by-day-of-week": {
+        "title": "Operaciones por día de la semana"
+      },
+      "expenses-by-label": {
+        "title": "Gastos Totales",
+        "description": "Gastos por etiqueta",
+        "other": "Otros",
+        "_empty": "No se encontraron gastos"
+      }
+    },
+    "operations": {
+      "stats": {
+        "today": "Hoy",
+        "30-days": "30 días"
+      },
+      "operations-by-month": {
+        "title": "Ingresos",
+        "_empty": {
+          "title": "¡No hay datos para mostrar!",
+          "button": {
+            "income": "Agregar ingreso",
+            "expense": "Agregar gasto"
+          }
+        }
+      },
+      "operation-table": {
+        "top-content": {
+          "reset": "Restablecer",
+          "search": {
+            "placeholder": "Buscar"
+          },
+          "filter": {
+            "label": {
+              "label": "Etiqueta",
+              "default": "Todas",
+              "description": "gastos"
+            },
+            "currency": {
+              "label": "Moneda",
+              "default": "Todas"
+            }
+          },
+          "add": "Agregar"
+        },
+        "columns": {
+          "issued_at": "FECHA",
+          "title": "TÍTULO",
+          "amount": "CANTIDAD",
+          "currency": "MONEDA",
+          "label": "ETIQUETA"
+        },
+        "modal": {
+          "button": "Descargar",
+          "_error": "¡No se pudo cargar la imagen!"
+        },
+        "dropdown": {
+          "menu": {
+            "edit": {
+              "title": "Editar",
+              "description": "Modificar operación"
+            },
+            "delete": {
+              "title": "Eliminar",
+              "description": "Eliminar operación"
+            }
+          },
+          "modal": {
+            "edit": {
+              "title": "Editar gasto",
+              "form": {
+                "title": {
+                  "label": "Título",
+                  "placeholder": "Salario"
+                },
+                "amount": {
+                  "label": "Cantidad"
+                },
+                "currency": {
+                  "label": "Moneda"
+                },
+                "issued-at": {
+                  "label": "Fecha de emisión"
+                },
+                "label": {
+                  "label": "Etiqueta",
+                  "placeholder": "Comida",
+                  "description": "gastos",
+                  "tooltip": "Añade una etiqueta para agrupar las operaciones"
+                },
+                "_close": {
+                  "label": "Cancelar"
+                },
+                "_submit": {
+                  "label": "Guardar"
+                }
+              }
+            },
+            "delete": {
+              "title": "¿Eliminar la operación",
+              "description": "¡Esta acción es irreversible! Asegúrate de que estás eliminando las operaciones correctas antes de confirmar",
+              "button": {
+                "_close": "Cancelar",
+                "_submit": "Eliminar"
+              }
+            }
+          }
+        },
+        "_empty": {
+          "title": "No se encontraron operaciones",
+          "button": {
+            "income": "Agregar ingreso",
+            "expense": "Agregar gasto"
+          }
+        }
+      },
+      "add": {
+        "title": {
+          "income": "Nuevo ingreso",
+          "expense": "Nuevo gasto"
+        },
+        "tab": {
+          "manual": {
+            "title": "Manualmente"
+          },
+          "scan": {
+            "title": "Escanear imagen",
+            "description": "Añadir o soltar archivos",
+            "table": {
+              "title": "Vista previa"
+            }
+          }
+        }
+      },
+      "expenses": {
+        "limits": {
+          "period": {
+            "daily": "Día",
+            "weekly": "Semana",
+            "monthly": "Mes"
+          },
+          "_empty": {
+            "title": {
+              "daily": "Límite - Día",
+              "weekly": "Límite - Semana",
+              "monthly": "Límite - Mes"
+            },
+            "label": "Establecer límite"
+          },
+          "modal": {
+            "title": {
+              "new": "Nuevo límite",
+              "edit": "Editar límite"
+            },
+            "form": {
+              "period": {
+                "label": "Período",
+                "values": {
+                  "daily": "Diario",
+                  "weekly": "Semanal",
+                  "monthly": "Mensual"
+                }
+              },
+              "amount": {
+                "label": "Cantidad"
+              },
+              "currency": {
+                "label": "Moneda"
+              },
+              "_close": {
+                "label": "Cancelar"
+              },
+              "_submit": {
+                "label": "Guardar",
+                "_error": "Ocurrió un error al agregar el límite"
+              }
+            }
+          }
+        }
+      },
+      "recurring-payments": {}
+    },
+    "goals": {
+      "list": {
+        "title": "Actual",
+        "button": "Añadir",
+        "goal": {
+          "no-deadline": "Sin fecha límite",
+          "menu": {
+            "add": {
+              "title": "Añadir",
+              "description": "Añadir dinero al objetivo"
+            },
+            "priority": {
+              "title": "Establecer prioridad",
+              "description": "Establecer este objetivo como prioritario"
+            },
+            "delete": {
+              "title": "Eliminar objetivo",
+              "description": "Eliminar permanentemente el objetivo"
+            }
+          },
+          "collected": "Recaudado"
+        }
+      },
+      "priority": {
+        "title": "Prioridad",
+        "collected": "Recaudado",
+        "remaining": "Restante",
+        "payments": {
+          "title": "Pagos",
+          "date": "Fecha",
+          "amount": "Monto"
+        },
+        "_empty": "No se ha establecido ninguna prioridad"
+      }
+    },
+    "ai-assistant": {
+      "chat": {
+        "recomendation": [
+          "Resumen mensual",
+          "Visión general semanal",
+          "Recomendaciones financieras",
+          "Ver predicciones",
+          "Calcular tasa de ahorro",
+          "Plan para completar el objetivo"
+        ],
+        "input": {
+          "placeholder": "Detecta anomalías en los gastos de esta semana"
+        },
+        "_submit": {
+          "label": "Enviar"
+        }
+      },
+      "context": {
+        "title": "Contexto",
+        "description": "Selecciona la información que debe ser procesada por el asistente",
+        "form": {
+          "currency": "Moneda",
+          "operations": {
+            "title": "Operaciones",
+            "recurring-payments": "Pagos recurrentes"
+          },
+          "limits": {
+            "title": "Límites de gastos",
+            "_empty": "No hay límites para la moneda especificada"
+          },
+          "goals": {
+            "title": "Objetivos",
+            "_empty": "No hay objetivos para la moneda especificada"
+          },
+          "_error": "Ocurrió un error"
+        }
+      }
+    },
+    "automation": {
+      "title": "Bot de Telegram",
+      "description": [
+        "¡Agrega operaciones más rápido con un Bot de Telegram personalizado!",
+        "El bot automatiza muchos procesos, ahorrándote tiempo y minimizando el riesgo de errores. Todos los datos se sincronizan en tiempo real, por lo que puedes estar seguro de que la información siempre está actualizada.",
+        "Aquí está tu clave de Telegram. Envíala al bot para conectar tu cuenta:"
+      ],
+      "input": {
+        "label": "Clave de Telegram"
+      },
+      "latest-operations": {
+        "title": "Últimas operaciones",
+        "_empty": {
+          "title": "¡Aún no has agregado ninguna operación usando el bot!",
+          "button": "Agregar operaciones"
+        }
+      }
+    },
+    "settings": {
+      "title": "Configuración",
+      "description": "Administra tus datos personales, preferencias y suscripción",
+      "account": {
+        "personal-data": {
+          "title": "Datos personales",
+          "description": "Ajusta tus datos personales para tu cuenta",
+          "form": {
+            "first-name": {
+              "label": "Nombre"
+            },
+            "last-name": {
+              "label": "Apellido"
+            },
+            "_submit": {
+              "label": "Guardar"
+            }
+          }
+        },
+        "email": {
+          "title": "Correo electrónico",
+          "description": "Cambia el correo electrónico asociado a tu cuenta",
+          "form": {
+            "email": {
+              "label": "Correo electrónico",
+              "placeholder": "ejemplo@correo.com"
+            },
+            "_submit": {
+              "label": "Guardar"
+            }
+          }
+        },
+        "password": {
+          "title": "Contraseña",
+          "description": "Cambia la contraseña de tu cuenta",
+          "form": {
+            "password": {
+              "label": "Nueva contraseña"
+            },
+            "confirm-password": {
+              "label": "Confirmar nueva contraseña"
+            },
+            "_submit": {
+              "label": "Guardar contraseña"
+            },
+            "_toast": {
+              "success": "La contraseña ha sido cambiada exitosamente"
+            }
+          }
+        }
+      },
+      "preferences": {
+        "default-currency": {
+          "title": "Moneda predeterminada",
+          "description": "Se utiliza de forma predeterminada en la aplicación",
+          "select": { "label": "Moneda" }
+        },
+        "location": {
+          "title": "Ubicación",
+          "description": "Seleccione idioma y zona horaria",
+          "language": {
+            "label": "Idioma",
+            "placeholder": "Selecciona el idioma"
+          },
+          "timezone": {
+            "label": "Zona horaria",
+            "placeholder": "Selecciona la zona horaria"
+          }
+        }
+      },
+      "notifications": {
+        "telegram": {
+          "title": "Notificaciones de Telegram",
+          "description": "Enviadas automáticamente por Telegram Bot"
+        },
+        "email": {
+          "title": "Notificaciones por correo electrónico",
+          "description": "Enviadas automáticamente a su dirección de correo electrónico"
+        }
+      }
+    }
+  },
+  "public": {
+    "auth": {
+      "_layout": {
+        "or": "o",
+        "google": {
+          "label": "Iniciar sesión con Google"
+        }
+      },
+      "sign-in": {
+        "title": "¡Bienvenido de nuevo!",
+        "description": "Inicia sesión para continuar",
+        "form": {
+          "password": {
+            "label": "Contraseña"
+          },
+          "_submit": {
+            "label": "Iniciar sesión"
+          }
+        },
+        "forgot-password": {
+          "label": "¿Olvidaste tu contraseña?",
+          "link": "Restablecer contraseña"
+        },
+        "swap": {
+          "label": "¿No tienes una cuenta?",
+          "link": "Regístrate"
+        }
+      },
+      "sign-up": {
+        "title": "¡Bienvenido a Credivio!",
+        "description": "Regístrate para continuar",
+        "form": {
+          "first-name": {
+            "label": "Nombre"
+          },
+          "last-name": {
+            "label": "Apellido"
+          },
+          "password": {
+            "label": "Contraseña"
+          },
+          "_submit": {
+            "label": "Registrarse"
+          }
+        },
+        "swap": {
+          "label": "¿Ya tienes una cuenta?",
+          "link": "Iniciar sesión"
+        }
+      },
+      "forgot-password": {
+        "title": "Restablecer contraseña",
+        "description": "Ingresa tu dirección de correo electrónico para continuar",
+        "form": {
+          "_submit": {
+            "label": "Enviar"
+          },
+          "_toast": {
+            "success": "Se ha enviado un enlace de verificación a la dirección de correo electrónico"
+          }
+        }
+      }
+    }
+  }
+}

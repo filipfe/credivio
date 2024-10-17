@@ -17,13 +17,15 @@ import toast from "react-hot-toast";
 import Toast from "../../ui/toast";
 import { DownloadIcon } from "lucide-react";
 import Link from "next/link";
+import { Dict } from "@/const/dict";
 
 type Props = {
+  dict: Dict["private"]["operations"]["operation-table"]["modal"];
   docPath: string | null;
   setDocPath: Dispatch<SetStateAction<string | null>>;
 };
 
-export default function DocModal({ docPath, setDocPath }: Props) {
+export default function DocModal({ dict, docPath, setDocPath }: Props) {
   const { onClose, onOpenChange } = useDisclosure();
   const [mediaUrl, setMediaUrl] = useState<string>("");
   const [isLoading, setIsLoading] = useState({
@@ -45,7 +47,7 @@ export default function DocModal({ docPath, setDocPath }: Props) {
         setIsLoading((prev) => ({ ...prev, url: false }));
       } else {
         toast.custom((t) => (
-          <Toast {...t} message="Nie udało się wczytać obrazu!" type="error" />
+          <Toast {...t} message={dict._error} type="error" />
         ));
         onClose();
         setDocPath(null);
@@ -66,7 +68,7 @@ export default function DocModal({ docPath, setDocPath }: Props) {
               {mediaUrl && (
                 <Link href={`${mediaUrl}&download`}>
                   <Button as="div" disableRipple type="submit">
-                    <DownloadIcon size={16} /> Pobierz
+                    <DownloadIcon size={16} /> {dict.button}
                   </Button>
                 </Link>
               )}

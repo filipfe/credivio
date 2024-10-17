@@ -1,4 +1,4 @@
-import numberFormat from "@/utils/formatters/currency";
+import NumberFormat from "@/utils/formatters/currency";
 import { Skeleton, cn } from "@nextui-org/react";
 import { formatDistance } from "date-fns";
 import * as locales from "date-fns/locale";
@@ -6,14 +6,14 @@ import { Coins, Wallet2 } from "lucide-react";
 
 type Props = {
   payment: Payment;
-  preferences: Preferences;
+  languageCode: Locale;
 };
 
 export default function OperationRef({
   payment: { title, issued_at, type, currency, amount },
-  preferences,
+  languageCode,
 }: Props) {
-  const [language, country] = preferences.language.code.split("-");
+  const [language, country] = languageCode.split("-");
   return (
     <div className="rounded-md bg-primary max-w-max">
       <div className="border shadow-[inset_0px_2px_9px_rgba(255,255,255,0.4)] border-white/10 bg-gradient-to-b from-white/5 to-white/[0.01] p-4 rounded-md backdrop-blur-lg flex flex-col gap-2 min-w-64">
@@ -29,9 +29,11 @@ export default function OperationRef({
               addSuffix: true,
               locale:
                 locales[
-                  (language.toLowerCase() === country.toLowerCase()
-                    ? language
-                    : `${language}${country}`) as keyof typeof locales
+                  country
+                    ? ((language.toLowerCase() === country.toLowerCase()
+                        ? language
+                        : `${language}${country}`) as keyof typeof locales)
+                    : (language as keyof typeof locales)
                 ],
               includeSeconds: false,
             })}
@@ -39,8 +41,13 @@ export default function OperationRef({
         </div>
         <div className="h-10">
           <strong className="text-3xl font-bold text-white">
-            {type === "income" ? "+" : type === "expense" ? "-" : ""}
-            {numberFormat(currency, amount, "compact")}
+            <NumberFormat
+              currency={currency}
+              amount={type === "expense" ? -1 * amount : amount}
+              notation="compact"
+              signDisplay="exceptZero"
+              currencyDisplay="symbol"
+            />
           </strong>
         </div>
       </div>
@@ -70,7 +77,12 @@ export default function OperationRef({
     //       >
     //         {formatDistance(issued_at, new Date(), {
     //           addSuffix: true,
-    //           locale: pl,
+    //           locale:
+    //             locales[
+    //               (language.toLowerCase() === country.toLowerCase()
+    //                 ? language
+    //                 : `${language}${country}`) as keyof typeof locales
+    //             ],
     //           includeSeconds: false,
     //         })}
     //       </small>
@@ -83,7 +95,7 @@ export default function OperationRef({
     //         )}
     //       >
     //         {type === "income" ? "+" : type === "expense" ? "-" : ""}
-    //         {numberFormat(currency, amount)}
+    //         <NumberFormat currency={currency} amount={amount} />
     //       </strong>
     //     </div>
     //   </div>

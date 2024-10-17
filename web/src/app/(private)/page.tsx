@@ -2,52 +2,46 @@ import { Suspense } from "react";
 import LatestOperations from "@/components/dashboard/latest-operations";
 import { OperationLoader } from "@/components/operations/ref";
 import Block from "@/components/ui/block";
-import { getPreferences } from "@/lib/settings/actions";
-import Priority from "@/components/goals/priority";
-import { createClient } from "@/utils/supabase/server";
 import Limits from "@/components/operations/limits";
+import GoalPriority from "@/components/dashboard/goal-priority";
+import WeeklyGraph from "@/components/dashboard/weekly-graph";
+import { getSettings } from "@/lib/general/actions";
+import getDictionary from "@/const/dict";
 
 export default async function Dashboard() {
-  const { result: preferences, error } = await getPreferences();
+  const settings = await getSettings();
 
-  if (error || !preferences) {
-    throw new Error(error || "Preferences could not be retrieved");
-  }
+  const {
+    private: {
+      dashboard: dict,
+      goals: { priority },
+      operations: {
+        expenses: { limits },
+      },
+    },
+  } = await getDictionary(settings.language);
 
   return (
-    <div className="sm:px-10 py-4 sm:py-8 flex flex-col xl:grid grid-cols-6 gap-4 sm:gap-6">
-      <Suspense fallback={latestOperationsFallback}>
-        <LatestOperations preferences={preferences} />
+    <div className="sm:px-10 h-full py-4 sm:py-8 flex flex-col xl:grid grid-cols-6 xl:grid-rows-[max-content_max-content_1fr] gap-4 sm:gap-6">
+      <Suspense
+        fallback={<LatestOperationsFallback dict={dict["latest-operations"]} />}
+      >
+        <LatestOperations
+          dict={dict["latest-operations"]}
+          languageCode={settings.language}
+        />
       </Suspense>
-      <Limits defaultCurrency={preferences.currency} />
+      <Limits dict={limits} settings={settings} />
       <Suspense>
-        <GoalPriority />
+        <GoalPriority dict={priority} />
       </Suspense>
+      <WeeklyGraph settings={settings} dict={dict["weekly-graph"]} />
     </div>
   );
 }
 
-async function GoalPriority() {
-  const supabase = createClient();
-  const { data: goal } = await supabase
-    .from("goals")
-    .select("title, price, currency, payments:goals_payments(date, amount)")
-    .eq("is_priority", true)
-    .order("date", { referencedTable: "goals_payments", ascending: false })
-    .returns<Goal[]>()
-    .single();
-
-  if (!goal) return <></>;
-
-  return (
-    <div className="col-span-3">
-      <Priority goal={goal} />
-    </div>
-  );
-}
-
-const latestOperationsFallback = (
-  <Block title="Ostatnie operacje" className="xl:col-span-6">
+const LatestOperationsFallback = ({ dict }: { dict: { title: string } }) => (
+  <Block title={dict.title} className="xl:col-span-6">
     <div className="grid grid-cols-6 gap-6">
       <OperationLoader />
       <OperationLoader />

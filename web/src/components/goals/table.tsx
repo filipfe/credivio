@@ -12,89 +12,55 @@ import {
   cn,
 } from "@nextui-org/react";
 import Block from "../ui/block";
-import { addDays, format, subDays } from "date-fns";
-import { useEffect, useMemo, useRef, useState } from "react";
-import numberFormat from "@/utils/formatters/currency";
+import { useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
-import Loader from "../stocks/loader";
 import PaymentPopover from "./popover";
-import useSWR from "swr";
-import { getGoalsPayments } from "@/lib/goals/queries";
+import NumberFormat from "@/utils/formatters/currency";
 
-const generateDates = (start: Date, end: Date): Date[] => {
-  const dates = [];
-  let currentDate = start;
-  while (currentDate <= end) {
-    dates.push(new Date(currentDate));
-    currentDate = addDays(currentDate, 1);
-  }
-  return dates;
-};
-
-const getAmountByDate = (date: string, payments: GoalPayment[]): number =>
-  payments.find((p) => {
-    console.log(p.date, date);
-    return p.date === date;
-  })?.amount || 0;
-
-const today = new Date();
-
-export default function GoalsTable({ goals }: { goals: Goal[] }) {
-  // const {
-  //   data: payments,
-  //   isLoading,
-  //   isValidating,
-  // } = useSWR("goals_payments", getGoalsPayments, { keepPreviousData: true });
+export default function GoalsTable({
+  goals,
+  tableData,
+  language,
+}: {
+  goals: Goal[];
+  tableData: GoalPayment[];
+  language: Locale;
+}) {
   const [scrollButtonVisible, setScrollButtonVisible] = useState(false);
   const tbodyRef = useRef<HTMLDivElement | null>(null);
 
-  const dates = useMemo(() => {
-    const startDate = subDays(today, 21);
-    return generateDates(startDate, today);
-  }, []);
-
-  // Helper function to get payment amount for a specific date and goal
-
-  const sums = useMemo(
-    () =>
-      goals.reduce(
-        (prev, { payments, id }) => ({
-          ...prev,
-          [id]: payments.reduce((prev, { amount }) => prev + amount, 0),
-        }),
-        {} as Record<string, number>
-      ),
-    [goals]
-  );
+  if (goals.length === 0) return <></>;
 
   useEffect(() => {
     if (!tbodyRef.current) return;
+
     tbodyRef.current.scrollTop = tbodyRef.current.scrollHeight;
   }, [goals]);
 
   useEffect(() => {
     if (!tbodyRef.current) return;
+
     setScrollButtonVisible(
       tbodyRef.current.scrollTop + tbodyRef.current.clientHeight <
         tbodyRef.current.scrollHeight - 1
     );
+
     const onScroll = (_e: Event) => {
       if (!tbodyRef.current) return;
+
       setScrollButtonVisible(
         tbodyRef.current.scrollTop + tbodyRef.current.clientHeight <
           tbodyRef.current.scrollHeight - 65
       );
     };
+
     tbodyRef.current.addEventListener("scroll", onScroll);
+
     return () => {
       tbodyRef.current &&
         tbodyRef.current.removeEventListener("scroll", onScroll);
     };
   }, [tbodyRef.current]);
-
-  // if (isLoading && !isValidating) {
-  //   return <Loader title="Wpłaty" className="row-span-2" />;
-  // }
 
   return (
     <Block title="Wpłaty" className="row-span-2">
@@ -140,28 +106,26 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
             <TableColumn className="font-medium text-sm text-foreground-700 shadow-[0_0_0_1px_rgba(23,121,129,0.1)]">
               Data
             </TableColumn>
-            {
-              goals.map(({ id, title }) => (
+            {goals.length > 0 &&
+              (goals.map((goal) => (
                 <TableColumn
                   minWidth={288}
                   align="center"
                   className="font-medium text-sm text-foreground-700 shadow-[0_-1px_0_0_rgba(23,121,129,0.1),0_1px_0_0_rgba(23,121,129,0.1)] last:shadow-[1px_0_0_0_rgba(23,121,129,0.1),0_-1px_0_0_rgba(23,121,129,0.1),0_1px_0_0_rgba(23,121,129,0.1)]"
-                  key={id}
+                  key={goal.id}
                 >
-                  {title}
+                  {goal.title}
                 </TableColumn>
-              )) as any
-            }
+              )) as any)}
           </TableHeader>
           <TableBody className="py-px">
             {
-              dates.map((date) => {
-                const YMD = format(date, "yyyy-MM-dd");
-                const isToday = today.toDateString() === date.toDateString();
+              tableData.map(({ date, payments }) => {
+                const isToday = tableData[tableData.length - 1].date === date;
                 return (
                   <TableRow
                     className={cn(!isToday && "hover:bg-light")}
-                    key={date.toISOString()}
+                    key={date}
                   >
                     <TableCell
                       className={cn(
@@ -171,33 +135,32 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
                     >
                       {isToday
                         ? "Dzisiaj"
-                        : new Intl.DateTimeFormat("pl-PL", {
+                        : new Intl.DateTimeFormat(language, {
                             dateStyle: "long",
-                          }).format(date)}
+                          }).format(new Date(date))}
                     </TableCell>
                     {
-                      goals.map((goal) => (
-                        <TableCell key={goal.id}>
-                          {isToday ? (
-                            <PaymentPopover
-                              goal={goal}
-                              amount={getAmountByDate(YMD, goal.payments)}
-                              max={
-                                goal.price -
-                                ((sums[goal.id] || 0) -
-                                  (isToday
-                                    ? getAmountByDate(YMD, goal.payments)
-                                    : 0))
-                              }
-                            />
-                          ) : (
-                            numberFormat(
-                              goal.currency,
-                              getAmountByDate(YMD, goal.payments)
-                            )
-                          )}
-                        </TableCell>
-                      )) as any
+                      goals.map((goal) => {
+                        const payment = payments.find(
+                          (p) => p.goal_id === goal.id
+                        )!;
+
+                        return (
+                          <TableCell key={goal.id}>
+                            {isToday ? (
+                              <PaymentPopover
+                                goal={goal}
+                                paid={payment.amount}
+                              />
+                            ) : (
+                              <NumberFormat
+                                currency={goal.currency}
+                                amount={payment.amount}
+                              />
+                            )}
+                          </TableCell>
+                        );
+                      }) as any
                     }
                   </TableRow>
                 );
@@ -208,13 +171,20 @@ export default function GoalsTable({ goals }: { goals: Goal[] }) {
                 Suma
               </TableCell>
               {
-                goals.map(({ id, currency, price }) => (
+                goals.map((goal) => (
                   <TableCell className="text-foreground-700 bg-light shadow-[0_-1px_0_0_rgba(23,121,129,0.1),0_1px_0_0_rgba(23,121,129,0.1)] last:shadow-[1px_0_0_0_rgba(23,121,129,0.1),0_-1px_0_0_rgba(23,121,129,0.1),0_1px_0_0_rgba(23,121,129,0.1)] last:rounded-r-md">
                     <span className="font-semibold text-sm">
-                      {numberFormat(currency, sums[id] || 0)}
+                      <NumberFormat
+                        currency={goal.currency}
+                        amount={goal.total_paid}
+                      />
                     </span>{" "}
                     <span className="font-medium text-tiny">
-                      / {numberFormat(currency, price)}
+                      /{" "}
+                      <NumberFormat
+                        currency={goal.currency}
+                        amount={goal.price}
+                      />
                     </span>
                   </TableCell>
                 )) as any

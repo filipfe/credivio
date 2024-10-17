@@ -31,7 +31,7 @@ export default async function processVoice(
     formData.append("file", file);
     formData.append("model", "whisper-1");
     formData.append("response_format", "text");
-    formData.append("language", user.language_code.split("-")[0]);
+    formData.append("language", user.settings.language);
 
     const transcription = await fetch(
       "https://api.openai.com/v1/audio/transcriptions",
