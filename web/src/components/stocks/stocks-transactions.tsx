@@ -1,5 +1,5 @@
 import { Fragment, Suspense } from "react";
-import TransactionTable from "./transactions-table";
+// import TransactionTable from "./transactions-table";
 import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@nextui-org/react";
@@ -17,14 +17,14 @@ export default async function StocksAndTransactions() {
         <OwnStocks holdings={holdings || {}} />
       </Suspense>
       <div className="col-span-2 flex items-stretch">
-        <TransactionTable
+        {/* <TransactionTable
           type="stock"
           title="Ostatnie transakcje"
           count={count || 0}
           rows={transactions || []}
           simplified
           topContent={cta}
-        />
+        /> */}
       </div>
     </Fragment>
   );

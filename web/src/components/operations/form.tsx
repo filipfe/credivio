@@ -17,7 +17,7 @@ export default function AddForm({
   type,
   defaultCurrency,
 }: {
-  dict: Dict["private"]["operations"]["operation-table"]["dropdown"]["modal"]["edit"]["form"];
+  dict: Dict["private"]["operations"]["operation-table"]["dropdown"];
   type: OperationType;
   defaultCurrency: string;
 }) {
@@ -25,6 +25,7 @@ export default function AddForm({
 
   return records.length > 0 ? (
     <PreviewTable
+      dict={dict}
       type={type}
       rows={records}
       count={records.length}
@@ -35,7 +36,9 @@ export default function AddForm({
         successMessage="Pomyślnie dodano operacje!"
       >
         <div className="flex flex-col justify-end h-full mt-6">
-          {type === "expense" && <LabelInput dict={dict.label} />}
+          {type === "expense" && (
+            <LabelInput dict={dict.modal.edit.form.label} />
+          )}
           <input type="hidden" name="type" value={type} />
           <input type="hidden" name="data" value={JSON.stringify(records)} />
         </div>
@@ -69,7 +72,7 @@ export default function AddForm({
             successMessage="Pomyślnie dodano operację!"
           >
             <Manual
-              dict={dict}
+              dict={dict.modal.edit.form}
               withLabel={type === "expense"}
               type={type}
               defaultCurrency={defaultCurrency}

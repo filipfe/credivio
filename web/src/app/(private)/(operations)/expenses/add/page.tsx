@@ -8,13 +8,7 @@ export default async function Page() {
   const {
     private: {
       operations: {
-        "operation-table": {
-          dropdown: {
-            modal: {
-              edit: { form: dict },
-            },
-          },
-        },
+        "operation-table": { dropdown: dict },
       },
     },
   } = await getDictionary(settings.language);
