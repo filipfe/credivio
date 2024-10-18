@@ -21,7 +21,7 @@ export default function Header() {
         </nav>
         <div className="bg-primary/20 rounded-lg p-1 flex items-center">
           <Link
-            href="https://credivio.vercel.app"
+            href="https://app.monfuse.com"
             className="bg-primary py-2.5 text-sm px-5 rounded-md text-white"
           >
             Rozpocznij

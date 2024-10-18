@@ -14,7 +14,7 @@ export default async function Active({ status, plan }: Subscription) {
         <h3 className="sm:text-lg lg:text-xl">
           {status === "active" ? "Subskrypcja aktywna" : "Okres próbny aktywny"}
         </h3>
-        <p className="text-sm">Dziękujemy za korzystanie z Credivio</p>
+        <p className="text-sm">Dziękujemy za korzystanie z Monfuse</p>
       </div>
       <p className="inline-flex items-end">
         <strong className="text-2xl sm:text-3xl lg:text-4xl">

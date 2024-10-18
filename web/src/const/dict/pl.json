@@ -251,12 +251,32 @@
     "ai-assistant": {
       "chat": {
         "recomendation": [
-          "Podsumowanie miesięczne",
-          "Przegląd tygodniowy",
-          "Zalecenia finansowe",
-          "Zobacz prognozy",
-          "Oblicz wskaźnik oszczędności",
-          "Zaplanuj realizację celu"
+          {
+            "title": "Podsumowanie miesięczne",
+            "category": "Analiza"
+          },
+          {
+            "title": "Przegląd tygodniowy",
+            "category": "Analiza"
+          },
+          {
+            "title": "Zalecenia finansowe",
+            "category": "Analiza"
+          },
+          {
+            "title": "Zobacz prognozy",
+            "category": "Analiza"
+          },
+          {
+            "title": "Oblicz wskaźnik oszczędności",
+            "category": "Operacje",
+            "requirements": ["operations"]
+          },
+          {
+            "title": "Zaplanuj realizację celu",
+            "category": "Cele",
+            "requirements": ["goals"]
+          }
         ],
         "input": {
           "placeholder": "Wykryj anomalie w wydatkach z tego tygodnia"
@@ -418,7 +438,7 @@
         }
       },
       "sign-up": {
-        "title": "Witaj w Credivio!",
+        "title": "Witaj w Monfuse!",
         "description": "Zarejestruj się, aby kontynuować",
         "form": {
           "first-name": {

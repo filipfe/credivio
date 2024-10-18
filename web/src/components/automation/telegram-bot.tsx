@@ -38,7 +38,7 @@ export default function TelegramBot({
           <h3 className="sm:text-lg text-base">Telegram Bot</h3>
           <Link
             className="bg-light border grid place-content-center h-7 w-7 rounded-md"
-            href="https://t.me/CredivioBot"
+            href="https://t.me/MonfuseBot"
             target="_blank"
             rel="noreferrer"
           >
