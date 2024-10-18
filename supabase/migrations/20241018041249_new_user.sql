@@ -14,11 +14,12 @@ begin
     new.raw_user_meta_data ->> 'first_name',
     new.raw_user_meta_data ->> 'last_name'
   );
-  insert into settings (user_id, timezone, language) 
+  insert into settings (user_id, timezone, language, currency) 
   values (
     new.id,
     new.raw_user_meta_data ->> 'timezone',
-    new.raw_user_meta_data ->> 'language'
+    new.raw_user_meta_data ->> 'language',
+    new.raw_user_meta_data ->> 'currency'
   );
 
   return new;
