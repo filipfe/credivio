@@ -58,7 +58,8 @@ export async function signUp(formData: FormData) {
   const last_name = formData.get("last-name")?.toString();
   const email = formData.get("email")?.toString() || "";
   const password = formData.get("password")?.toString() || "";
-  const language_code = formData.get("lang") as string || "en";
+  const language = formData.get("lang") as string || "en";
+  const timezone = formData.get("timezone") as string;
 
   const supabase = createClient();
 
@@ -68,10 +69,10 @@ export async function signUp(formData: FormData) {
     options: {
       emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/confirm`,
       data: {
-        language_code,
-        currency: "PLN",
+        language,
         first_name,
         last_name,
+        timezone,
       },
     },
   });

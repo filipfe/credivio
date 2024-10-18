@@ -31,7 +31,16 @@ export default function Form({
         })
       }
     >
-      <input type="hidden" name="lang" value={lang} />
+      {isSignUp && (
+        <>
+          <input type="hidden" name="lang" value={lang} />
+          <input
+            type="hidden"
+            name="timezone"
+            value={Intl.DateTimeFormat().resolvedOptions().timeZone}
+          />
+        </>
+      )}
       {children}
       <div className="flex flex-col gap-6 mt-6">
         <div>
