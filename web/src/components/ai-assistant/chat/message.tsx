@@ -1,15 +1,19 @@
 import { cn } from "@nextui-org/react";
 import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { motion } from "framer-motion";
 
 export default function MessageRef({ from, content }: ChatMessage) {
   return (
-    <div
+    <motion.div
+      initial={{ translateX: from === "assistant" ? -16 : 16, opacity: 0 }}
+      animate={{ translateX: 0, opacity: 1 }}
       className={cn(
         "flex items-start gap-3",
         from === "user" ? "flex-row-reverse" : "flex-row"
       )}
     >
-      <div className="h-10 w-10 rounded-full border bg-white grid place-content-center">
+      <div className="h-10 w-10 rounded-full border bg-white place-content-center hidden sm:grid">
         <p>{from === "assistant" ? "A" : "F"}</p>
       </div>
       <div
@@ -24,6 +28,7 @@ export default function MessageRef({ from, content }: ChatMessage) {
         ) : typeof content === "string" ? (
           <Markdown
             className="flex flex-col gap-3"
+            remarkPlugins={[remarkGfm]}
             components={{
               h3: ({ children, ...props }) => (
                 <h3 className="mt-1.5 text-sm font-bold" {...props}>
@@ -56,6 +61,27 @@ export default function MessageRef({ from, content }: ChatMessage) {
                   {children}
                 </li>
               ),
+              table: ({ children, ...props }) => (
+                <table className="table-fixed w-full" {...props}>
+                  {children}
+                </table>
+              ),
+              th: ({ children, ...props }) => (
+                <th
+                  className="text-sm text-left py-1 px-2 first:pl-0 last:pr-0"
+                  {...props}
+                >
+                  {children}
+                </th>
+              ),
+              td: ({ children, ...props }) => (
+                <td
+                  className="text-sm text-left border-t py-1 whitespace-nowrap text-ellipsis overflow-hidden px-2 first:pl-0 last:pr-0"
+                  {...props}
+                >
+                  {children}
+                </td>
+              ),
             }}
           >
             {content}
@@ -64,6 +90,6 @@ export default function MessageRef({ from, content }: ChatMessage) {
           content
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

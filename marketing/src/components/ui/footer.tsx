@@ -11,8 +11,7 @@ export default function Footer() {
         </div>
         <div className="flex items-center gap-4 justify-between py-4 border-t border-white/10">
           <small className="text-white/80">
-            &copy; {new Date().getFullYear()} Credivio, Inc. All rights
-            reserved.
+            &copy; {new Date().getFullYear()} Monfuse, Inc. All rights reserved.
           </small>
         </div>
       </div>

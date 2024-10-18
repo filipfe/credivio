@@ -25,7 +25,7 @@ export default function Form({
         stripe={getStripe()}
       >
         <div className="flex flex-col gap-6">
-          <h4 className="">Subskrypcja Credivio</h4>
+          <h4 className="">Subskrypcja Monfuse</h4>
           <p className="inline-flex items-end">
             <strong className="text-2xl sm:text-3xl lg:text-4xl">
               {new Intl.NumberFormat(settings?.language, {
