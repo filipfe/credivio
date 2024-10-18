@@ -317,9 +317,9 @@ select
   period,
   'PLN',
   case
-    when period = 'daily' then round((random() * 50 + 10)::numeric, 2)
-    when period = 'weekly' then round((random() * 300 + 50)::numeric, 2)
-    when period = 'monthly' then round((random() * 2000 + 500)::numeric, 2)
+    when period = 'daily' then 700
+    when period = 'weekly' then 2000
+    when period = 'monthly' then 9000
   end
 from (
   select 'daily'::period_type as period
