@@ -1,7 +1,6 @@
 "use client";
 
 import Block from "@/components/ui/block";
-import LineChartLoader from "@/components/ui/charts/line-loader";
 import Empty from "@/components/ui/empty";
 import { ReactNode, useContext } from "react";
 import {
@@ -134,7 +133,7 @@ export default function BalanceByMonth({
       ) : maxValue !== 0 ? (
         <div className="flex-1 grid">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={results} stackOffset="sign">
+            <BarChart data={results} stackOffset="sign" reverseStackOrder>
               <CartesianGrid vertical={false} opacity={0.5} />
               <YAxis
                 width={width}
