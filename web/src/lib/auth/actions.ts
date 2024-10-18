@@ -148,7 +148,7 @@ export async function setupAccount(formData: FormData) {
       first_name,
       last_name,
     })
-    .eq("user_id", user.id);
+    .eq("id", user.id);
 
   if (profileError) {
     return {
