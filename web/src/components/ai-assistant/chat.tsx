@@ -25,7 +25,10 @@ export default function Chat({
       scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [isLoading]);
 
-  const onSubmit = async (input: string) => {
+  const onSubmit = async (
+    input: string,
+    _operations?: Record<"incomes" | "expenses" | "recurring_payments", boolean>
+  ) => {
     if (!input) return;
     setMessages((prev) => [...prev, { from: "user", content: input }]);
     setIsLoading(true);
@@ -35,7 +38,7 @@ export default function Chat({
     const { data, error } = await supabase.functions.invoke("ai-assistant", {
       body: {
         currency,
-        operations,
+        operations: _operations || operations,
         input,
         limit,
         goal,
@@ -56,28 +59,29 @@ export default function Chat({
   };
 
   return (
-    <div className="flex flex-col px-6 sm:px-0 mb-4 sm:mb-8">
+    <div className="flex flex-col px-6 sm:px-0 sm:mb-8 pb-6 xl:pb-0 h-[calc(100vh-64px)] sm:h-[calc(100vh-80px)] xl:h-auto">
       <div className="flex-1 flex flex-col justify-center">
         {messages.length === 0 ? (
-          <div className="grid grid-cols-3 gap-4 mx-6">
-            {dict.recomendation.map((title) => (
-              <RecommendationRef
-                title={title}
-                onSubmit={(input) => onSubmit(input)}
-              />
+          <div className="grid-cols-2 grid lg:grid-cols-3 gap-4 mx-6">
+            {dict.recomendation.map((r) => (
+              <RecommendationRef {...r} onSubmit={onSubmit} />
             ))}
           </div>
         ) : (
           <ScrollShadow
             ref={scrollRef}
-            className="h-full max-h-[calc(100vh-160px)] pt-4 sm:pt-8 pb-6"
+            className="h-full max-h-[calc(100vh-160px)] pt-4 sm:pt-8 xl:pb-6"
             hideScrollBar
           >
             <div className="flex flex-col gap-4 min-h-max">
               {messages
                 .slice(messages.length - 4, messages.length)
                 .map((message, k) => (
-                  <MessageRef {...message} key={message.from + k} />
+                  <MessageRef
+                    {...message}
+                    content={message.content}
+                    key={message.from + k}
+                  />
                 ))}
               {isLoading && (
                 <MessageRef from="assistant" content={<l-bouncy size={24} />} />
@@ -113,7 +117,7 @@ export default function Chat({
           }
           onValueChange={(value) => setInput(value)}
           classNames={{
-            inputWrapper: "shadow-none !bg-white border",
+            inputWrapper: "shadow-none !bg-white border h-12",
             input: "text-sm",
           }}
         />
@@ -124,17 +128,43 @@ export default function Chat({
 
 const RecommendationRef = ({
   title,
+  category,
   onSubmit,
+  requirements,
 }: {
   title: string;
-  onSubmit: (input: string) => void;
-}) => (
-  <button
-    onClick={() => onSubmit(title)}
-    className="p-3 border rounded-md cursor-pointer select-none bg-white"
-  >
-    <div className="text-left">
-      <h4 className="font-medium text-sm">{title}</h4>
-    </div>
-  </button>
-);
+  category: string;
+  onSubmit: (
+    input: string,
+    _operations?: Record<"incomes" | "expenses" | "recurring_payments", boolean>
+  ) => void;
+  requirements?: string[];
+}) => {
+  const { goal, setOperations } = useAIAssistant();
+  const isDisabled = requirements && requirements.includes("goals") && !goal;
+  return (
+    <button
+      disabled={isDisabled}
+      onClick={() => {
+        requirements &&
+          requirements.includes("operations") &&
+          setOperations({
+            incomes: true,
+            expenses: true,
+            recurring_payments: true,
+          });
+        onSubmit(title, {
+          incomes: true,
+          expenses: true,
+          recurring_payments: true,
+        });
+      }}
+      className="p-3 border rounded-md select-none bg-white disabled:opacity-60"
+    >
+      <div className="text-left">
+        <h5 className="text-primary font-medium text-xs">{category}</h5>
+        <h4 className="font-medium text-sm">{title}</h4>
+      </div>
+    </button>
+  );
+};

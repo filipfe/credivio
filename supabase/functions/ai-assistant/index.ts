@@ -27,13 +27,15 @@ const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY");
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   throw new Error(
-    `Environment variables missing: ${Object.entries({
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY,
-    })
-      .filter(([_key, value]) => !value)
-      .map(([key]) => key)
-      .join(", ")}`
+    `Environment variables missing: ${
+      Object.entries({
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY,
+      })
+        .filter(([_key, value]) => !value)
+        .map(([key]) => key)
+        .join(", ")
+    }`,
   );
 }
 
@@ -68,6 +70,7 @@ Deno.serve(async (req) => {
 
   const { input, currency, ...context } = (await req.json()) as Body;
 
+  console.log(context);
   const getGoalPayments = async (goalId: string) => {
     const { data: payments, error } = await supabase
       .from("goals_payments")
@@ -94,7 +97,7 @@ Deno.serve(async (req) => {
   const getOperations = async (
     type: OperationsType,
     from: string,
-    to: string
+    to: string,
   ) => {
     const start = fromZonedTime(startOfDay(parseISO(from)), settings.timezone);
     const end = fromZonedTime(endOfDay(parseISO(to)), settings.timezone);
@@ -117,11 +120,12 @@ Deno.serve(async (req) => {
     const { data, error } = await supabase
       .from(type)
       .select(
-        type === "expenses" ? [...cols, "label"].join(", ") : cols.join(", ")
+        type === "expenses" ? [...cols, "label"].join(", ") : cols.join(", "),
       )
       .eq("currency", currency)
       .gte("issued_at", start.toUTCString())
-      .lte("issued_at", end.toUTCString());
+      .lte("issued_at", end.toUTCString())
+      .returns<Payment[]>();
 
     if (error) {
       return {
@@ -131,7 +135,11 @@ Deno.serve(async (req) => {
     }
 
     return {
-      results: data,
+      results: data.map((payment) => ({
+        ...payment,
+        issued_at: toZonedTime(payment.issued_at, settings.timezone)
+          .toDateString(),
+      })),
     };
   };
 
@@ -167,11 +175,10 @@ Deno.serve(async (req) => {
   const completion = await openai.chat.completions.create({
     model: "gpt-4o",
     messages,
-    tool_choice:
-      context.operations &&
-      Object.values(context.operations).some((v) => v === true)
-        ? "required"
-        : "none",
+    tool_choice: context.operations &&
+        Object.values(context.operations).some((v) => v === true)
+      ? "required"
+      : "none",
     tools: Object.values(functions).map((func) => ({
       function: func,
       type: "function",
@@ -202,6 +209,7 @@ Deno.serve(async (req) => {
         const { from, to } = JSON.parse(args);
         const type = name.replace("get_", "") as OperationsType;
         const { results, error } = await getOperations(type, from, to);
+        console.log(results);
         messages.push({
           tool_call_id: id,
           content: error || JSON.stringify(results),
@@ -217,13 +225,13 @@ Deno.serve(async (req) => {
     return new Response(
       // JSON.stringify({ message: "" }),
       JSON.stringify({ message: finalCompletion.choices[0].message.content }),
-      { headers: { "Content-Type": "application/json", ...corsHeaders } }
+      { headers: { "Content-Type": "application/json", ...corsHeaders } },
     );
   }
 
   return new Response(
     // JSON.stringify({ message: "" }),
     JSON.stringify({ message: choice.message.content }),
-    { headers: { "Content-Type": "application/json", ...corsHeaders } }
+    { headers: { "Content-Type": "application/json", ...corsHeaders } },
   );
 });

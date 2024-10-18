@@ -20,7 +20,7 @@ export default function Pricing() {
         </div>
         <div className="mx-auto my-12 max-w-4xl">
           <div className="rounded-md border bg-light p-6 grid gap-4">
-            <h3 className="font-black">Subskrypcja Credivio</h3>
+            <h3 className="font-black">Subskrypcja Monfuse</h3>
             <div className="grid grid-cols-2 gap-3">
               <label
                 htmlFor=""

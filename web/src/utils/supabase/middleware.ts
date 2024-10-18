@@ -62,7 +62,7 @@ export async function updateSession(request: NextRequest) {
   const {
     data: user,
   } = await supabase.from("profiles").select(
-    "id, ...settings(currency, timezone, language)",
+    "id, first_name, last_name, ...settings(currency, timezone, language)",
   ).single();
 
   // User tried accessing private path without being authenticated
@@ -85,6 +85,20 @@ export async function updateSession(request: NextRequest) {
     if (PUBLIC_ROUTES.includes(request.nextUrl.pathname)) {
       const url = request.nextUrl.clone();
       url.pathname = "/";
+      return NextResponse.redirect(url);
+    }
+
+    const isAccountSetup = !!user.first_name && !!user.last_name &&
+      !!user.currency && !!user.language &&
+      !!user.timezone;
+
+    if (request.nextUrl.pathname === "/account-setup" && !isAccountSetup) {
+      return supabaseResponse;
+    }
+
+    if (!isAccountSetup) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/account-setup";
       return NextResponse.redirect(url);
     }
 
@@ -128,10 +142,6 @@ export async function updateSession(request: NextRequest) {
     if (!isActive) {
       const url = request.nextUrl.clone();
       url.pathname = "/settings/subscription";
-      return NextResponse.redirect(url);
-    } else if (!user.currency || !user.language || !user.timezone) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/account-setup";
       return NextResponse.redirect(url);
     }
   }

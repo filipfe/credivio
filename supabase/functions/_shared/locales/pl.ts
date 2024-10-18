@@ -8,7 +8,7 @@ const pl = {
   },
   start: {
     registration:
-      "Podaj swój unikalny klucz Telegram. Znajdziesz go tutaj: https://credivio.vercel.app/automations",
+      "Podaj swój unikalny klucz Telegram. Znajdziesz go tutaj: https://app.monfuse.com/automations",
     welcome: `Cześć { $first_name },
 Twoja rejestracja przebiegła pomyślnie!
 
