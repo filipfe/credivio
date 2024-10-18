@@ -5,7 +5,7 @@ import Dropdown from "./dropdown";
 import CurrencySelect from "../settings/inputs/currency";
 import { Dict } from "@/const/dict";
 import { CURRENCIES, LOCALE_CURRENCIES } from "@/const";
-import { Button, Progress } from "@nextui-org/react";
+import { Button, Input, Progress } from "@nextui-org/react";
 import UniversalSelect from "../ui/universal-select";
 import LanguageSelect from "../settings/inputs/language";
 import TimezoneSelect from "../settings/inputs/timezone";
@@ -25,6 +25,8 @@ export default function AccountSetupForm({
 }) {
   const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const [isPending, startTransition] = useTransition();
+  const [firstName, setFirstName] = useState(settings.first_name || "");
+  const [lastName, setLastName] = useState(settings.last_name || "");
   const [submitAvailable, setSubmitAvailable] = useState(false);
   const [timezone, setTimezone] = useState(deviceTimezone);
   const [language, setLanguage] = useState(settings.language);
@@ -32,12 +34,16 @@ export default function AccountSetupForm({
   const [currency, setCurrency] = useState(
     LOCALE_CURRENCIES[settings.language]
   );
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(
+    settings.first_name && settings.last_name ? 1 : 0
+  );
   const { isLoading, data: languages } = useSWR("languages", () =>
     getLanguages()
   );
   const isDisabled =
-    (step === 0 && !currency) || (step === 1 && (!language || !timezone));
+    (step === 0 && (!firstName || !lastName)) ||
+    (step === 1 && !currency) ||
+    (step === 2 && (!language || !timezone));
 
   const action = (formData: FormData) =>
     startTransition(async () => {
@@ -71,13 +77,13 @@ export default function AccountSetupForm({
             size="sm"
             value={step + 1}
             label="Krok"
-            maxValue={3}
+            maxValue={4}
             classNames={{
               label: "text-xs text-font/60",
               value: "text-xs font-medium",
             }}
             showValueLabel
-            valueLabel={`${step + 1} / 3`}
+            valueLabel={`${step + 1} / 4`}
           />
         </div>
       </div>
@@ -85,10 +91,46 @@ export default function AccountSetupForm({
         <div className="flex flex-col gap-4 sm:gap-6">
           <div className="flex flex-col gap-2 sm:gap-3">
             <Dropdown
-              title="Domyślna waluta"
+              title="Dane"
               step={step}
               onOpen={() => setStep(0)}
               index={0}
+            >
+              <Input
+                classNames={{ inputWrapper: "!bg-light shadow-none border" }}
+                name="first_name"
+                label={
+                  dict.settings.account["personal-data"].form["first-name"]
+                    .label
+                }
+                placeholder={
+                  dict.settings.account["personal-data"].form["first-name"]
+                    .label
+                }
+                value={firstName}
+                onValueChange={(value) => setFirstName(value)}
+                className="max-w-xl"
+              />
+              <Input
+                classNames={{ inputWrapper: "!bg-light shadow-none border" }}
+                label={
+                  dict.settings.account["personal-data"].form["last-name"].label
+                }
+                name="last_name"
+                placeholder={
+                  dict.settings.account["personal-data"].form["last-name"].label
+                }
+                value={lastName}
+                onValueChange={(value) => setLastName(value)}
+                className="max-w-xl"
+              />
+            </Dropdown>
+            <Dropdown
+              title="Domyślna waluta"
+              step={step}
+              disabled={!firstName || !lastName}
+              onOpen={() => setStep(1)}
+              index={1}
             >
               <UniversalSelect
                 name="currency"
@@ -104,8 +146,8 @@ export default function AccountSetupForm({
               title="Lokalizacja"
               disabled={!currency}
               step={step}
-              index={1}
-              onOpen={() => setStep(1)}
+              index={2}
+              onOpen={() => setStep(2)}
             >
               <UniversalSelect
                 name="language"
@@ -146,8 +188,8 @@ export default function AccountSetupForm({
               title="Telegram Bot (opcjonalnie)"
               step={step}
               disabled={!currency || !language || !timezone}
-              index={2}
-              onOpen={() => setStep(2)}
+              index={3}
+              onOpen={() => setStep(3)}
             >
               <TelegramBot
                 simplified

@@ -117,9 +117,17 @@ export async function signOut() {
 }
 
 export async function setupAccount(formData: FormData) {
+  const first_name = formData.get("first_name") as string;
+  const last_name = formData.get("last_name") as string;
   const currency = formData.get("currency") as string;
   const language = formData.get("language") as string;
   const timezone = formData.get("timezone") as string;
+
+  if (!first_name || !last_name || !currency || !language || !timezone) {
+    return {
+      error: "Fields missing",
+    };
+  }
 
   const supabase = createClient();
 
@@ -127,19 +135,30 @@ export async function setupAccount(formData: FormData) {
 
   if (authError || !user) {
     return {
-      error: authError,
+      error: authError?.message || "User not found",
     };
   }
 
-  const { error } = await supabase.from("settings").update({
+  const { error: profileError } = await supabase.from("settings").update({
+    first_name,
+    last_name,
+  }).eq("user_id", user.id);
+
+  if (profileError) {
+    return {
+      error: profileError?.message,
+    };
+  }
+
+  const { error: settingsError } = await supabase.from("settings").update({
     currency,
     language,
     timezone,
   }).eq("user_id", user.id);
 
-  if (error) {
+  if (settingsError) {
     return {
-      error,
+      error: settingsError?.message,
     };
   }
 

@@ -94,6 +94,7 @@ type PageProps = {
 
 type Settings = {
   first_name: string;
+  last_name: string;
   currency: string;
   timezone: string;
   language: Locale;
