@@ -1,4 +1,4 @@
-import { StatsFilterContext } from "@/app/(private)/stats/providers";
+import { StatsFilterContext } from "@/app/(private)/(sidebar)/stats/providers";
 import { Select, SelectItem } from "@nextui-org/react";
 import { useContext } from "react";
 

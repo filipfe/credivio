@@ -26,7 +26,7 @@ import Empty from "../ui/empty";
 import { PaperclipIcon } from "lucide-react";
 import DocModal from "./modals/doc-modal";
 import ActionsDropdown from "./actions-dropdown";
-import { PeriodContext } from "@/app/(private)/(operations)/providers";
+import { PeriodContext } from "@/app/(private)/(sidebar)/(operations)/providers";
 import { Dict } from "@/const/dict";
 
 export default function OperationTable({

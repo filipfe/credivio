@@ -23,7 +23,7 @@ export default function TokenInput({
   }, [copied]);
 
   return (
-    <div className="relative flex items-center max-w-md">
+    <div className="relative flex items-center flex-1">
       <Input
         type="text"
         autoComplete="off"

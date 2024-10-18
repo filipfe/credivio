@@ -186,6 +186,12 @@ export const ADD_METHODS: AddMethod[] = [
 
 export const CURRENCIES = ["PLN", "USD", "EUR", "GBP", "CHF"];
 
+export const LOCALE_CURRENCIES: Record<Locale, string> = {
+  "pl": "PLN",
+  "en": "GBP",
+  "es": "EUR",
+};
+
 export const TRANSACTION_TYPES: Option<string>[] = [
   {
     name: "Sprzedaż",

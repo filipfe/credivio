@@ -3,7 +3,7 @@
 import { Section } from "@/components/ui/block";
 import Option from "./option";
 import { cn, Skeleton } from "@nextui-org/react";
-import { useAIAssistant } from "@/app/(private)/ai-assistant/providers";
+import { useAIAssistant } from "@/app/(private)/(sidebar)/ai-assistant/providers";
 import Empty from "@/components/ui/empty";
 import { useLimits } from "@/lib/general/queries";
 import NumberFormat from "@/utils/formatters/currency";

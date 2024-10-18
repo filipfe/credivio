@@ -1,6 +1,6 @@
 "use client";
 
-import { StatsFilterContext } from "@/app/(private)/stats/providers";
+import { StatsFilterContext } from "@/app/(private)/(sidebar)/stats/providers";
 import Block from "@/components/ui/block";
 import NumberFormat from "@/utils/formatters/currency";
 import { Skeleton, cn } from "@nextui-org/react";

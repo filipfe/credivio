@@ -6,7 +6,7 @@ import { Skeleton } from "@nextui-org/react";
 import { ArrowUpRight, Coins } from "lucide-react";
 import Link from "next/link";
 import Empty from "../ui/empty";
-import { StatsFilterContext } from "@/app/(private)/stats/providers";
+import { StatsFilterContext } from "@/app/(private)/(sidebar)/stats/providers";
 import { useExpensesByLabel } from "@/lib/stats/queries";
 import NumberFormat from "@/utils/formatters/currency";
 import { Dict } from "@/const/dict";

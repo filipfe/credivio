@@ -1,4 +1,4 @@
-import { PeriodContext } from "@/app/(private)/(operations)/providers";
+import { PeriodContext } from "@/app/(private)/(sidebar)/(operations)/providers";
 import { Dict } from "@/const/dict";
 import { getLocalTimeZone, parseDate, today } from "@internationalized/date";
 import {

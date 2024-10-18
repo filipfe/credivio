@@ -2,7 +2,7 @@
 
 import { Fragment, useContext } from "react";
 import { useStatsData } from "@/lib/stats/queries";
-import { StatsFilterContext } from "@/app/(private)/stats/providers";
+import { StatsFilterContext } from "@/app/(private)/(sidebar)/stats/providers";
 import Comparison from "./comparison";
 import Stat, { StatLoader } from "./stat-ref";
 import { Dict } from "@/const/dict";
