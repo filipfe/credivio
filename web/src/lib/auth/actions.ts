@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function requestPasswordChange(
-  formData: FormData,
+  formData: FormData
 ): Promise<SupabaseResponse<any>> {
   const email = formData.get("email")?.toString();
 
@@ -26,7 +26,7 @@ export async function requestPasswordChange(
 }
 
 export async function resetPassword(
-  formData: FormData,
+  formData: FormData
 ): Promise<SupabaseResponse<any>> {
   const password = formData.get("password")?.toString();
   const shouldRedirect = formData.get("redirect")?.toString() === "true";
@@ -58,7 +58,7 @@ export async function signUp(formData: FormData) {
   const last_name = formData.get("last-name")?.toString();
   const email = formData.get("email")?.toString() || "";
   const password = formData.get("password")?.toString() || "";
-  const language = formData.get("lang") as string || "en";
+  const language = (formData.get("lang") as string) || "en";
   const timezone = formData.get("timezone") as string;
 
   const supabase = createClient();
@@ -131,7 +131,10 @@ export async function setupAccount(formData: FormData) {
 
   const supabase = createClient();
 
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
 
   if (authError || !user) {
     return {
@@ -139,10 +142,13 @@ export async function setupAccount(formData: FormData) {
     };
   }
 
-  const { error: profileError } = await supabase.from("settings").update({
-    first_name,
-    last_name,
-  }).eq("user_id", user.id);
+  const { error: profileError } = await supabase
+    .from("profiles")
+    .update({
+      first_name,
+      last_name,
+    })
+    .eq("user_id", user.id);
 
   if (profileError) {
     return {
@@ -150,11 +156,14 @@ export async function setupAccount(formData: FormData) {
     };
   }
 
-  const { error: settingsError } = await supabase.from("settings").update({
-    currency,
-    language,
-    timezone,
-  }).eq("user_id", user.id);
+  const { error: settingsError } = await supabase
+    .from("settings")
+    .update({
+      currency,
+      language,
+      timezone,
+    })
+    .eq("user_id", user.id);
 
   if (settingsError) {
     return {
