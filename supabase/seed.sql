@@ -61,7 +61,7 @@ insert into auth.users (
   '8d65ee5d-3897-4f61-b467-9bdc8df6f07f', 
   'authenticated', 
   'authenticated', 
-  'test@credivio.com',  
+  'test@monfuse.com',  
   extensions.crypt('maciek102', extensions.gen_salt('bf')), 
   timezone('utc'::text, now()),
   '', 
