@@ -16,7 +16,7 @@ export default function ContextDropdown({
   const { operations, goal, limit } = useAIAssistant();
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div className="absolute top-6 left-6 right-6 z-10 bg-white border rounded-md">
+    <div className="absolute top-6 left-6 right-6 z-10 bg-white border rounded-md xl:hidden">
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         className="w-full px-5 h-12 flex items-center gap-4"
