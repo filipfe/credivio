@@ -1,3 +1,5 @@
+alter table profiles disable trigger after_profile_update;
+
 create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
