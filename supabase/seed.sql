@@ -169,10 +169,7 @@ select
     else false
   end as recurring,
   random() < 0.3 as from_telegram,
-  case
-    when random() < 0.2 then now() - (random() * interval '90 day')
-    else now() - (random() * interval '1 year')
-  end as issued_at
+  now() - (random() * interval '1 year')
 from cte1 c1;
 
 -- INCOMES
@@ -200,10 +197,7 @@ select
     else false
   end as recurring,
   random() < 0.2 as from_telegram,
-  case
-    when random() < 0.3 then now() - (random() * interval '90 day')
-    else now() - (random() * interval '1 year')
-  end as issued_at
+  now() - (random() * interval '1 year')
 from generate_series(1, 100);
 
 -- RECURRING PAYMENTS
