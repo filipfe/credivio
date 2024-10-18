@@ -187,7 +187,7 @@ select
     when random() < 0.95 then 'Dochód z wynajmu'
     else 'Zwrot podatku'
   end,
-  round((random() * (case when random() < 0.7 then 5000 else 10000 end))::numeric, 2),
+  round((random() * (case when random() < 0.7 then 3000 else 10000 end))::numeric, 2),
   ( 
     case
       when random() < 0.9 then 'PLN'
@@ -204,7 +204,7 @@ select
     when random() < 0.3 then now() - (random() * interval '90 day')
     else now() - (random() * interval '1 year')
   end as issued_at
-from generate_series(1, 500);
+from generate_series(1, 100);
 
 -- RECURRING PAYMENTS
 with cte1 as (
