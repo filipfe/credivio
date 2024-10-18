@@ -255,12 +255,32 @@
     "ai-assistant": {
       "chat": {
         "recomendation": [
-          "Monthly Summary",
-          "Weekly Overview",
-          "Financial Recommendations",
-          "View Predictions",
-          "Calculate Savings Rate",
-          "Plan for Goal Completion"
+          {
+            "title": "Monthly Summary",
+            "category": "Analysis"
+          },
+          {
+            "title": "Weekly Review",
+            "category": "Analysis"
+          },
+          {
+            "title": "Financial Recommendations",
+            "category": "Analysis"
+          },
+          {
+            "title": "Check Forecasts",
+            "category": "Analysis"
+          },
+          {
+            "title": "Calculate Savings Rate",
+            "category": "Operations",
+            "requirements": ["operations"]
+          },
+          {
+            "title": "Plan Goal Achievement",
+            "category": "Goals",
+            "requirements": ["goals"]
+          }
         ],
         "input": {
           "placeholder": "Detect anomalies in this week's expenses"
@@ -421,7 +441,7 @@
         }
       },
       "sign-up": {
-        "title": "Welcome to Credivio!",
+        "title": "Welcome to Monfuse!",
         "description": "Sign up to continue",
         "form": {
           "first-name": {

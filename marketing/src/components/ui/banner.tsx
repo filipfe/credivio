@@ -14,7 +14,7 @@ export default function Banner({ dict: { title } }: { dict: Dict["banner"] }) {
           </h2>
           <div className="bg-primary/20 rounded-md p-1 flex items-center">
             <Link
-              href="https://credivio.vercel.app"
+              href="https://app.monfuse.com"
               className="bg-primary py-2.5 text-sm px-5 rounded-md text-white"
             >
               Rozpocznij

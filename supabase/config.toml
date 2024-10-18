@@ -1,6 +1,6 @@
 # A string used to distinguish different Supabase projects on the same host. Defaults to the
 # working directory name when running `supabase init`.
-project_id = "tipplet"
+project_id = "monfuse"
 
 [api]
 enabled = true
@@ -103,7 +103,7 @@ enable_confirmations = true
 max_frequency = "1s"
 
 [auth.email.template.confirmation]
-subject = "Confirmation Link | Credivio"
+subject = "Confirmation Link | Monfuse"
 content_path = "./supabase/templates/confirmation.html"
 
 [auth.sms]

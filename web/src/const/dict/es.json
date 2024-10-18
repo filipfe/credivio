@@ -252,12 +252,32 @@
     "ai-assistant": {
       "chat": {
         "recomendation": [
-          "Resumen mensual",
-          "Visión general semanal",
-          "Recomendaciones financieras",
-          "Ver predicciones",
-          "Calcular tasa de ahorro",
-          "Plan para completar el objetivo"
+          {
+            "title": "Resumen Mensual",
+            "category": "Análisis"
+          },
+          {
+            "title": "Revisión Semanal",
+            "category": "Análisis"
+          },
+          {
+            "title": "Recomendaciones Financieras",
+            "category": "Análisis"
+          },
+          {
+            "title": "Consultar Pronósticos",
+            "category": "Análisis"
+          },
+          {
+            "title": "Calcular Tasa de Ahorro",
+            "category": "Operaciones",
+            "requirements": ["operations"]
+          },
+          {
+            "title": "Planificar Logro de Objetivos",
+            "category": "Objetivos",
+            "requirements": ["goals"]
+          }
         ],
         "input": {
           "placeholder": "Detecta anomalías en los gastos de esta semana"
@@ -416,7 +436,7 @@
         }
       },
       "sign-up": {
-        "title": "¡Bienvenido a Credivio!",
+        "title": "¡Bienvenido a Monfuse!",
         "description": "Regístrate para continuar",
         "form": {
           "first-name": {
